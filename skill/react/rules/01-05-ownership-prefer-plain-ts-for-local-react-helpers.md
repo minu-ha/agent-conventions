@@ -19,7 +19,14 @@ tags: ownership, hooks, widget
 **Impact: HIGH (실제 상태 · 생명주기 · 컨텍스트가 필요한 경우에만 리액트 훅을 사용합니다)**
 
 화면 전용 계산, 정규화, 전송 값 조립처럼 순수한 로직은 커스텀 훅으로 감싸지 않습니다.
-화면 지역 훅은 상태, 컨텍스트, 훅 호출 순서를 실제로 캡슐화할 때만 허용합니다.
+
+훅으로 감쌀지 정하는 차례입니다.
+
+```mermaid
+flowchart LR
+	q1{"상태 · 컨텍스트 · 훅 호출 순서를<br>실제로 캡슐화하는가?"} -- 아니요 --> r1("_function 의 순수 함수")
+	q1 -- 예 --> r2("커스텀 훅")
+```
 
 | 대상 | 처리 |
 | --- | --- |
@@ -34,13 +41,17 @@ tags: ownership, hooks, widget
 
 **Incorrect 1 (순수 지역 계산을 커스텀 훅으로 감쌉니다):**
 
-```tsx
+```ts
 // page/products/_hook/use-media-upload-payload.ts
 export const useMediaUploadPayload = (files: File[]) => {
 	return files.map((file) => ({name: file.name, size: file.size}));
 };
+```
 
+```tsx
 // page/products/_pg-media-upload-panel.tsx
+import {useMediaUploadPayload} from "@/page/products/_hook/use-media-upload-payload";
+
 export const PgMediaUploadPanel = (props: PgMediaUploadPanelProps) => {
 	const mediaUploadPayload = useMediaUploadPayload(props.files);
 
@@ -57,7 +68,7 @@ export const PgMediaUploadPanel = (props: PgMediaUploadPanelProps) => {
 
 **Correct 1 (순수 계산은 소유자의 `_function` 폴더에 두고 핸들러가 직접 부릅니다):**
 
-```tsx
+```ts
 // page/products/_function/to-media-upload-payload.ts
 /**
  * 업로드 파일 목록으로 저장 요청 본문을 조립
@@ -65,7 +76,9 @@ export const PgMediaUploadPanel = (props: PgMediaUploadPanelProps) => {
 export const toMediaUploadPayload = (files: File[]) => {
 	return files.map((file) => ({name: file.name, size: file.size}));
 };
+```
 
+```tsx
 // page/products/_pg-media-upload-panel.tsx
 import {toMediaUploadPayload} from "@/page/products/_function/to-media-upload-payload";
 

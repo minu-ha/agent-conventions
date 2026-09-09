@@ -113,7 +113,6 @@
 **Impact: CRITICAL (공용 책임과 화면 전용 책임이 같은 레이어에 섞이지 않습니다)**
 
 컴포넌트의 레이어는 사용 횟수나 조립 규모가 아니라 **무엇을 아는지**로 나눕니다.
-먼저 `page` 조건을 확인하고, 해당하지 않으면 도메인 지식으로 구분합니다.
 
 ### 판정 차례
 
@@ -126,7 +125,7 @@ flowchart LR
 	q2 -- 예 --> r2("widget")
 ```
 
-**1순위**
+아래 조건 중 하나라도 걸리면 `page`입니다.
 
 | 조건 | 레이어 |
 | --- | --- |
@@ -134,12 +133,8 @@ flowchart LR
 | 쿼리 · 뮤테이션 · 라우터 훅 · 화면 스토어를 직접 호출함 | `page` |
 | 해당 화면의 `Suspense` 경계 · 폼 프로바이더 · 모달을 여는 조건을 소유함 | `page` |
 
-**2순위**
-
-| 조건 | 레이어 |
-| --- | --- |
-| 화면은 모르고 도메인만 앎 | `widget`. 이름에 도메인 단어가 남아도 됩니다 |
-| 도메인도 화면도 모름 | `ui` |
+하나도 걸리지 않으면 도메인을 아는 쪽이 `widget`, 모르는 쪽이 `ui`입니다.
+`widget`은 이름에 도메인 단어가 남아도 됩니다.
 
 ### 근거가 되지 않는 조건
 
@@ -216,15 +211,21 @@ export const WgLineChart = (props: WgLineChartProps) => {
 };
 ```
 
-**Correct 3 (도메인 지식이 없는 조합은 `ui`, 있는 조합은 `widget`에 둡니다):**
+**Correct 3 (도메인 지식이 없는 조합은 `ui`에 둡니다):**
 
 ```tsx
 // component/ui/line-chart/ui-line-chart.tsx
 export const UiLineChart = (props: UiLineChartProps) => {
 	return <svg className={clsx("ui_lineChart__root")}>{props.children}</svg>;
 };
+```
 
+**Correct (도메인을 아는 조립은 `widget`이 맡아 `ui` 부품을 씁니다):**
+
+```tsx
 // component/widget/product-trend-chart/wg-product-trend-chart.tsx
+import {UiLineChart} from "@/component/ui/line-chart/ui-line-chart";
+
 export const WgProductTrendChart = (props: WgProductTrendChartProps) => {
 	return <UiLineChart points={toChartPoints(props.dailyCounts)} />;
 };
@@ -599,7 +600,14 @@ import {chart_series_line} from "@/component/ui/chart/_constant/series";
 **Impact: HIGH (실제 상태 · 생명주기 · 컨텍스트가 필요한 경우에만 리액트 훅을 사용합니다)**
 
 화면 전용 계산, 정규화, 전송 값 조립처럼 순수한 로직은 커스텀 훅으로 감싸지 않습니다.
-화면 지역 훅은 상태, 컨텍스트, 훅 호출 순서를 실제로 캡슐화할 때만 허용합니다.
+
+훅으로 감쌀지 정하는 차례입니다.
+
+```mermaid
+flowchart LR
+	q1{"상태 · 컨텍스트 · 훅 호출 순서를<br>실제로 캡슐화하는가?"} -- 아니요 --> r1("_function 의 순수 함수")
+	q1 -- 예 --> r2("커스텀 훅")
+```
 
 | 대상 | 처리 |
 | --- | --- |
@@ -614,13 +622,17 @@ import {chart_series_line} from "@/component/ui/chart/_constant/series";
 
 **Incorrect 1 (순수 지역 계산을 커스텀 훅으로 감쌉니다):**
 
-```tsx
+```ts
 // page/products/_hook/use-media-upload-payload.ts
 export const useMediaUploadPayload = (files: File[]) => {
 	return files.map((file) => ({name: file.name, size: file.size}));
 };
+```
 
+```tsx
 // page/products/_pg-media-upload-panel.tsx
+import {useMediaUploadPayload} from "@/page/products/_hook/use-media-upload-payload";
+
 export const PgMediaUploadPanel = (props: PgMediaUploadPanelProps) => {
 	const mediaUploadPayload = useMediaUploadPayload(props.files);
 
@@ -637,7 +649,7 @@ export const PgMediaUploadPanel = (props: PgMediaUploadPanelProps) => {
 
 **Correct 1 (순수 계산은 소유자의 `_function` 폴더에 두고 핸들러가 직접 부릅니다):**
 
-```tsx
+```ts
 // page/products/_function/to-media-upload-payload.ts
 /**
  * 업로드 파일 목록으로 저장 요청 본문을 조립
@@ -645,7 +657,9 @@ export const PgMediaUploadPanel = (props: PgMediaUploadPanelProps) => {
 export const toMediaUploadPayload = (files: File[]) => {
 	return files.map((file) => ({name: file.name, size: file.size}));
 };
+```
 
+```tsx
 // page/products/_pg-media-upload-panel.tsx
 import {toMediaUploadPayload} from "@/page/products/_function/to-media-upload-payload";
 
@@ -869,6 +883,15 @@ const responseProductListSuspense = useProductListSuspense(
 
 ### 합치는 방법 고르기
 
+합칠 방법을 고르는 차례입니다.
+
+```mermaid
+flowchart LR
+	q1{"결과를 하나로<br>합치는가?"} -- 예 --> q2{"Suspense 쿼리인가?"} -- 예 --> r2("useSuspenseQueries + combine")
+	q1 -- 아니요 --> r1("합친 값을 만들지 않고<br>결과를 따로 읽기")
+	q2 -- 아니요 --> r3("useQueries + combine")
+```
+
 | 상황 | 선택 |
 | --- | --- |
 | Suspense 쿼리 결과를 합침 | `useSuspenseQueries` + `combine`. `isPending`을 만들어 내보내지 않습니다 |
@@ -1020,6 +1043,14 @@ useEffect(() => {
 
 ### 호출 방식 고르기
 
+호출 방식을 고르는 차례입니다.
+
+```mermaid
+flowchart LR
+	q1{"결과를 기다린 뒤<br>핸들러가 이어 실행되는가?"} -- 아니요 --> r1("mutate 와<br>onError · onSuccess")
+	q1 -- 예 --> r2("mutateAsync 와 try/catch")
+```
+
 | 상황 | 선택 |
 | --- | --- |
 | 호출 뒤 핸들러가 더 할 일이 없음 | `mutate` + `onError`, `onSuccess` |
@@ -1156,8 +1187,8 @@ sequenceDiagram
 
 같은 `QueryClient`의 같은 키를 구독하면 `refetch()` 결과도 함께 받습니다.
 무효화를 고르는 기준은 구독자 수가 아니라 관련 키의 범위입니다.
-`invalidateQueries`는 일치하는 쿼리를 오래된 상태로 표시하고 기본적으로 활성 쿼리를 다시 불러옵니다.
-비활성 쿼리까지 즉시 요청한다고 가정하지 않습니다.
+`invalidateQueries`는 일치하는 쿼리를 오래된 상태로 표시하지만,
+비활성 쿼리까지 즉시 다시 요청한다고 가정하지 않습니다.
 
 ### 무효화 호출 조건
 
@@ -1305,6 +1336,15 @@ const handleSubmitClick: UiButtonProps["onClick"] = (event) => {
 
 ### 프롭 종류별 선언
 
+프롭을 어떻게 선언할지 고르는 차례입니다.
+
+```mermaid
+flowchart LR
+	q1{"안쪽 컴포넌트가<br>받는 프롭인가?"} -- 예 --> q2{"라이브러리 스타일<br>주입 프롭인가?"} -- 아니요 --> r3("인덱스 접근으로 하나씩 열기")
+	q1 -- 아니요 --> r1("자기 프롭. 타입을 직접 적기")
+	q2 -- 예 --> r2("선언하지 않기")
+```
+
 | 프롭 종류 | 선언 방법 |
 | --- | --- |
 | 라이브러리에 이미 있는 표시 프롭 (`color`, `padding`, `size`) | `ButtonProps["color"]`처럼 인덱스 접근으로 하나씩 엽니다 |
@@ -1317,7 +1357,6 @@ const handleSubmitClick: UiButtonProps["onClick"] = (event) => {
 
 ### 자기 프롭 구분
 
-자기 프롭은 이름이 아니라 **안쪽 컴포넌트가 받는지**로 구분합니다.
 `UiIconButtonProps`의 `icon`은 자기 프롭이지만, 안쪽 컴포넌트도 받는 `UiTableRowProps`의 `selected`는 아닙니다.
 인덱스 접근은 이미 있는 프롭을 그대로 열 때만 쓰며, 상속된 프롭도 바깥 타입 이름으로 접근합니다.
 
@@ -1390,11 +1429,9 @@ flowchart LR
 	q2 -- 예 --> r2("2단계. 그 이름만 Omit으로 빼고<br>인덱스 접근으로 다시 열기")
 ```
 
-1. DOM 계약과 호환되면 `extends <요소>HTMLAttributes<T>`로 씁니다.
-2. 같은 이름 프롭의 타입이 호환되지 않으면 `extends Omit<<요소>HTMLAttributes<T>, "size">`처럼
-   충돌하는 이름만 빼고, 그 프롭을 인덱스 접근으로 다시 엽니다.
-3. 감싸는 요소와 이벤트 대상이 다르거나 자기 프롭을 하나씩 전달하면
-   `extends` 없이 전달할 DOM 프롭만 선언합니다.
+1. `extends <요소>HTMLAttributes<T>`
+2. `extends Omit<<요소>HTMLAttributes<T>, "size">`로 충돌하는 이름만 빼고 인덱스 접근으로 다시 엽니다
+3. `extends` 없이 전달할 DOM 프롭만 선언합니다
 
 | 함께 판단할 내용 | 기준 |
 | --- | --- |
@@ -1735,7 +1772,7 @@ export const UiTableRow = (props: UiTableRowProps) => {
 **Impact: MEDIUM (필요한 확장 범위에 맞춰 단순한 컴포넌트 구조를 선택합니다)**
 
 공용 컴포넌트는 프롭스보다 구조를 먼저 고릅니다.
-표를 위에서부터 읽어 현재 필요한 단계까지만 적용합니다.
+현재 필요한 단계까지만 적용합니다.
 
 필요한 구조를 고르는 차례입니다.
 
@@ -1747,14 +1784,8 @@ flowchart LR
 	q3 -- 아니요 --> r3("상태 있는 합성")
 ```
 
-| 상황 | 선택 |
-| --- | --- |
-| 고정 UI | 단일 컴포넌트 |
-| 부품 조립만 필요함 | 상태 없는 합성 |
-| 여러 부품이 같은 상태 · 동작 · 컨텍스트를 읽음 | 상태 있는 합성 |
-| 같은 합성 조합이 반복됨 | 조합을 한 이름으로 감싼 변형 |
-
-고정 UI를 화면 지역 JSX로 둘지는 `screen-extract-local-section-components-for-runtime-boundaries`를 따릅니다.
+부품 조립이 필요 없는 고정 UI를 화면 지역 JSX로 둘지는
+`screen-extract-local-section-components-for-runtime-boundaries`를 따릅니다.
 
 아래 예제는 같은 대화상자를 필요에 따라 확장합니다.
 합성에 상태를 추가해도 사용처의 공개 이름은 유지하고, 반복되는 조합은 변형으로 감쌉니다.
@@ -1971,15 +2002,14 @@ export const WgReadOnlyProfileDialog = (props: WgReadOnlyProfileDialogProps) => 
 **Incorrect 1 (내부 구조를 전부 공개해 계약으로 굳힙니다):**
 
 ```tsx
+// component/ui/panel/ui-panel.tsx
+import {UiPanelBody} from "@/component/ui/panel/_ui-panel-body";
+import {UiPanelHeader} from "@/component/ui/panel/_ui-panel-header";
+import {UiPanelHeaderInner} from "@/component/ui/panel/_ui-panel-header-inner";
+import {UiPanelRoot} from "@/component/ui/panel/_ui-panel-root";
+import {UiPanelSpacer} from "@/component/ui/panel/_ui-panel-spacer";
+
 // 사용처가 끼워 넣을 자리가 없는 래퍼와 여백 보정용 DOM까지 이름이 붙어 나갔다
-const UiPanelHeaderInner = (props: UiPanelPartProps) => {
-	return <div className={clsx("ui_panel__headerInner")}>{props.children}</div>;
-};
-
-const UiPanelSpacer = () => {
-	return <div className={clsx("ui_panel__spacer")} />;
-};
-
 export const UiPanel = {
 	Root: UiPanelRoot,
 	Header: UiPanelHeader,
@@ -1992,11 +2022,12 @@ export const UiPanel = {
 **Correct 1 (조립에 필요한 것만 공개합니다):**
 
 ```tsx
-// 단순 클래스 래퍼는 모듈 안에 남기고 여백 보정용 DOM은 만들지 않는다
-const UiPanelHeaderInner = (props: UiPanelPartProps) => {
-	return <div className={clsx("ui_panel__headerInner")}>{props.children}</div>;
-};
+// component/ui/panel/ui-panel.tsx
+import {UiPanelBody} from "@/component/ui/panel/_ui-panel-body";
+import {UiPanelHeader} from "@/component/ui/panel/_ui-panel-header";
+import {UiPanelRoot} from "@/component/ui/panel/_ui-panel-root";
 
+// 단순 클래스 래퍼는 헤더 부품만 쓰고 여백 보정용 DOM은 만들지 않는다
 export const UiPanel = {
 	Root: UiPanelRoot,
 	Header: UiPanelHeader,
@@ -2029,6 +2060,7 @@ export const UiPanel = {
 **Incorrect 1 (불리언 프롭 조합으로 공용 컴포넌트가 비대해집니다):**
 
 ```tsx
+// component/widget/product-toolbar/wg-product-toolbar.tsx
 export interface WgProductToolbarProps {
 	isCompact?: boolean;
 	isEditing?: boolean;
@@ -2049,9 +2081,26 @@ export const WgProductToolbar = (props: WgProductToolbarProps) => {
 };
 ```
 
-**Correct 1 (모드를 변형 컴포넌트와 상태 없는 합성으로 분리합니다):**
+**Correct 1 (모드마다 조합을 고정한 변형 컴포넌트를 둡니다):**
 
 ```tsx
+// component/widget/product-browse-toolbar/wg-product-browse-toolbar.tsx
+import {WgProductToolbar} from "@/component/widget/product-toolbar/wg-product-toolbar";
+
+export const WgProductBrowseToolbar = () => {
+	return (
+		<WgProductToolbar.Root>
+			<WgProductSearchField />
+			<WgProductBrowseActions />
+		</WgProductToolbar.Root>
+	);
+};
+```
+
+**Correct (변형이 조립하는 틀 부품과 진입 파일, 나머지 변형입니다):**
+
+```tsx
+// component/widget/product-toolbar/_wg-product-toolbar-root.tsx
 /**
  * 툴바 바깥 틀 부품
  */
@@ -2062,23 +2111,24 @@ export interface WgProductToolbarRootProps {
 	children: ReactNode;
 }
 
-const WgProductToolbarRoot = (props: WgProductToolbarRootProps) => {
+export const WgProductToolbarRoot = (props: WgProductToolbarRootProps) => {
 	return <header className={clsx("wg_productToolbar__root")}>{props.children}</header>;
 };
+```
 
-// 조합은 아래 두 변형이 이미 제공하므로 사용처가 직접 조립할 `Root`만 공개한다
+```tsx
+// component/widget/product-toolbar/wg-product-toolbar.tsx
+import {WgProductToolbarRoot} from "@/component/widget/product-toolbar/_wg-product-toolbar-root";
+
+// 조합은 두 변형이 이미 제공하므로 사용처가 직접 조립할 `Root`만 공개한다
 export const WgProductToolbar = {
 	Root: WgProductToolbarRoot,
 } as const;
+```
 
-export const WgProductBrowseToolbar = () => {
-	return (
-		<WgProductToolbar.Root>
-			<WgProductSearchField />
-			<WgProductBrowseActions />
-		</WgProductToolbar.Root>
-	);
-};
+```tsx
+// component/widget/product-edit-toolbar/wg-product-edit-toolbar.tsx
+import {WgProductToolbar} from "@/component/widget/product-toolbar/wg-product-toolbar";
 
 export const WgProductEditToolbar = () => {
 	return (
@@ -2101,10 +2151,13 @@ export const WgProductEditToolbar = () => {
 
 ### 슬롯 고르기
 
-| 상황 | 선택 |
-| --- | --- |
-| 부모가 자식 자리만 열어 줌 | `children`과 네임스페이스 슬롯 부품 |
-| 부모가 항목 · 순번 · 상태 같은 실행 문맥을 자식에게 전달해야 함 | 이때만 `renderHeader`, `renderFooter` 같은 렌더 프롭을 씁니다 |
+슬롯을 고르는 차례입니다.
+
+```mermaid
+flowchart LR
+	q1{"부모가 항목 · 순번 · 상태 같은<br>실행 문맥을 자식에게 넘기는가?"} -- 아니요 --> r1("children 과<br>네임스페이스 슬롯 부품")
+	q1 -- 예 --> r2("renderHeader · renderFooter<br>같은 렌더 프롭")
+```
 
 ### 슬롯 계약 이름
 
@@ -2118,6 +2171,7 @@ export const WgProductEditToolbar = () => {
 **Incorrect 1 (정적인 구조를 렌더 프롭으로 조립합니다):**
 
 ```tsx
+// component/ui/panel/ui-panel.tsx
 export interface UiPanelProps {
 	renderHeader?: () => ReactNode;
 	renderFooter?: () => ReactNode;
@@ -2134,9 +2188,26 @@ export const UiPanel = (props: UiPanelProps) => {
 };
 ```
 
-**Correct 1 (`children`과 네임스페이스 슬롯 부품으로 구조를 드러냅니다):**
+**Correct 1 (부품이 `children`으로 사용처가 넣을 자리를 엽니다):**
 
 ```tsx
+// component/ui/panel/_ui-panel-root.tsx
+import {clsx} from "clsx";
+
+import type {UiPanelPartProps} from "@/component/ui/panel/_type/panel-part";
+
+/**
+ * 패널 틀. 나머지 부품은 이 안에서만 그린다
+ */
+export const UiPanelRoot = (props: UiPanelPartProps) => {
+	return <section className={clsx("ui_panel__root")}>{props.children}</section>;
+};
+```
+
+**Correct (부품 계약, 진입 파일, 화면 조립을 파일마다 나눕니다):**
+
+```ts
+// component/ui/panel/_type/panel-part.ts
 /**
  * 패널 부품 셋이 나눠 쓰는 계약
  *
@@ -2148,35 +2219,29 @@ export interface UiPanelPartProps {
 	 */
 	children: ReactNode;
 }
+```
 
-/**
- * 패널 틀
- */
-const UiPanelRoot = (props: UiPanelPartProps) => {
-	return <section className={clsx("ui_panel__root")}>{props.children}</section>;
-};
+```tsx
+// component/ui/panel/ui-panel.tsx
+import {UiPanelFooter} from "@/component/ui/panel/_ui-panel-footer";
+import {UiPanelHeader} from "@/component/ui/panel/_ui-panel-header";
+import {UiPanelRoot} from "@/component/ui/panel/_ui-panel-root";
 
-/**
- * 패널 위쪽 제목 자리
- */
-const UiPanelHeader = (props: UiPanelPartProps) => {
-	return <header className={clsx("ui_panel__header")}>{props.children}</header>;
-};
-
-/**
- * 패널 아래쪽 동작 자리
- */
-const UiPanelFooter = (props: UiPanelPartProps) => {
-	return <footer className={clsx("ui_panel__footer")}>{props.children}</footer>;
-};
-
+// Header 와 Footer 도 Root 와 같은 형태로 children 만 받는다
 export const UiPanel = {
 	Root: UiPanelRoot,
 	Header: UiPanelHeader,
 	Footer: UiPanelFooter,
 } as const;
+```
 
-export const PgProductScreen = () => {
+```tsx
+// page/products/pg-products.tsx
+import {Fragment} from "react";
+
+import {UiPanel} from "@/component/ui/panel/ui-panel";
+
+export const PgProducts = () => {
 	return (
 		<Fragment>
 			<UiPanel.Root>
@@ -2268,6 +2333,7 @@ const WgUserCard = ({ label, onSave }: WgUserCardProps) => {
 **Incorrect 1 (렌더마다 새 컴포넌트 타입을 만듭니다):**
 
 ```tsx
+// component/widget/user-profile-card/wg-user-profile-card.tsx
 export const WgUserProfileCard = (props: WgUserProfileCardProps) => {
 	const Avatar = () => {
 		return (
@@ -2290,9 +2356,25 @@ export const WgUserProfileCard = (props: WgUserProfileCardProps) => {
 };
 ```
 
-**Correct 1 (컴포넌트를 바깥으로 분리하고 프롭스로 넘깁니다):**
+**Correct 1 (형제 파일로 뺀 컴포넌트를 부르고 값은 프롭스로 넘깁니다):**
 
 ```tsx
+// component/widget/user-profile-card/wg-user-profile-card.tsx
+import {WgUserProfileAvatar} from "@/component/widget/user-profile-card/_wg-user-profile-avatar";
+
+export const WgUserProfileCard = (props: WgUserProfileCardProps) => {
+	return (
+		<section>
+			<WgUserProfileAvatar src={props.user.avatarUrl} alt={props.user.name} theme={props.theme} />
+		</section>
+	);
+};
+```
+
+**Correct (뺀 아바타는 소유자 폴더의 형제 파일에 둡니다):**
+
+```tsx
+// component/widget/user-profile-card/_wg-user-profile-avatar.tsx
 /**
  * 사용자 프로필 아바타 프롭스
  */
@@ -2321,14 +2403,6 @@ export const WgUserProfileAvatar = (props: WgUserProfileAvatarProps) => {
 			src={props.src}
 			alt={props.alt}
 		/>
-	);
-};
-
-export const WgUserProfileCard = (props: WgUserProfileCardProps) => {
-	return (
-		<section>
-			<WgUserProfileAvatar src={props.user.avatarUrl} alt={props.user.name} theme={props.theme} />
-		</section>
 	);
 };
 ```
@@ -2398,6 +2472,15 @@ const handleRemoveProductButtonClick: MouseEventHandler<HTMLButtonElement> = (_e
 
 `ref`는 사용처가 포커스, 스크롤, 측정 등을 직접 제어해야 할 때만 엽니다.
 현재 사용처가 없으면 미리 공개하지 않습니다.
+
+`ref` 계약을 고르는 차례입니다.
+
+```mermaid
+flowchart LR
+	q1{"사용처가 포커스 · 스크롤 ·<br>측정을 직접 제어하는가?"} -- 예 --> q2{"명령 메서드 묶음을<br>공개하는가?"} -- 예 --> r3("useImperativeHandle 로<br>명령 계약 공개")
+	q1 -- 아니요 --> r1("ref 프롭을 열지 않기")
+	q2 -- 아니요 --> r2("DOM 요소를 가리키는 ref 프롭")
+```
 
 | 조건 | 처리 |
 | --- | --- |
@@ -2528,8 +2611,18 @@ export const UiSearchInput = (props: UiSearchInputProps) => {
 
 **Impact: HIGH (상태 보존과 초기화 요구에 맞는 렌더 방식을 선택합니다)**
 
-기본은 조건부 렌더링입니다. 리액트 19.2 이상에서 숨겼다 다시 보여 줄 때
-하위 트리 상태를 보존해야 하는 경우에만 `<Activity>`를 씁니다. 이전 버전은 조건부 렌더링을 씁니다.
+기본은 조건부 렌더링입니다.
+
+### 렌더 방식 고르기
+
+렌더 방식을 고르는 차례입니다.
+
+```mermaid
+flowchart LR
+	q1{"리액트 19.2<br>이상인가?"} -- 예 --> q2{"다시 보일 때 하위 트리<br>상태를 보존해야 하는가?"} -- 예 --> r2("Activity 로 숨기기")
+	q1 -- 아니요 --> r1("조건부 렌더링")
+	q2 -- 아니요 --> r1
+```
 
 ### 두 방식의 차이
 
@@ -2581,28 +2674,32 @@ return (
 **Incorrect 2 (다시 보여 줄 때 필요한 상태를 조건부 렌더링으로 잃습니다):**
 
 ```tsx
-// 사이드바: 접어 둔 노드와 스크롤 위치를 자기 상태로 갖는다
-const PgProductSidebar = () => {
+// page/products/_pg-product-sidebar.tsx: 접어 둔 노드와 스크롤 위치를 자기 상태로 갖는다
+export const PgProductSidebar = () => {
 	const [expandedItems, setExpandedItems] = useState<string[]>([]);
 
 	return <UiTree expandedItems={expandedItems} onExpandedItemsChange={setExpandedItems} />;
 };
+```
 
-// 사이드바를 소유한 화면: 닫으면 해제돼서 접어 둔 노드와 스크롤 위치가 사라진다
+```tsx
+// page/products/pg-products.tsx: 닫으면 해제돼서 접어 둔 노드와 스크롤 위치가 사라진다
 return isSidebarOpen && <PgProductSidebar />;
 ```
 
 **Correct 2 (다시 보여 줄 때 하위 트리 상태를 보존해야 하는 경우에만 씁니다):**
 
 ```tsx
-// 사이드바: 접어 둔 노드와 스크롤 위치를 자기 상태로 갖는다
-const PgProductSidebar = () => {
+// page/products/_pg-product-sidebar.tsx: 접어 둔 노드와 스크롤 위치를 자기 상태로 갖는다
+export const PgProductSidebar = () => {
 	const [expandedItems, setExpandedItems] = useState<string[]>([]);
 
 	return <UiTree expandedItems={expandedItems} onExpandedItemsChange={setExpandedItems} />;
 };
+```
 
-// 사이드바를 소유한 화면: 닫아도 상태와 DOM을 보존하고 이펙트는 정리한다
+```tsx
+// page/products/pg-products.tsx: 닫아도 상태와 DOM을 보존하고 이펙트는 정리한다
 return (
 	<Activity mode={isSidebarOpen ? "visible" : "hidden"}>
 		<PgProductSidebar />
@@ -2643,6 +2740,7 @@ return (
 **Incorrect 1 (파일 위쪽에 타입을 모으고 내보내지 않습니다):**
 
 ```tsx
+// component/ui/badge/ui-badge.tsx: 칩까지 한 파일에 두고 타입을 위쪽에 모았다
 interface UiBadgeProps {
 	label: string;
 }
@@ -2660,9 +2758,10 @@ export const UiChip = (props: UiChipProps) => {
 };
 ```
 
-**Correct 1 (각 컴포넌트 바로 위에 선언하고 내보냅니다):**
+**Correct 1 (컴포넌트 파일마다 계약을 바로 위에 선언하고 내보냅니다):**
 
 ```tsx
+// component/ui/badge/ui-badge.tsx
 /**
  * 상태 배지 계약
  */
@@ -2675,20 +2774,6 @@ export interface UiBadgeProps {
 
 export const UiBadge = (props: UiBadgeProps) => {
 	return <span className={clsx("ui_badge__root")}>{props.label}</span>;
-};
-
-/**
- * 선택 칩 계약
- */
-export interface UiChipProps {
-	/**
-	 * 칩에 표시할 문구
-	 */
-	label: string;
-}
-
-export const UiChip = (props: UiChipProps) => {
-	return <span className={clsx("ui_chip__root")}>{props.label}</span>;
 };
 ```
 
@@ -2809,6 +2894,15 @@ export const PgProductRows = (props: PgProductRowsProps) => {
 
 JSX 분기는 각 요소 바로 앞에 표시 조건이 드러나도록 적습니다.
 
+분기 형태를 고르는 차례입니다.
+
+```mermaid
+flowchart LR
+	q1{"조건에 따라 고르는 것이<br>JSX 요소인가?"} -- 예 --> q2{"컴포넌트 전체를<br>표시하지 않는가?"} -- 아니요 --> r3("분기마다 && 를 따로")
+	q1 -- 아니요 --> r1("값 하나는 삼항")
+	q2 -- 예 --> r2("이른 반환으로 null")
+```
+
 | 표현할 내용 | 형태 |
 | --- | --- |
 | 조건에 따라 JSX 요소를 표시함 | 분기마다 `&&`를 따로 씁니다. 참 · 거짓 요소를 삼항 하나로 묶지 않습니다 |
@@ -2893,10 +2987,14 @@ return <UiBadge tone={props.isSelected ? "accent" : "neutral"} />;
 컴포넌트 본문은 아래 네 구획 순서로 작성합니다.
 렌더 중에 읽는 값은 사용 위치보다 위에서 선언합니다.
 
-1. 훅 구획에는 라우터, 스토어, 쿼리, 컨텍스트, 커스텀 훅과 `useState`, `useRef`를 둡니다.
-2. 핸들러 구획에는 `handle*` 함수를 둡니다.
-3. 이펙트 구획에는 `useEffect`, `useLayoutEffect`를 둡니다.
-4. 반환 구획에는 이른 반환과 JSX를 둡니다.
+본문 네 구획이 놓이는 차례입니다.
+
+```mermaid
+flowchart TD
+	s1("훅<br>라우터 · 스토어 · 쿼리 · 컨텍스트<br>커스텀 훅 · useState · useRef") --> s2("핸들러<br>handle* 함수")
+	s2 --> s3("이펙트<br>useEffect · useLayoutEffect")
+	s3 --> s4("반환<br>이른 반환과 JSX")
+```
 
 이펙트의 인자와 의존성 배열은 해당 줄에서 평가되므로, 이펙트를 마지막 훅으로 두어 앞선 선언을 참조합니다.
 이른 반환은 모든 훅 뒤에 두어 렌더마다 훅 호출 개수를 유지합니다.
@@ -3001,6 +3099,7 @@ flowchart LR
 | 라이브러리와 성능 | 외부 라이브러리 생명주기 어댑터 · 가상 스크롤 · 전환 · 지연 값 |
 
 책임 표는 `screen-extract-local-section-components-for-runtime-boundaries`와 같습니다.
+
 ### `widget` · `ui` 전용 책임
 
 아래 두 책임은 `widget`, `ui`에만 적용합니다.
@@ -3126,7 +3225,7 @@ export const PgProducts = () => {
 };
 ```
 
-**Correct 1 (라우트 진입은 조립과 경계를 맡고, 섹션은 자신의 쿼리 키로 데이터를 읽습니다):**
+**Correct 1 (라우트 진입은 섹션 조립과 경계만 맡습니다):**
 
 ```tsx
 // page/products/pg-products.tsx
@@ -3140,7 +3239,11 @@ export const PgProducts = () => {
 		</Fragment>
 	);
 };
+```
 
+**Correct (섹션이 자신의 쿼리 키로 데이터를 읽고 저장까지 소유합니다):**
+
+```tsx
 // page/products/_pg-product-list-section.tsx
 export const PgProductListSection = () => {
 	const [urlParams, setUrlParams] = useQueryStates(productUrlParsers);
@@ -3255,15 +3358,10 @@ export const PgProductTable = (props: PgProductTableProps) => {
 **Incorrect 2 (사용처가 한 화면뿐인데 공용 훅으로 먼저 빼냅니다):**
 
 ```tsx
-// _hook/use-product-filter-form.ts
-export const useProductFilterForm = () => {
-	const [keyword, setKeyword] = useState("");
-	const [categoryId, setCategoryId] = useState<string>();
+// page/products/pg-products.tsx
+// useProductFilterForm 은 두 useState 를 돌려주기만 하고 이 화면 하나만 부른다
+import {useProductFilterForm} from "@/page/products/_hook/use-product-filter-form";
 
-	return {categoryId, keyword, setCategoryId, setKeyword};
-};
-
-// page/products/pg-products.tsx: 이 훅을 부르는 화면은 여기 하나뿐이다
 export const PgProducts = () => {
 	const productFilterForm = useProductFilterForm();
 
@@ -3350,12 +3448,9 @@ export const toProductSaveRequest = (formValues: ProductFormValues) => {
 **Incorrect 1 (감싸기만 하는 래퍼를 섹션으로 추출합니다):**
 
 ```tsx
-const PgProductSidebarPanel = (props: PgProductSidebarPanelProps) => {
+// page/products/_pg-product-sidebar-panel.tsx: 감싸기만 하고 자기 책임이 없다
+export const PgProductSidebarPanel = (props: PgProductSidebarPanelProps) => {
 	return <section className={clsx("pg_products__sidebar")}>{props.children}</section>;
-};
-
-const PgProductDetailPanel = (props: PgProductDetailPanelProps) => {
-	return <section className={clsx("pg_products__detail")}>{props.children}</section>;
 };
 ```
 
@@ -3521,35 +3616,25 @@ flowchart LR
 **Incorrect 1 (진입에 경계가 없어 화면 전체가 함께 멈춥니다):**
 
 ```tsx
-// 진입 파일: PgProductTreeSection이 Suspense 쿼리를 부르는데 감싸는 경계가 없다
+// page/products/pg-products.tsx: PgProductTreeSection이 Suspense 쿼리를 부르는데 감싸는 경계가 없다
 return <PgProductTreeSection />;
 ```
 
 **Correct 1 (섹션 소유자가 경계와 대체 화면을 가집니다):**
 
 ```tsx
-// 진입 파일: 쿼리를 부르는 섹션을 경계로 감싼다
+// page/products/pg-products.tsx: 쿼리를 부르는 섹션을 경계로 감싼다
 return (
 	<Suspense fallback={<PgProductTreeSkeleton />}>
 		<PgProductTreeSection />
 	</Suspense>
 );
-
-// 섹션: 자기 자신을 감쌀 수 없으므로 경계 없이 쿼리만 부른다
-export const PgProductTreeSection = () => {
-	/**
-	 * 사이드바 분류 트리를 읽는다. 이 쿼리가 멈추는 동안은 진입 파일의 경계가 받는다
-	 */
-	const responseProductTreeSuspense = useProductTreeSuspense();
-
-	return <UiTree items={responseProductTreeSuspense.data.categoryNodes} />;
-};
 ```
 
 **Incorrect 2 (한 화면에 경계를 여러 겹 쌓습니다):**
 
 ```tsx
-// 진입 파일이 이미 경계를 갖는데 섹션 안에서 같은 쿼리를 다시 감싼다
+// page/products/_pg-product-tree-section.tsx: 진입 파일이 이미 경계를 갖는데 같은 쿼리를 다시 감싼다
 export const PgProductTreeSection = () => {
 	return (
 		<Suspense fallback={<PgProductTreeSkeleton />}>
@@ -3567,6 +3652,20 @@ export const PgProducts = () => {
 	const responseProductListSuspense = useProductListSuspense();
 
 	return <UiTable rows={responseProductListSuspense.data.products} />;
+};
+```
+
+**Correct (쿼리를 부르는 섹션은 자기 자신을 감싸지 않습니다):**
+
+```tsx
+// page/products/_pg-product-tree-section.tsx
+export const PgProductTreeSection = () => {
+	/**
+	 * 사이드바 분류 트리를 읽는다. 이 쿼리가 멈추는 동안은 진입 파일의 경계가 받는다
+	 */
+	const responseProductTreeSuspense = useProductTreeSuspense();
+
+	return <UiTree items={responseProductTreeSuspense.data.categoryNodes} />;
 };
 ```
 
@@ -3657,13 +3756,21 @@ return <PgPaymentWidgetSection amount={responseOrderAmountSuspense.data.confirme
 
 ### 경계를 둘 층
 
+경계 층을 고르는 차례입니다.
+
+```mermaid
+flowchart LR
+	q1{"나머지 섹션만으로도<br>쓸모가 있는가?"} -- 아니요 --> q2{"내비게이션과 레이아웃 셸은<br>남겨야 하는가?"} -- 아니요 --> r3("앱 경계")
+	q1 -- 예 --> r1("섹션 경계")
+	q2 -- 예 --> r2("화면 경계")
+```
+
 | 층 | 위치 | 오류 뒤 남는 화면 |
 | --- | --- | --- |
 | 앱 | 루트에 한 번 | 없음. 마지막 안전망입니다 |
 | 화면 | 라우트 진입 | 내비게이션과 레이아웃 셸 |
 | 섹션 | `Suspense` 경계와 같은 소유자 | 같은 화면의 다른 섹션 |
 
-섹션 경계는 나머지 섹션만으로도 쓸모가 있을 때만 둡니다.
 목록 실패 후 옆 필터로 할 수 있는 일이 없다면 화면 경계로 충분합니다.
 로딩 · 오류 경계는 같은 소유자가 조립하며, 위치는 `runtime-place-suspense-boundaries-at-the-section-owner`를 따릅니다.
 
@@ -3677,6 +3784,7 @@ return <PgPaymentWidgetSection amount={responseOrderAmountSuspense.data.confirme
 | 트랜지션 Action 오류 · 라이브러리가 렌더에서 다시 던진 오류 | 일반 핸들러 오류와 구분합니다 |
 
 본문의 실패 분기는 `runtime-avoid-ad-hoc-loading-branches`를 따릅니다.
+
 ### 경계 구현과 재시도
 
 오류 경계 클래스는 `ui`의 `UiErrorBoundary` 하나에 둡니다. 리액트 오류 경계 구현에는 클래스가 필요합니다.
@@ -3852,7 +3960,6 @@ return <UiSelectedCountBadge count={selectedIds.length} />;
 **Impact: HIGH (로컬 · 공유 · 서버 · URL 상태의 소유자를 구분합니다)**
 
 상태 도구는 값의 수명과 소유자로 고릅니다.
-표를 아래에서부터 읽어 처음 해당하는 행을 적용합니다.
 
 ### 도구 고르기
 
@@ -3941,7 +4048,8 @@ const themeStore = useThemeStore();
 
 **Correct (합성 컴포넌트 안에서 부품끼리 나눠 쓰는 상태는 `Context`로 내려보냅니다):**
 
-```tsx
+```ts
+// component/ui/tabs/_hook/use-tabs.ts
 /**
  * 탭 부품끼리 나눠 쓰는 값
  */
@@ -3956,12 +4064,17 @@ interface UiTabsContextValue {
 	onSelect: (id: string) => void;
 }
 
-const UiTabsContext = createContext<UiTabsContextValue | null>(null);
+export const UiTabsContext = createContext<UiTabsContextValue | null>(null);
+```
+
+```tsx
+// component/ui/tabs/_ui-tabs-root.tsx
+import {UiTabsContext} from "@/component/ui/tabs/_hook/use-tabs";
 
 /**
  * 탭 묶음 루트 입력 계약
  */
-interface UiTabsRootProps {
+export interface UiTabsRootProps {
 	/**
 	 * 처음 열어 둘 탭 식별자
 	 */
@@ -4570,6 +4683,15 @@ const [draftFilter] = useState(() => parseStoredProductFilter(localStorage.getIt
 목록 행 수와 조작별 소요 시간을 확인하고, `perf-avoid-defensive-memoization`의 예외나 예상 규모만 근거로 삼지 않습니다.
 
 ### 지연 도구 고르기
+
+지연 도구를 고르는 차례입니다.
+
+```mermaid
+flowchart LR
+	q1{"무거운 렌더를 일으키는<br>갱신 함수를 직접 부르는가?"} -- 예 --> q2{"트랜지션 진행 표시가<br>필요한가?"} -- 아니요 --> r3("startTransition")
+	q1 -- 아니요 --> r1("useDeferredValue")
+	q2 -- 예 --> r2("useTransition 의 isPending")
+```
 
 | 상황 | 선택 |
 | --- | --- |

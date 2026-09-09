@@ -42,35 +42,25 @@ flowchart LR
 **Incorrect 1 (진입에 경계가 없어 화면 전체가 함께 멈춥니다):**
 
 ```tsx
-// 진입 파일: PgProductTreeSection이 Suspense 쿼리를 부르는데 감싸는 경계가 없다
+// page/products/pg-products.tsx: PgProductTreeSection이 Suspense 쿼리를 부르는데 감싸는 경계가 없다
 return <PgProductTreeSection />;
 ```
 
 **Correct 1 (섹션 소유자가 경계와 대체 화면을 가집니다):**
 
 ```tsx
-// 진입 파일: 쿼리를 부르는 섹션을 경계로 감싼다
+// page/products/pg-products.tsx: 쿼리를 부르는 섹션을 경계로 감싼다
 return (
 	<Suspense fallback={<PgProductTreeSkeleton />}>
 		<PgProductTreeSection />
 	</Suspense>
 );
-
-// 섹션: 자기 자신을 감쌀 수 없으므로 경계 없이 쿼리만 부른다
-export const PgProductTreeSection = () => {
-	/**
-	 * 사이드바 분류 트리를 읽는다. 이 쿼리가 멈추는 동안은 진입 파일의 경계가 받는다
-	 */
-	const responseProductTreeSuspense = useProductTreeSuspense();
-
-	return <UiTree items={responseProductTreeSuspense.data.categoryNodes} />;
-};
 ```
 
 **Incorrect 2 (한 화면에 경계를 여러 겹 쌓습니다):**
 
 ```tsx
-// 진입 파일이 이미 경계를 갖는데 섹션 안에서 같은 쿼리를 다시 감싼다
+// page/products/_pg-product-tree-section.tsx: 진입 파일이 이미 경계를 갖는데 같은 쿼리를 다시 감싼다
 export const PgProductTreeSection = () => {
 	return (
 		<Suspense fallback={<PgProductTreeSkeleton />}>
@@ -88,5 +78,19 @@ export const PgProducts = () => {
 	const responseProductListSuspense = useProductListSuspense();
 
 	return <UiTable rows={responseProductListSuspense.data.products} />;
+};
+```
+
+**Correct (쿼리를 부르는 섹션은 자기 자신을 감싸지 않습니다):**
+
+```tsx
+// page/products/_pg-product-tree-section.tsx
+export const PgProductTreeSection = () => {
+	/**
+	 * 사이드바 분류 트리를 읽는다. 이 쿼리가 멈추는 동안은 진입 파일의 경계가 받는다
+	 */
+	const responseProductTreeSuspense = useProductTreeSuspense();
+
+	return <UiTree items={responseProductTreeSuspense.data.categoryNodes} />;
 };
 ```

@@ -30,12 +30,9 @@ tags: screen, routes
 **Incorrect 1 (감싸기만 하는 래퍼를 섹션으로 추출합니다):**
 
 ```tsx
-const PgProductSidebarPanel = (props: PgProductSidebarPanelProps) => {
+// page/products/_pg-product-sidebar-panel.tsx: 감싸기만 하고 자기 책임이 없다
+export const PgProductSidebarPanel = (props: PgProductSidebarPanelProps) => {
 	return <section className={clsx("pg_products__sidebar")}>{props.children}</section>;
-};
-
-const PgProductDetailPanel = (props: PgProductDetailPanelProps) => {
-	return <section className={clsx("pg_products__detail")}>{props.children}</section>;
 };
 ```
 

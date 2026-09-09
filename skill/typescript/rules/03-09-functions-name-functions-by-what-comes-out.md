@@ -63,30 +63,53 @@ tags: functions, naming
 **Incorrect 1 (입력 · 구현 동작 · 막연한 접미사를 이름에 씁니다):**
 
 ```ts
+// page/detail/_function/build-user-payload.ts
 export const buildUserPayload = (formValues: UserFormValues) => { /* … */ };
+```
+
+```ts
+// page/detail/_function/map-response-to-model.ts
 export const mapResponseToModel = (response: UserResponse) => { /* … */ };
+```
+
+```ts
+// page/detail/_function/process-user-rows.ts
 export const processUserRows = (rows: UserRow[]) => { /* … */ };
+```
+
+```ts
+// page/detail/_function/resolve-status-tone.ts
 export const resolveStatusTone = (status: string) => { /* … */ };
 ```
 
 **Correct 1 (출력 역할이나 효과를 이름에 씁니다):**
 
 ```ts
+// page/detail/_function/to-user-save-request.ts
 /**
  * 사용자 저장 요청 조립. 서버가 빈 문자열을 거부해 비운 칸은 넣지 않는다
  */
 export const toUserSaveRequest = (formValues: UserFormValues) => { /* … */ };
+```
 
+```ts
+// page/detail/_function/to-user-rows.ts
 /**
  * 응답 한 건을 표 행으로 바꾼다
  */
 export const toUserRows = (response: UserResponse) => { /* … */ };
+```
 
+```ts
+// page/detail/_function/to-active-users.ts
 /**
  * 비활성 사용자를 제외한 목록
  */
 export const toActiveUsers = (rows: UserRow[]) => { /* … */ };
+```
 
+```ts
+// page/detail/_function/to-status-tone.ts
 /**
  * 상태 문자열을 강조 tone으로 분류한다
  */
@@ -96,11 +119,15 @@ export const toStatusTone = (status: string) => { /* … */ };
 **Correct (저장 · 검사 함수는 역할과 판정으로 이름을 짓습니다):**
 
 ```ts
+// util/user/is-admin-user.ts
 /**
  * 관리자 권한 판정. 역할 목록이 비어 있으면 조회 전 상태로 보고 false를 돌려준다
  */
 export const isAdminUser = (user: User) => { /* … */ };
+```
 
+```ts
+// util/session/assert-logged-in.ts
 /**
  * 로그인 상태가 아니면 예외를 던진다. 화면 이동은 호출한 쪽이 정한다
  */

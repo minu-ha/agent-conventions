@@ -54,7 +54,9 @@ export const toSignedTone = (value: number | null | undefined): Tone => {
 	}
 	return value > 0 ? "positive" : "negative";
 };
+```
 
+```ts
 // page/detail/_function/format-signed-percent.ts
 export const formatSignedPercent = (value: number | null | undefined) => {
 	if (isNil(value) || !Number.isFinite(value)) {
@@ -77,7 +79,9 @@ export const toSignedTone = (value: number): Tone => {
 	}
 	return value > 0 ? "positive" : "negative";
 };
+```
 
+```ts
 // page/detail/_function/format-signed-percent.ts
 /**
  * 부호를 붙인 변화율 표시 문자열

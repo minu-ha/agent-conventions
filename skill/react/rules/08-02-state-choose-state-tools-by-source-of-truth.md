@@ -16,7 +16,6 @@ tags: state, react-query, zustand
 **Impact: HIGH (로컬 · 공유 · 서버 · URL 상태의 소유자를 구분합니다)**
 
 상태 도구는 값의 수명과 소유자로 고릅니다.
-표를 아래에서부터 읽어 처음 해당하는 행을 적용합니다.
 
 ### 도구 고르기
 
@@ -105,7 +104,8 @@ const themeStore = useThemeStore();
 
 **Correct (합성 컴포넌트 안에서 부품끼리 나눠 쓰는 상태는 `Context`로 내려보냅니다):**
 
-```tsx
+```ts
+// component/ui/tabs/_hook/use-tabs.ts
 /**
  * 탭 부품끼리 나눠 쓰는 값
  */
@@ -120,12 +120,17 @@ interface UiTabsContextValue {
 	onSelect: (id: string) => void;
 }
 
-const UiTabsContext = createContext<UiTabsContextValue | null>(null);
+export const UiTabsContext = createContext<UiTabsContextValue | null>(null);
+```
+
+```tsx
+// component/ui/tabs/_ui-tabs-root.tsx
+import {UiTabsContext} from "@/component/ui/tabs/_hook/use-tabs";
 
 /**
  * 탭 묶음 루트 입력 계약
  */
-interface UiTabsRootProps {
+export interface UiTabsRootProps {
 	/**
 	 * 처음 열어 둘 탭 식별자
 	 */

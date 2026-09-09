@@ -19,6 +19,15 @@ tags: perf, state
 
 ### 지연 도구 고르기
 
+지연 도구를 고르는 차례입니다.
+
+```mermaid
+flowchart LR
+	q1{"무거운 렌더를 일으키는<br>갱신 함수를 직접 부르는가?"} -- 예 --> q2{"트랜지션 진행 표시가<br>필요한가?"} -- 아니요 --> r3("startTransition")
+	q1 -- 아니요 --> r1("useDeferredValue")
+	q2 -- 예 --> r2("useTransition 의 isPending")
+```
+
 | 상황 | 선택 |
 | --- | --- |
 | 직접 호출하는 상태 갱신이 무거운 렌더를 일으킴 | `startTransition`으로 호출을 감쌉니다. 프롭으로 받은 갱신 함수도 같습니다 |

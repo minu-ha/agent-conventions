@@ -610,12 +610,16 @@ const noopLog: LogSink = (_message, _level) => {};
 
 형태를 모르는 값은 `unknown`으로 받아 좁힙니다.
 컴파일 오류를 없애려고 `as`, `!`, `any`, `@ts-expect-error`로 검사를 우회하지 않습니다.
+저장소, 메시지, URL, 검증하지 않은 응답이 앱 밖의 값입니다.
 
-| 값의 출처 | 처리 |
-| --- | --- |
-| 앱 밖의 값: 저장소, 메시지, URL, 검증하지 않은 응답 | 스키마로 검증하고 결과에서 타입을 얻습니다 |
-| 내부 값 | 분기로 좁히거나 타입 관계가 드러나도록 계약을 고칩니다 |
-| 실제 동작과 외부 패키지 타입이 다름 | 단언 바로 위에 확인할 수 있는 이유를 남깁니다 |
+값의 출처로 처리를 고르는 차례입니다.
+
+```mermaid
+flowchart LR
+	q1{"앱 밖에서<br>들어온 값인가?"} -- 아니요 --> q2{"외부 패키지 타입이<br>실제 동작과 다른가?"} -- 예 --> r2("단언 위에<br>확인할 수 있는 이유")
+	q1 -- 예 --> r1("스키마로 검증하고<br>결과에서 타입을 얻음")
+	q2 -- 아니요 --> r3("분기로 좁히거나<br>계약을 고침")
+```
 
 ### 표기별 보장 범위
 
@@ -816,7 +820,6 @@ type MutableRow = Omit<Row, "children"> & {
 ### 상수 자리 고르기
 
 상수 위치는 사용처 수가 아니라 소유자로 정합니다.
-소유자를 지워도 남는 값은 루트에, 함께 사라지는 값은 그 소유자 아래에 둡니다.
 
 자리를 고르는 차례입니다.
 
@@ -860,8 +863,11 @@ const request_timeout_ms = 20_000;
 
 const productClient = createClient({timeoutMs: request_timeout_ms});
 const productQuery = useProductQuery({client: productClient, pageSize: default_page_size});
+```
 
+```ts
 // page/orders/pg-orders.tsx
+// 다른 화면이 같은 값을 다시 선언한다
 const default_page_size = 20;
 
 const orderQuery = useOrderQuery({pageSize: default_page_size});
@@ -876,7 +882,9 @@ import {pagination_default_page_size} from "@/constant/pagination";
 
 const productClient = createClient({timeoutMs: api_request_timeout_ms});
 const productQuery = useProductQuery({client: productClient, pageSize: pagination_default_page_size});
+```
 
+```ts
 // page/orders/pg-orders.tsx
 import {pagination_default_page_size} from "@/constant/pagination";
 
@@ -1149,7 +1157,9 @@ const UiTabs = (props: UiTabsProps) => {
 };
 
 export default UiTabs;
+```
 
+```tsx
 // page/settings/pg-settings.tsx
 // 사용처가 이름을 지어서 같은 컴포넌트가 파일마다 다른 이름으로 불린다
 import Tabs from "@/component/ui/tabs/ui-tabs";
@@ -1162,7 +1172,9 @@ import Tabs from "@/component/ui/tabs/ui-tabs";
 export const UiTabs = (props: UiTabsProps) => {
 	return <div role="tablist">{props.children}</div>;
 };
+```
 
+```tsx
 // page/settings/pg-settings.tsx
 import {UiTabs} from "@/component/ui/tabs/ui-tabs";
 ```
@@ -1179,13 +1191,17 @@ import {UiTabs} from "@/component/ui/tabs/ui-tabs";
 
 ### 경로 표기
 
-심볼은 `@/` 절대경로로 가져옵니다.
+심볼은 `@/` 절대경로로 가져옵니다. 편집기 자동 가져오기가 만드는 형식입니다.
 심볼 없이 같은 폴더의 파일만 불러올 때는 `./`를 허용하며, `../`는 쓰지 않습니다.
 
-| 가져오기 | 경로 |
-| --- | --- |
-| `import {a} from …` | `@/<src 아래 경로>`. 편집기 자동 가져오기 형식입니다 |
-| `import "….css"` | 같은 폴더면 `./<파일>`, 다른 폴더면 `@/<src 아래 경로>`입니다 |
+경로 표기를 고르는 차례입니다.
+
+```mermaid
+flowchart LR
+	q1{"심볼을<br>가져오는가?"} -- 아니요 --> q2{"같은 폴더의<br>파일인가?"} -- 예 --> r2("./ 로 파일만 불러옴")
+	q1 -- 예 --> r1("@/ 절대경로")
+	q2 -- 아니요 --> r1
+```
 
 이동, 이름 변경은 편집기의 경로 갱신을 사용합니다.
 접근 가능한 소유 경계는 경로 표기가 아니라 가져오는 파일의 위치로 판단합니다.
@@ -1244,12 +1260,16 @@ import "./pg-product-table-section.css";
 환경 값은 루트 `config/env.ts`에서만 읽고 `env_` 상수로 내보냅니다.
 다른 파일은 그 이름을 쓰며 `import.meta.env`와 `process.env`를 직접 읽지 않습니다.
 
-| 값이 바뀌는 때 | 위치 · 이름 |
-| --- | --- |
-| 코드 변경 | `constant` 폴더 |
-| 배포 환경 변경 | `config/env.ts`의 `env_` 상수 |
-| 배포 환경에 따른 기능 플래그 | `env_` 값에서 파생한 `config/feature.ts`의 `feature_` 상수 |
+값이 바뀌는 때로 자리와 이름을 고르는 차례입니다.
 
+```mermaid
+flowchart LR
+	q1{"배포 환경마다<br>달라지는가?"} -- 예 --> q2{"기능을 켜고 끄는<br>플래그인가?"} -- 예 --> r2("config/feature.ts 의<br>feature_ 상수")
+	q1 -- 아니요 --> r1("constant 폴더")
+	q2 -- 아니요 --> r3("config/env.ts 의<br>env_ 상수")
+```
+
+`feature_` 상수는 `env_` 값에서 파생합니다.
 배포 환경은 프로젝트 단위이므로 `config`는 루트에만 둡니다.
 상수 파일과 이름의 형식은 `naming-place-project-constants-in-the-root-constant-folder`를 따릅니다.
 
@@ -1266,8 +1286,11 @@ import "./pg-product-table-section.css";
 ```ts
 // service/product-client.ts
 const baseUrl = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:3000";
+```
 
+```ts
 // service/report-client.ts
+// 다른 파일이 같은 키를 다시 읽고 같은 리터럴로 덮는다
 const reportBaseUrl = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:3000";
 ```
 
@@ -1283,7 +1306,9 @@ if (!import.meta.env.VITE_API_BASE_URL) {
  * API 서버 주소. 배포 환경마다 다르다
  */
 export const env_api_base_url = import.meta.env.VITE_API_BASE_URL;
+```
 
+```ts
 // service/product-client.ts
 import {env_api_base_url} from "@/config/env";
 
@@ -1876,10 +1901,12 @@ page/report/_function/
 
 내보낸 계약과 대표 함수를 먼저 보여 주되, 모듈 초기화 시 필요한 선언 순서를 지킵니다.
 
-1. `import`를 맨 위에 둡니다.
-2. 내보낸 계약 타입을 둡니다.
-3. 내보낸 대표 함수를 둡니다.
-4. 모듈을 불러올 때 계산하는 선언을 마지막에 둡니다. 필요한 선언이 먼저 초기화되어야 합니다.
+파일 위에서 아래로 놓는 차례입니다.
+
+```mermaid
+flowchart TD
+	s1("import") --> s2("내보낸 계약 타입") --> s3("내보낸 대표 함수") --> s4("모듈을 불러올 때<br>계산하는 선언")
+```
 
 함수 본문 참조는 호출 시점에 읽으므로 모듈 초기화가 끝난 뒤 부르면 참조 대상이 아래에 있어도 됩니다.
 즉시 계산하는 선언은 자기가 부르는 선언 뒤에 둡니다.
@@ -1978,7 +2005,6 @@ flowchart LR
 | --- | --- |
 | 함수도 사라짐 | 해당 소유자의 `_function`에 둡니다. `toProfileSaveRequest`가 그 예입니다 |
 | 함수가 남음 | 한 곳에서만 써도 `util/<받는 값의 종류>/`에 둡니다. `toDisplayDate`가 그 예입니다 |
-| 값의 종류로 폴더명을 지을 수 없음 | 루트로 올리지 않고 소유자 아래에 둡니다 |
 
 ### 종류 폴더
 
@@ -2083,12 +2109,14 @@ export const toSignedAmount = (amount: Amount): string => {
 모듈 최상위나 함수 본문 전체에 걸친 `let` 재할당, `push`, 조건부 누적으로 값을 조립하지 않습니다.
 `if`나 `for` 블록 안에서만 쓰는 누적은 대상이 아닙니다.
 
-| 상황 | 조립 방법 |
-| --- | --- |
-| 좁은 스코프에서만 씀 | 해당 스코프에서 바로 계산합니다 |
-| 값 하나가 두 분기로 갈림 | 삼항 하나로 씁니다 |
-| 값 하나가 세 분기 이상으로 갈림 | 함수로 추출하고 분기마다 `return`으로 끝냅니다 |
-| 목록에 조건부 항목을 넣음 | 조건부 스프레드나 `filter`로 한 번에 조립합니다 |
+넓은 스코프에서 조립 방법을 고르는 차례입니다.
+
+```mermaid
+flowchart LR
+	q1{"목록에 조건부<br>항목을 넣는가?"} -- 아니요 --> q2{"값 하나가 두 분기로<br>갈리는가?"} -- 예 --> r2("삼항 하나")
+	q1 -- 예 --> r1("조건부 스프레드나 filter")
+	q2 -- 아니요 --> r3("분기마다 return 으로<br>끝나는 함수로 추출")
+```
 
 중첩 삼항과 기본값을 `let`에 넣은 뒤 덮어쓰는 방식은 사용하지 않습니다.
 분기별 결과가 그 자리에서 끝나야 읽는 사람이 이후 재할당까지 확인하지 않아도 됩니다.
@@ -2377,30 +2405,53 @@ const submitDraft = async (draft: Draft) => {
 **Incorrect 1 (입력 · 구현 동작 · 막연한 접미사를 이름에 씁니다):**
 
 ```ts
+// page/detail/_function/build-user-payload.ts
 export const buildUserPayload = (formValues: UserFormValues) => { /* … */ };
+```
+
+```ts
+// page/detail/_function/map-response-to-model.ts
 export const mapResponseToModel = (response: UserResponse) => { /* … */ };
+```
+
+```ts
+// page/detail/_function/process-user-rows.ts
 export const processUserRows = (rows: UserRow[]) => { /* … */ };
+```
+
+```ts
+// page/detail/_function/resolve-status-tone.ts
 export const resolveStatusTone = (status: string) => { /* … */ };
 ```
 
 **Correct 1 (출력 역할이나 효과를 이름에 씁니다):**
 
 ```ts
+// page/detail/_function/to-user-save-request.ts
 /**
  * 사용자 저장 요청 조립. 서버가 빈 문자열을 거부해 비운 칸은 넣지 않는다
  */
 export const toUserSaveRequest = (formValues: UserFormValues) => { /* … */ };
+```
 
+```ts
+// page/detail/_function/to-user-rows.ts
 /**
  * 응답 한 건을 표 행으로 바꾼다
  */
 export const toUserRows = (response: UserResponse) => { /* … */ };
+```
 
+```ts
+// page/detail/_function/to-active-users.ts
 /**
  * 비활성 사용자를 제외한 목록
  */
 export const toActiveUsers = (rows: UserRow[]) => { /* … */ };
+```
 
+```ts
+// page/detail/_function/to-status-tone.ts
 /**
  * 상태 문자열을 강조 tone으로 분류한다
  */
@@ -2410,11 +2461,15 @@ export const toStatusTone = (status: string) => { /* … */ };
 **Correct (저장 · 검사 함수는 역할과 판정으로 이름을 짓습니다):**
 
 ```ts
+// util/user/is-admin-user.ts
 /**
  * 관리자 권한 판정. 역할 목록이 비어 있으면 조회 전 상태로 보고 false를 돌려준다
  */
 export const isAdminUser = (user: User) => { /* … */ };
+```
 
+```ts
+// util/session/assert-logged-in.ts
 /**
  * 로그인 상태가 아니면 예외를 던진다. 화면 이동은 호출한 쪽이 정한다
  */
@@ -2444,13 +2499,17 @@ export const assertLoggedIn = (session: Session): void => {
 정렬은 새 배열을 반환하는 `es-toolkit` 함수로 합니다. 원본을 바꾸는 `.sort()`는 쓰지 않습니다.
 프롭스, 상태, 매개변수, 모듈 상수로 받은 배열도 같은 기준을 따릅니다.
 
-| 정렬 조건 | 선택 |
-| --- | --- |
-| 모든 키가 오름차순 | `sortBy` |
-| 하나라도 내림차순 | `orderBy` |
-| `localeCompare`처럼 비교 규칙을 키로 표현할 수 없음 | 대상 런타임이 지원할 때만 `.toSorted()` |
-| 같은 키의 항목도 입력 순서와 무관하게 정렬해야 함 | 고유 식별자를 마지막 정렬 키로 추가 |
+정렬 함수를 고르는 차례입니다.
 
+```mermaid
+flowchart LR
+	q1{"비교 규칙을 정렬 키로<br>적을 수 있는가?"} -- 예 --> q2{"모든 키가<br>오름차순인가?"} -- 예 --> r2("sortBy")
+	q1 -- 아니요 --> r1("런타임이 지원할 때만<br>.toSorted")
+	q2 -- 아니요 --> r3("orderBy")
+```
+
+`localeCompare`가 정렬 키로 적을 수 없는 비교 규칙입니다.
+같은 키의 항목도 입력 순서와 무관하게 정렬해야 하면 고유 식별자를 마지막 정렬 키로 더합니다.
 새 배열도 원소 객체는 공유하므로 정렬 키를 계산하면서 원소를 수정하지 않습니다.
 입력을 수정하지 않는 정렬 함수는 `readonly` 배열을 매개변수로 받습니다.
 `.toSorted()`의 타입 선언만 추가해도 런타임 지원이 생기지는 않습니다.
@@ -3069,12 +3128,19 @@ const compactDateTime = responseDateTime.slice(0, 16).replace("T", " ");
 ```ts
 // page/product-detail/pg-product-detail.tsx: ProductSummary 를 만들며 이미 포맷한다
 const productSummary = {averageRate: formatPercent(responseProductSummarySuspense.data.changeRate)};
+```
 
+```ts
 // page/product-detail/_function/to-report-content.ts: 문자열을 다시 숫자로 읽어 다시 포맷한다
 const rows = [{id: "changeRate", value: formatPercent(productSummary.averageRate)}];
 ```
 
 **Correct 1 (경계에서 한 번 포맷하고 소비처는 전달된 값을 그대로 씁니다):**
+
+```ts
+// page/product-detail/pg-product-detail.tsx: ProductSummary 를 만드는 경계에서 한 번 포맷한다
+const productSummary = {averageRate: formatPercent(responseProductSummarySuspense.data.changeRate)};
+```
 
 ```ts
 // page/product-detail/_function/to-report-content.ts
@@ -3382,7 +3448,9 @@ export const toSignedTone = (value: number | null | undefined): Tone => {
 	}
 	return value > 0 ? "positive" : "negative";
 };
+```
 
+```ts
 // page/detail/_function/format-signed-percent.ts
 export const formatSignedPercent = (value: number | null | undefined) => {
 	if (isNil(value) || !Number.isFinite(value)) {
@@ -3405,7 +3473,9 @@ export const toSignedTone = (value: number): Tone => {
 	}
 	return value > 0 ? "positive" : "negative";
 };
+```
 
+```ts
 // page/detail/_function/format-signed-percent.ts
 /**
  * 부호를 붙인 변화율 표시 문자열
@@ -3603,20 +3673,27 @@ const responseProductList = useProductList();
 **Incorrect 1 (영문이거나 선언 이름을 옮겨 적기만 합니다):**
 
 ```ts
+// util/array/to-sorted-product-refs.ts
 /**
  * This function sorts product refs and returns the result.
  */
 export const toSortedProductRefs = (refs: ProductRef[]): ProductRef[] => {
 	return sortBy(uniq(refs), [(ref) => ref.id]);
 };
+```
 
+```ts
+// util/array/to-products-newest-first.ts
 /**
- * 상품 참조를 정렬하는 함수
+ * 상품을 정렬하는 함수
  */
-export const toSortedProductRefs = (refs: ProductRef[]): ProductRef[] => {
-	return sortBy(uniq(refs), [(ref) => ref.id]);
+export const toProductsNewestFirst = (products: Product[]): Product[] => {
+	return orderBy(products, ["updatedAt", "id"], ["desc", "asc"]);
 };
+```
 
+```ts
+// page/product-tree/_pg-product-tree.tsx
 /**
  * route-local product tree props
  */
@@ -3628,13 +3705,17 @@ export interface PgProductTreeProps {
 **Correct 1 (이름에 없는 정보를 더합니다):**
 
 ```ts
+// util/array/to-sorted-product-refs.ts
 /**
  * 같은 참조 객체의 중복을 제거하고 식별자순으로 정렬해 검토 목록의 순서를 고정한다.
  */
 export const toSortedProductRefs = (refs: ProductRef[]): ProductRef[] => {
 	return sortBy(uniq(refs), [(ref) => ref.id]);
 };
+```
 
+```ts
+// util/array/to-products-newest-first.ts
 /**
  * 저장 응답의 정렬 순서를 그대로 믿지 않고 다시 정렬한다.
  *
@@ -3644,7 +3725,10 @@ export const toSortedProductRefs = (refs: ProductRef[]): ProductRef[] => {
 export const toProductsNewestFirst = (products: Product[]): Product[] => {
 	return orderBy(products, ["updatedAt", "id"], ["desc", "asc"]);
 };
+```
 
+```ts
+// page/product-tree/_pg-product-tree.tsx
 /**
  * route-local product 트리 입력 계약
  */
@@ -3700,11 +3784,15 @@ export const fetchProductList = async (): Promise<Product[]> => {
 **Incorrect 1 (한 줄 블록과 `//`로 선언을 설명합니다):**
 
 ```ts
+// service/product/fetch-product-list.ts
 /** product 목록. 조회 실패는 호출부가 처리한다 */
 export const fetchProductList = async (): Promise<Product[]> => {
 	return await client.get("/products");
 };
+```
 
+```ts
+// service/product/save-product.ts
 // product 저장 요청. 응답 본문이 없어 성공은 상태 코드로만 확인한다
 export const saveProduct = async (product: Product): Promise<void> => {
 	await client.post("/products", product);
@@ -3714,13 +3802,17 @@ export const saveProduct = async (product: Product): Promise<void> => {
 **Correct 1 (같은 내용을 여러 줄 블록으로 고정합니다):**
 
 ```ts
+// service/product/fetch-product-list.ts
 /**
  * product 목록. 조회 실패는 호출부가 처리한다
  */
 export const fetchProductList = async (): Promise<Product[]> => {
 	return await client.get("/products");
 };
+```
 
+```ts
+// service/product/save-product.ts
 /**
  * product 저장 요청. 응답 본문이 없어 성공은 상태 코드로만 확인한다
  */
@@ -3753,11 +3845,14 @@ export const saveProduct = async (product: Product): Promise<void> => {
 
 ### 주석 자리
 
-| 예외 위치 | 주석 위치 · 형태 |
-| --- | --- |
-| 일반 코드 | 해당 줄 바로 위에 `//` |
-| 헤더 문서 주석이 있는 선언 | 헤더 블록 안에 이유 작성 |
-| JSX 자식 | 프레임워크 규칙이 정한 형태 |
+이유를 적을 자리를 고르는 차례입니다.
+
+```mermaid
+flowchart LR
+	q1{"헤더 문서 주석이<br>있는 선언인가?"} -- 아니요 --> q2{"JSX 자식인가?"} -- 아니요 --> r3("해당 줄 바로 위에 //")
+	q1 -- 예 --> r1("헤더 블록 안에 이유")
+	q2 -- 예 --> r2("프레임워크 규칙이<br>정한 형태")
+```
 
 어투와 내용은 `docs-write-korean-comments-about-purpose-and-constraints`를 따릅니다.
 

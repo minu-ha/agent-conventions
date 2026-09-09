@@ -83,15 +83,10 @@ export const PgProductTable = (props: PgProductTableProps) => {
 **Incorrect 2 (사용처가 한 화면뿐인데 공용 훅으로 먼저 빼냅니다):**
 
 ```tsx
-// _hook/use-product-filter-form.ts
-export const useProductFilterForm = () => {
-	const [keyword, setKeyword] = useState("");
-	const [categoryId, setCategoryId] = useState<string>();
+// page/products/pg-products.tsx
+// useProductFilterForm 은 두 useState 를 돌려주기만 하고 이 화면 하나만 부른다
+import {useProductFilterForm} from "@/page/products/_hook/use-product-filter-form";
 
-	return {categoryId, keyword, setCategoryId, setKeyword};
-};
-
-// page/products/pg-products.tsx: 이 훅을 부르는 화면은 여기 하나뿐이다
 export const PgProducts = () => {
 	const productFilterForm = useProductFilterForm();
 

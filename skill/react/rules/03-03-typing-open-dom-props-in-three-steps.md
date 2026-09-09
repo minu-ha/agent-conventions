@@ -32,11 +32,9 @@ flowchart LR
 	q2 -- 예 --> r2("2단계. 그 이름만 Omit으로 빼고<br>인덱스 접근으로 다시 열기")
 ```
 
-1. DOM 계약과 호환되면 `extends <요소>HTMLAttributes<T>`로 씁니다.
-2. 같은 이름 프롭의 타입이 호환되지 않으면 `extends Omit<<요소>HTMLAttributes<T>, "size">`처럼
-   충돌하는 이름만 빼고, 그 프롭을 인덱스 접근으로 다시 엽니다.
-3. 감싸는 요소와 이벤트 대상이 다르거나 자기 프롭을 하나씩 전달하면
-   `extends` 없이 전달할 DOM 프롭만 선언합니다.
+1. `extends <요소>HTMLAttributes<T>`
+2. `extends Omit<<요소>HTMLAttributes<T>, "size">`로 충돌하는 이름만 빼고 인덱스 접근으로 다시 엽니다
+3. `extends` 없이 전달할 DOM 프롭만 선언합니다
 
 | 함께 판단할 내용 | 기준 |
 | --- | --- |

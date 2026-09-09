@@ -33,20 +33,27 @@ tags: docs, comments
 **Incorrect 1 (영문이거나 선언 이름을 옮겨 적기만 합니다):**
 
 ```ts
+// util/array/to-sorted-product-refs.ts
 /**
  * This function sorts product refs and returns the result.
  */
 export const toSortedProductRefs = (refs: ProductRef[]): ProductRef[] => {
 	return sortBy(uniq(refs), [(ref) => ref.id]);
 };
+```
 
+```ts
+// util/array/to-products-newest-first.ts
 /**
- * 상품 참조를 정렬하는 함수
+ * 상품을 정렬하는 함수
  */
-export const toSortedProductRefs = (refs: ProductRef[]): ProductRef[] => {
-	return sortBy(uniq(refs), [(ref) => ref.id]);
+export const toProductsNewestFirst = (products: Product[]): Product[] => {
+	return orderBy(products, ["updatedAt", "id"], ["desc", "asc"]);
 };
+```
 
+```ts
+// page/product-tree/_pg-product-tree.tsx
 /**
  * route-local product tree props
  */
@@ -58,13 +65,17 @@ export interface PgProductTreeProps {
 **Correct 1 (이름에 없는 정보를 더합니다):**
 
 ```ts
+// util/array/to-sorted-product-refs.ts
 /**
  * 같은 참조 객체의 중복을 제거하고 식별자순으로 정렬해 검토 목록의 순서를 고정한다.
  */
 export const toSortedProductRefs = (refs: ProductRef[]): ProductRef[] => {
 	return sortBy(uniq(refs), [(ref) => ref.id]);
 };
+```
 
+```ts
+// util/array/to-products-newest-first.ts
 /**
  * 저장 응답의 정렬 순서를 그대로 믿지 않고 다시 정렬한다.
  *
@@ -74,7 +85,10 @@ export const toSortedProductRefs = (refs: ProductRef[]): ProductRef[] => {
 export const toProductsNewestFirst = (products: Product[]): Product[] => {
 	return orderBy(products, ["updatedAt", "id"], ["desc", "asc"]);
 };
+```
 
+```ts
+// page/product-tree/_pg-product-tree.tsx
 /**
  * route-local product 트리 입력 계약
  */

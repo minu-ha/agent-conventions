@@ -7,6 +7,15 @@
 
 ### 합치는 방법 고르기
 
+합칠 방법을 고르는 차례입니다.
+
+```mermaid
+flowchart LR
+	q1{"결과를 하나로<br>합치는가?"} -- 예 --> q2{"Suspense 쿼리인가?"} -- 예 --> r2("useSuspenseQueries + combine")
+	q1 -- 아니요 --> r1("합친 값을 만들지 않고<br>결과를 따로 읽기")
+	q2 -- 아니요 --> r3("useQueries + combine")
+```
+
 | 상황 | 선택 |
 | --- | --- |
 | Suspense 쿼리 결과를 합침 | `useSuspenseQueries` + `combine`. `isPending`을 만들어 내보내지 않습니다 |

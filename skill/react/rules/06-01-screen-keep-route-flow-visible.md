@@ -70,7 +70,7 @@ export const PgProducts = () => {
 };
 ```
 
-**Correct 1 (라우트 진입은 조립과 경계를 맡고, 섹션은 자신의 쿼리 키로 데이터를 읽습니다):**
+**Correct 1 (라우트 진입은 섹션 조립과 경계만 맡습니다):**
 
 ```tsx
 // page/products/pg-products.tsx
@@ -84,7 +84,11 @@ export const PgProducts = () => {
 		</Fragment>
 	);
 };
+```
 
+**Correct (섹션이 자신의 쿼리 키로 데이터를 읽고 저장까지 소유합니다):**
+
+```tsx
 // page/products/_pg-product-list-section.tsx
 export const PgProductListSection = () => {
 	const [urlParams, setUrlParams] = useQueryStates(productUrlParsers);

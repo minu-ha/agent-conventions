@@ -35,12 +35,19 @@ tags: values, boundaries
 ```ts
 // page/product-detail/pg-product-detail.tsx: ProductSummary 를 만들며 이미 포맷한다
 const productSummary = {averageRate: formatPercent(responseProductSummarySuspense.data.changeRate)};
+```
 
+```ts
 // page/product-detail/_function/to-report-content.ts: 문자열을 다시 숫자로 읽어 다시 포맷한다
 const rows = [{id: "changeRate", value: formatPercent(productSummary.averageRate)}];
 ```
 
 **Correct 1 (경계에서 한 번 포맷하고 소비처는 전달된 값을 그대로 씁니다):**
+
+```ts
+// page/product-detail/pg-product-detail.tsx: ProductSummary 를 만드는 경계에서 한 번 포맷한다
+const productSummary = {averageRate: formatPercent(responseProductSummarySuspense.data.changeRate)};
+```
 
 ```ts
 // page/product-detail/_function/to-report-content.ts

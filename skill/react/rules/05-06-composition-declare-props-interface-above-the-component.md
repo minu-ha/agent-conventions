@@ -38,6 +38,7 @@ tags: composition, props
 **Incorrect 1 (파일 위쪽에 타입을 모으고 내보내지 않습니다):**
 
 ```tsx
+// component/ui/badge/ui-badge.tsx: 칩까지 한 파일에 두고 타입을 위쪽에 모았다
 interface UiBadgeProps {
 	label: string;
 }
@@ -55,9 +56,10 @@ export const UiChip = (props: UiChipProps) => {
 };
 ```
 
-**Correct 1 (각 컴포넌트 바로 위에 선언하고 내보냅니다):**
+**Correct 1 (컴포넌트 파일마다 계약을 바로 위에 선언하고 내보냅니다):**
 
 ```tsx
+// component/ui/badge/ui-badge.tsx
 /**
  * 상태 배지 계약
  */
@@ -70,20 +72,6 @@ export interface UiBadgeProps {
 
 export const UiBadge = (props: UiBadgeProps) => {
 	return <span className={clsx("ui_badge__root")}>{props.label}</span>;
-};
-
-/**
- * 선택 칩 계약
- */
-export interface UiChipProps {
-	/**
-	 * 칩에 표시할 문구
-	 */
-	label: string;
-}
-
-export const UiChip = (props: UiChipProps) => {
-	return <span className={clsx("ui_chip__root")}>{props.label}</span>;
 };
 ```
 

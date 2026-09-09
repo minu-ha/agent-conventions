@@ -21,12 +21,16 @@ tags: naming, config
 환경 값은 루트 `config/env.ts`에서만 읽고 `env_` 상수로 내보냅니다.
 다른 파일은 그 이름을 쓰며 `import.meta.env`와 `process.env`를 직접 읽지 않습니다.
 
-| 값이 바뀌는 때 | 위치 · 이름 |
-| --- | --- |
-| 코드 변경 | `constant` 폴더 |
-| 배포 환경 변경 | `config/env.ts`의 `env_` 상수 |
-| 배포 환경에 따른 기능 플래그 | `env_` 값에서 파생한 `config/feature.ts`의 `feature_` 상수 |
+값이 바뀌는 때로 자리와 이름을 고르는 차례입니다.
 
+```mermaid
+flowchart LR
+	q1{"배포 환경마다<br>달라지는가?"} -- 예 --> q2{"기능을 켜고 끄는<br>플래그인가?"} -- 예 --> r2("config/feature.ts 의<br>feature_ 상수")
+	q1 -- 아니요 --> r1("constant 폴더")
+	q2 -- 아니요 --> r3("config/env.ts 의<br>env_ 상수")
+```
+
+`feature_` 상수는 `env_` 값에서 파생합니다.
 배포 환경은 프로젝트 단위이므로 `config`는 루트에만 둡니다.
 상수 파일과 이름의 형식은 `naming-place-project-constants-in-the-root-constant-folder`를 따릅니다.
 
@@ -43,8 +47,11 @@ tags: naming, config
 ```ts
 // service/product-client.ts
 const baseUrl = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:3000";
+```
 
+```ts
 // service/report-client.ts
+// 다른 파일이 같은 키를 다시 읽고 같은 리터럴로 덮는다
 const reportBaseUrl = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:3000";
 ```
 
@@ -60,7 +67,9 @@ if (!import.meta.env.VITE_API_BASE_URL) {
  * API 서버 주소. 배포 환경마다 다르다
  */
 export const env_api_base_url = import.meta.env.VITE_API_BASE_URL;
+```
 
+```ts
 // service/product-client.ts
 import {env_api_base_url} from "@/config/env";
 

@@ -17,6 +17,7 @@
 **Incorrect 1 (불리언 프롭 조합으로 공용 컴포넌트가 비대해집니다):**
 
 ```tsx
+// component/widget/product-toolbar/wg-product-toolbar.tsx
 export interface WgProductToolbarProps {
 	isCompact?: boolean;
 	isEditing?: boolean;
@@ -37,41 +38,17 @@ export const WgProductToolbar = (props: WgProductToolbarProps) => {
 };
 ```
 
-**Correct 1 (모드를 변형 컴포넌트와 상태 없는 합성으로 분리합니다):**
+**Correct 1 (모드마다 조합을 고정한 변형 컴포넌트를 둡니다):**
 
 ```tsx
-/**
- * 툴바 바깥 틀 부품
- */
-export interface WgProductToolbarRootProps {
-	/**
-	 * 툴바 줄에 늘어놓을 검색과 동작 부품
-	 */
-	children: ReactNode;
-}
-
-const WgProductToolbarRoot = (props: WgProductToolbarRootProps) => {
-	return <header className={clsx("wg_productToolbar__root")}>{props.children}</header>;
-};
-
-// 조합은 아래 두 변형이 이미 제공하므로 사용처가 직접 조립할 `Root`만 공개한다
-export const WgProductToolbar = {
-	Root: WgProductToolbarRoot,
-} as const;
+// component/widget/product-browse-toolbar/wg-product-browse-toolbar.tsx
+import {WgProductToolbar} from "@/component/widget/product-toolbar/wg-product-toolbar";
 
 export const WgProductBrowseToolbar = () => {
 	return (
 		<WgProductToolbar.Root>
 			<WgProductSearchField />
 			<WgProductBrowseActions />
-		</WgProductToolbar.Root>
-	);
-};
-
-export const WgProductEditToolbar = () => {
-	return (
-		<WgProductToolbar.Root>
-			<WgProductEditActions />
 		</WgProductToolbar.Root>
 	);
 };

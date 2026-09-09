@@ -17,10 +17,14 @@ tags: composition, ordering
 컴포넌트 본문은 아래 네 구획 순서로 작성합니다.
 렌더 중에 읽는 값은 사용 위치보다 위에서 선언합니다.
 
-1. 훅 구획에는 라우터, 스토어, 쿼리, 컨텍스트, 커스텀 훅과 `useState`, `useRef`를 둡니다.
-2. 핸들러 구획에는 `handle*` 함수를 둡니다.
-3. 이펙트 구획에는 `useEffect`, `useLayoutEffect`를 둡니다.
-4. 반환 구획에는 이른 반환과 JSX를 둡니다.
+본문 네 구획이 놓이는 차례입니다.
+
+```mermaid
+flowchart TD
+	s1("훅<br>라우터 · 스토어 · 쿼리 · 컨텍스트<br>커스텀 훅 · useState · useRef") --> s2("핸들러<br>handle* 함수")
+	s2 --> s3("이펙트<br>useEffect · useLayoutEffect")
+	s3 --> s4("반환<br>이른 반환과 JSX")
+```
 
 이펙트의 인자와 의존성 배열은 해당 줄에서 평가되므로, 이펙트를 마지막 훅으로 두어 앞선 선언을 참조합니다.
 이른 반환은 모든 훅 뒤에 두어 렌더마다 훅 호출 개수를 유지합니다.

@@ -19,10 +19,13 @@ tags: components, wrappers, layout
 래퍼를 넣으면 부모의 `flex`나 `grid` 아이템이 바뀌어 내부의 `flex`, `grid-area`,
 정렬이 부모 레이아웃에 적용되지 않을 수 있습니다.
 
-| 컴포넌트 | 처리 |
-| --- | --- |
-| 우리가 만든 컴포넌트 | 먼저 `className`을 받도록 고칩니다 |
-| `className`을 받지 않는 외부 라이브러리 컴포넌트 | 마지막 수단으로만 래퍼를 허용합니다. 역할 이름을 붙이고 감싼 이유를 주석으로 남깁니다 |
+여백이나 크기를 줄 방법을 고르는 차례입니다.
+
+```mermaid
+flowchart LR
+	q1{"우리가 만든<br>컴포넌트인가?"} -- 예 --> r1("className을 받도록 고침")
+	q1 -- 아니요 --> r2("마지막 수단으로 래퍼<br>역할 이름과 감싼 이유 주석")
+```
 
 역할 없는 래퍼는 `naming-name-elements-and-modifiers-by-role`이 요구하는 이름도 지을 수 없습니다.
 

@@ -36,6 +36,7 @@ flowchart LR
 | 라이브러리와 성능 | 외부 라이브러리 생명주기 어댑터 · 가상 스크롤 · 전환 · 지연 값 |
 
 책임 표는 `screen-extract-local-section-components-for-runtime-boundaries`와 같습니다.
+
 ### `widget` · `ui` 전용 책임
 
 아래 두 책임은 `widget`, `ui`에만 적용합니다.

@@ -17,7 +17,6 @@ tags: naming, constant
 ### 상수 자리 고르기
 
 상수 위치는 사용처 수가 아니라 소유자로 정합니다.
-소유자를 지워도 남는 값은 루트에, 함께 사라지는 값은 그 소유자 아래에 둡니다.
 
 자리를 고르는 차례입니다.
 
@@ -61,8 +60,11 @@ const request_timeout_ms = 20_000;
 
 const productClient = createClient({timeoutMs: request_timeout_ms});
 const productQuery = useProductQuery({client: productClient, pageSize: default_page_size});
+```
 
+```ts
 // page/orders/pg-orders.tsx
+// 다른 화면이 같은 값을 다시 선언한다
 const default_page_size = 20;
 
 const orderQuery = useOrderQuery({pageSize: default_page_size});
@@ -77,7 +79,9 @@ import {pagination_default_page_size} from "@/constant/pagination";
 
 const productClient = createClient({timeoutMs: api_request_timeout_ms});
 const productQuery = useProductQuery({client: productClient, pageSize: pagination_default_page_size});
+```
 
+```ts
 // page/orders/pg-orders.tsx
 import {pagination_default_page_size} from "@/constant/pagination";
 

@@ -22,6 +22,7 @@ tags: composition, perf
 **Incorrect 1 (렌더마다 새 컴포넌트 타입을 만듭니다):**
 
 ```tsx
+// component/widget/user-profile-card/wg-user-profile-card.tsx
 export const WgUserProfileCard = (props: WgUserProfileCardProps) => {
 	const Avatar = () => {
 		return (
@@ -44,9 +45,25 @@ export const WgUserProfileCard = (props: WgUserProfileCardProps) => {
 };
 ```
 
-**Correct 1 (컴포넌트를 바깥으로 분리하고 프롭스로 넘깁니다):**
+**Correct 1 (형제 파일로 뺀 컴포넌트를 부르고 값은 프롭스로 넘깁니다):**
 
 ```tsx
+// component/widget/user-profile-card/wg-user-profile-card.tsx
+import {WgUserProfileAvatar} from "@/component/widget/user-profile-card/_wg-user-profile-avatar";
+
+export const WgUserProfileCard = (props: WgUserProfileCardProps) => {
+	return (
+		<section>
+			<WgUserProfileAvatar src={props.user.avatarUrl} alt={props.user.name} theme={props.theme} />
+		</section>
+	);
+};
+```
+
+**Correct (뺀 아바타는 소유자 폴더의 형제 파일에 둡니다):**
+
+```tsx
+// component/widget/user-profile-card/_wg-user-profile-avatar.tsx
 /**
  * 사용자 프로필 아바타 프롭스
  */
@@ -75,14 +92,6 @@ export const WgUserProfileAvatar = (props: WgUserProfileAvatarProps) => {
 			src={props.src}
 			alt={props.alt}
 		/>
-	);
-};
-
-export const WgUserProfileCard = (props: WgUserProfileCardProps) => {
-	return (
-		<section>
-			<WgUserProfileAvatar src={props.user.avatarUrl} alt={props.user.name} theme={props.theme} />
-		</section>
 	);
 };
 ```

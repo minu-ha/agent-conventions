@@ -15,7 +15,6 @@ tags: ownership, widget, naming
 **Impact: CRITICAL (공용 책임과 화면 전용 책임이 같은 레이어에 섞이지 않습니다)**
 
 컴포넌트의 레이어는 사용 횟수나 조립 규모가 아니라 **무엇을 아는지**로 나눕니다.
-먼저 `page` 조건을 확인하고, 해당하지 않으면 도메인 지식으로 구분합니다.
 
 ### 판정 차례
 
@@ -28,7 +27,7 @@ flowchart LR
 	q2 -- 예 --> r2("widget")
 ```
 
-**1순위**
+아래 조건 중 하나라도 걸리면 `page`입니다.
 
 | 조건 | 레이어 |
 | --- | --- |
@@ -36,12 +35,8 @@ flowchart LR
 | 쿼리 · 뮤테이션 · 라우터 훅 · 화면 스토어를 직접 호출함 | `page` |
 | 해당 화면의 `Suspense` 경계 · 폼 프로바이더 · 모달을 여는 조건을 소유함 | `page` |
 
-**2순위**
-
-| 조건 | 레이어 |
-| --- | --- |
-| 화면은 모르고 도메인만 앎 | `widget`. 이름에 도메인 단어가 남아도 됩니다 |
-| 도메인도 화면도 모름 | `ui` |
+하나도 걸리지 않으면 도메인을 아는 쪽이 `widget`, 모르는 쪽이 `ui`입니다.
+`widget`은 이름에 도메인 단어가 남아도 됩니다.
 
 ### 근거가 되지 않는 조건
 
@@ -118,15 +113,21 @@ export const WgLineChart = (props: WgLineChartProps) => {
 };
 ```
 
-**Correct 3 (도메인 지식이 없는 조합은 `ui`, 있는 조합은 `widget`에 둡니다):**
+**Correct 3 (도메인 지식이 없는 조합은 `ui`에 둡니다):**
 
 ```tsx
 // component/ui/line-chart/ui-line-chart.tsx
 export const UiLineChart = (props: UiLineChartProps) => {
 	return <svg className={clsx("ui_lineChart__root")}>{props.children}</svg>;
 };
+```
 
+**Correct (도메인을 아는 조립은 `widget`이 맡아 `ui` 부품을 씁니다):**
+
+```tsx
 // component/widget/product-trend-chart/wg-product-trend-chart.tsx
+import {UiLineChart} from "@/component/ui/line-chart/ui-line-chart";
+
 export const WgProductTrendChart = (props: WgProductTrendChartProps) => {
 	return <UiLineChart points={toChartPoints(props.dailyCounts)} />;
 };

@@ -14,11 +14,15 @@
 **Incorrect 1 (한 줄 블록과 `//`로 선언을 설명합니다):**
 
 ```ts
+// service/product/fetch-product-list.ts
 /** product 목록. 조회 실패는 호출부가 처리한다 */
 export const fetchProductList = async (): Promise<Product[]> => {
 	return await client.get("/products");
 };
+```
 
+```ts
+// service/product/save-product.ts
 // product 저장 요청. 응답 본문이 없어 성공은 상태 코드로만 확인한다
 export const saveProduct = async (product: Product): Promise<void> => {
 	await client.post("/products", product);
@@ -28,18 +32,12 @@ export const saveProduct = async (product: Product): Promise<void> => {
 **Correct 1 (같은 내용을 여러 줄 블록으로 고정합니다):**
 
 ```ts
+// service/product/fetch-product-list.ts
 /**
  * product 목록. 조회 실패는 호출부가 처리한다
  */
 export const fetchProductList = async (): Promise<Product[]> => {
 	return await client.get("/products");
-};
-
-/**
- * product 저장 요청. 응답 본문이 없어 성공은 상태 코드로만 확인한다
- */
-export const saveProduct = async (product: Product): Promise<void> => {
-	await client.post("/products", product);
 };
 ```
 

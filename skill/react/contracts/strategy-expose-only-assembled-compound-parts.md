@@ -17,15 +17,14 @@
 **Incorrect 1 (내부 구조를 전부 공개해 계약으로 굳힙니다):**
 
 ```tsx
+// component/ui/panel/ui-panel.tsx
+import {UiPanelBody} from "@/component/ui/panel/_ui-panel-body";
+import {UiPanelHeader} from "@/component/ui/panel/_ui-panel-header";
+import {UiPanelHeaderInner} from "@/component/ui/panel/_ui-panel-header-inner";
+import {UiPanelRoot} from "@/component/ui/panel/_ui-panel-root";
+import {UiPanelSpacer} from "@/component/ui/panel/_ui-panel-spacer";
+
 // 사용처가 끼워 넣을 자리가 없는 래퍼와 여백 보정용 DOM까지 이름이 붙어 나갔다
-const UiPanelHeaderInner = (props: UiPanelPartProps) => {
-	return <div className={clsx("ui_panel__headerInner")}>{props.children}</div>;
-};
-
-const UiPanelSpacer = () => {
-	return <div className={clsx("ui_panel__spacer")} />;
-};
-
 export const UiPanel = {
 	Root: UiPanelRoot,
 	Header: UiPanelHeader,
@@ -38,11 +37,12 @@ export const UiPanel = {
 **Correct 1 (조립에 필요한 것만 공개합니다):**
 
 ```tsx
-// 단순 클래스 래퍼는 모듈 안에 남기고 여백 보정용 DOM은 만들지 않는다
-const UiPanelHeaderInner = (props: UiPanelPartProps) => {
-	return <div className={clsx("ui_panel__headerInner")}>{props.children}</div>;
-};
+// component/ui/panel/ui-panel.tsx
+import {UiPanelBody} from "@/component/ui/panel/_ui-panel-body";
+import {UiPanelHeader} from "@/component/ui/panel/_ui-panel-header";
+import {UiPanelRoot} from "@/component/ui/panel/_ui-panel-root";
 
+// 단순 클래스 래퍼는 헤더 부품만 쓰고 여백 보정용 DOM은 만들지 않는다
 export const UiPanel = {
 	Root: UiPanelRoot,
 	Header: UiPanelHeader,

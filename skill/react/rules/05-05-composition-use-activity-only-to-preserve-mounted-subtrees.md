@@ -14,8 +14,18 @@ tags: composition, jsx
 
 **Impact: HIGH (상태 보존과 초기화 요구에 맞는 렌더 방식을 선택합니다)**
 
-기본은 조건부 렌더링입니다. 리액트 19.2 이상에서 숨겼다 다시 보여 줄 때
-하위 트리 상태를 보존해야 하는 경우에만 `<Activity>`를 씁니다. 이전 버전은 조건부 렌더링을 씁니다.
+기본은 조건부 렌더링입니다.
+
+### 렌더 방식 고르기
+
+렌더 방식을 고르는 차례입니다.
+
+```mermaid
+flowchart LR
+	q1{"리액트 19.2<br>이상인가?"} -- 예 --> q2{"다시 보일 때 하위 트리<br>상태를 보존해야 하는가?"} -- 예 --> r2("Activity 로 숨기기")
+	q1 -- 아니요 --> r1("조건부 렌더링")
+	q2 -- 아니요 --> r1
+```
 
 ### 두 방식의 차이
 
@@ -67,28 +77,32 @@ return (
 **Incorrect 2 (다시 보여 줄 때 필요한 상태를 조건부 렌더링으로 잃습니다):**
 
 ```tsx
-// 사이드바: 접어 둔 노드와 스크롤 위치를 자기 상태로 갖는다
-const PgProductSidebar = () => {
+// page/products/_pg-product-sidebar.tsx: 접어 둔 노드와 스크롤 위치를 자기 상태로 갖는다
+export const PgProductSidebar = () => {
 	const [expandedItems, setExpandedItems] = useState<string[]>([]);
 
 	return <UiTree expandedItems={expandedItems} onExpandedItemsChange={setExpandedItems} />;
 };
+```
 
-// 사이드바를 소유한 화면: 닫으면 해제돼서 접어 둔 노드와 스크롤 위치가 사라진다
+```tsx
+// page/products/pg-products.tsx: 닫으면 해제돼서 접어 둔 노드와 스크롤 위치가 사라진다
 return isSidebarOpen && <PgProductSidebar />;
 ```
 
 **Correct 2 (다시 보여 줄 때 하위 트리 상태를 보존해야 하는 경우에만 씁니다):**
 
 ```tsx
-// 사이드바: 접어 둔 노드와 스크롤 위치를 자기 상태로 갖는다
-const PgProductSidebar = () => {
+// page/products/_pg-product-sidebar.tsx: 접어 둔 노드와 스크롤 위치를 자기 상태로 갖는다
+export const PgProductSidebar = () => {
 	const [expandedItems, setExpandedItems] = useState<string[]>([]);
 
 	return <UiTree expandedItems={expandedItems} onExpandedItemsChange={setExpandedItems} />;
 };
+```
 
-// 사이드바를 소유한 화면: 닫아도 상태와 DOM을 보존하고 이펙트는 정리한다
+```tsx
+// page/products/pg-products.tsx: 닫아도 상태와 DOM을 보존하고 이펙트는 정리한다
 return (
 	<Activity mode={isSidebarOpen ? "visible" : "hidden"}>
 		<PgProductSidebar />

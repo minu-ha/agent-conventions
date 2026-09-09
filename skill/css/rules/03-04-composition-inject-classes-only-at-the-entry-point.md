@@ -22,6 +22,14 @@ tags: components, entry-point, class-props
 
 ### 사용처가 바꾸는 자리
 
+방법을 고르는 차례입니다.
+
+```mermaid
+flowchart LR
+	q1{"최상위의 배치 · 여백 ·<br>크기를 바꾸는가?"} -- 예 --> r1("받은 className을<br>자기 최상위 클래스와 합침")
+	q1 -- 아니요 --> r2("variant 프롭을 받아<br>필요한 노드마다 수정자")
+```
+
 | 사용처가 바꾸려는 것 | 방법 |
 | --- | --- |
 | 최상위의 배치, 여백, 크기 | 받은 `className`을 자기 최상위 클래스와 `clsx()`로 합칩니다 |

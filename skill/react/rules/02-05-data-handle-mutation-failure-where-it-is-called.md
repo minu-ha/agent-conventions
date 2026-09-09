@@ -21,6 +21,14 @@ tags: data, mutation, errors
 
 ### 호출 방식 고르기
 
+호출 방식을 고르는 차례입니다.
+
+```mermaid
+flowchart LR
+	q1{"결과를 기다린 뒤<br>핸들러가 이어 실행되는가?"} -- 아니요 --> r1("mutate 와<br>onError · onSuccess")
+	q1 -- 예 --> r2("mutateAsync 와 try/catch")
+```
+
 | 상황 | 선택 |
 | --- | --- |
 | 호출 뒤 핸들러가 더 할 일이 없음 | `mutate` + `onError`, `onSuccess` |

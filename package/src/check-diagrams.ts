@@ -45,6 +45,21 @@ export const checkDiagrams = async (): Promise<DiagramReport[]> => {
 					return;
 				}
 
+				// 격자 렌더러는 라벨 안의 괄호에서 글을 잘라 낸다. 라벨에 괄호가 있으면 오류로 잡는다.
+				const parenthesizedLabel = [...fence.code.matchAll(/(?<=[[({])"([^"\n]*)"/g)].find((match) => /[()]/.test(match[1] ?? ""));
+
+				if (parenthesizedLabel) {
+					reports.push({
+						skill: skillName,
+						ruleId: rule.fileName,
+						index,
+						columns: 0,
+						rows: 0,
+						error: `라벨에 괄호: ${parenthesizedLabel[0]}`,
+					});
+					return;
+				}
+
 				try {
 					const grid = renderMermaidASCII(widenCjk(fence.code), {paddingX: 3, paddingY: 2, boxBorderPadding: 1, colorMode: "none"});
 					const lines = grid.replace(/\s+$/, "").split("\n");

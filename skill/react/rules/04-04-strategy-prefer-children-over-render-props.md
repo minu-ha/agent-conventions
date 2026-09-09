@@ -18,10 +18,13 @@ tags: strategy, composition, components
 
 ### 슬롯 고르기
 
-| 상황 | 선택 |
-| --- | --- |
-| 부모가 자식 자리만 열어 줌 | `children`과 네임스페이스 슬롯 부품 |
-| 부모가 항목 · 순번 · 상태 같은 실행 문맥을 자식에게 전달해야 함 | 이때만 `renderHeader`, `renderFooter` 같은 렌더 프롭을 씁니다 |
+슬롯을 고르는 차례입니다.
+
+```mermaid
+flowchart LR
+	q1{"부모가 항목 · 순번 · 상태 같은<br>실행 문맥을 자식에게 넘기는가?"} -- 아니요 --> r1("children 과<br>네임스페이스 슬롯 부품")
+	q1 -- 예 --> r2("renderHeader · renderFooter<br>같은 렌더 프롭")
+```
 
 ### 슬롯 계약 이름
 
@@ -35,6 +38,7 @@ tags: strategy, composition, components
 **Incorrect 1 (정적인 구조를 렌더 프롭으로 조립합니다):**
 
 ```tsx
+// component/ui/panel/ui-panel.tsx
 export interface UiPanelProps {
 	renderHeader?: () => ReactNode;
 	renderFooter?: () => ReactNode;
@@ -51,9 +55,26 @@ export const UiPanel = (props: UiPanelProps) => {
 };
 ```
 
-**Correct 1 (`children`과 네임스페이스 슬롯 부품으로 구조를 드러냅니다):**
+**Correct 1 (부품이 `children`으로 사용처가 넣을 자리를 엽니다):**
 
 ```tsx
+// component/ui/panel/_ui-panel-root.tsx
+import {clsx} from "clsx";
+
+import type {UiPanelPartProps} from "@/component/ui/panel/_type/panel-part";
+
+/**
+ * 패널 틀. 나머지 부품은 이 안에서만 그린다
+ */
+export const UiPanelRoot = (props: UiPanelPartProps) => {
+	return <section className={clsx("ui_panel__root")}>{props.children}</section>;
+};
+```
+
+**Correct (부품 계약, 진입 파일, 화면 조립을 파일마다 나눕니다):**
+
+```ts
+// component/ui/panel/_type/panel-part.ts
 /**
  * 패널 부품 셋이 나눠 쓰는 계약
  *
@@ -65,35 +86,29 @@ export interface UiPanelPartProps {
 	 */
 	children: ReactNode;
 }
+```
 
-/**
- * 패널 틀
- */
-const UiPanelRoot = (props: UiPanelPartProps) => {
-	return <section className={clsx("ui_panel__root")}>{props.children}</section>;
-};
+```tsx
+// component/ui/panel/ui-panel.tsx
+import {UiPanelFooter} from "@/component/ui/panel/_ui-panel-footer";
+import {UiPanelHeader} from "@/component/ui/panel/_ui-panel-header";
+import {UiPanelRoot} from "@/component/ui/panel/_ui-panel-root";
 
-/**
- * 패널 위쪽 제목 자리
- */
-const UiPanelHeader = (props: UiPanelPartProps) => {
-	return <header className={clsx("ui_panel__header")}>{props.children}</header>;
-};
-
-/**
- * 패널 아래쪽 동작 자리
- */
-const UiPanelFooter = (props: UiPanelPartProps) => {
-	return <footer className={clsx("ui_panel__footer")}>{props.children}</footer>;
-};
-
+// Header 와 Footer 도 Root 와 같은 형태로 children 만 받는다
 export const UiPanel = {
 	Root: UiPanelRoot,
 	Header: UiPanelHeader,
 	Footer: UiPanelFooter,
 } as const;
+```
 
-export const PgProductScreen = () => {
+```tsx
+// page/products/pg-products.tsx
+import {Fragment} from "react";
+
+import {UiPanel} from "@/component/ui/panel/ui-panel";
+
+export const PgProducts = () => {
 	return (
 		<Fragment>
 			<UiPanel.Root>
