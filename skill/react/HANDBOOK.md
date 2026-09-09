@@ -5097,18 +5097,7 @@ JSX 자식 자리의 주석은 여러 줄 블록으로 씁니다.
 | `style/useFragmentSyntax` | `recommended`에 없으며, 켜면 `Fragment`를 요구하는 `react/composition-name-fragments-explicitly`와 충돌합니다 |
 | `style/useReactFunctionComponents` | 도메인 `all`에만 있고 기본 심각도가 `info`라 통과 여부를 판정하지 못합니다 |
 
-**Incorrect 1 (리액트 도메인 설정이 없습니다):**
-
-```json
-{
-	"linter": {
-		"enabled": true,
-		"rules": {"preset": "recommended"}
-	}
-}
-```
-
-**Correct 1 (도메인과 추가 검사를 켜고 레이어, 라우트 `overrides`를 설정합니다):**
+**Correct (도메인과 추가 검사를 켜고 레이어, 라우트 `overrides`를 설정합니다):**
 
 ```json
 {

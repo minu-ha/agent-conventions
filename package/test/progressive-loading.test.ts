@@ -458,10 +458,15 @@ test("generated rule contract rejects missing boundaries and oversized normative
 	unfencedExamplesRule.body = "## Observe State\n\n**Impact: HIGH (State impact.)**\n\nNormative guidance.\n\n**Incorrect**\n\n**Correct**";
 	assert.throws(() => generateRuleContractMarkdown(unfencedExamplesRule), /state-observe.*Incorrect.*fenced example/i);
 
-	const reversedExamplesRule = createRoutingDocument().rules[0];
-	reversedExamplesRule.body =
-		"## Observe State\n\n**Impact: HIGH (State impact.)**\n\nNormative guidance.\n\n**Correct**\n\n```ts\nconst good = true;\n```\n\n**Incorrect**\n\n```ts\nconst bad = true;\n```";
-	assert.throws(() => generateRuleContractMarkdown(reversedExamplesRule), /state-observe.*Correct.*before.*Incorrect/i);
+	// 도구 설정처럼 대비가 뜻이 없는 규칙은 Correct 만 둘 수 있다. MEDIUM 계약은 그 첫 Correct 를 싣는다.
+	const correctOnlyRule = createRoutingDocument().rules[0];
+	correctOnlyRule.impact = "MEDIUM";
+	correctOnlyRule.body =
+		'## Observe State\n\n**Impact: MEDIUM (State impact.)**\n\nNormative guidance.\n\n**Correct (설정을 고정합니다):**\n\n```json\n{"linter": true}\n```';
+	const correctOnlyContract = generateRuleContractMarkdown(correctOnlyRule);
+	assert.match(correctOnlyContract, /\*\*Correct \(설정을 고정합니다\):\*\*/);
+	assert.match(correctOnlyContract, /```json\n\{"linter": true\}\n```/);
+	assert.doesNotMatch(correctOnlyContract, /Incorrect/);
 
 	const misspelledCriticalRule = createRoutingDocument().rules[2];
 	misspelledCriticalRule.impact = "CRITCAL";

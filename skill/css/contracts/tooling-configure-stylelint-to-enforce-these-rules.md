@@ -46,19 +46,7 @@
 
 `@media` 방향은 `css/layout-write-breakpoints-desktop-first`가 함께 판단합니다.
 
-**Incorrect 1 (결합자 개수로 깊이를 막으려 합니다):**
-
-```js
-export default {
-	extends: ["stylelint-config-standard"],
-	rules: {
-		// .MuiTableHead-root > tr > th 같은 라이브러리 DOM 을 잡아 예외 주석만 늘어난다
-		"selector-max-combinators": 1,
-	},
-};
-```
-
-**Correct 1 (공통 규칙에 디렉터리별 접두사 `overrides`를 더합니다):**
+**Correct (공통 규칙에 디렉터리별 접두사 `overrides`를 더합니다):**
 
 ```js
 /**

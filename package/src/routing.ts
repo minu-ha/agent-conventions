@@ -172,11 +172,11 @@ const joinFoldedImpactDeclaration = (lines: readonly string[]): string[] => {
  */
 interface NormativeRuleContract {
 	/**
-	 * 첫 Incorrect 앞 규범 산문. 헤딩은 `#`으로 올린다
+	 * 첫 예시 라벨(Incorrect 또는 Correct) 앞 규범 산문. 헤딩은 `#`으로 올린다
 	 */
 	normativeBody: string;
 	/**
-	 * 첫 Incorrect 라벨부터 첫 Correct 펜스가 닫히는 줄까지. MEDIUM contract 에 그대로 실린다
+	 * 첫 예시 라벨부터 첫 Correct 펜스가 닫히는 줄까지. Incorrect 가 없는 규칙은 첫 Correct 하나다. MEDIUM contract 에 그대로 실린다
 	 */
 	firstExamplePair: string;
 }
@@ -195,7 +195,6 @@ const readNormativeRuleContract = (rule: SkillRule): NormativeRuleContract => {
 	let incorrectBoundaryOffset: number | undefined;
 	let firstExamplePairEndOffset: number | undefined;
 	let pendingExampleMarker: "Incorrect" | "Correct" | undefined;
-	let incorrectExampleFound = false;
 	let correctMarkerFound = false;
 
 	for (const [lineIndex, line] of lines.entries()) {
@@ -229,9 +228,7 @@ const readNormativeRuleContract = (rule: SkillRule): NormativeRuleContract => {
 					throw new Error(`${getRuleId(rule)}: ${activeExampleMarker} fenced example must contain non-whitespace content.`);
 				}
 
-				if (activeExampleMarker === "Incorrect") {
-					incorrectExampleFound = true;
-				} else if (activeExampleMarker === "Correct") {
+				if (activeExampleMarker === "Correct") {
 					if (!correctMarkerFound) {
 						firstExamplePairEndOffset = currentOffset + line.length;
 					}
@@ -254,10 +251,9 @@ const readNormativeRuleContract = (rule: SkillRule): NormativeRuleContract => {
 					throw new Error(`${getRuleId(rule)}: ${pendingExampleMarker} marker must be followed by a fenced example.`);
 				}
 
-				if (marker[1] === "Incorrect" && incorrectBoundaryOffset === undefined) {
+				// 첫 예시 라벨이 규범과 예시의 경계다. 도구 설정처럼 대비가 뜻이 없는 규칙은 Correct 만 둘 수 있다.
+				if (incorrectBoundaryOffset === undefined) {
 					incorrectBoundaryOffset = currentOffset;
-				} else if (marker[1] === "Correct" && incorrectBoundaryOffset === undefined) {
-					throw new Error(`${getRuleId(rule)}: Correct example marker cannot appear before the first Incorrect boundary.`);
 				}
 
 				pendingExampleMarker = marker[1] as "Incorrect" | "Correct";
@@ -282,11 +278,11 @@ const readNormativeRuleContract = (rule: SkillRule): NormativeRuleContract => {
 	}
 
 	if (incorrectBoundaryOffset === undefined) {
-		throw new Error(`${getRuleId(rule)}: compact contract requires an anchored Incorrect example boundary.`);
+		throw new Error(`${getRuleId(rule)}: compact contract requires an anchored Incorrect or Correct example boundary.`);
 	}
 
-	if (!incorrectExampleFound || !correctMarkerFound || firstExamplePairEndOffset === undefined) {
-		throw new Error(`${getRuleId(rule)}: full rule body requires fenced Incorrect and Correct examples after anchored markers.`);
+	if (!correctMarkerFound || firstExamplePairEndOffset === undefined) {
+		throw new Error(`${getRuleId(rule)}: full rule body requires at least one fenced Correct example after the first example marker.`);
 	}
 
 	const normativeLines = joinFoldedImpactDeclaration(

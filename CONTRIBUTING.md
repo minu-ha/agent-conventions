@@ -57,15 +57,16 @@ skill/react/
    규칙 ID는 번호를 뺀 `<prefix>-<설명>`이라 중간 삽입으로 번호가 밀려도 참조는 깨지지 않는다.
    react처럼 번호를 쓰는 skill은 섹션 안에서 1부터 연속해야 하고 `validate`가 검사한다.
 3. frontmatter를 채운다. `appliesWhen`은 관찰 가능한 변경으로 쓴다.
-4. 본문을 쓴다. 규범과 예외를 첫 `Incorrect` 앞에서 끝낸다.
+4. 본문을 쓴다. 규범과 예외를 첫 예시 라벨 앞에서 끝낸다.
 5. progressive skill 이면 `routing-evals.json`에 걸리는 시나리오를 넣는다.
 6. [5절](#5-명령) 명령으로 재생성하고 검증한다.
 
 주의할 것.
 
 - `## 1. Ownership and Boundaries (ownership)` 섹션이면 파일명은 `ownership-*.md`.
-- 첫 `Incorrect` 뒤에는 `Incorrect` / `Correct` 라벨, 코드 펜스, 빈 줄만 온다.
-  생성되는 `contracts/*.md`가 첫 `Incorrect` 앞부분을 규범으로 뽑고, `MEDIUM`은 그 뒤 첫 짝만 덧붙이기 때문이다.
+- 첫 예시 라벨 뒤에는 `Incorrect` / `Correct` 라벨, 코드 펜스, 빈 줄만 온다.
+  생성되는 `contracts/*.md`가 첫 예시 앞부분을 규범으로 뽑고, `MEDIUM`은 그 뒤 첫 짝(또는 첫 Correct)만 덧붙이기 때문이다.
+- `Correct`는 하나 이상 있어야 하고 `Incorrect`는 선택이다. 도구 설정처럼 "이렇게 쓴다"만 있고 대비가 뜻이 없는 규칙은 `Correct`만 둔다.
 - 한 쌍은 한 변수만 바꾼다. `Incorrect`와 `Correct`는 그 규칙이 말하는 것 하나만 달라야 독자가 무엇이 규칙인지 짚는다.
   이름, 구조, 무관한 코드를 함께 바꾸지 않는다.
 - 예시 차례는 **짝 → 홀로 선 Incorrect → 홀로 선 Correct** 다. 짝은 `**Incorrect 1 (…):**` 바로 뒤에 `**Correct 1 (…):**`이 오고

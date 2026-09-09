@@ -252,8 +252,9 @@ const validateLocalSkill = async (skillPaths: SkillPaths): Promise<LocalValidati
 			);
 		}
 
-		if (!rule.body.includes("**Incorrect") || !rule.body.includes("**Correct")) {
-			throw new Error(`${skillPaths.skillName}: ${rule.fileName} must contain Incorrect and Correct sections.`);
+		// Correct 는 하나 이상 있어야 한다. Incorrect 는 선택이다 — 도구 설정처럼 대비가 뜻이 없는 규칙은 Correct 만 둔다.
+		if (!rule.body.includes("**Correct")) {
+			throw new Error(`${skillPaths.skillName}: ${rule.fileName} must contain at least one Correct section.`);
 		}
 	}
 
