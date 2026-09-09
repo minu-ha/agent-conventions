@@ -30,7 +30,7 @@ tags: state, naming, url
 파일명 · 심볼 표기는 `typescript/naming-use-consistent-file-and-symbol-naming`을 따릅니다.
 값을 주소에 둘지는 `state-choose-state-tools-by-source-of-truth`로 판단합니다.
 
-**Incorrect (파서 묶음의 역할이 이름에 드러나지 않습니다):**
+**Incorrect 1 (파서 묶음의 역할이 이름에 드러나지 않습니다):**
 
 ```ts
 // page/products/_constant/product-search.ts
@@ -40,7 +40,7 @@ export const productSearch = {
 };
 ```
 
-**Correct (파서 묶음은 `<범위>UrlParsers`로 소유자 `_constant` 폴더에 둡니다):**
+**Correct 1 (파서 묶음은 `<범위>UrlParsers`로 소유자 `_constant` 폴더에 둡니다):**
 
 ```ts
 // page/products/_constant/product-url-parsers.ts
@@ -53,7 +53,7 @@ export const productUrlParsers = {
 };
 ```
 
-**Incorrect (파싱 결과에 플랫폼 객체와 서버 요청용 이름을 섞어 씁니다):**
+**Incorrect 2 (파싱 결과에 플랫폼 객체와 서버 요청용 이름을 섞어 씁니다):**
 
 ```tsx
 const [searchParams, setSearchParams] = useQueryStates(productUrlParsers);
@@ -62,7 +62,7 @@ const query = searchParams.keyword;
 <UiSearchInput value={query} />;
 ```
 
-**Correct (파싱을 거친 값은 `urlParams`이고 별칭 없이 체인으로 읽습니다):**
+**Correct 2 (파싱을 거친 값은 `urlParams`이고 별칭 없이 체인으로 읽습니다):**
 
 ```tsx
 const [urlParams, setUrlParams] = useQueryStates(productUrlParsers);

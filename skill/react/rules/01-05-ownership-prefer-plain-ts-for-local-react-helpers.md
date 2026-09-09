@@ -32,7 +32,7 @@ tags: ownership, hooks, widget
 추출한 파일의 배치는 `ownership-place-owner-files-in-role-folders`를,
 내보내기와 가져오기 형태는 `typescript/naming-use-direct-imports-and-public-entry-points`를 따릅니다.
 
-**Incorrect (순수 지역 계산을 커스텀 훅으로 감쌉니다):**
+**Incorrect 1 (순수 지역 계산을 커스텀 훅으로 감쌉니다):**
 
 ```tsx
 // page/products/_hook/use-media-upload-payload.ts
@@ -55,7 +55,7 @@ export const PgMediaUploadPanel = (props: PgMediaUploadPanelProps) => {
 };
 ```
 
-**Correct (순수 계산은 소유자의 `_function` 폴더에 두고 핸들러가 직접 부릅니다):**
+**Correct 1 (순수 계산은 소유자의 `_function` 폴더에 두고 핸들러가 직접 부릅니다):**
 
 ```tsx
 // page/products/_function/to-media-upload-payload.ts

@@ -33,7 +33,7 @@ const WgUserCard = ({ label, onSave }: WgUserCardProps) => {
 };
 ```
 
-**Incorrect (본문 첫 줄에서 구조분해합니다):**
+**Incorrect 1 (본문 첫 줄에서 구조분해합니다):**
 
 ```tsx
 const WgUserCard = (props: WgUserCardProps) => {
@@ -42,7 +42,7 @@ const WgUserCard = (props: WgUserCardProps) => {
 };
 ```
 
-**Correct (`props`로 읽어 출처를 남깁니다):**
+**Correct 1 (`props`로 읽어 출처를 남깁니다):**
 
 ```tsx
 const WgUserCard = (props: WgUserCardProps) => {

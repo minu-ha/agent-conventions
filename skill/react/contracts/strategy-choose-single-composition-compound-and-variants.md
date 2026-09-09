@@ -21,7 +21,7 @@
 렌더 프롭은 `strategy-prefer-children-over-render-props`를,
 공개 부품의 범위는 `strategy-expose-only-assembled-compound-parts`를 따릅니다.
 
-**Incorrect (단일 · 합성 · 변형을 구분하지 않고 한 컴포넌트에 모두 구현합니다):**
+**Incorrect 1 (단일 · 합성 · 변형을 구분하지 않고 한 컴포넌트에 모두 구현합니다):**
 
 ```tsx
 export interface WgProfileDialogProps {
@@ -47,7 +47,7 @@ export const WgProfileDialog = (props: WgProfileDialogProps) => {
 };
 ```
 
-**Correct (1단계 — 확장이 필요 없으면 단일 컴포넌트로 둡니다):**
+**Correct 1 (1단계 — 확장이 필요 없으면 단일 컴포넌트로 둡니다):**
 
 ```tsx
 /**

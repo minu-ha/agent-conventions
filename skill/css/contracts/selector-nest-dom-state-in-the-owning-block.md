@@ -24,7 +24,7 @@ DOM 상태 가상 클래스는 해당 요소의 **조건 없는 기본 클래스
 | `selector-disallowed-list` | 최상위에 다시 선언한 상태 가상 클래스 |
 | `property-disallowed-list` | 지역 변수 선언 |
 
-**Incorrect (가상 클래스를 최상위 선택자로 다시 엽니다):**
+**Incorrect 1 (가상 클래스를 최상위 선택자로 다시 엽니다):**
 
 ```css
 .wg_siteHeader__brandLink {
@@ -41,7 +41,7 @@ DOM 상태 가상 클래스는 해당 요소의 **조건 없는 기본 클래스
 }
 ```
 
-**Correct (기본 블록 안에서 각 상태를 별도의 `&:` 블록으로 선언합니다):**
+**Correct 1 (기본 블록 안에서 각 상태를 별도의 `&:` 블록으로 선언합니다):**
 
 ```css
 .wg_siteHeader__brandLink {

@@ -41,7 +41,7 @@ tags: absence
 채우는 위치는 `absence-resolve-defaults-at-the-boundary`가 정합니다.
 일반 숫자 리터럴은 `values-declare-meaningful-numbers`가 정하고, 여기서는 없는 값을 대체하는 자리만 봅니다.
 
-**Incorrect (`??`, `||`, 기본 매개변수 자리에 리터럴을 적습니다):**
+**Incorrect 1 (`??`, `||`, 기본 매개변수 자리에 리터럴을 적습니다):**
 
 ```ts
 const supportEmail = settings.supportEmail ?? "help@example.com";
@@ -49,7 +49,7 @@ const displayName = user.nickname || "-";
 const toPageRequest = (size = 10): PageRequest => { /* … */ };
 ```
 
-**Correct (이미 선언된 이름만 가리킵니다):**
+**Correct 1 (이미 선언된 이름만 가리킵니다):**
 
 ```ts
 const supportEmail = settings.supportEmail ?? support_email_default;

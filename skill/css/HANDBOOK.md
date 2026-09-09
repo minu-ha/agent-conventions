@@ -92,7 +92,7 @@
 `.module.css`를 새로 만들거나 클래스를 `styles.foo`처럼 객체 속성으로 참조하지 않습니다.
 CSS Modules가 공식 표준이고 별도의 이름 규칙과 실행 규칙이 있으면 그 프로젝트 규칙을 따릅니다.
 
-**Incorrect (프로젝트 표준이 없는데도 CSS Modules를 기본처럼 씁니다):**
+**Incorrect 1 (프로젝트 표준이 없는데도 CSS Modules를 기본처럼 씁니다):**
 
 ```tsx
 import styles from "./products.module.css";
@@ -112,7 +112,7 @@ import styles from "./products.module.css";
 }
 ```
 
-**Correct (기본으로 일반 CSS와 전역 고유 클래스 이름을 씁니다):**
+**Correct 1 (기본으로 일반 CSS와 전역 고유 클래스 이름을 씁니다):**
 
 ```tsx
 import {clsx} from "clsx";
@@ -158,7 +158,7 @@ import "./pg-products.css";
 `UiButton`은 `ui_button`으로 쓰고 `ui_uiButton`으로 쓰지 않습니다.
 기계 검증은 이 문법을 정규식으로 등록한 `selector-class-pattern`이 담당합니다.
 
-**Incorrect (식별자, 요소, 수정자에 snake_case와 kebab-case가 섞입니다):**
+**Incorrect 1 (식별자, 요소, 수정자에 snake_case와 kebab-case가 섞입니다):**
 
 ```txt
 ui_uiButton__root
@@ -171,7 +171,7 @@ pg_productDetail__main-content
 pg_productDetail__main--route_active
 ```
 
-**Correct (범위는 소문자로 쓰고 식별자, 요소, 수정자는 camelCase로 씁니다):**
+**Correct 1 (범위는 소문자로 쓰고 식별자, 요소, 수정자는 camelCase로 씁니다):**
 
 ```txt
 ui_tagList__root
@@ -198,7 +198,7 @@ pg_productDetail__main--routeActive
 수정자를 붙일 수 있는지는 `composition-do-not-build-structural-variants-with-modifiers` 규칙이 정합니다.
 이 규칙은 붙이기로 한 이름이 역할을 드러내는지 판단합니다.
 
-**Incorrect (역할 대신 구조나 치수로 이름을 짓습니다):**
+**Incorrect 1 (역할 대신 구조나 치수로 이름을 짓습니다):**
 
 ```txt
 ui_card__wrapper
@@ -206,7 +206,7 @@ ui_card__box
 ui_card__body--gap12
 ```
 
-**Correct (역할과 상태를 기준으로 이름을 붙입니다):**
+**Correct 1 (역할과 상태를 기준으로 이름을 붙입니다):**
 
 ```txt
 ui_card__toolbar
@@ -238,7 +238,7 @@ ui_card__body--dense
 중간 컴포넌트 이름은 넣지 않습니다.
 미리 붙이면 폴더가 깊어질수록 이름도 길어집니다.
 
-**Incorrect (화면 이름이 아닌 식별자를 씁니다):**
+**Incorrect 1 (화면 이름이 아닌 식별자를 씁니다):**
 
 ```txt
 pg_shell__body    <- 역할 낱말이라 어느 화면인지 안 나옴
@@ -246,7 +246,7 @@ pg_doc__content   <- 라우트에 없는 줄임말
 pg_x__root        <- 되짚을 이름이 없음
 ```
 
-**Correct (뼈대에는 라우트 세그먼트를 그대로 씁니다):**
+**Correct 1 (뼈대에는 라우트 세그먼트를 그대로 씁니다):**
 
 ```txt
 pg_ordersIndex__root    <- orders index 화면
@@ -254,28 +254,28 @@ pg_ordersDetail__body   <- orders/[id] 화면
 pg_document__body      <- document 화면
 ```
 
-**Incorrect (충돌이 없는데도 부모 식별자를 미리 붙입니다):**
+**Incorrect 2 (충돌이 없는데도 부모 식별자를 미리 붙입니다):**
 
 ```txt
 pg_detailProductTableOverviewSection__root
 pg_detailProductTableSummaryBand__root
 ```
 
-**Correct (화면 안의 컴포넌트는 자기 식별자만 씁니다):**
+**Correct 2 (화면 안의 컴포넌트는 자기 식별자만 씁니다):**
 
 ```txt
 pg_overviewSection__root
 pg_summaryBand__root
 ```
 
-**Incorrect (충돌을 피하려고 상위 경로 전체를 식별자에 붙입니다):**
+**Incorrect 3 (충돌을 피하려고 상위 경로 전체를 식별자에 붙입니다):**
 
 ```txt
 pg_detailProductTableOverviewSection__root
 pg_indexProductTableOverviewSection__root
 ```
 
-**Correct (충돌한 화면 이름만 최소로 덧붙입니다):**
+**Correct 3 (충돌한 화면 이름만 최소로 덧붙입니다):**
 
 ```txt
 pg_detailOverviewSection__root
@@ -304,7 +304,7 @@ CSS 파일마다 고유한 범위_식별자를 하나씩 씁니다. 같은 범�
 | 의미가 같아도 CSS 파일이 다름 | 식별자를 따로 만듭니다. 부품끼리 부모 식별자를 나누어 쓰는 것도 금지합니다 |
 | 부모 식별자를 계속 씀 | 스타일도 부모 CSS 파일에 둡니다 |
 
-**Incorrect (이미 다른 소유자가 쓰는 `scope_slug`를 재사용합니다):**
+**Incorrect 1 (이미 다른 소유자가 쓰는 `scope_slug`를 재사용합니다):**
 
 ```txt
 /* products route */
@@ -314,7 +314,7 @@ pg_products__header
 pg_products__header
 ```
 
-**Correct (소유자가 다르면 별도 식별자를 부여합니다):**
+**Correct 1 (소유자가 다르면 별도 식별자를 부여합니다):**
 
 ```txt
 /* products route */
@@ -324,14 +324,14 @@ pg_products__header
 pg_orderIndex__header
 ```
 
-**Incorrect (부품의 CSS 파일이 부모 식별자를 그대로 씁니다):**
+**Incorrect 2 (부품의 CSS 파일이 부모 식별자를 그대로 씁니다):**
 
 ```txt
 /* page/detail/_pg-chart-card.css */
 pg_detail__chartCard
 ```
 
-**Correct (자기 CSS 파일을 가진 컴포넌트는 자기 식별자를 씁니다):**
+**Correct 2 (자기 CSS 파일을 가진 컴포넌트는 자기 식별자를 씁니다):**
 
 ```txt
 /* page/detail/_pg-chart-card.css */
@@ -365,7 +365,7 @@ pg_chartCard__root
 소유자의 레이어가 바뀌면 접두사도 함께 바꿉니다.
 최상위 폴더의 선택과 파일 이름의 `_` 표식은 활성화된 프레임워크 규약이 정합니다.
 
-**Incorrect (최상위 폴더 대신 사용 횟수와 재사용 예상을 보고 접두사를 고릅니다):**
+**Incorrect 1 (최상위 폴더 대신 사용 횟수와 재사용 예상을 보고 접두사를 고릅니다):**
 
 ```txt
 page/detail/_pg-product-table-section.css
@@ -375,7 +375,7 @@ component/widget/chart/_wg-chart-header.css
   pg_chartHeader__root
 ```
 
-**Correct (소유 레이어대로 접두사를 붙입니다):**
+**Correct 1 (소유 레이어대로 접두사를 붙입니다):**
 
 ```txt
 page/detail/pg-detail.css
@@ -425,7 +425,7 @@ component/ui/button/ui-button.css
 같은 레이어의 다른 식별자와 미등록 라이브러리 클래스는 파일별 소유자를 대조해야 합니다.
 전체 설정은 `tooling-configure-stylelint-to-enforce-these-rules` 규칙에 있습니다.
 
-**Incorrect (최상위 블록 없이 라이브러리 클래스를 바로 씁니다):**
+**Incorrect 1 (최상위 블록 없이 라이브러리 클래스를 바로 씁니다):**
 
 ```css
 .MuiTreeItem-content {
@@ -437,7 +437,7 @@ component/ui/button/ui-button.css
 }
 ```
 
-**Correct (내 최상위 블록 안에서 외부 라이브러리 DOM을 선택자로 잡습니다):**
+**Correct 1 (내 최상위 블록 안에서 외부 라이브러리 DOM을 선택자로 잡습니다):**
 
 ```css
 .pg_products__sidebar {
@@ -451,7 +451,7 @@ component/ui/button/ui-button.css
 }
 ```
 
-**Incorrect (최상위 블록 없이 다른 `scope_slug`의 클래스를 바로 씁니다):**
+**Incorrect 2 (최상위 블록 없이 다른 `scope_slug`의 클래스를 바로 씁니다):**
 
 ```css
 /* page/detail/pg-detail.css */
@@ -464,7 +464,7 @@ component/ui/button/ui-button.css
 }
 ```
 
-**Correct (다른 `scope_slug`의 클래스도 내 최상위 블록 안에서 선택자로 잡습니다):**
+**Correct 2 (다른 `scope_slug`의 클래스도 내 최상위 블록 안에서 선택자로 잡습니다):**
 
 ```css
 /* page/detail/pg-detail.css */
@@ -481,7 +481,7 @@ component/ui/button/ui-button.css
 }
 ```
 
-**Incorrect (최상위 블록을 열지 않고 바깥에서 이어 씁니다):**
+**Incorrect 3 (최상위 블록을 열지 않고 바깥에서 이어 씁니다):**
 
 ```css
 .pg_products__sidebarToolbar > .MuiButton-root > .MuiButton-startIcon {
@@ -489,7 +489,7 @@ component/ui/button/ui-button.css
 }
 ```
 
-**Correct (소유자 API로 해결할 수 없으면 내 최상위 블록 안에서 선택합니다):**
+**Correct 3 (소유자 API로 해결할 수 없으면 내 최상위 블록 안에서 선택합니다):**
 
 ```css
 .pg_products__sidebarToolbar {
@@ -598,7 +598,7 @@ TSX의 `className`은 클래스가 하나여도 `clsx()`로 조합합니다.
 형식을 통일하면 검색과 리뷰에서 한 패턴만 확인하면 됩니다.
 클래스 이름에 값을 끼워 넣지 않는 규칙은 `composition-write-modifiers-as-conditions`가 정합니다.
 
-**Incorrect (문자열 연결로 클래스 조합을 숨깁니다):**
+**Incorrect 1 (문자열 연결로 클래스 조합을 숨깁니다):**
 
 ```tsx
 <button className={"pg_products__listButton " + (isActive ? "pg_products__listButton--active" : "")}>
@@ -606,7 +606,7 @@ TSX의 `className`은 클래스가 하나여도 `clsx()`로 조합합니다.
 </button>
 ```
 
-**Correct (기본 클래스와 수정자를 `clsx()`로 조합합니다):**
+**Correct 1 (기본 클래스와 수정자를 `clsx()`로 조합합니다):**
 
 ```tsx
 <button
@@ -643,7 +643,7 @@ TSX의 `className`은 클래스가 하나여도 `clsx()`로 조합합니다.
 두 번째 소유자가 같은 이름을 쓰기 전까지는 요소 클래스로 두고, 쓰게 되는 시점에 수정자로 바꿉니다.
 앱이 켜고 끄는 상태에는 이 반복 횟수 기준을 적용하지 않습니다.
 
-**Incorrect (그 화면 하나를 고치려고 수정자를 붙입니다):**
+**Incorrect 1 (그 화면 하나를 고치려고 수정자를 붙입니다):**
 
 ```tsx
 <div className={clsx("pg_productDetail__section", "pg_productDetail__section--compactTop")} />
@@ -653,7 +653,7 @@ TSX의 `className`은 클래스가 하나여도 `clsx()`로 조합합니다.
 <div className={clsx("pg_productDetail__aside", "pg_productDetail__aside--marginLeft0")} />
 ```
 
-**Correct (한 곳의 보정은 역할 이름을 붙인 요소 클래스로 분리합니다):**
+**Correct 1 (한 곳의 보정은 역할 이름을 붙인 요소 클래스로 분리합니다):**
 
 ```tsx
 <div className={clsx("pg_productDetail__specSection")} />
@@ -686,13 +686,13 @@ TSX의 `className`은 클래스가 하나여도 `clsx()`로 조합합니다.
 
 수정자로 표현할 수 있는 상태인지는 `composition-do-not-build-structural-variants-with-modifiers` 규칙이 판단합니다.
 
-**Incorrect (기본 클래스 이름에 상태를 포함합니다):**
+**Incorrect 1 (기본 클래스 이름에 상태를 포함합니다):**
 
 ```tsx
 <div className={clsx("pg_products__listButtonActive")} />
 ```
 
-**Correct (기본 클래스와 상태 수정자를 분리합니다):**
+**Correct 1 (기본 클래스와 상태 수정자를 분리합니다):**
 
 ```tsx
 <div className={clsx("pg_products__listButton", isActive && "pg_products__listButton--active")} />
@@ -868,7 +868,7 @@ export const UiCollapse = (props: UiCollapseProps) => {
 }
 ```
 
-**Incorrect (역할 없는 이름의 래퍼를 늘립니다):**
+**Incorrect 1 (역할 없는 이름의 래퍼를 늘립니다):**
 
 ```tsx
 <div className={clsx("pg_orders__box")}>
@@ -878,7 +878,7 @@ export const UiCollapse = (props: UiCollapseProps) => {
 </div>
 ```
 
-**Correct (외부 라이브러리가 `className`을 받지 않으면 역할 이름을 붙여 감쌉니다):**
+**Correct 1 (외부 라이브러리가 `className`을 받지 않으면 역할 이름을 붙여 감쌉니다):**
 
 ```tsx
 {/**
@@ -982,7 +982,7 @@ export const UiCollapse = (props: UiCollapseProps) => {
 수정자를 붙일 수 있는지는 `composition-do-not-build-structural-variants-with-modifiers` 규칙이 판단합니다.
 이 규칙은 허용한 수정자의 작성 형식을 정합니다.
 
-**Incorrect (클래스 이름을 값으로 조립합니다):**
+**Incorrect 1 (클래스 이름을 값으로 조립합니다):**
 
 ```tsx
 export interface UiTooltipProps {
@@ -999,7 +999,7 @@ export const UiTooltip = (props: UiTooltipProps) => {
 };
 ```
 
-**Correct (값마다 한 줄로 나열합니다):**
+**Correct 1 (값마다 한 줄로 나열합니다):**
 
 ```tsx
 export interface UiTooltipProps {
@@ -1022,7 +1022,7 @@ export const UiTooltip = (props: UiTooltipProps) => {
 };
 ```
 
-**Incorrect (라이브러리가 정하는 값으로 수정자를 만듭니다):**
+**Incorrect 2 (라이브러리가 정하는 값으로 수정자를 만듭니다):**
 
 ```tsx
 export interface UiButtonProps {
@@ -1035,7 +1035,7 @@ export const UiButton = (props: UiButtonProps) => {
 };
 ```
 
-**Correct (라이브러리가 정하는 값은 수정자로 만들지 않고 그대로 넘깁니다):**
+**Correct 2 (라이브러리가 정하는 값은 수정자로 만들지 않고 그대로 넘깁니다):**
 
 ```tsx
 export interface UiButtonProps {
@@ -1166,7 +1166,7 @@ export const WgUserCard = (props: WgUserCardProps) => {
 }
 ```
 
-**Incorrect (다른 요소의 가상 요소를 `&`로 다시 엽니다):**
+**Incorrect 1 (다른 요소의 가상 요소를 `&`로 다시 엽니다):**
 
 ```css
 .pg_products__sortButton {
@@ -1178,7 +1178,7 @@ export const WgUserCard = (props: WgUserCardProps) => {
 }
 ```
 
-**Correct (`&`는 한 번, 그다음 경로는 같은 줄에 이어 씁니다):**
+**Correct 1 (`&`는 한 번, 그다음 경로는 같은 줄에 이어 씁니다):**
 
 ```css
 .pg_products__sortBox {
@@ -1340,7 +1340,7 @@ h2 {
 | 쉼표 목록의 선택자를 아래에서 단독으로 다시 선언함 | `no-duplicate-selectors`의 `disallowInList` 옵션 |
 | 중복 없이 쉼표로 묶기만 함 | 리뷰. 기계 검사는 묶음 자체를 막지 않습니다 |
 
-**Incorrect (`,`로 공통 선언을 묶고 아래에서 일부만 다시 엽니다):**
+**Incorrect 1 (`,`로 공통 선언을 묶고 아래에서 일부만 다시 엽니다):**
 
 ```css
 .pg_products__badge--draft,
@@ -1356,7 +1356,7 @@ h2 {
 }
 ```
 
-**Correct (각 클래스가 자기 선언을 전부 가집니다):**
+**Correct 1 (각 클래스가 자기 선언을 전부 가집니다):**
 
 ```css
 .pg_products__badge--draft {
@@ -1381,7 +1381,7 @@ h2 {
 }
 ```
 
-**Incorrect (한 대상의 진입 조건을 `,`로 나열합니다):**
+**Incorrect 2 (한 대상의 진입 조건을 `,`로 나열합니다):**
 
 ```css
 .pg_products__sortButton {
@@ -1392,7 +1392,7 @@ h2 {
 }
 ```
 
-**Correct (진입 조건마다 블록을 따로 열고 선언을 그대로 씁니다):**
+**Correct 2 (진입 조건마다 블록을 따로 열고 선언을 그대로 씁니다):**
 
 ```css
 .pg_products__sortButton {
@@ -1428,7 +1428,7 @@ h2 {
 조건 블록의 위치는 `layout-group-breakpoints-at-the-file-bottom` 규칙을 따릅니다.
 기계 검증은 `no-duplicate-selectors`가 담당합니다.
 
-**Incorrect (같은 클래스를 파일 두 곳에서 열어 선언 순서에 의존합니다):**
+**Incorrect 1 (같은 클래스를 파일 두 곳에서 열어 선언 순서에 의존합니다):**
 
 ```css
 .pg_products__toolbar {
@@ -1446,7 +1446,7 @@ h2 {
 }
 ```
 
-**Correct (한 블록에 모으고 최종 값만 남깁니다):**
+**Correct 1 (한 블록에 모으고 최종 값만 남깁니다):**
 
 ```css
 .pg_products__toolbar {
@@ -1502,7 +1502,7 @@ h2 {
 가상 클래스의 위치는 `selector-nest-dom-state-in-the-owning-block`,
 `:not()` 금지는 `selector-do-not-negate-with-not` 규칙을 따릅니다.
 
-**Incorrect (앱이 정하는 상태를 `data-*` 속성 선택자로 잡습니다):**
+**Incorrect 1 (앱이 정하는 상태를 `data-*` 속성 선택자로 잡습니다):**
 
 ```css
 .pg_products__row {
@@ -1512,7 +1512,7 @@ h2 {
 }
 ```
 
-**Correct (앱이 정하는 상태는 수정자 클래스로 씁니다):**
+**Correct 1 (앱이 정하는 상태는 수정자 클래스로 씁니다):**
 
 ```css
 .pg_products__row--expanded {
@@ -1520,7 +1520,7 @@ h2 {
 }
 ```
 
-**Incorrect (같은 상태를 속성과 수정자 두 표기로 씁니다):**
+**Incorrect 2 (같은 상태를 속성과 수정자 두 표기로 씁니다):**
 
 ```css
 .pg_products__card--selected {
@@ -1532,7 +1532,7 @@ h2 {
 }
 ```
 
-**Correct (두 표기를 수정자 하나로 모읍니다):**
+**Correct 2 (두 표기를 수정자 하나로 모읍니다):**
 
 ```css
 .pg_products__card--selected {
@@ -1540,7 +1540,7 @@ h2 {
 	box-shadow: 0 0 0 1px #1677ff;
 }
 ```
-**Incorrect (앱 상태를 속성 선택자로 잡고 DOM 상태를 수정자로 만듭니다):**
+**Incorrect 3 (앱 상태를 속성 선택자로 잡고 DOM 상태를 수정자로 만듭니다):**
 
 ```tsx
 <button
@@ -1566,7 +1566,7 @@ h2 {
 }
 ```
 
-**Correct (`aria-*`는 마크업에 두고 앱 상태는 수정자로, DOM 상태는 가상 클래스로 씁니다):**
+**Correct 3 (`aria-*`는 마크업에 두고 앱 상태는 수정자로, DOM 상태는 가상 클래스로 씁니다):**
 
 ```tsx
 <button
@@ -1625,7 +1625,7 @@ DOM 상태 가상 클래스는 해당 요소의 **조건 없는 기본 클래스
 | `selector-disallowed-list` | 최상위에 다시 선언한 상태 가상 클래스 |
 | `property-disallowed-list` | 지역 변수 선언 |
 
-**Incorrect (가상 클래스를 최상위 선택자로 다시 엽니다):**
+**Incorrect 1 (가상 클래스를 최상위 선택자로 다시 엽니다):**
 
 ```css
 .wg_siteHeader__brandLink {
@@ -1642,7 +1642,7 @@ DOM 상태 가상 클래스는 해당 요소의 **조건 없는 기본 클래스
 }
 ```
 
-**Correct (기본 블록 안에서 각 상태를 별도의 `&:` 블록으로 선언합니다):**
+**Correct 1 (기본 블록 안에서 각 상태를 별도의 `&:` 블록으로 선언합니다):**
 
 ```css
 .wg_siteHeader__brandLink {
@@ -1659,7 +1659,7 @@ DOM 상태 가상 클래스는 해당 요소의 **조건 없는 기본 클래스
 }
 ```
 
-**Incorrect (조상이 hover일 때 바뀌는 모습을 자손 블록의 `&:hover`로 씁니다):**
+**Incorrect 2 (조상이 hover일 때 바뀌는 모습을 자손 블록의 `&:hover`로 씁니다):**
 
 ```css
 .wg_siteHeader__brandMark {
@@ -1676,7 +1676,7 @@ DOM 상태 가상 클래스는 해당 요소의 **조건 없는 기본 클래스
 }
 ```
 
-**Correct (조상 상태가 자손을 바꾸면 같은 소유자 안에서 결합자 하나만 씁니다):**
+**Correct 2 (조상 상태가 자손을 바꾸면 같은 소유자 안에서 결합자 하나만 씁니다):**
 
 ```css
 .wg_siteHeader__brandMark {
@@ -1692,7 +1692,7 @@ DOM 상태 가상 클래스는 해당 요소의 **조건 없는 기본 클래스
 }
 ```
 
-**Incorrect (상호작용 상태를 수정자 아래로 옮겨 적용 대상을 좁힙니다):**
+**Incorrect 3 (상호작용 상태를 수정자 아래로 옮겨 적용 대상을 좁힙니다):**
 
 ```css
 .ui_button__root--active {
@@ -1708,7 +1708,7 @@ DOM 상태 가상 클래스는 해당 요소의 **조건 없는 기본 클래스
 }
 ```
 
-**Correct (상호작용 상태를 조건 없는 기본 블록으로 되돌립니다):**
+**Correct 3 (상호작용 상태를 조건 없는 기본 블록으로 되돌립니다):**
 
 ```css
 .ui_button__root {
@@ -1764,7 +1764,7 @@ DOM 상태와 앱 상태의 구분은 `selector-use-pseudo-classes-for-dom-owned
 }
 ```
 
-**Incorrect (활성 버튼의 hover를 부정 조건으로 표현합니다):**
+**Incorrect 1 (활성 버튼의 hover를 부정 조건으로 표현합니다):**
 
 ```css
 .pg_products__cardButton {
@@ -1774,7 +1774,7 @@ DOM 상태와 앱 상태의 구분은 `selector-use-pseudo-classes-for-dom-owned
 }
 ```
 
-**Correct (네이티브 버튼의 활성 상태를 긍정 조건으로 표현합니다):**
+**Correct 1 (네이티브 버튼의 활성 상태를 긍정 조건으로 표현합니다):**
 
 ```css
 .pg_products__cardButton {
@@ -1834,7 +1834,7 @@ DOM 상태와 앱 상태의 구분은 `selector-use-pseudo-classes-for-dom-owned
 정상 주입된 토큰 값은 대체값보다 우선합니다.
 이 규칙을 적용하려고 요청에 없는 CSS 변수를 만들지는 않습니다.
 
-**Incorrect (공통 토큰에 대체값을 붙여 값을 두 곳에 둡니다):**
+**Incorrect 1 (공통 토큰에 대체값을 붙여 값을 두 곳에 둡니다):**
 
 ```css
 /* src/page/orders/_pg-order-filter-dialog.css */
@@ -1844,7 +1844,7 @@ DOM 상태와 앱 상태의 구분은 `selector-use-pseudo-classes-for-dom-owned
 }
 ```
 
-**Correct (공통 토큰 목록에 있는 변수는 대체값 없이 씁니다):**
+**Correct 1 (공통 토큰 목록에 있는 변수는 대체값 없이 씁니다):**
 
 ```css
 /* src/style/token.css — 공통 토큰 목록의 단일 출처 */
@@ -1860,7 +1860,7 @@ DOM 상태와 앱 상태의 구분은 `selector-use-pseudo-classes-for-dom-owned
 }
 ```
 
-**Incorrect (주입이 보장되지 않는 변수를 대체값 없이 씁니다):**
+**Incorrect 2 (주입이 보장되지 않는 변수를 대체값 없이 씁니다):**
 
 ```css
 .pg_orderFilterDialog__collapse {
@@ -1870,7 +1870,7 @@ DOM 상태와 앱 상태의 구분은 `selector-use-pseudo-classes-for-dom-owned
 }
 ```
 
-**Correct (목록에 없는 변수에는 대체값을 붙입니다):**
+**Correct 2 (목록에 없는 변수에는 대체값을 붙입니다):**
 
 ```css
 .pg_orderFilterDialog__collapse {
@@ -1907,7 +1907,7 @@ DOM 상태와 앱 상태의 구분은 `selector-use-pseudo-classes-for-dom-owned
 `selector-do-not-group-classes-with-commas`에 따라 여러 클래스의 공통 선언도 묶지 않고 각 블록에 반복합니다.
 층 목록은 `values-declare-stacking-layers-as-tokens`, 새 토큰 이름은 `values-name-tokens-by-purpose` 규칙이 정합니다.
 
-**Incorrect (한 파일 안 반복을 조상에 선언한 지역 변수로 감쌉니다):**
+**Incorrect 1 (한 파일 안 반복을 조상에 선언한 지역 변수로 감쌉니다):**
 
 ```css
 .pg_products__root {
@@ -1923,7 +1923,7 @@ DOM 상태와 앱 상태의 구분은 `selector-use-pseudo-classes-for-dom-owned
 }
 ```
 
-**Correct (한 파일 안 반복은 값을 그대로 둡니다):**
+**Correct 1 (한 파일 안 반복은 값을 그대로 둡니다):**
 
 ```css
 .pg_products__toolbar {
@@ -1935,7 +1935,7 @@ DOM 상태와 앱 상태의 구분은 `selector-use-pseudo-classes-for-dom-owned
 }
 ```
 
-**Incorrect (상태를 전달하려고 지역 변수를 만듭니다):**
+**Incorrect 2 (상태를 전달하려고 지역 변수를 만듭니다):**
 
 ```css
 .pg_products__rowBadge {
@@ -1951,7 +1951,7 @@ DOM 상태와 앱 상태의 구분은 `selector-use-pseudo-classes-for-dom-owned
 }
 ```
 
-**Correct (상태 전달은 지역 변수 없이 결합자 하나로 풉니다):**
+**Correct 2 (상태 전달은 지역 변수 없이 결합자 하나로 풉니다):**
 
 ```css
 .pg_products__rowBadge {
@@ -1965,7 +1965,7 @@ DOM 상태와 앱 상태의 구분은 `selector-use-pseudo-classes-for-dom-owned
 }
 ```
 
-**Incorrect (여러 파일이 쓰는 값을 각 파일에 하드코딩합니다):**
+**Incorrect 3 (여러 파일이 쓰는 값을 각 파일에 하드코딩합니다):**
 
 ```css
 /* pg-products.css */
@@ -1979,7 +1979,7 @@ DOM 상태와 앱 상태의 구분은 `selector-use-pseudo-classes-for-dom-owned
 }
 ```
 
-**Correct (여러 파일이 쓰는 값은 전역 공통 토큰으로 둡니다):**
+**Correct 3 (여러 파일이 쓰는 값은 전역 공통 토큰으로 둡니다):**
 
 ```css
 /* src/style/token.css */
@@ -2041,7 +2041,7 @@ DOM 상태와 앱 상태의 구분은 `selector-use-pseudo-classes-for-dom-owned
 6. `showModal()`로 연 `dialog`나 열린 popover는 최상위 레이어입니다.
    일반 문서의 `z-index` 토큰으로 그 위에 올라가려 하지 않습니다.
 
-**Incorrect (숫자를 직접 쓰고 경쟁으로 올립니다):**
+**Incorrect 1 (숫자를 직접 쓰고 경쟁으로 올립니다):**
 
 ```css
 /* src/page/products/pg-products.css */
@@ -2057,7 +2057,7 @@ DOM 상태와 앱 상태의 구분은 `selector-use-pseudo-classes-for-dom-owned
 }
 ```
 
-**Correct (층 토큰만 씁니다):**
+**Correct 1 (층 토큰만 씁니다):**
 
 ```css
 /* src/style/token.css */
@@ -2109,7 +2109,7 @@ DOM 상태와 앱 상태의 구분은 `selector-use-pseudo-classes-for-dom-owned
 토큰 이름은 `values-name-tokens-by-purpose` 규칙을 따릅니다.
 `layout-group-breakpoints-at-the-file-bottom`의 폭 조건은 클래스를 바꾸는 규칙이므로 테마 조건과 섞지 않습니다.
 
-**Incorrect (컴포넌트 파일에서 테마를 분기합니다):**
+**Incorrect 1 (컴포넌트 파일에서 테마를 분기합니다):**
 
 ```css
 /* src/page/products/pg-products.css */
@@ -2122,7 +2122,7 @@ DOM 상태와 앱 상태의 구분은 `selector-use-pseudo-classes-for-dom-owned
 }
 ```
 
-**Correct (컴포넌트는 토큰만 씁니다):**
+**Correct 1 (컴포넌트는 토큰만 씁니다):**
 
 ```css
 /* src/page/products/pg-products.css */
@@ -2213,7 +2213,7 @@ DOM 상태와 앱 상태의 구분은 `selector-use-pseudo-classes-for-dom-owned
 토큰화 대상은 `values-tokenize-repeated-visual-values`,
 테마별 값은 `values-switch-themes-by-changing-token-values` 규칙이 정합니다.
 
-**Incorrect (값으로 이름을 짓습니다):**
+**Incorrect 1 (값으로 이름을 짓습니다):**
 
 ```css
 /* src/style/token.css */
@@ -2230,7 +2230,7 @@ DOM 상태와 앱 상태의 구분은 `selector-use-pseudo-classes-for-dom-owned
 }
 ```
 
-**Correct (쓰임으로 이름을 짓습니다):**
+**Correct 1 (쓰임으로 이름을 짓습니다):**
 
 ```css
 /* src/style/token.css */
@@ -2280,7 +2280,7 @@ DOM 상태와 앱 상태의 구분은 `selector-use-pseudo-classes-for-dom-owned
 
 테마 조건은 `values-switch-themes-by-changing-token-values`에 따라 토큰 파일의 최상위 `@media`에 둡니다.
 
-**Incorrect (클래스 블록 안에 중첩해서 브레이크포인트가 흩어집니다):**
+**Incorrect 1 (클래스 블록 안에 중첩해서 브레이크포인트가 흩어집니다):**
 
 ```css
 .pg_products__toolbar {
@@ -2302,7 +2302,7 @@ DOM 상태와 앱 상태의 구분은 `selector-use-pseudo-classes-for-dom-owned
 }
 ```
 
-**Correct (선언은 위에 두고 브레이크포인트는 파일 아래 한 곳에 모읍니다):**
+**Correct 1 (선언은 위에 두고 브레이크포인트는 파일 아래 한 곳에 모읍니다):**
 
 ```css
 .pg_products__toolbar {
@@ -2326,7 +2326,7 @@ DOM 상태와 앱 상태의 구분은 `selector-use-pseudo-classes-for-dom-owned
 }
 ```
 
-**Incorrect (같은 `@media` 블록을 파일마다 복사합니다):**
+**Incorrect 2 (같은 `@media` 블록을 파일마다 복사합니다):**
 
 ```css
 /* src/page/products/pg-products.css */
@@ -2344,7 +2344,7 @@ DOM 상태와 앱 상태의 구분은 `selector-use-pseudo-classes-for-dom-owned
 }
 ```
 
-**Correct (반복되는 배치를 컴포넌트 하나로 만들고 브레이크포인트는 그 파일에만 둡니다):**
+**Correct 2 (반복되는 배치를 컴포넌트 하나로 만들고 브레이크포인트는 그 파일에만 둡니다):**
 
 ```css
 /* src/component/ui/filter-bar/ui-filter-bar.css */
@@ -2385,7 +2385,7 @@ DOM 상태와 앱 상태의 구분은 `selector-use-pseudo-classes-for-dom-owned
 `@media` 조건에는 `var()`를 쓸 수 없으므로 이 숫자를 토큰으로 만들지 않습니다.
 블록 위치는 `layout-group-breakpoints-at-the-file-bottom` 규칙을 따릅니다.
 
-**Incorrect (기본 선언을 중간 폭에 맞추고 넓고 좁은 방향을 함께 씁니다):**
+**Incorrect 1 (기본 선언을 중간 폭에 맞추고 넓고 좁은 방향을 함께 씁니다):**
 
 ```css
 .pg_products__layout {
@@ -2406,7 +2406,7 @@ DOM 상태와 앱 상태의 구분은 `selector-use-pseudo-classes-for-dom-owned
 }
 ```
 
-**Correct (기본 선언은 가장 넓은 화면에 맞추고 좁아질 때만 덮어씁니다):**
+**Correct 1 (기본 선언은 가장 넓은 화면에 맞추고 좁아질 때만 덮어씁니다):**
 
 ```css
 .pg_products__layout {
@@ -2427,7 +2427,7 @@ DOM 상태와 앱 상태의 구분은 `selector-use-pseudo-classes-for-dom-owned
 }
 ```
 
-**Incorrect (`max-width`를 소수로 보정하고 좁은 쪽부터 씁니다):**
+**Incorrect 2 (`max-width`를 소수로 보정하고 좁은 쪽부터 씁니다):**
 
 ```css
 @media (max-width: 639.98px) {
@@ -2443,7 +2443,7 @@ DOM 상태와 앱 상태의 구분은 `selector-use-pseudo-classes-for-dom-owned
 }
 ```
 
-**Correct (범위 표기로 적고 넓은 쪽부터 좁혀 갑니다):**
+**Correct 2 (범위 표기로 적고 넓은 쪽부터 좁혀 갑니다):**
 
 ```css
 @media (width < 1024px) {
@@ -2481,7 +2481,7 @@ DOM 상태와 앱 상태의 구분은 `selector-use-pseudo-classes-for-dom-owned
 `fixed`는 `transform`이 적용된 조상 아래에서 뷰포트 기준을 잃습니다.
 `sticky`는 중간 조상에 `overflow: hidden`이나 `auto`가 있으면 그 조상이 기준이 되어 뷰포트에 붙지 않습니다.
 
-**Incorrect (층 숫자를 직접 적고 기준 컨테이너 설명이 없습니다):**
+**Incorrect 1 (층 숫자를 직접 적고 기준 컨테이너 설명이 없습니다):**
 
 ```css
 .pg_productDetail__toolbar {
@@ -2491,7 +2491,7 @@ DOM 상태와 앱 상태의 구분은 `selector-use-pseudo-classes-for-dom-owned
 }
 ```
 
-**Correct (기준 컨테이너와 의도를 드러냅니다):**
+**Correct 1 (기준 컨테이너와 의도를 드러냅니다):**
 
 ```css
 .pg_productDetail__toolbar {
@@ -2570,7 +2570,7 @@ DOM 상태와 앱 상태의 구분은 `selector-use-pseudo-classes-for-dom-owned
 `padding`, `min-height`, 글자 크기까지만 소유하고 폭은 사용처가 정합니다.
 폭을 고정한 이유가 클래스명과 선언에서 드러나는지는 `layout-keep-layout-intent-explicit` 규칙을 따릅니다.
 
-**Incorrect (열 개수를 브레이크포인트마다 직접 지정합니다):**
+**Incorrect 1 (열 개수를 브레이크포인트마다 직접 지정합니다):**
 
 ```css
 .pg_products__grid {
@@ -2598,7 +2598,7 @@ DOM 상태와 앱 상태의 구분은 `selector-use-pseudo-classes-for-dom-owned
 }
 ```
 
-**Correct (사용 가능한 폭에 따라 열 개수를 조정합니다):**
+**Correct 1 (사용 가능한 폭에 따라 열 개수를 조정합니다):**
 
 ```css
 .pg_products__grid {
@@ -2703,7 +2703,7 @@ WCAG 2.2 SC 1.4.11(AA)은 인접 색 대비를 다룹니다.
 SC 2.4.13(AAA)은 2 CSS px 둘레에 해당하는 최소 면적과 포커스 전후 같은 픽셀의 3:1 대비를 요구합니다.
 AAA 기준을 모든 표시의 두께가 반드시 2px이어야 한다는 뜻으로 읽지 않습니다.
 
-**Incorrect (포커스 링을 제거하고 대체를 두지 않습니다):**
+**Incorrect 1 (포커스 링을 제거하고 대체를 두지 않습니다):**
 
 ```css
 .ui_button__root {
@@ -2715,7 +2715,7 @@ AAA 기준을 모든 표시의 두께가 반드시 2px이어야 한다는 뜻으
 }
 ```
 
-**Correct (`:focus-visible`에 형태가 바뀌는 표시를 기본 블록에 둡니다):**
+**Correct 1 (`:focus-visible`에 형태가 바뀌는 표시를 기본 블록에 둡니다):**
 
 ```css
 .ui_button__root {
@@ -2728,7 +2728,7 @@ AAA 기준을 모든 표시의 두께가 반드시 2px이어야 한다는 뜻으
 }
 ```
 
-**Incorrect (색만 바꾸고 수정자 안에만 둡니다):**
+**Incorrect 2 (색만 바꾸고 수정자 안에만 둡니다):**
 
 ```css
 .ui_input__field--invalid {
@@ -2739,7 +2739,7 @@ AAA 기준을 모든 표시의 두께가 반드시 2px이어야 한다는 뜻으
 }
 ```
 
-**Correct (그림자 링에 투명한 외곽선을 함께 두어 강제 색상 모드에서도 표시를 남깁니다):**
+**Correct 2 (그림자 링에 투명한 외곽선을 함께 두어 강제 색상 모드에서도 표시를 남깁니다):**
 
 ```css
 .ui_input__field {
@@ -2795,7 +2795,7 @@ AAA 기준을 모든 표시의 두께가 반드시 2px이어야 한다는 뜻으
 
 `0.01ms`도 발생을 보장하지 않으므로 취소되거나 제거된 요소의 완료를 이벤트에만 맡기지 않습니다.
 
-**Incorrect (전역 이름을 겹치게 쓰고 시간을 직접 적습니다):**
+**Incorrect 1 (전역 이름을 겹치게 쓰고 시간을 직접 적습니다):**
 
 ```css
 @keyframes fadeIn {
@@ -2809,7 +2809,7 @@ AAA 기준을 모든 표시의 두께가 반드시 2px이어야 한다는 뜻으
 }
 ```
 
-**Correct (소유자를 붙인 이름과 토큰을 씁니다):**
+**Correct 1 (소유자를 붙인 이름과 토큰을 씁니다):**
 
 ```css
 @keyframes pg_products__fadeIn {
@@ -2823,7 +2823,7 @@ AAA 기준을 모든 표시의 두께가 반드시 2px이어야 한다는 뜻으
 }
 ```
 
-**Incorrect (컴포넌트 파일마다 따로 끄고 지속 시간을 `0`으로 둡니다):**
+**Incorrect 2 (컴포넌트 파일마다 따로 끄고 지속 시간을 `0`으로 둡니다):**
 
 ```css
 /* src/page/products/pg-products.css */
@@ -2834,7 +2834,7 @@ AAA 기준을 모든 표시의 두께가 반드시 2px이어야 한다는 뜻으
 }
 ```
 
-**Correct (전역 스타일시트에서 한 번 처리합니다):**
+**Correct 2 (전역 스타일시트에서 한 번 처리합니다):**
 
 ```css
 /* src/style/motion.css */

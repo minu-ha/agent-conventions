@@ -41,7 +41,7 @@ tags: ownership, naming
 
 진입 파일의 기준은 `ownership-place-owner-files-in-role-folders`를 따릅니다.
 
-**Incorrect (화면 컴포넌트의 접두사를 누락합니다):**
+**Incorrect 1 (화면 컴포넌트의 접두사를 누락합니다):**
 
 ```tsx
 // page/detail/product-table-section.tsx
@@ -50,7 +50,7 @@ export const ProductTable = (props: ProductTableProps) => {
 };
 ```
 
-**Correct (진입 파일이 아닌 파일에는 `_`를 붙이고 파일명과 심볼에 레이어 접두사를 씁니다):**
+**Correct 1 (진입 파일이 아닌 파일에는 `_`를 붙이고 파일명과 심볼에 레이어 접두사를 씁니다):**
 
 ```tsx
 // page/detail/_pg-product-table-section.tsx
@@ -59,7 +59,7 @@ export const PgProductTableSection = (props: PgProductTableSectionProps) => {
 };
 ```
 
-**Incorrect (폴더에도 접두사를 붙이고 이름에서 되풀이합니다):**
+**Incorrect 2 (폴더에도 접두사를 붙이고 이름에서 되풀이합니다):**
 
 ```tsx
 // component/ui/ui-button/ui-button-button.tsx
@@ -68,7 +68,7 @@ export const UiButtonButton = (props: UiButtonButtonProps) => {
 };
 ```
 
-**Correct (폴더에는 접두사를 붙이지 않고 파일명에서 같은 말을 반복하지 않습니다):**
+**Correct 2 (폴더에는 접두사를 붙이지 않고 파일명에서 같은 말을 반복하지 않습니다):**
 
 ```tsx
 // component/ui/button/ui-button.tsx
@@ -77,7 +77,7 @@ export const UiButton = (props: UiButtonProps) => {
 };
 ```
 
-**Incorrect (역할 낱말 하나로 지어 무엇의 부품인지 알 수 없습니다):**
+**Incorrect 3 (역할 낱말 하나로 지어 무엇의 부품인지 알 수 없습니다):**
 
 ```text
 component/widget/chatbot/
@@ -87,7 +87,7 @@ component/widget/chatbot/
     └── _wg-header.tsx  # WgHeader, wg_header
 ```
 
-**Correct (이름이 스스로 뜻을 말하고 소유자 이름은 필요할 때만 들어갑니다):**
+**Correct 3 (이름이 스스로 뜻을 말하고 소유자 이름은 필요할 때만 들어갑니다):**
 
 ```text
 component/widget/chatbot/

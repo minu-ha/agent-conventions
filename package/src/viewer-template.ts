@@ -402,6 +402,10 @@ mark { background: color-mix(in srgb, var(--accent) 30%, transparent); color: in
 .acc-body li.li-x::before { content: "\\2212"; color: var(--faint); font-weight: 600; }
 .x-lb { display: inline-block; vertical-align: .1em; margin-right: .55em; font-family: var(--mono); font-size: 9.5px; line-height: 1.3; letter-spacing: .06em; color: var(--faint); border: 1px solid var(--hair); border-radius: 2px; padding: 1px 5px; white-space: nowrap; }
 
+/* 흐름도. 카드 안에 가운데 두고 넘치면 가로로 민다. */
+.acc-body pre.mermaid { margin: 0 0 .95em; padding: 14px 16px; background: var(--card); border: 1px solid var(--hair); border-radius: 3px; display: flex; justify-content: center; overflow-x: auto; }
+.acc-body pre.mermaid svg { max-width: 100%; height: auto; }
+
 /* ---------- rule dialog ---------- */
 /* 참조 칩은 목록을 이동하는 대신 이 다이얼로그로 미리 보여준다. 보던 섹션을 잃지 않는다. */
 .dlg { width: min(1440px, calc(100vw - 32px)); max-height: min(92vh, 1080px); margin: auto; padding: 0; overflow: hidden; border: 1px solid var(--edge); border-radius: 3px; background: var(--card); color: var(--ink); box-shadow: 0 24px 64px color-mix(in srgb, #0b0f11 35%, transparent); }
@@ -591,7 +595,14 @@ const viewerClientScript = `(() => {
 
 		for (const p of prose) {
 			// 문자열은 일반 줄, 객체는 코드 블록이다.
-			if (typeof p !== "string") { flushAll(); out += '<pre class="code">' + hl(p.code, p.lang) + "</pre>"; continue; }
+			if (typeof p !== "string") {
+				flushAll();
+				// 흐름도는 mermaid 가 그린다. 라이브러리를 못 받았으면(오프라인) 원문을 코드로 보인다.
+				out += p.lang === "mermaid" && window.mermaid
+					? '<pre class="mermaid">' + esc(p.code) + "</pre>"
+					: '<pre class="code">' + hl(p.code, p.lang) + "</pre>";
+				continue;
+			}
 			const t = p.trim();
 
 			// 표
@@ -742,37 +753,44 @@ const viewerClientScript = `(() => {
 	};
 
 	// 예시를 짝 비교 유닛과 그룹 유닛으로 나눈다. 렌더와 "이 규칙 펼치기" 가 같은 결과를 봐야 한다.
+	// 짝은 원문이 정한다 — \`**Incorrect 1**\` 과 \`**Correct 1**\` 처럼 같은 번호를 단 둘만 좌우 diff 다.
+	// 구조나 닮은 정도로 짐작하지 않는다. 번호 없는 예시는 같은 종류가 이어지는 만큼 묶음으로 그린다.
+	// 블록이 여럿이면(tsx + css) 같은 자리의 블록끼리 마주 세운다. 블록 수와 언어는 validate 가 맞춘다.
 	const unitsOf = (r) => {
 		const units = [];
+		const mate = new Map();
+		const taken = new Set();
+
+		r.examples.forEach((e, i) => { if (e.kind === "correct" && e.pair !== undefined) mate.set(e.pair, i); });
+		r.examples.forEach((e, i) => {
+			const j = e.kind === "incorrect" && e.pair !== undefined ? mate.get(e.pair) : undefined;
+
+			if (j !== undefined && !taken.has(j) && r.examples[j].blocks.length === e.blocks.length) { taken.add(i); taken.add(j); }
+		});
 
 		for (let i = 0; i < r.examples.length; i++) {
 			const e = r.examples[i];
-			const nx = r.examples[i + 1];
 
-			// 짝은 Incorrect 하나가 Correct 하나를 마주 볼 때만 성립한다.
-			// 어느 한쪽에 형제가 있으면 짝이 아니라 묶음이다 — 골라 쓰는 대안이거나 이어지는 단계다.
-			// 같은 언어여야 한다. tsx 예시와 txt 흐름도를 마주 놓으면 비교가 아니라 두 다른 글이 나란히 선다.
-			const alone = (i === 0 || r.examples[i - 1].kind !== "incorrect") &&
-				(i + 2 >= r.examples.length || r.examples[i + 2].kind !== "correct");
-			const pairable = alone && e.kind === "incorrect" && nx && nx.kind === "correct" &&
-				e.blocks.length === 1 && nx.blocks.length === 1 && e.blocks[0].lang === nx.blocks[0].lang;
+			if (taken.has(i)) {
+				if (e.kind !== "incorrect") continue;
 
-			if (pairable) {
+				const good = r.examples[mate.get(e.pair)];
+				const plans = e.blocks.map((b, k) => diffPlan(b.code.split("\\n"), good.blocks[k].code.split("\\n")));
+
 				units.push({
 					diff: true,
 					bad: e,
-					good: nx,
-					marks: diffPlan(e.blocks[0].code.split("\\n"), nx.blocks[0].code.split("\\n")),
+					good: good,
+					marks: {left: plans.map((p) => (p ? p.left : null)), right: plans.map((p) => (p ? p.right : null))},
 					at: i,
 				});
-				i++;
 				continue;
 			}
 
 			const run = [];
 			const at = i;
 
-			while (i < r.examples.length && r.examples[i].kind === e.kind) { run.push(r.examples[i]); i++; }
+			while (i < r.examples.length && r.examples[i].kind === e.kind && !taken.has(i)) { run.push(r.examples[i]); i++; }
 
 			i--;
 			units.push({diff: false, kind: e.kind, samples: run, at: at});
@@ -784,7 +802,7 @@ const viewerClientScript = `(() => {
 	const codeHtml = (blocks, marks) => blocks.map((b, i) => {
 		const rows = b.code.split("\\n");
 		const painted = hl(b.code, b.lang).split("\\n");
-		const plan = blocks.length === 1 && marks ? marks.rows : null;
+		const plan = marks && marks.rows ? marks.rows[i] : null;
 		const glyph = marks && marks.bad ? "\\u2212" : "+";
 		const plan2 = plan || rows.map((_unused, n) => ({i: n, changed: false}));
 		const cells = plan2.map((row, n) => {
@@ -904,8 +922,7 @@ const viewerClientScript = `(() => {
 
 		let body = "";
 		if (open) {
-			// Incorrect 바로 뒤에 Correct 가 오고 둘 다 코드 블록 하나이며 서로 닮았으면 좌우 diff 로,
-			// 아니면 같은 종류가 이어지는 만큼 묶어 접이식 그룹으로 그린다.
+			// 같은 짝 번호를 단 Incorrect · Correct 는 좌우 diff 로, 나머지는 같은 종류가 이어지는 만큼 묶어 접이식 그룹으로 그린다.
 			const units = unitsOf(r);
 
 			// 이어지는 짝은 머리말 하나로 묶는다. DIFF 머리말이 짝마다 되풀이되면 목록이 시끄럽다.
@@ -1045,6 +1062,31 @@ const viewerClientScript = `(() => {
 		const allOpen = hits.length > 0 && hits.every((r) => state.open.has(keyOf(r)));
 		document.getElementById("expand").textContent = allOpen ? "규칙 전체 접기" : "규칙 전체 펼치기";
 		renderRail();
+		drawDiagrams();
+	}
+
+	// 새로 그린 흐름도만 렌더한다. mermaid 는 처리한 노드에 data-processed 를 남긴다.
+	function drawDiagrams() {
+		if (!window.mermaid) return;
+		const nodes = document.querySelectorAll("pre.mermaid:not([data-processed])");
+		if (nodes.length) mermaid.run({nodes: nodes}).catch(() => {});
+	}
+
+	function isDark() {
+		const cur = document.documentElement.dataset.theme;
+		return cur ? cur === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+	}
+
+	function initDiagrams() {
+		if (!window.mermaid) return;
+		mermaid.initialize({
+			startOnLoad: false,
+			securityLevel: "strict",
+			theme: isDark() ? "dark" : "neutral",
+			fontFamily: "inherit",
+			// 마름모가 글자 길이대로 부풀어 세로로 길어진다. 간격을 줄이고 폭은 카드에 맞춘다.
+			flowchart: {nodeSpacing: 28, rankSpacing: 40, useMaxWidth: true},
+		});
 	}
 
 	// 참조 미리 보기 다이얼로그. 목록 스크롤을 유지한 채 다른 규칙을 읽는다.
@@ -1066,6 +1108,7 @@ const viewerClientScript = `(() => {
 		const next = dlg.querySelector(".dlg-scroll");
 
 		if (next && top) next.scrollTop = top;
+		drawDiagrams();
 	}
 
 	function openDialog(key) {
@@ -1113,9 +1156,11 @@ const viewerClientScript = `(() => {
 	});
 
 	document.getElementById("theme").addEventListener("click", () => {
-		const cur = document.documentElement.dataset.theme;
-		const dark = cur ? cur === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
-		document.documentElement.dataset.theme = dark ? "light" : "dark";
+		document.documentElement.dataset.theme = isDark() ? "light" : "dark";
+		// 흐름도 색은 초기화 때 굳는다. 테마를 바꾸면 다시 초기화하고 다시 그린다.
+		initDiagrams();
+		render();
+		renderDialog();
 	});
 
 	// 끄는 동안에는 상태를 건드리지 않는다. 매번 다시 그리면 끌기가 끊긴다.
@@ -1298,6 +1343,7 @@ const viewerClientScript = `(() => {
 		if (e.key === "Escape" && e.target.id === "q") { e.target.value = ""; state.q = ""; render(); e.target.blur(); }
 	});
 
+	initDiagrams();
 	render();
 })();`;
 
@@ -1334,6 +1380,7 @@ ${viewerStyles}
 </head>
 <body>
 ${viewerBodyMarkup}
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11.15.0/dist/mermaid.min.js"></script>
 <script src="conventions-data.js"></script>
 <script>
 ${viewerClientScript}

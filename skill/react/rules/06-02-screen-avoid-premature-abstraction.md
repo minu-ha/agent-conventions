@@ -36,7 +36,7 @@ tags: screen
 | 함수 | `typescript/functions-extract-helpers-only-when-the-boundary-is-real` |
 | 훅 | `ownership-prefer-plain-ts-for-local-react-helpers` |
 
-**Incorrect (컴포넌트 하나만 쓰는 단계 보조 함수를 보조 모듈에 남깁니다):**
+**Incorrect 1 (컴포넌트 하나만 쓰는 단계 보조 함수를 보조 모듈에 남깁니다):**
 
 ```tsx
 const toEditHref = ({editHrefBase, row}: {editHrefBase: string; row: ProductRow}) =>
@@ -56,7 +56,7 @@ export const PgProductTable = (props: PgProductTableProps) => {
 };
 ```
 
-**Correct (작은 쿼리 가공과 `href` 조립은 사용처에 둡니다):**
+**Correct 1 (작은 쿼리 가공과 `href` 조립은 사용처에 둡니다):**
 
 ```tsx
 export const PgProductTable = (props: PgProductTableProps) => {

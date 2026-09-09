@@ -17,6 +17,7 @@ import type {GeneratedFileOperations} from "../src/generated-files.js";
 import {parseFrontmatter, parseSections, readResolvedSkillDocuments, readSkillRules} from "../src/parser.js";
 import {generateRuleContractMarkdown, generateRulesIndexMarkdown} from "../src/routing.js";
 import type {LoadedSkillDocument, SkillCompanion} from "../src/types.js";
+import {assertRuleDiscipline} from "../src/rule-discipline.js";
 import {validateSkill} from "../src/validate.js";
 
 const currentDir = path.dirname(fileURLToPath(import.meta.url));
@@ -1878,4 +1879,81 @@ test("diamond companion graphs validate and resolve each skill once", async () =
 			["left", "right"],
 		);
 	});
+});
+
+test("contracts accept a mermaid diagram in the normative prose and numbered example markers", () => {
+	const rule = createRoutingDocument().rules[0];
+	rule.body = [
+		"## Observe State",
+		"",
+		"**Impact: MEDIUM (State impact.)**",
+		"",
+		"Pick the tool by its source of truth.",
+		"",
+		"```mermaid",
+		"flowchart TD",
+		"\ta[server] --> b[query]",
+		"```",
+		"",
+		"**Incorrect 1 (local copy):**",
+		"",
+		"```ts",
+		"const bad = true;",
+		"```",
+		"",
+		"**Correct 1 (query):**",
+		"",
+		"```ts",
+		"const good = true;",
+		"```",
+	].join("\n");
+	rule.impact = "MEDIUM";
+
+	const contract = generateRuleContractMarkdown(rule);
+
+	assert.match(contract, /```mermaid\nflowchart TD/);
+	assert.match(contract, /\*\*Incorrect 1 \(local copy\):\*\*/);
+	assert.match(contract, /\*\*Correct 1 \(query\):\*\*/);
+
+	const codeInProse = createRoutingDocument().rules[0];
+	codeInProse.body = rule.body.replace("```mermaid\nflowchart TD\n\ta[server] --> b[query]", "```ts\nconst hidden = 1;");
+	assert.throws(() => generateRuleContractMarkdown(codeInProse), /fenced example before the Incorrect boundary/);
+});
+
+test("rule discipline requires numbered example pairs to match one Incorrect with one Correct of the same shape", () => {
+	const pairBody = (correctMarker: string, correctLang = "ts"): string =>
+		[
+			"## Observe State",
+			"",
+			"**Impact: MEDIUM (State impact.)**",
+			"",
+			"Pick the tool by its source of truth.",
+			"",
+			"**Incorrect 1 (local copy):**",
+			"",
+			"```ts",
+			"const bad = true;",
+			"```",
+			"",
+			`**${correctMarker}:**`,
+			"",
+			"```" + correctLang,
+			"const good = true;",
+			"```",
+		].join("\n");
+	const disciplineMessage = (body: string): string => {
+		const document = createRoutingDocument();
+		(document.rules[0] as {body: string}).body = body;
+
+		try {
+			assertRuleDiscipline(document);
+			return "";
+		} catch (error) {
+			return error instanceof Error ? error.message : String(error);
+		}
+	};
+
+	assert.doesNotMatch(disciplineMessage(pairBody("Correct 1 (query)")), /짝 번호/);
+	assert.match(disciplineMessage(pairBody("Correct (query)")), /짝 번호 1는 Incorrect 와 Correct 가 하나씩 있어야 한다/);
+	assert.match(disciplineMessage(pairBody("Correct 1 (query)", "tsx")), /짝 번호 1의 1번째 블록 언어가 다르다\(ts:tsx\)/);
 });

@@ -35,7 +35,7 @@ tags: perf, state
 리액트 컴파일러가 없어도 같은 기준을 적용합니다.
 컴파일러가 같은 최적화를 이미 제공하면 수동 메모이제이션을 더하지 않습니다.
 
-**Incorrect (단순 가공을 습관적으로 메모이제이션합니다):**
+**Incorrect 1 (단순 가공을 습관적으로 메모이제이션합니다):**
 
 ```ts
 const columns = useMemo(() => {
@@ -43,7 +43,7 @@ const columns = useMemo(() => {
 }, [props.columns]);
 ```
 
-**Correct (근거가 없으면 감싸지 않고 그대로 계산합니다):**
+**Correct 1 (근거가 없으면 감싸지 않고 그대로 계산합니다):**
 
 ```ts
 const columns = toTableColumns(props.columns);

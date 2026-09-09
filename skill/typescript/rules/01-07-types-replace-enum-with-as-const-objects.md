@@ -28,7 +28,7 @@ tags: types
 객체에는 `Enum[value]` 역방향 조회가 자동으로 생기지 않습니다.
 `as const`는 실행 중 동결이나 다른 변수에서 가져온 배열의 변경까지 보장하지 않습니다.
 
-**Incorrect (`enum`을 직접 씁니다):**
+**Incorrect 1 (`enum`을 직접 씁니다):**
 
 ```ts
 enum ProductStatus {
@@ -38,7 +38,7 @@ enum ProductStatus {
 }
 ```
 
-**Correct (객체 리터럴과 타입 추출을 조합합니다):**
+**Correct 1 (객체 리터럴과 타입 추출을 조합합니다):**
 
 ```ts
 /**

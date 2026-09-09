@@ -38,7 +38,7 @@ tags: functions, origin
 
 반복 조회 구조의 사용 기준은 `values-use-set-and-map-for-repeated-lookups`를 따릅니다.
 
-**Incorrect (두 번 쓴다는 이유만으로 변수로 뺍니다):**
+**Incorrect 1 (두 번 쓴다는 이유만으로 변수로 뺍니다):**
 
 ```ts
 const toRowClassNames = (row: Row): string[] => {
@@ -51,7 +51,7 @@ const toRowClassNames = (row: Row): string[] => {
 };
 ```
 
-**Correct (항이 하나라 두 번 적어도 그 자리에 그대로 씁니다):**
+**Correct 1 (항이 하나라 두 번 적어도 그 자리에 그대로 씁니다):**
 
 ```ts
 const toRowClassNames = (row: Row): string[] => {
@@ -62,7 +62,7 @@ const toRowClassNames = (row: Row): string[] => {
 };
 ```
 
-**Incorrect (돌려주기만 할 값을 변수로 뺍니다):**
+**Incorrect 2 (돌려주기만 할 값을 변수로 뺍니다):**
 
 ```ts
 const toNextPage = (page: number): number => {
@@ -78,7 +78,7 @@ const toRowLabel = (row: Row): string => {
 };
 ```
 
-**Correct (이름을 붙이지 않고 그대로 돌려줍니다):**
+**Correct 2 (이름을 붙이지 않고 그대로 돌려줍니다):**
 
 ```ts
 const toNextPage = (page: number): number => {
@@ -90,7 +90,7 @@ const toRowLabel = (row: Row): string => {
 };
 ```
 
-**Incorrect (세 항을 엮은 판정을 쓰는 자리에 그대로 늘어놓습니다):**
+**Incorrect 3 (세 항을 엮은 판정을 쓰는 자리에 그대로 늘어놓습니다):**
 
 ```ts
 const toRowAction = (row: Row): RowAction => {
@@ -100,7 +100,7 @@ const toRowAction = (row: Row): RowAction => {
 };
 ```
 
-**Correct (한 번만 써도 합성 판정이라 변수로 뺍니다):**
+**Correct 3 (한 번만 써도 합성 판정이라 변수로 뺍니다):**
 
 ```ts
 const toRowAction = (row: Row): RowAction => {
@@ -110,7 +110,7 @@ const toRowAction = (row: Row): RowAction => {
 };
 ```
 
-**Incorrect (콜백 안에 두어 행마다 다시 계산합니다):**
+**Incorrect 4 (콜백 안에 두어 행마다 다시 계산합니다):**
 
 ```ts
 const toVisibleRows = (rows: Row[], keyword: string): Row[] => {
@@ -118,7 +118,7 @@ const toVisibleRows = (rows: Row[], keyword: string): Row[] => {
 };
 ```
 
-**Correct (콜백 밖으로 빼 행마다 다시 계산하지 않습니다):**
+**Correct 4 (콜백 밖으로 빼 행마다 다시 계산하지 않습니다):**
 
 ```ts
 const toVisibleRows = (rows: Row[], keyword: string): Row[] => {
@@ -129,7 +129,7 @@ const toVisibleRows = (rows: Row[], keyword: string): Row[] => {
 };
 ```
 
-**Incorrect (변수를 없애느라 저장과 캐시 비우기 순서가 뒤집힙니다):**
+**Incorrect 5 (변수를 없애느라 저장과 캐시 비우기 순서가 뒤집힙니다):**
 
 ```ts
 /**
@@ -142,7 +142,7 @@ const submitDraft = async (draft: Draft) => {
 };
 ```
 
-**Correct (외부 호출의 실행 순서를 유지하려고 변수로 뺍니다):**
+**Correct 5 (외부 호출의 실행 순서를 유지하려고 변수로 뺍니다):**
 
 ```ts
 /**

@@ -29,7 +29,7 @@ JSX에 직접 쓴 화살표 함수와 달리, 팩토리가 반환하는 함수�
 
 `query.select` 같은 훅 옵션의 일회성 문맥 콜백은 리액트 핸들러 구현이 아니므로 대상에서 제외합니다.
 
-**Incorrect (팩토리 반환 타입을 적지 않아 이벤트가 암시적 `any`가 됩니다):**
+**Incorrect 1 (팩토리 반환 타입을 적지 않아 이벤트가 암시적 `any`가 됩니다):**
 
 ```ts
 const handleRowSelectToggle = (rowId: string) => (event) => {
@@ -38,7 +38,7 @@ const handleRowSelectToggle = (rowId: string) => (event) => {
 };
 ```
 
-**Correct (팩토리 반환 타입을 기존 별칭으로 고정합니다):**
+**Correct 1 (팩토리 반환 타입을 기존 별칭으로 고정합니다):**
 
 ```ts
 import type {MouseEventHandler} from "react";
@@ -54,7 +54,7 @@ const handleRowSelectToggle =
 	};
 ```
 
-**Incorrect (래퍼를 쓰면서 라이브러리 원본 프롭스를 참조합니다):**
+**Incorrect 2 (래퍼를 쓰면서 라이브러리 원본 프롭스를 참조합니다):**
 
 ```ts
 import type {ButtonProps} from "@mui/material";
@@ -64,7 +64,7 @@ const handleSubmitClick: ButtonProps["onClick"] = (event) => {
 };
 ```
 
-**Correct (래퍼가 노출한 계약을 참조합니다):**
+**Correct 2 (래퍼가 노출한 계약을 참조합니다):**
 
 ```ts
 import type {UiButtonProps} from "@/component/ui/button/ui-button";

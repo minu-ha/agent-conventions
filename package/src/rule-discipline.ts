@@ -1,4 +1,5 @@
 import {parseRuleBody} from "./rule-body.js";
+import type {RuleExample} from "./rule-body.js";
 import type {LoadedSkillDocument, SkillRule} from "./types.js";
 
 /**
@@ -210,8 +211,47 @@ const collectRuleViolations = (rule: SkillRule): string[] => {
 	// 라벨 괄호 설명은 검사하지 않는다. 실제 규칙은 모두 갖췄고,
 	// 테스트 fixture 는 다른 검사를 확인하려고 라벨만 최소로 쓴다.
 	//
-	// Incorrect 를 앞에 모으라는 제약은 뺐다. 뷰어가 `Incorrect` 하나와 `Correct` 하나가
-	// 마주 볼 때만 좌우 diff 로 그리므로, 짝이 되는 것끼리 붙여 쓰는 편이 읽기에 낫다.
+	// Incorrect 를 앞에 모으라는 제약은 뺐다. 뷰어는 같은 짝 번호를 단 `Incorrect`·`Correct` 만
+	// 좌우 diff 로 그리므로, 짝이 되는 것끼리 붙여 쓰는 편이 읽기에 낫다.
+	const pairSlots = new Map<number, Partial<Record<RuleExample["kind"], RuleExample>>>();
+
+	for (const example of parsed.examples) {
+		if (example.pair === undefined) {
+			continue;
+		}
+
+		const slot = pairSlots.get(example.pair) ?? {};
+
+		if (slot[example.kind] !== undefined) {
+			violations.push(`짝 번호 ${example.pair}에 ${example.kind === "incorrect" ? "Incorrect" : "Correct"}가 둘이다`);
+		}
+
+		slot[example.kind] = example;
+		pairSlots.set(example.pair, slot);
+	}
+
+	for (const [pairNumber, slot] of pairSlots) {
+		const {incorrect, correct} = slot;
+
+		if (incorrect === undefined || correct === undefined) {
+			violations.push(`짝 번호 ${pairNumber}는 Incorrect 와 Correct 가 하나씩 있어야 한다`);
+			continue;
+		}
+
+		if (incorrect.blocks.length !== correct.blocks.length) {
+			violations.push(`짝 번호 ${pairNumber}의 코드 블록 수가 다르다(${incorrect.blocks.length}:${correct.blocks.length})`);
+			continue;
+		}
+
+		incorrect.blocks.forEach((block, index) => {
+			const counterpart = correct.blocks[index];
+
+			if (counterpart !== undefined && counterpart.lang !== block.lang) {
+				violations.push(`짝 번호 ${pairNumber}의 ${index + 1}번째 블록 언어가 다르다(${block.lang}:${counterpart.lang})`);
+			}
+		});
+	}
+
 	for (const example of parsed.examples) {
 		for (const block of example.blocks) {
 			if (tabIndentedFenceLanguages.has(block.lang)) {

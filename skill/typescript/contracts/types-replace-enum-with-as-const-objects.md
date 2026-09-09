@@ -18,7 +18,7 @@
 
 **Requires selected:** `naming-use-consistent-file-and-symbol-naming`, `types-document-custom-types-and-shapes` · 함께 적용
 
-**Incorrect (`enum`을 직접 씁니다):**
+**Incorrect 1 (`enum`을 직접 씁니다):**
 
 ```ts
 enum ProductStatus {
@@ -28,7 +28,7 @@ enum ProductStatus {
 }
 ```
 
-**Correct (객체 리터럴과 타입 추출을 조합합니다):**
+**Correct 1 (객체 리터럴과 타입 추출을 조합합니다):**
 
 ```ts
 /**

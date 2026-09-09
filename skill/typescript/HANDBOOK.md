@@ -108,7 +108,7 @@
 함수 헤더 주석은 `docs-require-header-jsdoc-on-key-declarations`가 판단합니다.
 규칙을 적용하려고 요청에 없는 `*Params`나 `*Input`을 만들지 않습니다.
 
-**Incorrect (기존 계약과 같은 구조를 다시 선언합니다):**
+**Incorrect 1 (기존 계약과 같은 구조를 다시 선언합니다):**
 
 ```ts
 // 이미 있는 계약: UserRecord { id: string; name: string; email: string }
@@ -122,7 +122,7 @@ interface InviteRecipient {
 export const sendInvites = (recipients: InviteRecipient[]): Promise<void> => { /* … */ };
 ```
 
-**Correct (형태가 같으면 기존 계약을 그대로 참조합니다):**
+**Correct 1 (형태가 같으면 기존 계약을 그대로 참조합니다):**
 
 ```ts
 // 이미 있는 계약: UserRecord { id: string; name: string; email: string }
@@ -207,7 +207,7 @@ export const sendInvite = (draft: InviteDraft): Promise<void> => { /* … */ };
 | 읽기 전용 필드 | `readonly`를 직접 붙입니다. 인덱스 접근만으로는 복사되지 않습니다 |
 | `exactOptionalPropertyTypes`가 켜진 프로젝트의 선택 필드 | `name?: Required<Src>["name"]`으로 `undefined` 대입을 막습니다. 옵션이 꺼진 프로젝트는 `Src["name"]`으로 충분합니다 |
 
-**Incorrect (`Pick`으로 골라 필드 이름과 설명이 사라집니다):**
+**Incorrect 1 (`Pick`으로 골라 필드 이름과 설명이 사라집니다):**
 
 ```ts
 // 원본 계약
@@ -220,7 +220,7 @@ interface UserRecord {
 type UserPreview = Pick<UserRecord, "id" | "name">;
 ```
 
-**Correct (필드마다 출처를 인덱스 접근으로 가져오고 `?`, `readonly`를 직접 적습니다):**
+**Correct 1 (필드마다 출처를 인덱스 접근으로 가져오고 `?`, `readonly`를 직접 적습니다):**
 
 ```ts
 /**
@@ -238,7 +238,7 @@ interface UserPreview {
 }
 ```
 
-**Incorrect (인덱스 접근으로 옮기면서 선택 여부와 읽기 전용 속성을 누락합니다):**
+**Incorrect 2 (인덱스 접근으로 옮기면서 선택 여부와 읽기 전용 속성을 누락합니다):**
 
 ```ts
 // 원본: ProductRecord.id 는 readonly, UserRecord.name 은 선택 필드다
@@ -257,7 +257,7 @@ interface ProductListRow {
 }
 ```
 
-**Correct (여러 계약에서 필드를 모으고 `?`, `readonly`를 직접 적습니다):**
+**Correct 2 (여러 계약에서 필드를 모으고 `?`, `readonly`를 직접 적습니다):**
 
 ```ts
 /**
@@ -275,7 +275,7 @@ interface ProductListRow {
 }
 ```
 
-**Incorrect (원본을 따라가야 하는 열린 집합을 인덱스 접근으로 닫아 새 필드를 놓칩니다):**
+**Incorrect 3 (원본을 따라가야 하는 열린 집합을 인덱스 접근으로 닫아 새 필드를 놓칩니다):**
 
 ```ts
 /**
@@ -293,7 +293,7 @@ interface ExportRequestBody {
 }
 ```
 
-**Correct (원본을 따라가야 하는 열린 집합은 `Omit`으로 뺍니다):**
+**Correct 3 (원본을 따라가야 하는 열린 집합은 `Omit`으로 뺍니다):**
 
 ```ts
 /**
@@ -302,7 +302,7 @@ interface ExportRequestBody {
 type ExportRequestBody = Omit<GeneratedExportRequest, "requestedAt">;
 ```
 
-**Incorrect (좁힌 값을 원시 타입으로 다시 적어 원본과의 연결이 사라집니다):**
+**Incorrect 4 (좁힌 값을 원시 타입으로 다시 적어 원본과의 연결이 사라집니다):**
 
 ```ts
 // 원본: TableCellProps.align 은 선택 필드고 padding 은 normal · checkbox · none 이다
@@ -321,7 +321,7 @@ interface ReportCell {
 }
 ```
 
-**Correct (원본 필드를 `NonNullable` · `Extract`로 파생해 출처와 좁힘을 함께 남깁니다):**
+**Correct 4 (원본 필드를 `NonNullable` · `Extract`로 파생해 출처와 좁힘을 함께 남깁니다):**
 
 ```ts
 /**
@@ -364,7 +364,7 @@ interface ReportCell {
 `select: (response) => ({...})`를 밖으로 빼거나 새 함수 타입으로 고정하지 않습니다.
 커링 팩토리가 반환하는 리액트 핸들러는 프레임워크 컨벤션이 판단합니다.
 
-**Incorrect (계약이 있는데 시그니처를 다시 적습니다):**
+**Incorrect 1 (계약이 있는데 시그니처를 다시 적습니다):**
 
 ```ts
 // 이미 있는 계약
@@ -390,7 +390,7 @@ const toStateLabel = (state: Record<string, unknown>): string => {
 };
 ```
 
-**Correct (이미 있는 계약에서 시그니처를 가져와 함수 전체에 타입을 붙입니다):**
+**Correct 1 (이미 있는 계약에서 시그니처를 가져와 함수 전체에 타입을 붙입니다):**
 
 ```ts
 // 이미 있는 계약
@@ -416,7 +416,7 @@ const toStateLabel: UserFormatters["toStateLabel"] = (state) => {
 };
 ```
 
-**Incorrect (같은 시그니처를 쓰는 구현마다 매개변수와 반환 타입을 다시 적습니다):**
+**Incorrect 2 (같은 시그니처를 쓰는 구현마다 매개변수와 반환 타입을 다시 적습니다):**
 
 ```ts
 /**
@@ -434,7 +434,7 @@ const toSearchRequest = (request: string): string => {
 };
 ```
 
-**Correct (같은 시그니처를 쓰는 구현이 둘 이상이면 함수 타입 별칭을 선언합니다):**
+**Correct 2 (같은 시그니처를 쓰는 구현이 둘 이상이면 함수 타입 별칭을 선언합니다):**
 
 ```ts
 /**
@@ -488,7 +488,7 @@ const toSearchRequest: ToRequest = (request) => {
 익명 결과에 이 규칙을 적용하려고 필드 주석이나 새 타입을 만들지 않습니다.
 함수 선언의 헤더 주석은 `docs-require-header-jsdoc-on-key-declarations`가 별도로 판단합니다.
 
-**Incorrect (필드 설명을 생략하거나 예전 방식으로 헤더에 몰아씁니다):**
+**Incorrect 1 (필드 설명을 생략하거나 예전 방식으로 헤더에 몰아씁니다):**
 
 ```ts
 /**
@@ -501,7 +501,7 @@ interface PublishResult {
 }
 ```
 
-**Correct (헤더와 필드별 문서 주석을 씁니다):**
+**Correct 1 (헤더와 필드별 문서 주석을 씁니다):**
 
 ```ts
 /**
@@ -545,7 +545,7 @@ export const product_status = {
 커링한 핸들러의 마지막 콜백과 매개변수를 하나도 쓰지 않는 구현도 같습니다.
 `MouseEventHandler`의 이벤트를 쓰지 않으면 `() =>` 대신 `(_event) =>`로 받습니다.
 
-**Incorrect (계약의 일부인 콜백 매개변수를 생략합니다):**
+**Incorrect 1 (계약의 일부인 콜백 매개변수를 생략합니다):**
 
 ```ts
 /**
@@ -558,7 +558,7 @@ const noopLog: LogSink = () => {
 };
 ```
 
-**Correct (계약은 유지하고 쓰지 않는 매개변수만 `_`로 표시합니다):**
+**Correct 1 (계약은 유지하고 쓰지 않는 매개변수만 `_`로 표시합니다):**
 
 ```ts
 /**
@@ -663,7 +663,7 @@ if (!firstProduct) {
 객체에는 `Enum[value]` 역방향 조회가 자동으로 생기지 않습니다.
 `as const`는 실행 중 동결이나 다른 변수에서 가져온 배열의 변경까지 보장하지 않습니다.
 
-**Incorrect (`enum`을 직접 씁니다):**
+**Incorrect 1 (`enum`을 직접 씁니다):**
 
 ```ts
 enum ProductStatus {
@@ -673,7 +673,7 @@ enum ProductStatus {
 }
 ```
 
-**Correct (객체 리터럴과 타입 추출을 조합합니다):**
+**Correct 1 (객체 리터럴과 타입 추출을 조합합니다):**
 
 ```ts
 /**
@@ -716,7 +716,7 @@ type ProductStatus = (typeof product_status)[keyof typeof product_status];
 추론되는 익명 결과와 외부 · 생성된 계약은 그대로 둡니다.
 같은 뜻의 기존 계약은 `types-reuse-existing-contracts-before-new-types`에 따라 재사용합니다.
 
-**Incorrect (독립된 필드 계약을 객체 `type` 별칭으로 선언합니다):**
+**Incorrect 1 (독립된 필드 계약을 객체 `type` 별칭으로 선언합니다):**
 
 ```ts
 /**
@@ -734,7 +734,7 @@ type ProductSummary = {
 };
 ```
 
-**Correct (필드 계약은 `interface`, 타입 조합은 `type`으로 구분합니다):**
+**Correct 1 (필드 계약은 `interface`, 타입 조합은 `type`으로 구분합니다):**
 
 ```ts
 /**
@@ -808,7 +808,7 @@ type MutableRow = Omit<Row, "children"> & {
 색인 객체는 수동 관리가 필요하고 번들러의 미사용 프로퍼티 제거도 어려워질 수 있습니다.
 `constant`에는 코드와 함께 바뀌는 값만 둡니다.
 
-**Incorrect (프로젝트 전반의 값을 쓰는 자리에서 선언합니다):**
+**Incorrect 1 (프로젝트 전반의 값을 쓰는 자리에서 선언합니다):**
 
 ```ts
 // page/products/pg-products.tsx
@@ -824,7 +824,7 @@ const default_page_size = 20;
 const orderQuery = useOrderQuery({pageSize: default_page_size});
 ```
 
-**Correct (루트 `constant` 폴더에 둔 이름을 쓰는 자리에서 가져옵니다):**
+**Correct 1 (루트 `constant` 폴더에 둔 이름을 쓰는 자리에서 가져옵니다):**
 
 ```ts
 // page/products/pg-products.tsx
@@ -840,7 +840,7 @@ import {pagination_default_page_size} from "@/constant/pagination";
 const orderQuery = useOrderQuery({pageSize: pagination_default_page_size});
 ```
 
-**Incorrect (객체 하나에 모아 색인을 손으로 유지합니다):**
+**Incorrect 2 (객체 하나에 모아 색인을 손으로 유지합니다):**
 
 ```ts
 // constant/config.ts
@@ -850,7 +850,7 @@ export const config = {
 } as const;
 ```
 
-**Correct (주제 파일에 상수를 하나씩 이름 붙여 내보냅니다):**
+**Correct 2 (주제 파일에 상수를 하나씩 이름 붙여 내보냅니다):**
 
 ```ts
 // constant/api.ts
@@ -892,7 +892,7 @@ export const pagination_default_page_size = 20;
 계약 파일의 이름은 계약 규칙과 `naming-use-consistent-file-and-symbol-naming`을 따릅니다.
 소유자 아래에 `config`, `constants`, `common` 폴더는 만들지 않습니다.
 
-**Incorrect (한 소유자의 상수를 루트로 올립니다):**
+**Incorrect 1 (한 소유자의 상수를 루트로 올립니다):**
 
 ```ts
 // constant/chart.ts
@@ -900,7 +900,7 @@ export const pagination_default_page_size = 20;
 export const chart_axis_tick_count = 6;
 ```
 
-**Correct (소유자 아래 주제 파일에 둡니다):**
+**Correct 1 (소유자 아래 주제 파일에 둡니다):**
 
 ```ts
 // page/product-detail/_constant/chart.ts
@@ -910,7 +910,7 @@ export const chart_axis_tick_count = 6;
 export const chart_axis_tick_count = 6;
 ```
 
-**Incorrect (파일명에 소유자 이름을 되풀이하고 주제를 객체 하나에 모읍니다):**
+**Incorrect 2 (파일명에 소유자 이름을 되풀이하고 주제를 객체 하나에 모읍니다):**
 
 ```ts
 // page/product-detail/_constant/product-detail.ts
@@ -920,7 +920,7 @@ export const product_detail_config = {
 } as const;
 ```
 
-**Correct (주제마다 파일을 나누고 상수를 개별 이름으로 내보냅니다):**
+**Correct 2 (주제마다 파일을 나누고 상수를 개별 이름으로 내보냅니다):**
 
 ```ts
 // page/product-detail/_constant/chart.ts
@@ -967,7 +967,7 @@ API 응답 · 요청, 생성 DTO, 라이브러리 인자, DOM 속성, 환경 변
 `user_id`를 요구하는 API에는 그대로 적습니다.
 외부 이름을 별칭 없이 가져오면 대상이 아니며, 지역 별칭을 만들거나 이름을 바꿀 때 다시 판단합니다.
 
-**Incorrect (역할과 맞지 않는 표기를 씁니다):**
+**Incorrect 1 (역할과 맞지 않는 표기를 씁니다):**
 
 ```ts
 // userSettings.ts
@@ -977,7 +977,7 @@ interface User_Profile {
 }
 ```
 
-**Correct (파일명은 `kebab-case`, 타입 필드는 `camelCase`로 씁니다):**
+**Correct 1 (파일명은 `kebab-case`, 타입 필드는 `camelCase`로 씁니다):**
 
 ```ts
 // user-settings.ts
@@ -992,7 +992,7 @@ interface UserProfile {
 }
 ```
 
-**Incorrect (불변 데이터 상수와 값 집합의 이름과 키를 `camelCase`로 적습니다):**
+**Incorrect 2 (불변 데이터 상수와 값 집합의 이름과 키를 `camelCase`로 적습니다):**
 
 ```ts
 const retryPolicy = {
@@ -1006,7 +1006,7 @@ const productStatus = {
 } as const;
 ```
 
-**Correct (불변 데이터 상수와 값 집합은 이름과 상수 키를 모두 `snake_case`로 적습니다):**
+**Correct 2 (불변 데이터 상수와 값 집합은 이름과 상수 키를 모두 `snake_case`로 적습니다):**
 
 ```ts
 /**
@@ -1026,7 +1026,7 @@ const product_status = {
 } as const;
 ```
 
-**Incorrect (밖으로 나가는 키를 우리 표기로 바꿉니다):**
+**Incorrect 3 (밖으로 나가는 키를 우리 표기로 바꿉니다):**
 
 ```ts
 // 서버 계약은 {product_id, display_name} 인데 우리 표기로 바꿔 보낸다
@@ -1041,7 +1041,7 @@ const toProductSaveBody = (values: ProductFormValues) => {
 };
 ```
 
-**Correct (밖으로 나가는 키만 받는 쪽 표기를 그대로 씁니다):**
+**Correct 3 (밖으로 나가는 키만 받는 쪽 표기를 그대로 씁니다):**
 
 ```ts
 /**
@@ -1093,7 +1093,7 @@ import {pagination_default_page_size} from "@/constant/pagination";
 import {toDisplayDate} from "@/util/date/to-display-date";
 ```
 
-**Incorrect (`default`로 내보내 사용처마다 다른 이름이 생깁니다):**
+**Incorrect 1 (`default`로 내보내 사용처마다 다른 이름이 생깁니다):**
 
 ```tsx
 // component/ui/tabs/ui-tabs.tsx
@@ -1108,7 +1108,7 @@ export default UiTabs;
 import Tabs from "@/component/ui/tabs/ui-tabs";
 ```
 
-**Correct (선언 앞에 `export`를 붙여 사용처가 그 이름으로 가져옵니다):**
+**Correct 1 (선언 앞에 `export`를 붙여 사용처가 그 이름으로 가져옵니다):**
 
 ```tsx
 // component/ui/tabs/ui-tabs.tsx
@@ -1160,7 +1160,7 @@ import {UiTabs} from "@/component/ui/tabs/ui-tabs";
 
 루트의 소유자는 프로젝트이며 `constant` · `util` · `type` · `hook`에도 소유자 아래 역할 폴더의 규칙을 적용합니다.
 
-**Incorrect (상대경로로 심볼을 가져옵니다):**
+**Incorrect 1 (상대경로로 심볼을 가져옵니다):**
 
 ```ts
 // page/detail/product-table-section/pg-product-table-section.tsx
@@ -1168,7 +1168,7 @@ import {PgReviewSection} from "./_pg-review-section";
 import {toSummary} from "../_function/to-summary";
 ```
 
-**Correct (심볼은 `@/`, 같은 폴더의 CSS 파일만 `./`로 씁니다):**
+**Correct 1 (심볼은 `@/`, 같은 폴더의 CSS 파일만 `./`로 씁니다):**
 
 ```ts
 // page/detail/product-table-section/pg-product-table-section.tsx
@@ -1206,7 +1206,7 @@ import "./pg-product-table-section.css";
 | `VITE_` 등 외부 접두사 | 읽는 자리에서 내부 이름으로 바꿔 앱 안에 퍼지지 않게 합니다 |
 | 비밀값 | 클라이언트에 노출되는 접두사로 읽지 않습니다. 해당 값은 브라우저에서 보입니다 |
 
-**Incorrect (쓰는 파일마다 직접 읽고 없을 때 리터럴로 덮습니다):**
+**Incorrect 1 (쓰는 파일마다 직접 읽고 없을 때 리터럴로 덮습니다):**
 
 ```ts
 // service/product-client.ts
@@ -1216,7 +1216,7 @@ const baseUrl = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:3000";
 const reportBaseUrl = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:3000";
 ```
 
-**Correct (`config/env.ts`가 한 번 읽고 없으면 드러냅니다):**
+**Correct 1 (`config/env.ts`가 한 번 읽고 없으면 드러냅니다):**
 
 ```ts
 // config/env.ts
@@ -1278,7 +1278,7 @@ const productClient = createClient({baseUrl: env_api_base_url});
 
 단순 가공 · 표시 결과에는 `VM` · `ViewModel` · 막연한 `Model`과 그 대응 파일명을 쓰지 않습니다.
 
-**Incorrect (소유자와 막연한 화면 계약 접미사를 반복합니다):**
+**Incorrect 1 (소유자와 막연한 화면 계약 접미사를 반복합니다):**
 
 ```ts
 /**
@@ -1298,7 +1298,7 @@ interface OrderReportViewModel {
 const orderReportVM: OrderReportViewModel = response.data;
 ```
 
-**Correct (한 조회 시점에 고정된 값이라는 역할을 이름에 표시합니다):**
+**Correct 1 (한 조회 시점에 고정된 값이라는 역할을 이름에 표시합니다):**
 
 ```ts
 // page/order-report/_type/report-snapshot.ts: 폴더가 이미 order-report 를 말한다
@@ -1359,7 +1359,7 @@ const reportSnapshot: ReportSnapshot = response.data;
 `useConsistentArrowReturn`은 인라인 콜백과 커링까지 강제하므로 켜지 않습니다.
 도구 설정은 `tooling-configure-biome-to-enforce-these-rules`를 따릅니다.
 
-**Incorrect (이름 붙인 함수를 `function`으로 선언합니다):**
+**Incorrect 1 (이름 붙인 함수를 `function`으로 선언합니다):**
 
 ```ts
 /**
@@ -1370,7 +1370,7 @@ export function toTrimmedTitle(rawTitle: string): string {
 }
 ```
 
-**Correct (같은 함수를 `const` 화살표와 블록 본문으로 선언합니다):**
+**Correct 1 (같은 함수를 `const` 화살표와 블록 본문으로 선언합니다):**
 
 ```ts
 /**
@@ -1381,7 +1381,7 @@ export const toTrimmedTitle = (rawTitle: string): string => {
 };
 ```
 
-**Incorrect (객체 프로퍼티의 함수를 메서드 축약형으로 씁니다):**
+**Incorrect 2 (객체 프로퍼티의 함수를 메서드 축약형으로 씁니다):**
 
 ```ts
 export const cellFormatterByValueType = {
@@ -1391,7 +1391,7 @@ export const cellFormatterByValueType = {
 } as const;
 ```
 
-**Correct (객체 프로퍼티의 함수는 화살표, 인라인 콜백은 한 줄로 씁니다):**
+**Correct 2 (객체 프로퍼티의 함수는 화살표, 인라인 콜백은 한 줄로 씁니다):**
 
 ```ts
 /**
@@ -1685,7 +1685,7 @@ export const toStatusTone = (status: string): Tone => {
 루트 `util`끼리의 직접 가져오기도 각 공개 진입점의 출처가 드러나므로 허용합니다.
 부르는 대표 함수나 소유자가 늘면 표의 다음 배치를 검토합니다.
 
-**Incorrect (여러 보조를 모은 파일에서 내보낸 함수가 세 단계로 이어집니다):**
+**Incorrect 1 (여러 보조를 모은 파일에서 내보낸 함수가 세 단계로 이어집니다):**
 
 ```ts
 // utils.ts
@@ -1702,7 +1702,7 @@ export const toProductSaveRequest = (values: ProductFormValues) => {
 };
 ```
 
-**Correct (소유자 아래 대표 함수 하나에 파일 하나를 둡니다):**
+**Correct 1 (소유자 아래 대표 함수 하나에 파일 하나를 둡니다):**
 
 ```ts
 // page/product-form/_function/to-product-save-request.ts
@@ -1714,7 +1714,7 @@ export const toProductSaveRequest = (values: ProductFormValues) => {
 };
 ```
 
-**Incorrect (대표 함수 하나만 부르는 보조를 대표 파일 아래 비공개 `const`로 쌓습니다):**
+**Incorrect 2 (대표 함수 하나만 부르는 보조를 대표 파일 아래 비공개 `const`로 쌓습니다):**
 
 ```txt
 page/report/_function/
@@ -1725,7 +1725,7 @@ page/report/_function/
 └── to-product-filter-request.ts
 ```
 
-**Correct (자기만 쓰는 보조가 생긴 대표 함수는 자기 이름 폴더를 갖고 보조는 `_` 파일입니다):**
+**Correct 2 (자기만 쓰는 보조가 생긴 대표 함수는 자기 이름 폴더를 갖고 보조는 `_` 파일입니다):**
 
 ```txt
 page/report/_function/
@@ -1736,7 +1736,7 @@ page/report/_function/
 └── to-product-filter-request.ts   보조가 없어 파일 하나
 ```
 
-**Incorrect (한 대표만 부르는 보조를 `_function` 바로 아래에 내보내 둡니다):**
+**Incorrect 3 (한 대표만 부르는 보조를 `_function` 바로 아래에 내보내 둡니다):**
 
 ```txt
 page/report/_function/
@@ -1745,7 +1745,7 @@ page/report/_function/
 └── to-trend-chart.ts            toProductOverview 만 부르는데 소유자의 공개 면에 놓임
 ```
 
-**Correct (두 대표가 부르게 된 뒤에 `_function` 바로 아래로 올리고 `_`를 뗍니다):**
+**Correct 3 (두 대표가 부르게 된 뒤에 `_function` 바로 아래로 올리고 `_`를 뗍니다):**
 
 ```txt
 page/report/_function/
@@ -1774,7 +1774,7 @@ page/report/_function/
 즉시 계산하는 선언은 자기가 부르는 선언 뒤에 둡니다.
 컴포넌트 본문의 훅 · 핸들러 · 이펙트 순서는 프레임워크 컨벤션이 정합니다.
 
-**Incorrect (내보낸 계약 타입이 함수 아래에 있어 시그니처를 읽으려면 파일을 끝까지 내려가야 합니다):**
+**Incorrect 1 (내보낸 계약 타입이 함수 아래에 있어 시그니처를 읽으려면 파일을 끝까지 내려가야 합니다):**
 
 ```ts
 // page/report/_function/to-summary-rows.ts
@@ -1793,7 +1793,7 @@ export interface ToSummaryRowsParams {
 }
 ```
 
-**Correct (내보낸 계약 타입이 먼저, 그 계약을 받는 함수가 바로 아래에 옵니다):**
+**Correct 1 (내보낸 계약 타입이 먼저, 그 계약을 받는 함수가 바로 아래에 옵니다):**
 
 ```ts
 // page/report/_function/to-summary-rows.ts
@@ -1815,7 +1815,7 @@ export const toSummaryRows = (params: ToSummaryRowsParams): SummaryRow[] => {
 };
 ```
 
-**Incorrect (모듈을 불러올 때 계산되는 선언이 자기가 부르는 선언보다 위에 있습니다):**
+**Incorrect 2 (모듈을 불러올 때 계산되는 선언이 자기가 부르는 선언보다 위에 있습니다):**
 
 ```ts
 const selectedLocaleSupported = isSupportedLocale(selectedLocale);
@@ -1828,7 +1828,7 @@ export const isSupportedLocale = (locale: string): boolean => {
 };
 ```
 
-**Correct (모듈을 불러올 때 계산되는 선언은 자기가 부르는 선언 뒤에 둡니다):**
+**Correct 2 (모듈을 불러올 때 계산되는 선언은 자기가 부르는 선언 뒤에 둡니다):**
 
 ```ts
 /**
@@ -1873,7 +1873,7 @@ const selectedLocaleSupported = isSupportedLocale(selectedLocale);
 | 계산만 같음 | 각 소유자가 각각 갖습니다 |
 | 프로젝트 전반의 계산임 | 루트 `util`로 올립니다 |
 
-**Incorrect (소유자와 함께 사라질 함수를 루트 `util`로 올립니다):**
+**Incorrect 1 (소유자와 함께 사라질 함수를 루트 `util`로 올립니다):**
 
 ```ts
 // util/profile/to-profile-save-request.ts
@@ -1886,7 +1886,7 @@ export const toProfileSaveRequest = (values: ProfileFormValues) => {
 };
 ```
 
-**Correct (소유자와 함께 사라질 함수는 그 소유자의 `_function` 폴더에 둡니다):**
+**Correct 1 (소유자와 함께 사라질 함수는 그 소유자의 `_function` 폴더에 둡니다):**
 
 ```ts
 // page/profile/_function/to-profile-save-request.ts
@@ -1983,7 +1983,7 @@ export const toSignedAmount = (amount: Amount): string => {
 함수 이름은 `functions-name-functions-by-what-comes-out`을 따릅니다.
 중간값 명명은 `functions-name-a-value-only-for-recompute-or-judgment`가 판단합니다.
 
-**Incorrect (넓은 스코프에서 명령형으로 조립을 쌓습니다):**
+**Incorrect 1 (넓은 스코프에서 명령형으로 조립을 쌓습니다):**
 
 ```ts
 let visibleTabs = ["overview"];
@@ -1993,7 +1993,7 @@ if (canManageItems) {
 }
 ```
 
-**Correct (조건부 스프레드로 한 번에 계산합니다):**
+**Correct 1 (조건부 스프레드로 한 번에 계산합니다):**
 
 ```ts
 const visibleTabs = ["overview", ...(canManageItems ? ["items"] : [])];
@@ -2023,7 +2023,7 @@ export const toStatusLabel = (order: OrderRow): StatusLabel => {
 };
 ```
 
-**Incorrect (목록 조립에서 조건이 셋이 되자 삼항을 겹칩니다):**
+**Incorrect 2 (목록 조립에서 조건이 셋이 되자 삼항을 겹칩니다):**
 
 ```ts
 const visibleTabs = canManageItems
@@ -2035,7 +2035,7 @@ const visibleTabs = canManageItems
 		: ["overview"];
 ```
 
-**Correct (조건이 셋 이상인 목록은 표로 두고 걸러 냅니다):**
+**Correct 2 (조건이 셋 이상인 목록은 표로 두고 걸러 냅니다):**
 
 ```ts
 const visibleTabs = [
@@ -2081,7 +2081,7 @@ const visibleTabs = [
 
 반복 조회 구조의 사용 기준은 `values-use-set-and-map-for-repeated-lookups`를 따릅니다.
 
-**Incorrect (두 번 쓴다는 이유만으로 변수로 뺍니다):**
+**Incorrect 1 (두 번 쓴다는 이유만으로 변수로 뺍니다):**
 
 ```ts
 const toRowClassNames = (row: Row): string[] => {
@@ -2094,7 +2094,7 @@ const toRowClassNames = (row: Row): string[] => {
 };
 ```
 
-**Correct (항이 하나라 두 번 적어도 그 자리에 그대로 씁니다):**
+**Correct 1 (항이 하나라 두 번 적어도 그 자리에 그대로 씁니다):**
 
 ```ts
 const toRowClassNames = (row: Row): string[] => {
@@ -2105,7 +2105,7 @@ const toRowClassNames = (row: Row): string[] => {
 };
 ```
 
-**Incorrect (돌려주기만 할 값을 변수로 뺍니다):**
+**Incorrect 2 (돌려주기만 할 값을 변수로 뺍니다):**
 
 ```ts
 const toNextPage = (page: number): number => {
@@ -2121,7 +2121,7 @@ const toRowLabel = (row: Row): string => {
 };
 ```
 
-**Correct (이름을 붙이지 않고 그대로 돌려줍니다):**
+**Correct 2 (이름을 붙이지 않고 그대로 돌려줍니다):**
 
 ```ts
 const toNextPage = (page: number): number => {
@@ -2133,7 +2133,7 @@ const toRowLabel = (row: Row): string => {
 };
 ```
 
-**Incorrect (세 항을 엮은 판정을 쓰는 자리에 그대로 늘어놓습니다):**
+**Incorrect 3 (세 항을 엮은 판정을 쓰는 자리에 그대로 늘어놓습니다):**
 
 ```ts
 const toRowAction = (row: Row): RowAction => {
@@ -2143,7 +2143,7 @@ const toRowAction = (row: Row): RowAction => {
 };
 ```
 
-**Correct (한 번만 써도 합성 판정이라 변수로 뺍니다):**
+**Correct 3 (한 번만 써도 합성 판정이라 변수로 뺍니다):**
 
 ```ts
 const toRowAction = (row: Row): RowAction => {
@@ -2153,7 +2153,7 @@ const toRowAction = (row: Row): RowAction => {
 };
 ```
 
-**Incorrect (콜백 안에 두어 행마다 다시 계산합니다):**
+**Incorrect 4 (콜백 안에 두어 행마다 다시 계산합니다):**
 
 ```ts
 const toVisibleRows = (rows: Row[], keyword: string): Row[] => {
@@ -2161,7 +2161,7 @@ const toVisibleRows = (rows: Row[], keyword: string): Row[] => {
 };
 ```
 
-**Correct (콜백 밖으로 빼 행마다 다시 계산하지 않습니다):**
+**Correct 4 (콜백 밖으로 빼 행마다 다시 계산하지 않습니다):**
 
 ```ts
 const toVisibleRows = (rows: Row[], keyword: string): Row[] => {
@@ -2172,7 +2172,7 @@ const toVisibleRows = (rows: Row[], keyword: string): Row[] => {
 };
 ```
 
-**Incorrect (변수를 없애느라 저장과 캐시 비우기 순서가 뒤집힙니다):**
+**Incorrect 5 (변수를 없애느라 저장과 캐시 비우기 순서가 뒤집힙니다):**
 
 ```ts
 /**
@@ -2185,7 +2185,7 @@ const submitDraft = async (draft: Draft) => {
 };
 ```
 
-**Correct (외부 호출의 실행 순서를 유지하려고 변수로 뺍니다):**
+**Correct 5 (외부 호출의 실행 순서를 유지하려고 변수로 뺍니다):**
 
 ```ts
 /**
@@ -2330,7 +2330,7 @@ export const assertLoggedIn = (session: Session): void => {
 입력을 수정하지 않는 정렬 함수는 `readonly` 배열을 매개변수로 받습니다.
 `.toSorted()`의 타입 선언만 추가해도 런타임 지원이 생기지는 않습니다.
 
-**Incorrect (매개변수로 받은 배열을 제자리에서 바꿉니다):**
+**Incorrect 1 (매개변수로 받은 배열을 제자리에서 바꿉니다):**
 
 ```ts
 const toSortedUsers = (users: User[]): User[] => {
@@ -2338,7 +2338,7 @@ const toSortedUsers = (users: User[]): User[] => {
 };
 ```
 
-**Correct (키 기준 정렬은 `sortBy`를 씁니다):**
+**Correct 1 (키 기준 정렬은 `sortBy`를 씁니다):**
 
 ```ts
 import {sortBy} from "es-toolkit";
@@ -2397,14 +2397,14 @@ const toSortedUsers = (users: readonly User[]): User[] => {
 `groupBy` · `keyBy`는 목록을 재구성할 때 씁니다.
 목록 연산의 선택은 `values-use-es-toolkit-for-value-helpers`가 정합니다.
 
-**Incorrect (같은 배열을 반복 순회하며 포함 여부를 확인합니다):**
+**Incorrect 1 (같은 배열을 반복 순회하며 포함 여부를 확인합니다):**
 
 ```ts
 const visibleProducts = products.filter((product) => allowedProductIds.includes(product.id));
 const disabledProducts = archivedProducts.filter((product) => allowedProductIds.includes(product.id));
 ```
 
-**Correct (반복 조회는 `Set`으로 처리합니다):**
+**Correct 1 (반복 조회는 `Set`으로 처리합니다):**
 
 ```ts
 const allowedProductIdSet = new Set(allowedProductIds);
@@ -2562,7 +2562,7 @@ const toOverdueLines = (order: Order): OrderLine[] => {
 `tooling-configure-biome-to-enforce-these-rules`의 `style/noMagicNumbers`로 검사합니다.
 테스트 파일에서는 리터럴 자체가 기대 계약일 수 있어 이 검사를 끕니다.
 
-**Incorrect (뜻이 있는 숫자를 쓰는 자리에 적거나 지역 `const`로 자리만 옮깁니다):**
+**Incorrect 1 (뜻이 있는 숫자를 쓰는 자리에 적거나 지역 `const`로 자리만 옮깁니다):**
 
 ```ts
 // page/products/pg-products.tsx
@@ -2577,7 +2577,7 @@ const toPreviewRows = (rows: Row[]): Row[] => {
 };
 ```
 
-**Correct (`constant` 폴더에 선언하고 쓰는 자리에서 이름을 가리킵니다):**
+**Correct 1 (`constant` 폴더에 선언하고 쓰는 자리에서 이름을 가리킵니다):**
 
 ```ts
 // constant/retry.ts
@@ -2605,7 +2605,7 @@ const toPreviewRows = (rows: Row[]): Row[] => {
 };
 ```
 
-**Incorrect (뜻이 없는 숫자에까지 이름을 붙입니다):**
+**Incorrect 2 (뜻이 없는 숫자에까지 이름을 붙입니다):**
 
 ```ts
 // constant/table.ts
@@ -2624,7 +2624,7 @@ const toNextPage = (page: number): number => {
 };
 ```
 
-**Correct (뜻이 없는 숫자는 그대로 둡니다):**
+**Correct 2 (뜻이 없는 숫자는 그대로 둡니다):**
 
 ```ts
 // page/products/pg-products.tsx
@@ -2653,7 +2653,7 @@ const toNextPage = (page: number): number => {
 조회표는 여러 키의 대응 관계 자체가 도메인이나 외부 계약일 때만 둡니다.
 선언 바로 위에는 어떤 계약의 대응 관계인지 확인할 수 있는 근거를 적습니다.
 
-**Incorrect (한 곳의 프롭 값을 고르려고 조회표를 만듭니다):**
+**Incorrect 1 (한 곳의 프롭 값을 고르려고 조회표를 만듭니다):**
 
 ```tsx
 const chart_toolbar_variant_by_card_variant = {
@@ -2665,13 +2665,13 @@ const chart_toolbar_variant_by_card_variant = {
 <UiChart.Toolbar variant={chart_toolbar_variant_by_card_variant[props.variant]} />;
 ```
 
-**Correct (값이 달라지는 조건을 사용처에 적습니다):**
+**Correct 1 (값이 달라지는 조건을 사용처에 적습니다):**
 
 ```tsx
 <UiChart.Toolbar variant={props.variant === "fill" ? "default" : props.variant} />;
 ```
 
-**Incorrect (계약 조회표를 근거 없이 둡니다):**
+**Incorrect 2 (계약 조회표를 근거 없이 둡니다):**
 
 ```ts
 const order_status_by_api_code = {
@@ -2681,7 +2681,7 @@ const order_status_by_api_code = {
 } as const satisfies Record<OrderStatusCode, OrderStatus>;
 ```
 
-**Correct (외부 코드와 화면 상태의 대응 관계가 계약이면 이유를 남기고 조회표를 둡니다):**
+**Correct 2 (외부 코드와 화면 상태의 대응 관계가 계약이면 이유를 남기고 조회표를 둡니다):**
 
 ```ts
 /**
@@ -2737,7 +2737,7 @@ nullish만 제거하던 공개 계약은 `filter(isNotNil)` 등으로 보존하�
 `groupBy` · `keyBy`는 목록 재구성에 쓰고, 반복 조회는
 `values-use-set-and-map-for-repeated-lookups`에 따라 `Set` · `Map`으로 처리합니다.
 
-**Incorrect (`es-toolkit`에 있는 함수를 손으로 다시 씁니다):**
+**Incorrect 1 (`es-toolkit`에 있는 함수를 손으로 다시 씁니다):**
 
 ```ts
 const uniqueOwnerIds = ownerIds.filter((ownerId, index) => ownerIds.indexOf(ownerId) === index);
@@ -2751,7 +2751,7 @@ const searchKey = rawKey.replace(/([A-Z])/g, "_$1").toLowerCase();
 const tickTimes = Array.from({length: tick_count}, (_unused, tickIndex) => toTickTime(tickIndex));
 ```
 
-**Correct (`es-toolkit` 함수를 그대로 부릅니다):**
+**Correct 1 (`es-toolkit` 함수를 그대로 부릅니다):**
 
 ```ts
 import {cloneDeep, groupBy, range, snakeCase, uniq} from "es-toolkit";
@@ -2764,7 +2764,7 @@ const searchKey = snakeCase(rawKey);
 const tickTimes = range(tick_count).map((tickIndex) => toTickTime(tickIndex));
 ```
 
-**Incorrect (빈 목록을 먼저 검사하고 중간 배열을 만들어 양 끝을 읽습니다):**
+**Incorrect 2 (빈 목록을 먼저 검사하고 중간 배열을 만들어 양 끝을 읽습니다):**
 
 ```ts
 const toChartBounds = (points: readonly ChartPoint[]) => {
@@ -2778,7 +2778,7 @@ const toChartBounds = (points: readonly ChartPoint[]) => {
 };
 ```
 
-**Correct (빈 목록 판정을 `minBy` · `maxBy`의 결과로 합칩니다):**
+**Correct 2 (빈 목록 판정을 `minBy` · `maxBy`의 결과로 합칩니다):**
 
 ```ts
 import {maxBy, minBy} from "es-toolkit";
@@ -2835,7 +2835,7 @@ const trimmedKeyword = keyword.trim();
 형식 문자열은 상수로 선언하며 입력 형식과 화면 표시 형식은 별도 상수로 둡니다.
 배치는 `naming-place-project-constants-in-the-root-constant-folder`를 따릅니다.
 
-**Incorrect (정해진 경과 시간을 밀리초로 더하고 자릿수를 손으로 채웁니다):**
+**Incorrect 1 (정해진 경과 시간을 밀리초로 더하고 자릿수를 손으로 채웁니다):**
 
 ```ts
 // 만료 계약은 발급 시점으로부터 정확히 token_expiry_hours시간 뒤다
@@ -2843,7 +2843,7 @@ const expiresAt = new Date(issuedAt.getTime() + token_expiry_hours * 60 * 60 * 1
 const expiresLabel = `${expiresAt.getFullYear()}.${toPaddedDatePart(expiresAt.getMonth() + 1)}`;
 ```
 
-**Correct (더하기와 형식은 `dayjs`, 형식 문자열은 상수로 둡니다):**
+**Correct 1 (더하기와 형식은 `dayjs`, 형식 문자열은 상수로 둡니다):**
 
 ```ts
 import dayjs from "dayjs";
@@ -2921,7 +2921,7 @@ const compactDateTime = responseDateTime.slice(0, 16).replace("T", " ");
 시각 · 권한 · 로케일 등 판정 입력이 바뀌면 다시 계산하고, 입력이나 소비 목적이 다르면 판정을 합치지 않습니다.
 경계의 선택 순서는 `absence-resolve-defaults-at-the-boundary`와 같습니다.
 
-**Incorrect (경계에서 포맷한 값을 소비처가 다시 파싱해 포맷합니다):**
+**Incorrect 1 (경계에서 포맷한 값을 소비처가 다시 파싱해 포맷합니다):**
 
 ```ts
 // page/product-detail/pg-product-detail.tsx: ProductSummary 를 만들며 이미 포맷한다
@@ -2931,14 +2931,14 @@ const productSummary = {averageRate: formatPercent(responseProductSummarySuspens
 const rows = [{id: "changeRate", value: formatPercent(productSummary.averageRate)}];
 ```
 
-**Correct (경계에서 한 번 포맷하고 소비처는 전달된 값을 그대로 씁니다):**
+**Correct 1 (경계에서 한 번 포맷하고 소비처는 전달된 값을 그대로 씁니다):**
 
 ```ts
 // page/product-detail/_function/to-report-content.ts
 const rows = [{id: "changeRate", value: productSummary.averageRate}];
 ```
 
-**Incorrect (같은 색 판정을 범례와 차트 둘에서 하고 폴백으로 한 번 더 합니다):**
+**Incorrect 2 (같은 색 판정을 범례와 차트 둘에서 하고 폴백으로 한 번 더 합니다):**
 
 ```ts
 // 범례
@@ -2954,7 +2954,7 @@ const chartSeries = seriesItems.map((series, index) => ({
 }));
 ```
 
-**Correct (경계에서 한 번 정해 항목에 담고 차트는 읽기만 합니다):**
+**Correct 2 (경계에서 한 번 정해 항목에 담고 차트는 읽기만 합니다):**
 
 ```ts
 // 범례를 만드는 자리에서 색을 정해 항목에 싣는다
@@ -3010,7 +3010,7 @@ const chartSeries = comparisonSeries.map((series) => ({
 채우는 위치는 `absence-resolve-defaults-at-the-boundary`가 정합니다.
 일반 숫자 리터럴은 `values-declare-meaningful-numbers`가 정하고, 여기서는 없는 값을 대체하는 자리만 봅니다.
 
-**Incorrect (`??`, `||`, 기본 매개변수 자리에 리터럴을 적습니다):**
+**Incorrect 1 (`??`, `||`, 기본 매개변수 자리에 리터럴을 적습니다):**
 
 ```ts
 const supportEmail = settings.supportEmail ?? "help@example.com";
@@ -3018,7 +3018,7 @@ const displayName = user.nickname || "-";
 const toPageRequest = (size = 10): PageRequest => { /* … */ };
 ```
 
-**Correct (이미 선언된 이름만 가리킵니다):**
+**Correct 1 (이미 선언된 이름만 가리킵니다):**
 
 ```ts
 const supportEmail = settings.supportEmail ?? support_email_default;
@@ -3051,14 +3051,14 @@ const toPageRequest = (size = pagination_default_page_size): PageRequest => { /*
 `values-read-objects-through-chains`가 금지하는 단순 별칭에 해당하지 않습니다.
 이름을 붙일지는 `functions-name-a-value-only-for-recompute-or-judgment`가 정합니다.
 
-**Incorrect (없어도 되는 값에 기본값을 채웁니다):**
+**Incorrect 1 (없어도 되는 값에 기본값을 채웁니다):**
 
 ```ts
 const productIds = (response.data.rows ?? []).map((row) => row.id);
 const isCompact = (variant ?? "default") === "compact";
 ```
 
-**Correct (그대로 비교하면 기본값이 필요 없습니다):**
+**Correct 1 (그대로 비교하면 기본값이 필요 없습니다):**
 
 ```ts
 const productIds = response.data.rows?.map((row) => row.id);
@@ -3135,7 +3135,7 @@ setVisibleRowCount(effectivePageSize);
 
 없는 값을 무엇으로 대체할지는 `absence-expose-optional-values-instead-of-silent-fallbacks`가 정합니다.
 
-**Incorrect (타입이 `string`으로 보장한 값을 다시 검사합니다):**
+**Incorrect 1 (타입이 `string`으로 보장한 값을 다시 검사합니다):**
 
 ```ts
 const toRowLabel = (row: ProductRow): string => {
@@ -3147,7 +3147,7 @@ const toRowLabel = (row: ProductRow): string => {
 };
 ```
 
-**Correct (타입이 보장하는 조건은 다시 검사하지 않습니다):**
+**Correct 1 (타입이 보장하는 조건은 다시 검사하지 않습니다):**
 
 ```ts
 const toRowLabel = (row: ProductRow): string => {
@@ -3155,7 +3155,7 @@ const toRowLabel = (row: ProductRow): string => {
 };
 ```
 
-**Incorrect (생략과 `undefined`를 구분하지 않는 내부 계약에서 키를 조건부로 생략합니다):**
+**Incorrect 2 (생략과 `undefined`를 구분하지 않는 내부 계약에서 키를 조건부로 생략합니다):**
 
 ```ts
 // 이 내부 표시 계약은 stockCount의 undefined 대입을 허용하고 키 존재 여부를 읽지 않는다
@@ -3165,7 +3165,7 @@ return {
 };
 ```
 
-**Correct (생략과 같은 뜻이고 타입도 허용하면 `undefined`를 그대로 넣습니다):**
+**Correct 2 (생략과 같은 뜻이고 타입도 허용하면 `undefined`를 그대로 넣습니다):**
 
 ```ts
 // 이 내부 표시 계약은 stockCount의 undefined 대입을 허용하고 키 존재 여부를 읽지 않는다
@@ -3291,7 +3291,7 @@ export const toSignedTone = (value: number): Tone => {
 내용은 `docs-write-korean-comments-about-purpose-and-constraints`,
 허용된 예외의 이유는 `docs-justify-convention-exceptions-with-a-reason-comment`가 정합니다.
 
-**Incorrect (지역 선언에 코드를 옮겨 적은 주석을 답니다):**
+**Incorrect 1 (지역 선언에 코드를 옮겨 적은 주석을 답니다):**
 
 ```ts
 const toMatchedProducts = (products: Product[], keyword: string) => {
@@ -3302,7 +3302,7 @@ const toMatchedProducts = (products: Product[], keyword: string) => {
 };
 ```
 
-**Correct (선언 이름이 이미 말하는 주석은 지웁니다):**
+**Correct 1 (선언 이름이 이미 말하는 주석은 지웁니다):**
 
 ```ts
 const toMatchedProducts = (products: Product[], keyword: string) => {
@@ -3312,7 +3312,7 @@ const toMatchedProducts = (products: Product[], keyword: string) => {
 };
 ```
 
-**Incorrect (지켜야 할 순서와 제약을 주석 없이 코드에만 둡니다):**
+**Incorrect 2 (지켜야 할 순서와 제약을 주석 없이 코드에만 둡니다):**
 
 ```ts
 const submitProductDraft = async (draft: ProductDraft) => {
@@ -3329,7 +3329,7 @@ const submitProductDraft = async (draft: ProductDraft) => {
 };
 ```
 
-**Correct (`//`로 제약과 단계를 적습니다):**
+**Correct 2 (`//`로 제약과 단계를 적습니다):**
 
 ```ts
 const submitProductDraft = async (draft: ProductDraft) => {
@@ -3424,7 +3424,7 @@ const responseProductList = useProductList();
 선언 위 문서 주석은 `docs-write-doc-comments-as-multiline-blocks`,
 본문 설명은 `docs-keep-body-comments-for-intent-and-steps`에 따라 `//`로 씁니다.
 
-**Incorrect (영문이거나 선언 이름을 옮겨 적기만 합니다):**
+**Incorrect 1 (영문이거나 선언 이름을 옮겨 적기만 합니다):**
 
 ```ts
 /**
@@ -3449,7 +3449,7 @@ export interface PgProductTreeProps {
 }
 ```
 
-**Correct (이름에 없는 정보를 더합니다):**
+**Correct 1 (이름에 없는 정보를 더합니다):**
 
 ```ts
 /**
@@ -3480,7 +3480,7 @@ export interface PgProductTreeProps {
 }
 ```
 
-**Incorrect (역할 태그로 선언의 성격을 다시 적습니다):**
+**Incorrect 2 (역할 태그로 선언의 성격을 다시 적습니다):**
 
 ```ts
 /**
@@ -3491,7 +3491,7 @@ export const fetchProductList = async (): Promise<Product[]> => {
 };
 ```
 
-**Correct (태그를 지우고 헤더 첫 줄이 하는 일을 말합니다):**
+**Correct 2 (태그를 지우고 헤더 첫 줄이 하는 일을 말합니다):**
 
 ```ts
 /**
@@ -3521,7 +3521,7 @@ export const fetchProductList = async (): Promise<Product[]> => {
 | 문서화할 선언 선택 | `docs-require-header-jsdoc-on-key-declarations`를 따릅니다 |
 | 태그 선택 | `docs-write-korean-comments-about-purpose-and-constraints`를 따릅니다 |
 
-**Incorrect (한 줄 블록과 `//`로 선언을 설명합니다):**
+**Incorrect 1 (한 줄 블록과 `//`로 선언을 설명합니다):**
 
 ```ts
 /** product 목록. 조회 실패는 호출부가 처리한다 */
@@ -3535,7 +3535,7 @@ export const saveProduct = async (product: Product): Promise<void> => {
 };
 ```
 
-**Correct (같은 내용을 여러 줄 블록으로 고정합니다):**
+**Correct 1 (같은 내용을 여러 줄 블록으로 고정합니다):**
 
 ```ts
 /**
@@ -3581,7 +3581,7 @@ export const saveProduct = async (product: Product): Promise<void> => {
 
 어투와 내용은 `docs-write-korean-comments-about-purpose-and-constraints`를 따릅니다.
 
-**Incorrect (확인할 수 없는 말로 예외를 정당화합니다):**
+**Incorrect 1 (확인할 수 없는 말로 예외를 정당화합니다):**
 
 ```ts
 // 성능을 위해 메모이제이션
@@ -3590,7 +3590,7 @@ const columns = useMemo(() => {
 }, [responseTableColumnsSuspense.data.columns]);
 ```
 
-**Correct (외부 패키지의 제약을 가리킵니다):**
+**Correct 1 (외부 패키지의 제약을 가리킵니다):**
 
 ```ts
 // MUI Data Grid는 columns 참조가 바뀌면 열 너비나 순서를 잃을 수 있어 참조를 유지한다.
@@ -3599,7 +3599,7 @@ const columns = useMemo(() => {
 }, [responseTableColumnsSuspense.data.columns]);
 ```
 
-**Incorrect (막연한 말이라 무엇을 재서 넣었는지 알 수 없습니다):**
+**Incorrect 2 (막연한 말이라 무엇을 재서 넣었는지 알 수 없습니다):**
 
 ```ts
 // 안전하게 다시 계산하지 않도록
@@ -3608,7 +3608,7 @@ const filteredRows = useMemo(() => {
 }, [deferredKeyword, rows]);
 ```
 
-**Correct (측정 결과를 가리킵니다):**
+**Correct 2 (측정 결과를 가리킵니다):**
 
 ```ts
 // 행 5,000개에서 매 렌더 필터링이 120ms로 측정됐다. 지연한 검색어에만 다시 계산한다.

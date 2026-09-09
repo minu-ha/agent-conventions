@@ -47,6 +47,40 @@ test("parseRuleBody splits prose from Incorrect and Correct examples", () => {
 	assert.equal(parsed.examples[1]?.label, "핸들러로 노출");
 });
 
+test("parseRuleBody reads the pair number and leaves unnumbered examples without one", () => {
+	const body = [
+		"**Incorrect 2 (이름을 조립합니다):**",
+		"",
+		"```tsx",
+		"const a = 1;",
+		"```",
+		"",
+		"**Correct 2:**",
+		"",
+		"```tsx",
+		"const b = 2;",
+		"```",
+		"",
+		"**Correct (다른 대안):**",
+		"",
+		"```tsx",
+		"const c = 3;",
+		"```",
+	].join("\n");
+
+	const parsed = parseRuleBody(body);
+
+	assert.deepEqual(
+		parsed.examples.map((example) => [example.kind, example.pair, example.label]),
+		[
+			["incorrect", 2, "이름을 조립합니다"],
+			["correct", 2, ""],
+			["correct", undefined, "다른 대안"],
+		],
+	);
+	assert.equal("pair" in (parsed.examples[2] ?? {}), false);
+});
+
 test("parseRuleBody keeps multiple blocks under one Correct label", () => {
 	const body = ["**Correct:**", "", "```ts", "export const a = 1;", "```", "", "```tsx", "export const B = () => null;", "```"].join("\n");
 

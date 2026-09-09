@@ -46,7 +46,7 @@ tags: types
 | 읽기 전용 필드 | `readonly`를 직접 붙입니다. 인덱스 접근만으로는 복사되지 않습니다 |
 | `exactOptionalPropertyTypes`가 켜진 프로젝트의 선택 필드 | `name?: Required<Src>["name"]`으로 `undefined` 대입을 막습니다. 옵션이 꺼진 프로젝트는 `Src["name"]`으로 충분합니다 |
 
-**Incorrect (`Pick`으로 골라 필드 이름과 설명이 사라집니다):**
+**Incorrect 1 (`Pick`으로 골라 필드 이름과 설명이 사라집니다):**
 
 ```ts
 // 원본 계약
@@ -59,7 +59,7 @@ interface UserRecord {
 type UserPreview = Pick<UserRecord, "id" | "name">;
 ```
 
-**Correct (필드마다 출처를 인덱스 접근으로 가져오고 `?`, `readonly`를 직접 적습니다):**
+**Correct 1 (필드마다 출처를 인덱스 접근으로 가져오고 `?`, `readonly`를 직접 적습니다):**
 
 ```ts
 /**
@@ -77,7 +77,7 @@ interface UserPreview {
 }
 ```
 
-**Incorrect (인덱스 접근으로 옮기면서 선택 여부와 읽기 전용 속성을 누락합니다):**
+**Incorrect 2 (인덱스 접근으로 옮기면서 선택 여부와 읽기 전용 속성을 누락합니다):**
 
 ```ts
 // 원본: ProductRecord.id 는 readonly, UserRecord.name 은 선택 필드다
@@ -96,7 +96,7 @@ interface ProductListRow {
 }
 ```
 
-**Correct (여러 계약에서 필드를 모으고 `?`, `readonly`를 직접 적습니다):**
+**Correct 2 (여러 계약에서 필드를 모으고 `?`, `readonly`를 직접 적습니다):**
 
 ```ts
 /**
@@ -114,7 +114,7 @@ interface ProductListRow {
 }
 ```
 
-**Incorrect (원본을 따라가야 하는 열린 집합을 인덱스 접근으로 닫아 새 필드를 놓칩니다):**
+**Incorrect 3 (원본을 따라가야 하는 열린 집합을 인덱스 접근으로 닫아 새 필드를 놓칩니다):**
 
 ```ts
 /**
@@ -132,7 +132,7 @@ interface ExportRequestBody {
 }
 ```
 
-**Correct (원본을 따라가야 하는 열린 집합은 `Omit`으로 뺍니다):**
+**Correct 3 (원본을 따라가야 하는 열린 집합은 `Omit`으로 뺍니다):**
 
 ```ts
 /**
@@ -141,7 +141,7 @@ interface ExportRequestBody {
 type ExportRequestBody = Omit<GeneratedExportRequest, "requestedAt">;
 ```
 
-**Incorrect (좁힌 값을 원시 타입으로 다시 적어 원본과의 연결이 사라집니다):**
+**Incorrect 4 (좁힌 값을 원시 타입으로 다시 적어 원본과의 연결이 사라집니다):**
 
 ```ts
 // 원본: TableCellProps.align 은 선택 필드고 padding 은 normal · checkbox · none 이다
@@ -160,7 +160,7 @@ interface ReportCell {
 }
 ```
 
-**Correct (원본 필드를 `NonNullable` · `Extract`로 파생해 출처와 좁힘을 함께 남깁니다):**
+**Correct 4 (원본 필드를 `NonNullable` · `Extract`로 파생해 출처와 좁힘을 함께 남깁니다):**
 
 ```ts
 /**

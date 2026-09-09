@@ -33,7 +33,7 @@ tags: data, state, react-query
 `select` 내부 변환은 이 규칙이 담당합니다. 별도 함수나 보조 모듈 경계가 없으면
 `typescript/functions-extract-helpers-only-when-the-boundary-is-real`은 적용하지 않습니다.
 
-**Incorrect (렌더에서 응답 원본 구조를 가공합니다):**
+**Incorrect 1 (렌더에서 응답 원본 구조를 가공합니다):**
 
 ```tsx
 const responseProductListSuspense = useProductListSuspense();
@@ -46,7 +46,7 @@ const responseProductListSuspense = useProductListSuspense();
 />;
 ```
 
-**Correct (`query.select`에서 화면에 필요한 형태로 가공합니다):**
+**Correct 1 (`query.select`에서 화면에 필요한 형태로 가공합니다):**
 
 ```tsx
 /**

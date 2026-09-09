@@ -22,7 +22,7 @@ DOM 이벤트 매개변수나 커링을 덧붙이지 않고,
 `biome`도 `useEffectEvent`를 인식하는 최근 버전을 씁니다. 이전 버전은 아래 Correct 예제를 훅 규칙 위반으로 표시합니다.
 설정은 `typescript/tooling-configure-biome-to-enforce-these-rules`를 따릅니다.
 
-**Incorrect (최신 콜백을 읽기 위해 `ref`를 직접 동기화합니다):**
+**Incorrect 1 (최신 콜백을 읽기 위해 `ref`를 직접 동기화합니다):**
 
 ```tsx
 const onChangeRef = useRef(props.onChange);
@@ -40,7 +40,7 @@ useEffect(() => {
 }, [props.productId]);
 ```
 
-**Correct (비반응형 콜백은 `useEffectEvent`로 분리합니다):**
+**Correct 1 (비반응형 콜백은 `useEffectEvent`로 분리합니다):**
 
 ```tsx
 /**

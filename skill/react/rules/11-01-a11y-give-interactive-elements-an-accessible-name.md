@@ -32,7 +32,7 @@ tags: composition, accessibility
 역할만으로 찾는 테스트가 통과해도 접근 가능한 이름이 있다는 뜻은 아닙니다.
 포커스 이동 위치는 이 규칙의 대상이 아닙니다.
 
-**Incorrect (클릭 가능한 `div`와 이름 없는 아이콘 버튼을 씁니다):**
+**Incorrect 1 (클릭 가능한 `div`와 이름 없는 아이콘 버튼을 씁니다):**
 
 ```tsx
 <Fragment>
@@ -44,7 +44,7 @@ tags: composition, accessibility
 </Fragment>
 ```
 
-**Correct (`button`으로 만들고 이름을 붙입니다):**
+**Correct 1 (`button`으로 만들고 이름을 붙입니다):**
 
 ```tsx
 <Fragment>

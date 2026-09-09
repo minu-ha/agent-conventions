@@ -33,6 +33,10 @@ export interface RuleExample {
 	 * @field 라벨 아래 이어지는 코드 블록 목록
 	 */
 	blocks: RuleCodeBlock[];
+	/**
+	 * @field 짝 번호. `**Incorrect 1**`과 `**Correct 1**`처럼 같은 번호가 좌우 diff 로 마주 선다. 없으면 홀로 선 예시다
+	 */
+	pair?: number;
 }
 
 /**
@@ -58,7 +62,7 @@ export interface ParsedRuleBody {
  * 라벨 본문에 `clsx()`, `:is()`처럼 괄호가 들어가므로 마지막 `)`까지 greedy 로 잡는다.
  * `[^)]*`로 잡으면 첫 `)`에서 끊겨 라벨이 인식되지 않고 예시가 앞 카드에 병합된다.
  */
-const examplePattern = /^\*\*(Incorrect|Correct)\s*(?:\((.+)\))?\s*:?\*\*/;
+const examplePattern = /^\*\*(Incorrect|Correct)(?:\s+(\d+))?\s*(?:\((.+)\))?\s*:?\*\*/;
 
 /**
  * @helper 본문 선두의 `## 제목`과 `**Impact: …**` 줄 제거
@@ -114,7 +118,12 @@ export const parseRuleBody = (body: string): ParsedRuleBody => {
 		const matched = examplePattern.exec(line);
 
 		if (matched) {
-			current = {kind: matched[1] === "Incorrect" ? "incorrect" : "correct", label: (matched[2] ?? "").trim(), blocks: []};
+			current = {kind: matched[1] === "Incorrect" ? "incorrect" : "correct", label: (matched[3] ?? "").trim(), blocks: []};
+
+			if (matched[2] !== undefined) {
+				current.pair = Number(matched[2]);
+			}
+
 			examples.push(current);
 			index += 1;
 			continue;

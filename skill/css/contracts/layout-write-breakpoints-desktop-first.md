@@ -22,7 +22,7 @@
 `@media` 조건에는 `var()`를 쓸 수 없으므로 이 숫자를 토큰으로 만들지 않습니다.
 블록 위치는 `layout-group-breakpoints-at-the-file-bottom` 규칙을 따릅니다.
 
-**Incorrect (기본 선언을 중간 폭에 맞추고 넓고 좁은 방향을 함께 씁니다):**
+**Incorrect 1 (기본 선언을 중간 폭에 맞추고 넓고 좁은 방향을 함께 씁니다):**
 
 ```css
 .pg_products__layout {
@@ -43,7 +43,7 @@
 }
 ```
 
-**Correct (기본 선언은 가장 넓은 화면에 맞추고 좁아질 때만 덮어씁니다):**
+**Correct 1 (기본 선언은 가장 넓은 화면에 맞추고 좁아질 때만 덮어씁니다):**
 
 ```css
 .pg_products__layout {

@@ -69,7 +69,7 @@ export const UiCollapse = (props: UiCollapseProps) => {
 }
 ```
 
-**Incorrect (역할 없는 이름의 래퍼를 늘립니다):**
+**Incorrect 1 (역할 없는 이름의 래퍼를 늘립니다):**
 
 ```tsx
 <div className={clsx("pg_orders__box")}>
@@ -79,7 +79,7 @@ export const UiCollapse = (props: UiCollapseProps) => {
 </div>
 ```
 
-**Correct (외부 라이브러리가 `className`을 받지 않으면 역할 이름을 붙여 감쌉니다):**
+**Correct 1 (외부 라이브러리가 `className`을 받지 않으면 역할 이름을 붙여 감쌉니다):**
 
 ```tsx
 {/**

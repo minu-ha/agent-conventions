@@ -42,7 +42,7 @@ tags: values, layout, responsive
 `padding`, `min-height`, 글자 크기까지만 소유하고 폭은 사용처가 정합니다.
 폭을 고정한 이유가 클래스명과 선언에서 드러나는지는 `layout-keep-layout-intent-explicit` 규칙을 따릅니다.
 
-**Incorrect (열 개수를 브레이크포인트마다 직접 지정합니다):**
+**Incorrect 1 (열 개수를 브레이크포인트마다 직접 지정합니다):**
 
 ```css
 .pg_products__grid {
@@ -70,7 +70,7 @@ tags: values, layout, responsive
 }
 ```
 
-**Correct (사용 가능한 폭에 따라 열 개수를 조정합니다):**
+**Correct 1 (사용 가능한 폭에 따라 열 개수를 조정합니다):**
 
 ```css
 .pg_products__grid {

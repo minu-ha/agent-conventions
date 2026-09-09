@@ -31,7 +31,7 @@ Suspense의 불필요한 대기 분기는 `runtime-avoid-ad-hoc-loading-branches
 실측 병목이 있을 때만 `perf-avoid-defensive-memoization`의 예외 기준을 따릅니다.
 반복 조회 인덱스는 `typescript/values-use-set-and-map-for-repeated-lookups`를 따릅니다.
 
-**Incorrect (화면 본문에서 두 응답을 꺼내 합칩니다):**
+**Incorrect 1 (화면 본문에서 두 응답을 꺼내 합칩니다):**
 
 ```tsx
 const responseProductListSuspense = useProductListSuspense();
@@ -45,7 +45,7 @@ const rows = responseProductListSuspense.data.products.map((product) => ({
 }));
 ```
 
-**Correct (값을 렌더하는 섹션이 인라인 `combine`으로 합칩니다):**
+**Correct 1 (값을 렌더하는 섹션이 인라인 `combine`으로 합칩니다):**
 
 ```tsx
 export const PgProductTableSection = () => {

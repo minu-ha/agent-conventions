@@ -19,13 +19,13 @@
 
 **Requires selected:** `typing-take-handler-types-from-existing-contracts` · 함께 적용
 
-**Incorrect (인라인 래퍼로 인자를 넘깁니다):**
+**Incorrect 1 (인라인 래퍼로 인자를 넘깁니다):**
 
 ```tsx
 <UiButton onClick={() => handleListItemClick(product.id)}>{product.name}</UiButton>;
 ```
 
-**Correct (JSX에는 팩토리 호출만 두고 감싸는 화살표를 만들지 않습니다):**
+**Correct 1 (JSX에는 팩토리 호출만 두고 감싸는 화살표를 만들지 않습니다):**
 
 ```tsx
 <UiButton onClick={handleListItemClick(product.id)}>{product.name}</UiButton>;

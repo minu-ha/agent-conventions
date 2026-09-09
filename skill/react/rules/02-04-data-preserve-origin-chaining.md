@@ -23,7 +23,7 @@ tags: data, state, origin
 | 쿼리 결과 가공 | `data-shape-query-data-with-select`에 따라 `query.select`에서 처리합니다. 받는 쪽의 별칭은 깊이를 줄이지 못하고 출처만 지웁니다 |
 | 프롭스 접근 | `composition-read-props-without-destructuring` |
 
-**Incorrect (구조분해로 출처가 흐려집니다):**
+**Incorrect 1 (구조분해로 출처가 흐려집니다):**
 
 ```tsx
 const {products, selectedProduct} = responseProductListSuspense.data;
@@ -34,7 +34,7 @@ const {products, selectedProduct} = responseProductListSuspense.data;
 </Fragment>;
 ```
 
-**Correct (원본 객체의 속성을 직접 읽어 출처를 유지합니다):**
+**Correct 1 (원본 객체의 속성을 직접 읽어 출처를 유지합니다):**
 
 ```tsx
 <Fragment>
@@ -43,7 +43,7 @@ const {products, selectedProduct} = responseProductListSuspense.data;
 </Fragment>;
 ```
 
-**Incorrect (이펙트 의존성도 구조분해한 이름으로 적어 출처가 드러나지 않습니다):**
+**Incorrect 2 (이펙트 의존성도 구조분해한 이름으로 적어 출처가 드러나지 않습니다):**
 
 ```ts
 const {products} = responseProductSearchSuspense.data;
@@ -57,7 +57,7 @@ useEffect(() => {
 }, [products, urlParams.keyword]);
 ```
 
-**Correct (이펙트 안에서도 원본 이름 그대로 씁니다):**
+**Correct 2 (이펙트 안에서도 원본 이름 그대로 씁니다):**
 
 ```ts
 /**

@@ -50,7 +50,7 @@ const mutationProductSave = useProductSave({
 });
 ```
 
-**Incorrect (현재 목록 키만 다시 읽어 다른 목록 조건과 요약 키를 놓칩니다):**
+**Incorrect 1 (현재 목록 키만 다시 읽어 다른 목록 조건과 요약 키를 놓칩니다):**
 
 ```tsx
 const mutationProductSave = useProductSave({
@@ -62,7 +62,7 @@ const mutationProductSave = useProductSave({
 });
 ```
 
-**Correct (바뀐 데이터를 소유한 키를 무효화합니다):**
+**Correct 1 (바뀐 데이터를 소유한 키를 무효화합니다):**
 
 ```tsx
 const queryClient = useQueryClient();

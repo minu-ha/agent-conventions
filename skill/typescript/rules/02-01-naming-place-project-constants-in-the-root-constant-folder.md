@@ -39,7 +39,7 @@ tags: naming, constant
 색인 객체는 수동 관리가 필요하고 번들러의 미사용 프로퍼티 제거도 어려워질 수 있습니다.
 `constant`에는 코드와 함께 바뀌는 값만 둡니다.
 
-**Incorrect (프로젝트 전반의 값을 쓰는 자리에서 선언합니다):**
+**Incorrect 1 (프로젝트 전반의 값을 쓰는 자리에서 선언합니다):**
 
 ```ts
 // page/products/pg-products.tsx
@@ -55,7 +55,7 @@ const default_page_size = 20;
 const orderQuery = useOrderQuery({pageSize: default_page_size});
 ```
 
-**Correct (루트 `constant` 폴더에 둔 이름을 쓰는 자리에서 가져옵니다):**
+**Correct 1 (루트 `constant` 폴더에 둔 이름을 쓰는 자리에서 가져옵니다):**
 
 ```ts
 // page/products/pg-products.tsx
@@ -71,7 +71,7 @@ import {pagination_default_page_size} from "@/constant/pagination";
 const orderQuery = useOrderQuery({pageSize: pagination_default_page_size});
 ```
 
-**Incorrect (객체 하나에 모아 색인을 손으로 유지합니다):**
+**Incorrect 2 (객체 하나에 모아 색인을 손으로 유지합니다):**
 
 ```ts
 // constant/config.ts
@@ -81,7 +81,7 @@ export const config = {
 } as const;
 ```
 
-**Correct (주제 파일에 상수를 하나씩 이름 붙여 내보냅니다):**
+**Correct 2 (주제 파일에 상수를 하나씩 이름 붙여 내보냅니다):**
 
 ```ts
 // constant/api.ts

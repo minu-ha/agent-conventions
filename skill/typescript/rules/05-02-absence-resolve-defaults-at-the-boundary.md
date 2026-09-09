@@ -33,14 +33,14 @@ tags: absence
 `values-read-objects-through-chains`가 금지하는 단순 별칭에 해당하지 않습니다.
 이름을 붙일지는 `functions-name-a-value-only-for-recompute-or-judgment`가 정합니다.
 
-**Incorrect (없어도 되는 값에 기본값을 채웁니다):**
+**Incorrect 1 (없어도 되는 값에 기본값을 채웁니다):**
 
 ```ts
 const productIds = (response.data.rows ?? []).map((row) => row.id);
 const isCompact = (variant ?? "default") === "compact";
 ```
 
-**Correct (그대로 비교하면 기본값이 필요 없습니다):**
+**Correct 1 (그대로 비교하면 기본값이 필요 없습니다):**
 
 ```ts
 const productIds = response.data.rows?.map((row) => row.id);

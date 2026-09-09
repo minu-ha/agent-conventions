@@ -21,7 +21,7 @@ tags: composition, jsx
 `<>`를 강제하는 `biome`의 `style/useFragmentSyntax`는 켜지 않습니다.
 설정은 `typescript/tooling-configure-biome-to-enforce-these-rules`를 따릅니다.
 
-**Incorrect (`Fragment` 단축 문법을 씁니다):**
+**Incorrect 1 (`Fragment` 단축 문법을 씁니다):**
 
 ```tsx
 export const PgProductScreen = () => {
@@ -34,7 +34,7 @@ export const PgProductScreen = () => {
 };
 ```
 
-**Correct (`Fragment`를 그대로 씁니다):**
+**Correct 1 (`Fragment`를 그대로 씁니다):**
 
 ```tsx
 import {Fragment} from "react";
@@ -49,7 +49,7 @@ export const PgProductScreen = () => {
 };
 ```
 
-**Incorrect (목록에서도 짧은 문법을 써서 `key`를 붙일 자리가 없습니다):**
+**Incorrect 2 (목록에서도 짧은 문법을 써서 `key`를 붙일 자리가 없습니다):**
 
 ```tsx
 export const PgProductRows = (props: PgProductRowsProps) => {
@@ -62,7 +62,7 @@ export const PgProductRows = (props: PgProductRowsProps) => {
 };
 ```
 
-**Correct (`key`가 필요해도 같은 형태를 씁니다):**
+**Correct 2 (`key`가 필요해도 같은 형태를 씁니다):**
 
 ```tsx
 import {Fragment} from "react";

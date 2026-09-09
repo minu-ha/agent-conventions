@@ -19,7 +19,7 @@
 `selector-do-not-group-classes-with-commas`에 따라 여러 클래스의 공통 선언도 묶지 않고 각 블록에 반복합니다.
 층 목록은 `values-declare-stacking-layers-as-tokens`, 새 토큰 이름은 `values-name-tokens-by-purpose` 규칙이 정합니다.
 
-**Incorrect (한 파일 안 반복을 조상에 선언한 지역 변수로 감쌉니다):**
+**Incorrect 1 (한 파일 안 반복을 조상에 선언한 지역 변수로 감쌉니다):**
 
 ```css
 .pg_products__root {
@@ -35,7 +35,7 @@
 }
 ```
 
-**Correct (한 파일 안 반복은 값을 그대로 둡니다):**
+**Correct 1 (한 파일 안 반복은 값을 그대로 둡니다):**
 
 ```css
 .pg_products__toolbar {

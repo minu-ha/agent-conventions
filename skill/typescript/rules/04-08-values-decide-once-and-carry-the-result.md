@@ -30,7 +30,7 @@ tags: values, boundaries
 시각 · 권한 · 로케일 등 판정 입력이 바뀌면 다시 계산하고, 입력이나 소비 목적이 다르면 판정을 합치지 않습니다.
 경계의 선택 순서는 `absence-resolve-defaults-at-the-boundary`와 같습니다.
 
-**Incorrect (경계에서 포맷한 값을 소비처가 다시 파싱해 포맷합니다):**
+**Incorrect 1 (경계에서 포맷한 값을 소비처가 다시 파싱해 포맷합니다):**
 
 ```ts
 // page/product-detail/pg-product-detail.tsx: ProductSummary 를 만들며 이미 포맷한다
@@ -40,14 +40,14 @@ const productSummary = {averageRate: formatPercent(responseProductSummarySuspens
 const rows = [{id: "changeRate", value: formatPercent(productSummary.averageRate)}];
 ```
 
-**Correct (경계에서 한 번 포맷하고 소비처는 전달된 값을 그대로 씁니다):**
+**Correct 1 (경계에서 한 번 포맷하고 소비처는 전달된 값을 그대로 씁니다):**
 
 ```ts
 // page/product-detail/_function/to-report-content.ts
 const rows = [{id: "changeRate", value: productSummary.averageRate}];
 ```
 
-**Incorrect (같은 색 판정을 범례와 차트 둘에서 하고 폴백으로 한 번 더 합니다):**
+**Incorrect 2 (같은 색 판정을 범례와 차트 둘에서 하고 폴백으로 한 번 더 합니다):**
 
 ```ts
 // 범례
@@ -63,7 +63,7 @@ const chartSeries = seriesItems.map((series, index) => ({
 }));
 ```
 
-**Correct (경계에서 한 번 정해 항목에 담고 차트는 읽기만 합니다):**
+**Correct 2 (경계에서 한 번 정해 항목에 담고 차트는 읽기만 합니다):**
 
 ```ts
 // 범례를 만드는 자리에서 색을 정해 항목에 싣는다

@@ -9,7 +9,7 @@
 수정자를 붙일 수 있는지는 `composition-do-not-build-structural-variants-with-modifiers` 규칙이 정합니다.
 이 규칙은 붙이기로 한 이름이 역할을 드러내는지 판단합니다.
 
-**Incorrect (역할 대신 구조나 치수로 이름을 짓습니다):**
+**Incorrect 1 (역할 대신 구조나 치수로 이름을 짓습니다):**
 
 ```txt
 ui_card__wrapper
@@ -17,7 +17,7 @@ ui_card__box
 ui_card__body--gap12
 ```
 
-**Correct (역할과 상태를 기준으로 이름을 붙입니다):**
+**Correct 1 (역할과 상태를 기준으로 이름을 붙입니다):**
 
 ```txt
 ui_card__toolbar

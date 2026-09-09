@@ -40,7 +40,7 @@ tags: ownership, scope, third-party
 같은 레이어의 다른 식별자와 미등록 라이브러리 클래스는 파일별 소유자를 대조해야 합니다.
 전체 설정은 `tooling-configure-stylelint-to-enforce-these-rules` 규칙에 있습니다.
 
-**Incorrect (최상위 블록 없이 라이브러리 클래스를 바로 씁니다):**
+**Incorrect 1 (최상위 블록 없이 라이브러리 클래스를 바로 씁니다):**
 
 ```css
 .MuiTreeItem-content {
@@ -52,7 +52,7 @@ tags: ownership, scope, third-party
 }
 ```
 
-**Correct (내 최상위 블록 안에서 외부 라이브러리 DOM을 선택자로 잡습니다):**
+**Correct 1 (내 최상위 블록 안에서 외부 라이브러리 DOM을 선택자로 잡습니다):**
 
 ```css
 .pg_products__sidebar {
@@ -66,7 +66,7 @@ tags: ownership, scope, third-party
 }
 ```
 
-**Incorrect (최상위 블록 없이 다른 `scope_slug`의 클래스를 바로 씁니다):**
+**Incorrect 2 (최상위 블록 없이 다른 `scope_slug`의 클래스를 바로 씁니다):**
 
 ```css
 /* page/detail/pg-detail.css */
@@ -79,7 +79,7 @@ tags: ownership, scope, third-party
 }
 ```
 
-**Correct (다른 `scope_slug`의 클래스도 내 최상위 블록 안에서 선택자로 잡습니다):**
+**Correct 2 (다른 `scope_slug`의 클래스도 내 최상위 블록 안에서 선택자로 잡습니다):**
 
 ```css
 /* page/detail/pg-detail.css */
@@ -96,7 +96,7 @@ tags: ownership, scope, third-party
 }
 ```
 
-**Incorrect (최상위 블록을 열지 않고 바깥에서 이어 씁니다):**
+**Incorrect 3 (최상위 블록을 열지 않고 바깥에서 이어 씁니다):**
 
 ```css
 .pg_products__sidebarToolbar > .MuiButton-root > .MuiButton-startIcon {
@@ -104,7 +104,7 @@ tags: ownership, scope, third-party
 }
 ```
 
-**Correct (소유자 API로 해결할 수 없으면 내 최상위 블록 안에서 선택합니다):**
+**Correct 3 (소유자 API로 해결할 수 없으면 내 최상위 블록 안에서 선택합니다):**
 
 ```css
 .pg_products__sidebarToolbar {

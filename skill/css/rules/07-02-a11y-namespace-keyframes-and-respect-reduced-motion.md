@@ -45,7 +45,7 @@ tags: values, motion
 
 `0.01ms`도 발생을 보장하지 않으므로 취소되거나 제거된 요소의 완료를 이벤트에만 맡기지 않습니다.
 
-**Incorrect (전역 이름을 겹치게 쓰고 시간을 직접 적습니다):**
+**Incorrect 1 (전역 이름을 겹치게 쓰고 시간을 직접 적습니다):**
 
 ```css
 @keyframes fadeIn {
@@ -59,7 +59,7 @@ tags: values, motion
 }
 ```
 
-**Correct (소유자를 붙인 이름과 토큰을 씁니다):**
+**Correct 1 (소유자를 붙인 이름과 토큰을 씁니다):**
 
 ```css
 @keyframes pg_products__fadeIn {
@@ -73,7 +73,7 @@ tags: values, motion
 }
 ```
 
-**Incorrect (컴포넌트 파일마다 따로 끄고 지속 시간을 `0`으로 둡니다):**
+**Incorrect 2 (컴포넌트 파일마다 따로 끄고 지속 시간을 `0`으로 둡니다):**
 
 ```css
 /* src/page/products/pg-products.css */
@@ -84,7 +84,7 @@ tags: values, motion
 }
 ```
 
-**Correct (전역 스타일시트에서 한 번 처리합니다):**
+**Correct 2 (전역 스타일시트에서 한 번 처리합니다):**
 
 ```css
 /* src/style/motion.css */

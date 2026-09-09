@@ -20,7 +20,7 @@
 
 **Requires selected:** `typescript/docs-require-header-jsdoc-on-key-declarations` · 함께 적용
 
-**Incorrect (주요 경계 선언에 의도 설명이 없습니다):**
+**Incorrect 1 (주요 경계 선언에 의도 설명이 없습니다):**
 
 ```ts
 const handleBackButtonClick: MouseEventHandler<HTMLButtonElement> = (_event) => {
@@ -32,7 +32,7 @@ useEffect(() => {
 }, [watchedProductIds]);
 ```
 
-**Correct (선언 의도를 바로 위에 여러 줄 블록으로 적습니다):**
+**Correct 1 (선언 의도를 바로 위에 여러 줄 블록으로 적습니다):**
 
 ```ts
 /**

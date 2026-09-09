@@ -30,7 +30,7 @@ tags: types
 `select: (response) => ({...})`를 밖으로 빼거나 새 함수 타입으로 고정하지 않습니다.
 커링 팩토리가 반환하는 리액트 핸들러는 프레임워크 컨벤션이 판단합니다.
 
-**Incorrect (계약이 있는데 시그니처를 다시 적습니다):**
+**Incorrect 1 (계약이 있는데 시그니처를 다시 적습니다):**
 
 ```ts
 // 이미 있는 계약
@@ -56,7 +56,7 @@ const toStateLabel = (state: Record<string, unknown>): string => {
 };
 ```
 
-**Correct (이미 있는 계약에서 시그니처를 가져와 함수 전체에 타입을 붙입니다):**
+**Correct 1 (이미 있는 계약에서 시그니처를 가져와 함수 전체에 타입을 붙입니다):**
 
 ```ts
 // 이미 있는 계약
@@ -82,7 +82,7 @@ const toStateLabel: UserFormatters["toStateLabel"] = (state) => {
 };
 ```
 
-**Incorrect (같은 시그니처를 쓰는 구현마다 매개변수와 반환 타입을 다시 적습니다):**
+**Incorrect 2 (같은 시그니처를 쓰는 구현마다 매개변수와 반환 타입을 다시 적습니다):**
 
 ```ts
 /**
@@ -100,7 +100,7 @@ const toSearchRequest = (request: string): string => {
 };
 ```
 
-**Correct (같은 시그니처를 쓰는 구현이 둘 이상이면 함수 타입 별칭을 선언합니다):**
+**Correct 2 (같은 시그니처를 쓰는 구현이 둘 이상이면 함수 타입 별칭을 선언합니다):**
 
 ```ts
 /**

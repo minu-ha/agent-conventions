@@ -28,7 +28,7 @@
 
 진입 파일의 기준은 `ownership-place-owner-files-in-role-folders`를 따릅니다.
 
-**Incorrect (화면 컴포넌트의 접두사를 누락합니다):**
+**Incorrect 1 (화면 컴포넌트의 접두사를 누락합니다):**
 
 ```tsx
 // page/detail/product-table-section.tsx
@@ -37,7 +37,7 @@ export const ProductTable = (props: ProductTableProps) => {
 };
 ```
 
-**Correct (진입 파일이 아닌 파일에는 `_`를 붙이고 파일명과 심볼에 레이어 접두사를 씁니다):**
+**Correct 1 (진입 파일이 아닌 파일에는 `_`를 붙이고 파일명과 심볼에 레이어 접두사를 씁니다):**
 
 ```tsx
 // page/detail/_pg-product-table-section.tsx

@@ -122,7 +122,12 @@ const getRoutingRulesForSection = (section: SkillSection, rules: SkillRule[]): S
 		);
 };
 
-const exampleMarkerPattern = /^ {0,3}\*\*(Incorrect|Correct)(?:\s+\(.+\))?:?\*\*[ \t]*$/;
+const exampleMarkerPattern = /^ {0,3}\*\*(Incorrect|Correct)(?:\s+\d+)?(?:\s+\(.+\))?:?\*\*[ \t]*$/;
+
+/**
+ * 규범 산문 안에 둘 수 있는 유일한 펜스 언어. 흐름도는 예시가 아니라 산문의 일부라 Incorrect 경계 앞에 온다
+ */
+const proseFenceLanguage = "mermaid";
 const fencePattern = /^ {0,3}(`{3,}|~{3,})(.*)$/;
 
 /**
@@ -201,8 +206,12 @@ const readNormativeRuleContract = (rule: SkillRule): NormativeRuleContract => {
 			const fenceCharacter = fence[0] as "`" | "~";
 
 			if (activeFenceCharacter === undefined) {
-				if (incorrectBoundaryOffset === undefined) {
-					throw new Error(`${getRuleId(rule)}: compact contract must not contain a fenced example before the Incorrect boundary.`);
+				const fenceLanguage = (fenceMatch[2] ?? "").trim();
+
+				if (incorrectBoundaryOffset === undefined && fenceLanguage !== proseFenceLanguage) {
+					throw new Error(
+						`${getRuleId(rule)}: compact contract must not contain a fenced example before the Incorrect boundary; only a ${proseFenceLanguage} diagram may sit in the prose.`,
+					);
 				}
 
 				activeExampleMarker = pendingExampleMarker;

@@ -35,7 +35,7 @@ tags: composition, props
 | 컴포넌트가 아닌 함수의 객체 매개변수 | `typescript/functions-use-named-object-params-for-complex-signatures` |
 | 문서 주석 내용 | `typescript/types-document-custom-types-and-shapes` |
 
-**Incorrect (파일 위쪽에 타입을 모으고 내보내지 않습니다):**
+**Incorrect 1 (파일 위쪽에 타입을 모으고 내보내지 않습니다):**
 
 ```tsx
 interface UiBadgeProps {
@@ -55,7 +55,7 @@ export const UiChip = (props: UiChipProps) => {
 };
 ```
 
-**Correct (각 컴포넌트 바로 위에 선언하고 내보냅니다):**
+**Correct 1 (각 컴포넌트 바로 위에 선언하고 내보냅니다):**
 
 ```tsx
 /**
@@ -87,7 +87,7 @@ export const UiChip = (props: UiChipProps) => {
 };
 ```
 
-**Incorrect (설명이 컴포넌트에 붙어 계약과 떨어집니다):**
+**Incorrect 2 (설명이 컴포넌트에 붙어 계약과 떨어집니다):**
 
 ```tsx
 export interface UiPanelHeaderProps {
@@ -102,7 +102,7 @@ export const UiPanelHeader = (props: UiPanelHeaderProps) => {
 };
 ```
 
-**Correct (설명, 계약, 선언을 붙여 둡니다):**
+**Correct 2 (설명, 계약, 선언을 붙여 둡니다):**
 
 ```tsx
 /**

@@ -37,7 +37,7 @@ tags: composition, ownership
 뗀 파일의 이름은 `ownership-prefix-layer-names-on-files-and-symbols`를 따릅니다.
 자리는 `ownership-place-owner-files-in-role-folders`를 따릅니다.
 
-**Incorrect (컨텍스트를 읽어 분기만 하는 래퍼를 파일로 뗍니다):**
+**Incorrect 1 (컨텍스트를 읽어 분기만 하는 래퍼를 파일로 뗍니다):**
 
 ```tsx
 // component/widget/chatbot/_wg-chat-content.tsx: 어느 화면을 그릴지 고르기만 하고 상태를 소유하지 않는다
@@ -53,7 +53,7 @@ export const WgChatContent = () => {
 };
 ```
 
-**Correct (분기는 진입 파일에 남기고 상태를 소유한 부품만 뗍니다):**
+**Correct 1 (분기는 진입 파일에 남기고 상태를 소유한 부품만 뗍니다):**
 
 ```tsx
 // component/widget/chatbot/wg-chatbot.tsx

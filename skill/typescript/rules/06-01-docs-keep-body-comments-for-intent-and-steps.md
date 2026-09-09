@@ -29,7 +29,7 @@ tags: docs, comments
 내용은 `docs-write-korean-comments-about-purpose-and-constraints`,
 허용된 예외의 이유는 `docs-justify-convention-exceptions-with-a-reason-comment`가 정합니다.
 
-**Incorrect (지역 선언에 코드를 옮겨 적은 주석을 답니다):**
+**Incorrect 1 (지역 선언에 코드를 옮겨 적은 주석을 답니다):**
 
 ```ts
 const toMatchedProducts = (products: Product[], keyword: string) => {
@@ -40,7 +40,7 @@ const toMatchedProducts = (products: Product[], keyword: string) => {
 };
 ```
 
-**Correct (선언 이름이 이미 말하는 주석은 지웁니다):**
+**Correct 1 (선언 이름이 이미 말하는 주석은 지웁니다):**
 
 ```ts
 const toMatchedProducts = (products: Product[], keyword: string) => {
@@ -50,7 +50,7 @@ const toMatchedProducts = (products: Product[], keyword: string) => {
 };
 ```
 
-**Incorrect (지켜야 할 순서와 제약을 주석 없이 코드에만 둡니다):**
+**Incorrect 2 (지켜야 할 순서와 제약을 주석 없이 코드에만 둡니다):**
 
 ```ts
 const submitProductDraft = async (draft: ProductDraft) => {
@@ -67,7 +67,7 @@ const submitProductDraft = async (draft: ProductDraft) => {
 };
 ```
 
-**Correct (`//`로 제약과 단계를 적습니다):**
+**Correct 2 (`//`로 제약과 단계를 적습니다):**
 
 ```ts
 const submitProductDraft = async (draft: ProductDraft) => {

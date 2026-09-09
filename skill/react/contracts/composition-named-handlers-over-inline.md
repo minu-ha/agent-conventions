@@ -10,7 +10,7 @@ JSX에는 이름 붙인 핸들러 참조만 넘깁니다.
 
 **Requires selected:** `docs-require-jsdoc-on-key-declarations` · 함께 적용
 
-**Incorrect (분기와 비동기를 JSX 안에 숨깁니다):**
+**Incorrect 1 (분기와 비동기를 JSX 안에 숨깁니다):**
 
 ```tsx
 <UiButton
@@ -26,7 +26,7 @@ JSX에는 이름 붙인 핸들러 참조만 넘깁니다.
 </UiButton>
 ```
 
-**Correct (로직을 이름 붙인 핸들러로 뺍니다):**
+**Correct 1 (로직을 이름 붙인 핸들러로 뺍니다):**
 
 ```tsx
 import type {MouseEventHandler} from "react";

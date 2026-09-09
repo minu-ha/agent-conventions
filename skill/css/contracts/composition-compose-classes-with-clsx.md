@@ -9,7 +9,7 @@ TSX의 `className`은 클래스가 하나여도 `clsx()`로 조합합니다.
 형식을 통일하면 검색과 리뷰에서 한 패턴만 확인하면 됩니다.
 클래스 이름에 값을 끼워 넣지 않는 규칙은 `composition-write-modifiers-as-conditions`가 정합니다.
 
-**Incorrect (문자열 연결로 클래스 조합을 숨깁니다):**
+**Incorrect 1 (문자열 연결로 클래스 조합을 숨깁니다):**
 
 ```tsx
 <button className={"pg_products__listButton " + (isActive ? "pg_products__listButton--active" : "")}>
@@ -17,7 +17,7 @@ TSX의 `className`은 클래스가 하나여도 `clsx()`로 조합합니다.
 </button>
 ```
 
-**Correct (기본 클래스와 수정자를 `clsx()`로 조합합니다):**
+**Correct 1 (기본 클래스와 수정자를 `clsx()`로 조합합니다):**
 
 ```tsx
 <button

@@ -39,7 +39,7 @@ tags: types
 함수 헤더 주석은 `docs-require-header-jsdoc-on-key-declarations`가 판단합니다.
 규칙을 적용하려고 요청에 없는 `*Params`나 `*Input`을 만들지 않습니다.
 
-**Incorrect (기존 계약과 같은 구조를 다시 선언합니다):**
+**Incorrect 1 (기존 계약과 같은 구조를 다시 선언합니다):**
 
 ```ts
 // 이미 있는 계약: UserRecord { id: string; name: string; email: string }
@@ -53,7 +53,7 @@ interface InviteRecipient {
 export const sendInvites = (recipients: InviteRecipient[]): Promise<void> => { /* … */ };
 ```
 
-**Correct (형태가 같으면 기존 계약을 그대로 참조합니다):**
+**Correct 1 (형태가 같으면 기존 계약을 그대로 참조합니다):**
 
 ```ts
 // 이미 있는 계약: UserRecord { id: string; name: string; email: string }

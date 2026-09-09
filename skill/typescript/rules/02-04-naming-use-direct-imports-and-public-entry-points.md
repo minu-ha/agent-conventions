@@ -42,7 +42,7 @@ import {pagination_default_page_size} from "@/constant/pagination";
 import {toDisplayDate} from "@/util/date/to-display-date";
 ```
 
-**Incorrect (`default`로 내보내 사용처마다 다른 이름이 생깁니다):**
+**Incorrect 1 (`default`로 내보내 사용처마다 다른 이름이 생깁니다):**
 
 ```tsx
 // component/ui/tabs/ui-tabs.tsx
@@ -57,7 +57,7 @@ export default UiTabs;
 import Tabs from "@/component/ui/tabs/ui-tabs";
 ```
 
-**Correct (선언 앞에 `export`를 붙여 사용처가 그 이름으로 가져옵니다):**
+**Correct 1 (선언 앞에 `export`를 붙여 사용처가 그 이름으로 가져옵니다):**
 
 ```tsx
 // component/ui/tabs/ui-tabs.tsx

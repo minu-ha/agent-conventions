@@ -57,7 +57,7 @@ tags: ownership
 | 루트에만 두는 `util` | `typescript/functions-promote-owner-free-functions-to-root-util` |
 | 루트에만 두는 `config` | `typescript/naming-read-environment-values-through-config-env` |
 
-**Incorrect (단순 컴포넌트에 역할 폴더를 미리 다 만듭니다):**
+**Incorrect 1 (단순 컴포넌트에 역할 폴더를 미리 다 만듭니다):**
 
 ```txt
 component/ui/button/
@@ -69,7 +69,7 @@ component/ui/button/
 └── _type/
 ```
 
-**Correct (지원 코드가 없으면 폴더 없이 파일만 둡니다):**
+**Correct 1 (지원 코드가 없으면 폴더 없이 파일만 둡니다):**
 
 ```txt
 component/ui/button/
@@ -77,7 +77,7 @@ component/ui/button/
 └── ui-button.css
 ```
 
-**Incorrect (범용 이름 폴더를 섞어 쓰고 하위 소유자 안에 소유자를 다시 둡니다):**
+**Incorrect 2 (범용 이름 폴더를 섞어 쓰고 하위 소유자 안에 소유자를 다시 둡니다):**
 
 ```txt
 page/detail/
@@ -94,7 +94,7 @@ page/detail/
             └── to-review-rows.ts
 ```
 
-**Correct (필요한 역할 폴더만 만들고 부품은 파일로 둡니다):**
+**Correct 2 (필요한 역할 폴더만 만들고 부품은 파일로 둡니다):**
 
 ```txt
 page/detail/

@@ -14,7 +14,7 @@
 `fixed`는 `transform`이 적용된 조상 아래에서 뷰포트 기준을 잃습니다.
 `sticky`는 중간 조상에 `overflow: hidden`이나 `auto`가 있으면 그 조상이 기준이 되어 뷰포트에 붙지 않습니다.
 
-**Incorrect (층 숫자를 직접 적고 기준 컨테이너 설명이 없습니다):**
+**Incorrect 1 (층 숫자를 직접 적고 기준 컨테이너 설명이 없습니다):**
 
 ```css
 .pg_productDetail__toolbar {
@@ -24,7 +24,7 @@
 }
 ```
 
-**Correct (기준 컨테이너와 의도를 드러냅니다):**
+**Correct 1 (기준 컨테이너와 의도를 드러냅니다):**
 
 ```css
 .pg_productDetail__toolbar {

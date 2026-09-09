@@ -48,7 +48,7 @@ nullish만 제거하던 공개 계약은 `filter(isNotNil)` 등으로 보존하�
 `groupBy` · `keyBy`는 목록 재구성에 쓰고, 반복 조회는
 `values-use-set-and-map-for-repeated-lookups`에 따라 `Set` · `Map`으로 처리합니다.
 
-**Incorrect (`es-toolkit`에 있는 함수를 손으로 다시 씁니다):**
+**Incorrect 1 (`es-toolkit`에 있는 함수를 손으로 다시 씁니다):**
 
 ```ts
 const uniqueOwnerIds = ownerIds.filter((ownerId, index) => ownerIds.indexOf(ownerId) === index);
@@ -62,7 +62,7 @@ const searchKey = rawKey.replace(/([A-Z])/g, "_$1").toLowerCase();
 const tickTimes = Array.from({length: tick_count}, (_unused, tickIndex) => toTickTime(tickIndex));
 ```
 
-**Correct (`es-toolkit` 함수를 그대로 부릅니다):**
+**Correct 1 (`es-toolkit` 함수를 그대로 부릅니다):**
 
 ```ts
 import {cloneDeep, groupBy, range, snakeCase, uniq} from "es-toolkit";
@@ -75,7 +75,7 @@ const searchKey = snakeCase(rawKey);
 const tickTimes = range(tick_count).map((tickIndex) => toTickTime(tickIndex));
 ```
 
-**Incorrect (빈 목록을 먼저 검사하고 중간 배열을 만들어 양 끝을 읽습니다):**
+**Incorrect 2 (빈 목록을 먼저 검사하고 중간 배열을 만들어 양 끝을 읽습니다):**
 
 ```ts
 const toChartBounds = (points: readonly ChartPoint[]) => {
@@ -89,7 +89,7 @@ const toChartBounds = (points: readonly ChartPoint[]) => {
 };
 ```
 
-**Correct (빈 목록 판정을 `minBy` · `maxBy`의 결과로 합칩니다):**
+**Correct 2 (빈 목록 판정을 `minBy` · `maxBy`의 결과로 합칩니다):**
 
 ```ts
 import {maxBy, minBy} from "es-toolkit";

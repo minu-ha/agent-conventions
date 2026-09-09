@@ -43,7 +43,7 @@ API 응답 · 요청, 생성 DTO, 라이브러리 인자, DOM 속성, 환경 변
 `user_id`를 요구하는 API에는 그대로 적습니다.
 외부 이름을 별칭 없이 가져오면 대상이 아니며, 지역 별칭을 만들거나 이름을 바꿀 때 다시 판단합니다.
 
-**Incorrect (역할과 맞지 않는 표기를 씁니다):**
+**Incorrect 1 (역할과 맞지 않는 표기를 씁니다):**
 
 ```ts
 // userSettings.ts
@@ -53,7 +53,7 @@ interface User_Profile {
 }
 ```
 
-**Correct (파일명은 `kebab-case`, 타입 필드는 `camelCase`로 씁니다):**
+**Correct 1 (파일명은 `kebab-case`, 타입 필드는 `camelCase`로 씁니다):**
 
 ```ts
 // user-settings.ts
@@ -68,7 +68,7 @@ interface UserProfile {
 }
 ```
 
-**Incorrect (불변 데이터 상수와 값 집합의 이름과 키를 `camelCase`로 적습니다):**
+**Incorrect 2 (불변 데이터 상수와 값 집합의 이름과 키를 `camelCase`로 적습니다):**
 
 ```ts
 const retryPolicy = {
@@ -82,7 +82,7 @@ const productStatus = {
 } as const;
 ```
 
-**Correct (불변 데이터 상수와 값 집합은 이름과 상수 키를 모두 `snake_case`로 적습니다):**
+**Correct 2 (불변 데이터 상수와 값 집합은 이름과 상수 키를 모두 `snake_case`로 적습니다):**
 
 ```ts
 /**
@@ -102,7 +102,7 @@ const product_status = {
 } as const;
 ```
 
-**Incorrect (밖으로 나가는 키를 우리 표기로 바꿉니다):**
+**Incorrect 3 (밖으로 나가는 키를 우리 표기로 바꿉니다):**
 
 ```ts
 // 서버 계약은 {product_id, display_name} 인데 우리 표기로 바꿔 보낸다
@@ -117,7 +117,7 @@ const toProductSaveBody = (values: ProductFormValues) => {
 };
 ```
 
-**Correct (밖으로 나가는 키만 받는 쪽 표기를 그대로 씁니다):**
+**Correct 3 (밖으로 나가는 키만 받는 쪽 표기를 그대로 씁니다):**
 
 ```ts
 /**

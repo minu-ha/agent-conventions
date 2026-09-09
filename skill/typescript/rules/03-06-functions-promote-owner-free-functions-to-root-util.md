@@ -38,7 +38,7 @@ tags: functions, boundaries
 | 계산만 같음 | 각 소유자가 각각 갖습니다 |
 | 프로젝트 전반의 계산임 | 루트 `util`로 올립니다 |
 
-**Incorrect (소유자와 함께 사라질 함수를 루트 `util`로 올립니다):**
+**Incorrect 1 (소유자와 함께 사라질 함수를 루트 `util`로 올립니다):**
 
 ```ts
 // util/profile/to-profile-save-request.ts
@@ -51,7 +51,7 @@ export const toProfileSaveRequest = (values: ProfileFormValues) => {
 };
 ```
 
-**Correct (소유자와 함께 사라질 함수는 그 소유자의 `_function` 폴더에 둡니다):**
+**Correct 1 (소유자와 함께 사라질 함수는 그 소유자의 `_function` 폴더에 둡니다):**
 
 ```ts
 // page/profile/_function/to-profile-save-request.ts

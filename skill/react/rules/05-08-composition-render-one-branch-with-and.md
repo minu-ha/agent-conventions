@@ -27,7 +27,7 @@ JSX 분기는 각 요소 바로 앞에 표시 조건이 드러나도록 적습�
 `&&` 왼쪽에는 숫자를 두지 않습니다. 거짓으로 평가되는 `0`과 `NaN`도 화면에 그대로 렌더됩니다.
 길이 · 개수는 비교식으로 바꿔 불리언으로 판단합니다.
 
-**Incorrect (JSX 두 분기를 삼항 하나로 묶습니다):**
+**Incorrect 1 (JSX 두 분기를 삼항 하나로 묶습니다):**
 
 ```tsx
 return (
@@ -37,7 +37,7 @@ return (
 );
 ```
 
-**Correct (각 JSX 요소 앞에 표시 조건을 둡니다):**
+**Correct 1 (각 JSX 요소 앞에 표시 조건을 둡니다):**
 
 ```tsx
 return (
@@ -48,19 +48,19 @@ return (
 );
 ```
 
-**Incorrect (`&&` 왼쪽에 숫자를 둬서 `0`이 렌더됩니다):**
+**Incorrect 2 (`&&` 왼쪽에 숫자를 둬서 `0`이 렌더됩니다):**
 
 ```tsx
 return <section>{selectedRows.length && <PgProductBulkActionBar />}</section>;
 ```
 
-**Correct (`&&` 왼쪽에 불리언 비교식을 씁니다):**
+**Correct 2 (`&&` 왼쪽에 불리언 비교식을 씁니다):**
 
 ```tsx
 return <section>{selectedRows.length > 0 && <PgProductBulkActionBar selectedRows={selectedRows} />}</section>;
 ```
 
-**Incorrect (컴포넌트 전체를 표시하지 않을 때 `&&`를 씁니다):**
+**Incorrect 3 (컴포넌트 전체를 표시하지 않을 때 `&&`를 씁니다):**
 
 ```tsx
 const PgProductPanel = (props: PgProductPanelProps) => {
@@ -68,7 +68,7 @@ const PgProductPanel = (props: PgProductPanelProps) => {
 };
 ```
 
-**Correct (컴포넌트 전체를 표시하지 않으면 이른 반환합니다):**
+**Correct 3 (컴포넌트 전체를 표시하지 않으면 이른 반환합니다):**
 
 ```tsx
 const PgProductPanel = (props: PgProductPanelProps) => {

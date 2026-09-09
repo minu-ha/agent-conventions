@@ -18,7 +18,7 @@
 
 **Requires selected:** `typescript/naming-place-owner-constants-in-the-owner-constant-folder` · 함께 적용
 
-**Incorrect (파서 묶음의 역할이 이름에 드러나지 않습니다):**
+**Incorrect 1 (파서 묶음의 역할이 이름에 드러나지 않습니다):**
 
 ```ts
 // page/products/_constant/product-search.ts
@@ -28,7 +28,7 @@ export const productSearch = {
 };
 ```
 
-**Correct (파서 묶음은 `<범위>UrlParsers`로 소유자 `_constant` 폴더에 둡니다):**
+**Correct 1 (파서 묶음은 `<범위>UrlParsers`로 소유자 `_constant` 폴더에 둡니다):**
 
 ```ts
 // page/products/_constant/product-url-parsers.ts

@@ -14,7 +14,7 @@
 같은 컴포넌트에서 이름이 겹치지 않도록 대상이 다르면 대상 이름을 넣습니다.
 추가 인자 전달은 `events-curry-extra-handler-arguments`를 따릅니다.
 
-**Incorrect (구현에 `on*`을 쓰고 대상이 이름에 없어 같은 이름이 겹칩니다):**
+**Incorrect 1 (구현에 `on*`을 쓰고 대상이 이름에 없어 같은 이름이 겹칩니다):**
 
 ```ts
 import type {MouseEventHandler} from "react";
@@ -35,7 +35,7 @@ const onClick2: MouseEventHandler<HTMLButtonElement> = (event) => {
 };
 ```
 
-**Correct (`handle` 접두사와 대상 · 이벤트가 드러나는 이름을 씁니다):**
+**Correct 1 (`handle` 접두사와 대상 · 이벤트가 드러나는 이름을 씁니다):**
 
 ```ts
 import type {MouseEventHandler} from "react";

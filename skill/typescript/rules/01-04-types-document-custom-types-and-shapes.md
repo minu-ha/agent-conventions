@@ -38,7 +38,7 @@ tags: types, jsdoc
 익명 결과에 이 규칙을 적용하려고 필드 주석이나 새 타입을 만들지 않습니다.
 함수 선언의 헤더 주석은 `docs-require-header-jsdoc-on-key-declarations`가 별도로 판단합니다.
 
-**Incorrect (필드 설명을 생략하거나 예전 방식으로 헤더에 몰아씁니다):**
+**Incorrect 1 (필드 설명을 생략하거나 예전 방식으로 헤더에 몰아씁니다):**
 
 ```ts
 /**
@@ -51,7 +51,7 @@ interface PublishResult {
 }
 ```
 
-**Correct (헤더와 필드별 문서 주석을 씁니다):**
+**Correct 1 (헤더와 필드별 문서 주석을 씁니다):**
 
 ```ts
 /**

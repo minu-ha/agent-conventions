@@ -136,14 +136,14 @@ export const PgProductRecommendationBoundary = () => {
 };
 ```
 
-**Incorrect (캐시가 있는 재조회 실패도 자동으로 경계에 전달된다고 가정합니다):**
+**Incorrect 1 (캐시가 있는 재조회 실패도 자동으로 경계에 전달된다고 가정합니다):**
 
 ```tsx
 // 이 화면은 낡은 추천을 계속 보여 주면 안 되지만 재조회 실패를 던지지 않는다
 return <UiProductRecommendations items={responseProductRecommendationsSuspense.data.items} />;
 ```
 
-**Correct (낡은 데이터를 허용하지 않는 화면만 재조회 실패를 경계로 보냅니다):**
+**Correct 1 (낡은 데이터를 허용하지 않는 화면만 재조회 실패를 경계로 보냅니다):**
 
 ```tsx
 // 추천을 확정하는 화면은 재조회 실패 시 이전 추천을 계속 선택하게 두지 않는다

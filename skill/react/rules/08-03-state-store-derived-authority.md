@@ -27,7 +27,7 @@ tags: state, zustand
 같은 판별을 화면마다 반복하지 않도록 한 곳에서 스토어를 채웁니다.
 이펙트가 스토어 객체 전체에 의존하면 `set`으로 참조가 바뀔 때 다시 실행되므로 피합니다.
 
-**Incorrect (개별 화면이 도메인 판별을 수행하고 스토어에 저장합니다):**
+**Incorrect 1 (개별 화면이 도메인 판별을 수행하고 스토어에 저장합니다):**
 
 ```ts
 const permissionStore = usePermissionStore();
@@ -38,7 +38,7 @@ useEffect(() => {
 }, [permissionStore, canEditProduct]);
 ```
 
-**Correct (화면은 스토어에 채워진 결과만 참조합니다):**
+**Correct 1 (화면은 스토어에 채워진 결과만 참조합니다):**
 
 ```ts
 const permissionStore = usePermissionStore();
@@ -48,7 +48,7 @@ if (permissionStore.canEditProduct) {
 }
 ```
 
-**Incorrect (스토어 전체에 의존하는 이펙트가 `set`마다 다시 실행됩니다):**
+**Incorrect 2 (스토어 전체에 의존하는 이펙트가 `set`마다 다시 실행됩니다):**
 
 ```ts
 // page/_layout/pg-app-layout.tsx
@@ -62,7 +62,7 @@ useEffect(() => {
 }, [permissionStore, responseAccessBootstrapSuspense.data]);
 ```
 
-**Correct (초기화 경계에서 스토어를 채우고 스토어에서는 `set` 함수만 선택합니다):**
+**Correct 2 (초기화 경계에서 스토어를 채우고 스토어에서는 `set` 함수만 선택합니다):**
 
 ```ts
 // page/_layout/pg-app-layout.tsx

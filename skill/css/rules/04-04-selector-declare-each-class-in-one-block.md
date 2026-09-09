@@ -26,7 +26,7 @@ tags: selector, cascade, maintainability
 조건 블록의 위치는 `layout-group-breakpoints-at-the-file-bottom` 규칙을 따릅니다.
 기계 검증은 `no-duplicate-selectors`가 담당합니다.
 
-**Incorrect (같은 클래스를 파일 두 곳에서 열어 선언 순서에 의존합니다):**
+**Incorrect 1 (같은 클래스를 파일 두 곳에서 열어 선언 순서에 의존합니다):**
 
 ```css
 .pg_products__toolbar {
@@ -44,7 +44,7 @@ tags: selector, cascade, maintainability
 }
 ```
 
-**Correct (한 블록에 모으고 최종 값만 남깁니다):**
+**Correct 1 (한 블록에 모으고 최종 값만 남깁니다):**
 
 ```css
 .pg_products__toolbar {

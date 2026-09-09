@@ -14,7 +14,7 @@
 
 순수 계산을 훅으로 감싸는 문제는 `ownership-prefer-plain-ts-for-local-react-helpers`를 따릅니다.
 
-**Incorrect (파일 분량을 줄이려고 생명주기를 훅으로 옮깁니다):**
+**Incorrect 1 (파일 분량을 줄이려고 생명주기를 훅으로 옮깁니다):**
 
 ```tsx
 // component/widget/chart/chart-root/wg-chart-root.tsx
@@ -34,7 +34,7 @@ export const WgChartRoot = (props: WgChartRootProps) => {
 };
 ```
 
-**Correct (생명주기를 소유 컴포넌트가 직접 가집니다):**
+**Correct 1 (생명주기를 소유 컴포넌트가 직접 가집니다):**
 
 ```tsx
 // component/widget/chart/chart-root/wg-chart-root.tsx

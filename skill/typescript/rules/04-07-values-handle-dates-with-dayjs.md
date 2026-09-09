@@ -38,7 +38,7 @@ tags: values, dayjs
 형식 문자열은 상수로 선언하며 입력 형식과 화면 표시 형식은 별도 상수로 둡니다.
 배치는 `naming-place-project-constants-in-the-root-constant-folder`를 따릅니다.
 
-**Incorrect (정해진 경과 시간을 밀리초로 더하고 자릿수를 손으로 채웁니다):**
+**Incorrect 1 (정해진 경과 시간을 밀리초로 더하고 자릿수를 손으로 채웁니다):**
 
 ```ts
 // 만료 계약은 발급 시점으로부터 정확히 token_expiry_hours시간 뒤다
@@ -46,7 +46,7 @@ const expiresAt = new Date(issuedAt.getTime() + token_expiry_hours * 60 * 60 * 1
 const expiresLabel = `${expiresAt.getFullYear()}.${toPaddedDatePart(expiresAt.getMonth() + 1)}`;
 ```
 
-**Correct (더하기와 형식은 `dayjs`, 형식 문자열은 상수로 둡니다):**
+**Correct 1 (더하기와 형식은 `dayjs`, 형식 문자열은 상수로 둡니다):**
 
 ```ts
 import dayjs from "dayjs";

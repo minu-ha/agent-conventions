@@ -45,7 +45,7 @@ tags: naming, imports
 
 루트의 소유자는 프로젝트이며 `constant` · `util` · `type` · `hook`에도 소유자 아래 역할 폴더의 규칙을 적용합니다.
 
-**Incorrect (상대경로로 심볼을 가져옵니다):**
+**Incorrect 1 (상대경로로 심볼을 가져옵니다):**
 
 ```ts
 // page/detail/product-table-section/pg-product-table-section.tsx
@@ -53,7 +53,7 @@ import {PgReviewSection} from "./_pg-review-section";
 import {toSummary} from "../_function/to-summary";
 ```
 
-**Correct (심볼은 `@/`, 같은 폴더의 CSS 파일만 `./`로 씁니다):**
+**Correct 1 (심볼은 `@/`, 같은 폴더의 CSS 파일만 `./`로 씁니다):**
 
 ```ts
 // page/detail/product-table-section/pg-product-table-section.tsx

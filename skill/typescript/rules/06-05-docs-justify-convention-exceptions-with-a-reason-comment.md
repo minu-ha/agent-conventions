@@ -33,7 +33,7 @@ tags: docs, comments
 
 어투와 내용은 `docs-write-korean-comments-about-purpose-and-constraints`를 따릅니다.
 
-**Incorrect (확인할 수 없는 말로 예외를 정당화합니다):**
+**Incorrect 1 (확인할 수 없는 말로 예외를 정당화합니다):**
 
 ```ts
 // 성능을 위해 메모이제이션
@@ -42,7 +42,7 @@ const columns = useMemo(() => {
 }, [responseTableColumnsSuspense.data.columns]);
 ```
 
-**Correct (외부 패키지의 제약을 가리킵니다):**
+**Correct 1 (외부 패키지의 제약을 가리킵니다):**
 
 ```ts
 // MUI Data Grid는 columns 참조가 바뀌면 열 너비나 순서를 잃을 수 있어 참조를 유지한다.
@@ -51,7 +51,7 @@ const columns = useMemo(() => {
 }, [responseTableColumnsSuspense.data.columns]);
 ```
 
-**Incorrect (막연한 말이라 무엇을 재서 넣었는지 알 수 없습니다):**
+**Incorrect 2 (막연한 말이라 무엇을 재서 넣었는지 알 수 없습니다):**
 
 ```ts
 // 안전하게 다시 계산하지 않도록
@@ -60,7 +60,7 @@ const filteredRows = useMemo(() => {
 }, [deferredKeyword, rows]);
 ```
 
-**Correct (측정 결과를 가리킵니다):**
+**Correct 2 (측정 결과를 가리킵니다):**
 
 ```ts
 // 행 5,000개에서 매 렌더 필터링이 120ms로 측정됐다. 지연한 검색어에만 다시 계산한다.

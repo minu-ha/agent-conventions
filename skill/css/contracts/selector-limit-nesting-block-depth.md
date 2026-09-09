@@ -32,7 +32,7 @@
 }
 ```
 
-**Incorrect (다른 요소의 가상 요소를 `&`로 다시 엽니다):**
+**Incorrect 1 (다른 요소의 가상 요소를 `&`로 다시 엽니다):**
 
 ```css
 .pg_products__sortButton {
@@ -44,7 +44,7 @@
 }
 ```
 
-**Correct (`&`는 한 번, 그다음 경로는 같은 줄에 이어 씁니다):**
+**Correct 1 (`&`는 한 번, 그다음 경로는 같은 줄에 이어 씁니다):**
 
 ```css
 .pg_products__sortBox {

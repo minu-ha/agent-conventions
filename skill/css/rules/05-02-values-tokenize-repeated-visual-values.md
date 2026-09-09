@@ -31,7 +31,7 @@ tags: tokens, variables, reuse
 `selector-do-not-group-classes-with-commas`에 따라 여러 클래스의 공통 선언도 묶지 않고 각 블록에 반복합니다.
 층 목록은 `values-declare-stacking-layers-as-tokens`, 새 토큰 이름은 `values-name-tokens-by-purpose` 규칙이 정합니다.
 
-**Incorrect (한 파일 안 반복을 조상에 선언한 지역 변수로 감쌉니다):**
+**Incorrect 1 (한 파일 안 반복을 조상에 선언한 지역 변수로 감쌉니다):**
 
 ```css
 .pg_products__root {
@@ -47,7 +47,7 @@ tags: tokens, variables, reuse
 }
 ```
 
-**Correct (한 파일 안 반복은 값을 그대로 둡니다):**
+**Correct 1 (한 파일 안 반복은 값을 그대로 둡니다):**
 
 ```css
 .pg_products__toolbar {
@@ -59,7 +59,7 @@ tags: tokens, variables, reuse
 }
 ```
 
-**Incorrect (상태를 전달하려고 지역 변수를 만듭니다):**
+**Incorrect 2 (상태를 전달하려고 지역 변수를 만듭니다):**
 
 ```css
 .pg_products__rowBadge {
@@ -75,7 +75,7 @@ tags: tokens, variables, reuse
 }
 ```
 
-**Correct (상태 전달은 지역 변수 없이 결합자 하나로 풉니다):**
+**Correct 2 (상태 전달은 지역 변수 없이 결합자 하나로 풉니다):**
 
 ```css
 .pg_products__rowBadge {
@@ -89,7 +89,7 @@ tags: tokens, variables, reuse
 }
 ```
 
-**Incorrect (여러 파일이 쓰는 값을 각 파일에 하드코딩합니다):**
+**Incorrect 3 (여러 파일이 쓰는 값을 각 파일에 하드코딩합니다):**
 
 ```css
 /* pg-products.css */
@@ -103,7 +103,7 @@ tags: tokens, variables, reuse
 }
 ```
 
-**Correct (여러 파일이 쓰는 값은 전역 공통 토큰으로 둡니다):**
+**Correct 3 (여러 파일이 쓰는 값은 전역 공통 토큰으로 둡니다):**
 
 ```css
 /* src/style/token.css */

@@ -31,7 +31,7 @@ tags: clsx, className, modifiers
 수정자를 붙일 수 있는지는 `composition-do-not-build-structural-variants-with-modifiers` 규칙이 판단합니다.
 이 규칙은 허용한 수정자의 작성 형식을 정합니다.
 
-**Incorrect (클래스 이름을 값으로 조립합니다):**
+**Incorrect 1 (클래스 이름을 값으로 조립합니다):**
 
 ```tsx
 export interface UiTooltipProps {
@@ -48,7 +48,7 @@ export const UiTooltip = (props: UiTooltipProps) => {
 };
 ```
 
-**Correct (값마다 한 줄로 나열합니다):**
+**Correct 1 (값마다 한 줄로 나열합니다):**
 
 ```tsx
 export interface UiTooltipProps {
@@ -71,7 +71,7 @@ export const UiTooltip = (props: UiTooltipProps) => {
 };
 ```
 
-**Incorrect (라이브러리가 정하는 값으로 수정자를 만듭니다):**
+**Incorrect 2 (라이브러리가 정하는 값으로 수정자를 만듭니다):**
 
 ```tsx
 export interface UiButtonProps {
@@ -84,7 +84,7 @@ export const UiButton = (props: UiButtonProps) => {
 };
 ```
 
-**Correct (라이브러리가 정하는 값은 수정자로 만들지 않고 그대로 넘깁니다):**
+**Correct 2 (라이브러리가 정하는 값은 수정자로 만들지 않고 그대로 넘깁니다):**
 
 ```tsx
 export interface UiButtonProps {

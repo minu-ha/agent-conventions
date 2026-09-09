@@ -32,7 +32,7 @@ tags: functions
 함수 이름은 `functions-name-functions-by-what-comes-out`을 따릅니다.
 중간값 명명은 `functions-name-a-value-only-for-recompute-or-judgment`가 판단합니다.
 
-**Incorrect (넓은 스코프에서 명령형으로 조립을 쌓습니다):**
+**Incorrect 1 (넓은 스코프에서 명령형으로 조립을 쌓습니다):**
 
 ```ts
 let visibleTabs = ["overview"];
@@ -42,7 +42,7 @@ if (canManageItems) {
 }
 ```
 
-**Correct (조건부 스프레드로 한 번에 계산합니다):**
+**Correct 1 (조건부 스프레드로 한 번에 계산합니다):**
 
 ```ts
 const visibleTabs = ["overview", ...(canManageItems ? ["items"] : [])];
@@ -72,7 +72,7 @@ export const toStatusLabel = (order: OrderRow): StatusLabel => {
 };
 ```
 
-**Incorrect (목록 조립에서 조건이 셋이 되자 삼항을 겹칩니다):**
+**Incorrect 2 (목록 조립에서 조건이 셋이 되자 삼항을 겹칩니다):**
 
 ```ts
 const visibleTabs = canManageItems
@@ -84,7 +84,7 @@ const visibleTabs = canManageItems
 		: ["overview"];
 ```
 
-**Correct (조건이 셋 이상인 목록은 표로 두고 걸러 냅니다):**
+**Correct 2 (조건이 셋 이상인 목록은 표로 두고 걸러 냅니다):**
 
 ```ts
 const visibleTabs = [

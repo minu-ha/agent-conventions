@@ -32,7 +32,7 @@ tags: values, theme
 토큰 이름은 `values-name-tokens-by-purpose` 규칙을 따릅니다.
 `layout-group-breakpoints-at-the-file-bottom`의 폭 조건은 클래스를 바꾸는 규칙이므로 테마 조건과 섞지 않습니다.
 
-**Incorrect (컴포넌트 파일에서 테마를 분기합니다):**
+**Incorrect 1 (컴포넌트 파일에서 테마를 분기합니다):**
 
 ```css
 /* src/page/products/pg-products.css */
@@ -45,7 +45,7 @@ tags: values, theme
 }
 ```
 
-**Correct (컴포넌트는 토큰만 씁니다):**
+**Correct 1 (컴포넌트는 토큰만 씁니다):**
 
 ```css
 /* src/page/products/pg-products.css */

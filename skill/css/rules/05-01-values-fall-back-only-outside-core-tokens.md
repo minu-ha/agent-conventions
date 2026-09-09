@@ -36,7 +36,7 @@ tags: variables, fallbacks, tokens
 정상 주입된 토큰 값은 대체값보다 우선합니다.
 이 규칙을 적용하려고 요청에 없는 CSS 변수를 만들지는 않습니다.
 
-**Incorrect (공통 토큰에 대체값을 붙여 값을 두 곳에 둡니다):**
+**Incorrect 1 (공통 토큰에 대체값을 붙여 값을 두 곳에 둡니다):**
 
 ```css
 /* src/page/orders/_pg-order-filter-dialog.css */
@@ -46,7 +46,7 @@ tags: variables, fallbacks, tokens
 }
 ```
 
-**Correct (공통 토큰 목록에 있는 변수는 대체값 없이 씁니다):**
+**Correct 1 (공통 토큰 목록에 있는 변수는 대체값 없이 씁니다):**
 
 ```css
 /* src/style/token.css — 공통 토큰 목록의 단일 출처 */
@@ -62,7 +62,7 @@ tags: variables, fallbacks, tokens
 }
 ```
 
-**Incorrect (주입이 보장되지 않는 변수를 대체값 없이 씁니다):**
+**Incorrect 2 (주입이 보장되지 않는 변수를 대체값 없이 씁니다):**
 
 ```css
 .pg_orderFilterDialog__collapse {
@@ -72,7 +72,7 @@ tags: variables, fallbacks, tokens
 }
 ```
 
-**Correct (목록에 없는 변수에는 대체값을 붙입니다):**
+**Correct 2 (목록에 없는 변수에는 대체값을 붙입니다):**
 
 ```css
 .pg_orderFilterDialog__collapse {

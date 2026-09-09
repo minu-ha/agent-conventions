@@ -26,7 +26,7 @@
 `useDeferredValue`는 고정 지연 시간이 없고 요청 횟수를 줄이는 디바운스도 아닙니다.
 긴 동기 계산 하나는 실행 도중 중단되지 않으므로 렌더 지연만으로 입력 지연이 사라진다고 가정하지 않습니다.
 
-**Incorrect (행 20개 목록을 다시 렌더하는 갱신까지 트랜지션으로 감쌉니다):**
+**Incorrect 1 (행 20개 목록을 다시 렌더하는 갱신까지 트랜지션으로 감쌉니다):**
 
 ```tsx
 const [selectedTagId, setSelectedTagId] = useState("all");
@@ -41,7 +41,7 @@ const handleTagClick = (nextTagId: string) => {
 return <UiTagRows rows={tagRows} selectedTagId={selectedTagId} />;
 ```
 
-**Correct (측정 근거가 있는 갱신만 트랜지션으로 감싸고 행 20개 목록은 그대로 둡니다):**
+**Correct 1 (측정 근거가 있는 갱신만 트랜지션으로 감싸고 행 20개 목록은 그대로 둡니다):**
 
 ```tsx
 const handleTagClick = (nextTagId: string) => {

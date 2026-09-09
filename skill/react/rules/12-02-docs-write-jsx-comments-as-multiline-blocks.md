@@ -28,7 +28,7 @@ JSX 자식 자리의 주석은 여러 줄 블록으로 씁니다.
 | 규칙이 허용한 예외의 이유 | `typescript/docs-justify-convention-exceptions-with-a-reason-comment`를 따르되, `//` 한 줄 대신 JSX 블록을 씁니다 |
 | 마크업이나 바로 아래 컴포넌트 이름 반복 | 새 정보가 없으므로 적지 않습니다 |
 
-**Incorrect (주석을 한 줄로 접고 마크업 이름을 되풀이합니다):**
+**Incorrect 1 (주석을 한 줄로 접고 마크업 이름을 되풀이합니다):**
 
 ```tsx
 <div className={clsx("pg_products__root")}>
@@ -39,7 +39,7 @@ JSX 자식 자리의 주석은 여러 줄 블록으로 씁니다.
 </div>;
 ```
 
-**Correct (구역이 무엇을 담당하는지 여러 줄 블록으로 적습니다):**
+**Correct 1 (구역이 무엇을 담당하는지 여러 줄 블록으로 적습니다):**
 
 ```tsx
 <div className={clsx("pg_products__root")}>
@@ -51,7 +51,7 @@ JSX 자식 자리의 주석은 여러 줄 블록으로 씁니다.
 </div>;
 ```
 
-**Incorrect (예외 이유를 한 줄로 접습니다):**
+**Incorrect 2 (예외 이유를 한 줄로 접습니다):**
 
 ```tsx
 {/* LegacyDatePicker는 className을 받지 않아 배치용 래퍼가 필요하다 */}
@@ -60,7 +60,7 @@ JSX 자식 자리의 주석은 여러 줄 블록으로 씁니다.
 </div>;
 ```
 
-**Correct (예외 이유도 같은 블록 형태로 적습니다):**
+**Correct 2 (예외 이유도 같은 블록 형태로 적습니다):**
 
 ```tsx
 {/**
@@ -71,7 +71,7 @@ JSX 자식 자리의 주석은 여러 줄 블록으로 씁니다.
 </div>;
 ```
 
-**Incorrect (여러 줄 블록 셋 중 하나에만 주석을 둡니다):**
+**Incorrect 3 (여러 줄 블록 셋 중 하나에만 주석을 둡니다):**
 
 ```tsx
 <section className={clsx("wg_orderTable__root")}>
@@ -88,7 +88,7 @@ JSX 자식 자리의 주석은 여러 줄 블록으로 씁니다.
 </section>;
 ```
 
-**Correct (여러 줄 블록마다 주석을 두어 블록과 함께 접히게 합니다):**
+**Correct 3 (여러 줄 블록마다 주석을 두어 블록과 함께 접히게 합니다):**
 
 ```tsx
 <section className={clsx("wg_orderTable__root")}>

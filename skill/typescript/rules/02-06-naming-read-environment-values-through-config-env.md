@@ -34,7 +34,7 @@ tags: naming, config
 | `VITE_` 등 외부 접두사 | 읽는 자리에서 내부 이름으로 바꿔 앱 안에 퍼지지 않게 합니다 |
 | 비밀값 | 클라이언트에 노출되는 접두사로 읽지 않습니다. 해당 값은 브라우저에서 보입니다 |
 
-**Incorrect (쓰는 파일마다 직접 읽고 없을 때 리터럴로 덮습니다):**
+**Incorrect 1 (쓰는 파일마다 직접 읽고 없을 때 리터럴로 덮습니다):**
 
 ```ts
 // service/product-client.ts
@@ -44,7 +44,7 @@ const baseUrl = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:3000";
 const reportBaseUrl = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:3000";
 ```
 
-**Correct (`config/env.ts`가 한 번 읽고 없으면 드러냅니다):**
+**Correct 1 (`config/env.ts`가 한 번 읽고 없으면 드러냅니다):**
 
 ```ts
 // config/env.ts

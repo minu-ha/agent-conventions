@@ -20,6 +20,15 @@ tags: ownership
 가져오기는 아래 레이어 방향과 소유자 경계를 **모두** 지킵니다.
 모든 경로가 `@/`로 시작하므로 경로 모양이 아니라 가져오는 파일의 위치로 판정합니다.
 소유자 · 진입 파일 · 역할 폴더의 정의는 `ownership-place-owner-files-in-role-folders`를 따릅니다.
+가져오기는 화살표 방향으로만 흐르고, 중간 레이어는 건너뛸 수 있습니다.
+
+```mermaid
+flowchart LR
+	router["라우터 · 앱 진입 파일"] --> page["page"]
+	page --> widget["component/widget"]
+	widget --> ui["component/ui"]
+	ui --> root["루트 레이어<br>util · constant · type · hook<br>store · service · config · asset"]
+```
 
 | 가져오는 쪽 | 가져올 수 있는 레이어 |
 | --- | --- |
@@ -95,21 +104,21 @@ export const WgProductTable = (props: WgProductTableProps) => {
 import {WgProductTable} from "@/component/widget/product-table/wg-product-table";
 ```
 
-**Incorrect (`ui`가 `widget`을 가져옵니다):**
+**Incorrect 1 (`ui`가 `widget`을 가져옵니다):**
 
 ```tsx
 // component/ui/legend/ui-legend.tsx
 import {WgLegendPanel} from "@/component/widget/legend-panel/wg-legend-panel";
 ```
 
-**Correct (방향을 뒤집어 `widget`이 `ui`를 가져옵니다):**
+**Correct 1 (방향을 뒤집어 `widget`이 `ui`를 가져옵니다):**
 
 ```tsx
 // component/widget/legend-panel/wg-legend-panel.tsx
 import {UiLegend} from "@/component/ui/legend/ui-legend";
 ```
 
-**Incorrect (외부에서 사용한다는 이유만으로 역할 폴더의 파일을 루트로 옮깁니다):**
+**Incorrect 2 (외부에서 사용한다는 이유만으로 역할 폴더의 파일을 루트로 옮깁니다):**
 
 ```ts
 // type/chart-series.ts
@@ -125,7 +134,7 @@ export interface ChartSeries {
 import type {ChartSeries} from "@/type/chart-series";
 ```
 
-**Correct (역할 폴더의 파일은 레이어 방향만 지키면 밖에서도 가져옵니다):**
+**Correct 2 (역할 폴더의 파일은 레이어 방향만 지키면 밖에서도 가져옵니다):**
 
 ```ts
 // page/detail/product-table-section/_function/to-chart-option.ts

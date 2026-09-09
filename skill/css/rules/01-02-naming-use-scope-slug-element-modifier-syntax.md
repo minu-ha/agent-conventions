@@ -30,7 +30,7 @@ tags: naming, class-grammar, ownership
 `UiButton`은 `ui_button`으로 쓰고 `ui_uiButton`으로 쓰지 않습니다.
 기계 검증은 이 문법을 정규식으로 등록한 `selector-class-pattern`이 담당합니다.
 
-**Incorrect (식별자, 요소, 수정자에 snake_case와 kebab-case가 섞입니다):**
+**Incorrect 1 (식별자, 요소, 수정자에 snake_case와 kebab-case가 섞입니다):**
 
 ```txt
 ui_uiButton__root
@@ -43,7 +43,7 @@ pg_productDetail__main-content
 pg_productDetail__main--route_active
 ```
 
-**Correct (범위는 소문자로 쓰고 식별자, 요소, 수정자는 camelCase로 씁니다):**
+**Correct 1 (범위는 소문자로 쓰고 식별자, 요소, 수정자는 camelCase로 씁니다):**
 
 ```txt
 ui_tagList__root

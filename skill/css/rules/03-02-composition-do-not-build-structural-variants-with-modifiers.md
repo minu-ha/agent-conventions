@@ -28,7 +28,7 @@ tags: modifiers, structure, naming
 두 번째 소유자가 같은 이름을 쓰기 전까지는 요소 클래스로 두고, 쓰게 되는 시점에 수정자로 바꿉니다.
 앱이 켜고 끄는 상태에는 이 반복 횟수 기준을 적용하지 않습니다.
 
-**Incorrect (그 화면 하나를 고치려고 수정자를 붙입니다):**
+**Incorrect 1 (그 화면 하나를 고치려고 수정자를 붙입니다):**
 
 ```tsx
 <div className={clsx("pg_productDetail__section", "pg_productDetail__section--compactTop")} />
@@ -38,7 +38,7 @@ tags: modifiers, structure, naming
 <div className={clsx("pg_productDetail__aside", "pg_productDetail__aside--marginLeft0")} />
 ```
 
-**Correct (한 곳의 보정은 역할 이름을 붙인 요소 클래스로 분리합니다):**
+**Correct 1 (한 곳의 보정은 역할 이름을 붙인 요소 클래스로 분리합니다):**
 
 ```tsx
 <div className={clsx("pg_productDetail__specSection")} />

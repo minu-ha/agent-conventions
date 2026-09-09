@@ -18,6 +18,14 @@ tags: typing, wrapper, contracts
 기본은 프롭을 이름으로 하나씩 전달하는 것입니다.
 `{...props}`는 아래 세 조건을 **모두** 만족할 때만 씁니다.
 
+```mermaid
+flowchart LR
+	one{"안쪽 요소가<br>하나인가"} -- 예 --> own{"자기 프롭이<br>없는가"} -- 예 --> ext{"DOM 속성을<br>extends로 여는가"} -- 예 --> spread["{...props}로 넘긴다"]
+	one -- 아니요 --> named["이름으로 하나씩 넘긴다"]
+	own -- 아니요 --> dom["전달할 DOM 프롭만 선언하고<br>이름으로 넘긴다"]
+	ext -- 아니요 --> named
+```
+
 | 조건 | 확인 방법 |
 | --- | --- |
 | 안쪽 요소가 하나임 | 반환하는 JSX에 요소가 하나입니다 |

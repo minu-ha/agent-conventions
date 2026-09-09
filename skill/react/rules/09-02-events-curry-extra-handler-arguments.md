@@ -31,19 +31,19 @@ tags: events, handlers
 
 안쪽 핸들러에 이름을 붙이면 팩토리 이름을 반복하고 같은 반환 타입도 두 번 적게 됩니다.
 
-**Incorrect (인라인 래퍼로 인자를 넘깁니다):**
+**Incorrect 1 (인라인 래퍼로 인자를 넘깁니다):**
 
 ```tsx
 <UiButton onClick={() => handleListItemClick(product.id)}>{product.name}</UiButton>;
 ```
 
-**Correct (JSX에는 팩토리 호출만 두고 감싸는 화살표를 만들지 않습니다):**
+**Correct 1 (JSX에는 팩토리 호출만 두고 감싸는 화살표를 만들지 않습니다):**
 
 ```tsx
 <UiButton onClick={handleListItemClick(product.id)}>{product.name}</UiButton>;
 ```
 
-**Incorrect (안쪽 핸들러에 별도 이름을 붙이고 팩토리에 `With` 접미사를 붙입니다):**
+**Incorrect 2 (안쪽 핸들러에 별도 이름을 붙이고 팩토리에 `With` 접미사를 붙입니다):**
 
 ```tsx
 const handleListItemClickWithProductId = (productId: string): MouseEventHandler<HTMLButtonElement> => {
@@ -55,7 +55,7 @@ const handleListItemClickWithProductId = (productId: string): MouseEventHandler<
 };
 ```
 
-**Correct (추가 인자는 바깥 함수, 이벤트는 안쪽 함수입니다):**
+**Correct 2 (추가 인자는 바깥 함수, 이벤트는 안쪽 함수입니다):**
 
 ```tsx
 import type {MouseEventHandler} from "react";

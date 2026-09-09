@@ -30,7 +30,7 @@ tags: values, naming
 토큰화 대상은 `values-tokenize-repeated-visual-values`,
 테마별 값은 `values-switch-themes-by-changing-token-values` 규칙이 정합니다.
 
-**Incorrect (값으로 이름을 짓습니다):**
+**Incorrect 1 (값으로 이름을 짓습니다):**
 
 ```css
 /* src/style/token.css */
@@ -47,7 +47,7 @@ tags: values, naming
 }
 ```
 
-**Correct (쓰임으로 이름을 짓습니다):**
+**Correct 1 (쓰임으로 이름을 짓습니다):**
 
 ```css
 /* src/style/token.css */

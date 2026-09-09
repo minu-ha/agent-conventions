@@ -27,7 +27,7 @@ tags: composition, ordering
 구획 안에서는 선언 뒤에 참조한다는 조건만 지키고 별도 순서를 강제하지 않습니다.
 파생 값은 별도 구획으로 모으지 않고 `screen-keep-derived-values-close`에 따라 사용처에서 계산합니다.
 
-**Incorrect (같은 종류가 흩어지고 이펙트가 아래 선언을 의존성으로 참조합니다):**
+**Incorrect 1 (같은 종류가 흩어지고 이펙트가 아래 선언을 의존성으로 참조합니다):**
 
 ```tsx
 export const PgOrderToolbar = () => {
@@ -58,7 +58,7 @@ export const PgOrderToolbar = () => {
 };
 ```
 
-**Correct (네 구획이 순서대로 놓입니다):**
+**Correct 1 (네 구획이 순서대로 놓입니다):**
 
 ```tsx
 export const PgOrderToolbar = () => {

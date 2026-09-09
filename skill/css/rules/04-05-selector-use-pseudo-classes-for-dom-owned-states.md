@@ -30,7 +30,7 @@ tags: pseudo-classes, state, interaction
 가상 클래스의 위치는 `selector-nest-dom-state-in-the-owning-block`,
 `:not()` 금지는 `selector-do-not-negate-with-not` 규칙을 따릅니다.
 
-**Incorrect (앱이 정하는 상태를 `data-*` 속성 선택자로 잡습니다):**
+**Incorrect 1 (앱이 정하는 상태를 `data-*` 속성 선택자로 잡습니다):**
 
 ```css
 .pg_products__row {
@@ -40,7 +40,7 @@ tags: pseudo-classes, state, interaction
 }
 ```
 
-**Correct (앱이 정하는 상태는 수정자 클래스로 씁니다):**
+**Correct 1 (앱이 정하는 상태는 수정자 클래스로 씁니다):**
 
 ```css
 .pg_products__row--expanded {
@@ -48,7 +48,7 @@ tags: pseudo-classes, state, interaction
 }
 ```
 
-**Incorrect (같은 상태를 속성과 수정자 두 표기로 씁니다):**
+**Incorrect 2 (같은 상태를 속성과 수정자 두 표기로 씁니다):**
 
 ```css
 .pg_products__card--selected {
@@ -60,7 +60,7 @@ tags: pseudo-classes, state, interaction
 }
 ```
 
-**Correct (두 표기를 수정자 하나로 모읍니다):**
+**Correct 2 (두 표기를 수정자 하나로 모읍니다):**
 
 ```css
 .pg_products__card--selected {
@@ -68,7 +68,7 @@ tags: pseudo-classes, state, interaction
 	box-shadow: 0 0 0 1px #1677ff;
 }
 ```
-**Incorrect (앱 상태를 속성 선택자로 잡고 DOM 상태를 수정자로 만듭니다):**
+**Incorrect 3 (앱 상태를 속성 선택자로 잡고 DOM 상태를 수정자로 만듭니다):**
 
 ```tsx
 <button
@@ -94,7 +94,7 @@ tags: pseudo-classes, state, interaction
 }
 ```
 
-**Correct (`aria-*`는 마크업에 두고 앱 상태는 수정자로, DOM 상태는 가상 클래스로 씁니다):**
+**Correct 3 (`aria-*`는 마크업에 두고 앱 상태는 수정자로, DOM 상태는 가상 클래스로 씁니다):**
 
 ```tsx
 <button

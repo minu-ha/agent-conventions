@@ -7,13 +7,13 @@
 
 수정자로 표현할 수 있는 상태인지는 `composition-do-not-build-structural-variants-with-modifiers` 규칙이 판단합니다.
 
-**Incorrect (기본 클래스 이름에 상태를 포함합니다):**
+**Incorrect 1 (기본 클래스 이름에 상태를 포함합니다):**
 
 ```tsx
 <div className={clsx("pg_products__listButtonActive")} />
 ```
 
-**Correct (기본 클래스와 상태 수정자를 분리합니다):**
+**Correct 1 (기본 클래스와 상태 수정자를 분리합니다):**
 
 ```tsx
 <div className={clsx("pg_products__listButton", isActive && "pg_products__listButton--active")} />

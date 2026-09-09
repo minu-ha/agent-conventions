@@ -138,7 +138,7 @@
 
 레이어를 정한 뒤 파일명과 심볼에는 `ownership-prefix-layer-names-on-files-and-symbols`를 적용합니다.
 
-**Incorrect (공용 레이어에 화면 전용 로직이 섞입니다):**
+**Incorrect 1 (공용 레이어에 화면 전용 로직이 섞입니다):**
 
 ```tsx
 // component/ui/delete-product-button/ui-delete-product-button.tsx
@@ -156,7 +156,7 @@ export const UiDeleteProductButton = () => {
 };
 ```
 
-**Correct (라우터 훅을 호출하는 코드는 화면 레이어에 둡니다):**
+**Correct 1 (라우터 훅을 호출하는 코드는 화면 레이어에 둡니다):**
 
 ```tsx
 // page/products/_pg-delete-product-button.tsx
@@ -174,7 +174,7 @@ export const PgDeleteProductButton = () => {
 };
 ```
 
-**Incorrect (화면 타입 · 훅과 무관한 부품을 사용 횟수만으로 화면 레이어에 둡니다):**
+**Incorrect 2 (화면 타입 · 훅과 무관한 부품을 사용 횟수만으로 화면 레이어에 둡니다):**
 
 ```tsx
 // page/detail/_pg-product-status-badge.tsx
@@ -184,7 +184,7 @@ export const PgProductStatusBadge = (props: PgProductStatusBadgeProps) => {
 };
 ```
 
-**Correct (화면 타입 · 훅과 무관한 도메인 부품은 `widget`에 둡니다):**
+**Correct 2 (화면 타입 · 훅과 무관한 도메인 부품은 `widget`에 둡니다):**
 
 ```tsx
 // component/widget/product-status-badge/wg-product-status-badge.tsx
@@ -193,7 +193,7 @@ export const WgProductStatusBadge = (props: WgProductStatusBadgeProps) => {
 };
 ```
 
-**Incorrect (도메인을 모르는 조합을 조립 규모만 보고 `widget`에 둡니다):**
+**Incorrect 3 (도메인을 모르는 조합을 조립 규모만 보고 `widget`에 둡니다):**
 
 ```tsx
 // component/widget/line-chart/wg-line-chart.tsx
@@ -203,7 +203,7 @@ export const WgLineChart = (props: WgLineChartProps) => {
 };
 ```
 
-**Correct (도메인 지식이 없는 조합은 `ui`, 있는 조합은 `widget`에 둡니다):**
+**Correct 3 (도메인 지식이 없는 조합은 `ui`, 있는 조합은 `widget`에 둡니다):**
 
 ```tsx
 // component/ui/line-chart/ui-line-chart.tsx
@@ -253,7 +253,7 @@ export const WgProductTrendChart = (props: WgProductTrendChartProps) => {
 
 진입 파일의 기준은 `ownership-place-owner-files-in-role-folders`를 따릅니다.
 
-**Incorrect (화면 컴포넌트의 접두사를 누락합니다):**
+**Incorrect 1 (화면 컴포넌트의 접두사를 누락합니다):**
 
 ```tsx
 // page/detail/product-table-section.tsx
@@ -262,7 +262,7 @@ export const ProductTable = (props: ProductTableProps) => {
 };
 ```
 
-**Correct (진입 파일이 아닌 파일에는 `_`를 붙이고 파일명과 심볼에 레이어 접두사를 씁니다):**
+**Correct 1 (진입 파일이 아닌 파일에는 `_`를 붙이고 파일명과 심볼에 레이어 접두사를 씁니다):**
 
 ```tsx
 // page/detail/_pg-product-table-section.tsx
@@ -271,7 +271,7 @@ export const PgProductTableSection = (props: PgProductTableSectionProps) => {
 };
 ```
 
-**Incorrect (폴더에도 접두사를 붙이고 이름에서 되풀이합니다):**
+**Incorrect 2 (폴더에도 접두사를 붙이고 이름에서 되풀이합니다):**
 
 ```tsx
 // component/ui/ui-button/ui-button-button.tsx
@@ -280,7 +280,7 @@ export const UiButtonButton = (props: UiButtonButtonProps) => {
 };
 ```
 
-**Correct (폴더에는 접두사를 붙이지 않고 파일명에서 같은 말을 반복하지 않습니다):**
+**Correct 2 (폴더에는 접두사를 붙이지 않고 파일명에서 같은 말을 반복하지 않습니다):**
 
 ```tsx
 // component/ui/button/ui-button.tsx
@@ -289,7 +289,7 @@ export const UiButton = (props: UiButtonProps) => {
 };
 ```
 
-**Incorrect (역할 낱말 하나로 지어 무엇의 부품인지 알 수 없습니다):**
+**Incorrect 3 (역할 낱말 하나로 지어 무엇의 부품인지 알 수 없습니다):**
 
 ```text
 component/widget/chatbot/
@@ -299,7 +299,7 @@ component/widget/chatbot/
     └── _wg-header.tsx  # WgHeader, wg_header
 ```
 
-**Correct (이름이 스스로 뜻을 말하고 소유자 이름은 필요할 때만 들어갑니다):**
+**Correct 3 (이름이 스스로 뜻을 말하고 소유자 이름은 필요할 때만 들어갑니다):**
 
 ```text
 component/widget/chatbot/
@@ -361,7 +361,7 @@ component/widget/chatbot/
 | 루트에만 두는 `util` | `typescript/functions-promote-owner-free-functions-to-root-util` |
 | 루트에만 두는 `config` | `typescript/naming-read-environment-values-through-config-env` |
 
-**Incorrect (단순 컴포넌트에 역할 폴더를 미리 다 만듭니다):**
+**Incorrect 1 (단순 컴포넌트에 역할 폴더를 미리 다 만듭니다):**
 
 ```txt
 component/ui/button/
@@ -373,7 +373,7 @@ component/ui/button/
 └── _type/
 ```
 
-**Correct (지원 코드가 없으면 폴더 없이 파일만 둡니다):**
+**Correct 1 (지원 코드가 없으면 폴더 없이 파일만 둡니다):**
 
 ```txt
 component/ui/button/
@@ -381,7 +381,7 @@ component/ui/button/
 └── ui-button.css
 ```
 
-**Incorrect (범용 이름 폴더를 섞어 쓰고 하위 소유자 안에 소유자를 다시 둡니다):**
+**Incorrect 2 (범용 이름 폴더를 섞어 쓰고 하위 소유자 안에 소유자를 다시 둡니다):**
 
 ```txt
 page/detail/
@@ -398,7 +398,7 @@ page/detail/
             └── to-review-rows.ts
 ```
 
-**Correct (필요한 역할 폴더만 만들고 부품은 파일로 둡니다):**
+**Correct 2 (필요한 역할 폴더만 만들고 부품은 파일로 둡니다):**
 
 ```txt
 page/detail/
@@ -436,6 +436,15 @@ page/detail/
 가져오기는 아래 레이어 방향과 소유자 경계를 **모두** 지킵니다.
 모든 경로가 `@/`로 시작하므로 경로 모양이 아니라 가져오는 파일의 위치로 판정합니다.
 소유자 · 진입 파일 · 역할 폴더의 정의는 `ownership-place-owner-files-in-role-folders`를 따릅니다.
+가져오기는 화살표 방향으로만 흐르고, 중간 레이어는 건너뛸 수 있습니다.
+
+```mermaid
+flowchart LR
+	router["라우터 · 앱 진입 파일"] --> page["page"]
+	page --> widget["component/widget"]
+	widget --> ui["component/ui"]
+	ui --> root["루트 레이어<br>util · constant · type · hook<br>store · service · config · asset"]
+```
 
 | 가져오는 쪽 | 가져올 수 있는 레이어 |
 | --- | --- |
@@ -511,21 +520,21 @@ export const WgProductTable = (props: WgProductTableProps) => {
 import {WgProductTable} from "@/component/widget/product-table/wg-product-table";
 ```
 
-**Incorrect (`ui`가 `widget`을 가져옵니다):**
+**Incorrect 1 (`ui`가 `widget`을 가져옵니다):**
 
 ```tsx
 // component/ui/legend/ui-legend.tsx
 import {WgLegendPanel} from "@/component/widget/legend-panel/wg-legend-panel";
 ```
 
-**Correct (방향을 뒤집어 `widget`이 `ui`를 가져옵니다):**
+**Correct 1 (방향을 뒤집어 `widget`이 `ui`를 가져옵니다):**
 
 ```tsx
 // component/widget/legend-panel/wg-legend-panel.tsx
 import {UiLegend} from "@/component/ui/legend/ui-legend";
 ```
 
-**Incorrect (외부에서 사용한다는 이유만으로 역할 폴더의 파일을 루트로 옮깁니다):**
+**Incorrect 2 (외부에서 사용한다는 이유만으로 역할 폴더의 파일을 루트로 옮깁니다):**
 
 ```ts
 // type/chart-series.ts
@@ -541,7 +550,7 @@ export interface ChartSeries {
 import type {ChartSeries} from "@/type/chart-series";
 ```
 
-**Correct (역할 폴더의 파일은 레이어 방향만 지키면 밖에서도 가져옵니다):**
+**Correct 2 (역할 폴더의 파일은 레이어 방향만 지키면 밖에서도 가져옵니다):**
 
 ```ts
 // page/detail/product-table-section/_function/to-chart-option.ts
@@ -573,7 +582,7 @@ import {chart_series_line} from "@/component/ui/chart/_constant/series";
 추출한 파일의 배치는 `ownership-place-owner-files-in-role-folders`를,
 내보내기와 가져오기 형태는 `typescript/naming-use-direct-imports-and-public-entry-points`를 따릅니다.
 
-**Incorrect (순수 지역 계산을 커스텀 훅으로 감쌉니다):**
+**Incorrect 1 (순수 지역 계산을 커스텀 훅으로 감쌉니다):**
 
 ```tsx
 // page/products/_hook/use-media-upload-payload.ts
@@ -596,7 +605,7 @@ export const PgMediaUploadPanel = (props: PgMediaUploadPanelProps) => {
 };
 ```
 
-**Correct (순수 계산은 소유자의 `_function` 폴더에 두고 핸들러가 직접 부릅니다):**
+**Correct 1 (순수 계산은 소유자의 `_function` 폴더에 두고 핸들러가 직접 부릅니다):**
 
 ```tsx
 // page/products/_function/to-media-upload-payload.ts
@@ -644,7 +653,7 @@ export const PgMediaUploadPanel = (props: PgMediaUploadPanelProps) => {
 
 순수 계산을 훅으로 감싸는 문제는 `ownership-prefer-plain-ts-for-local-react-helpers`를 따릅니다.
 
-**Incorrect (파일 분량을 줄이려고 생명주기를 훅으로 옮깁니다):**
+**Incorrect 1 (파일 분량을 줄이려고 생명주기를 훅으로 옮깁니다):**
 
 ```tsx
 // component/widget/chart/chart-root/wg-chart-root.tsx
@@ -664,7 +673,7 @@ export const WgChartRoot = (props: WgChartRootProps) => {
 };
 ```
 
-**Correct (생명주기를 소유 컴포넌트가 직접 가집니다):**
+**Correct 1 (생명주기를 소유 컴포넌트가 직접 가집니다):**
 
 ```tsx
 // component/widget/chart/chart-root/wg-chart-root.tsx
@@ -782,7 +791,7 @@ const mutationProductRemove = useProductRemove();
 `select` 내부 변환은 이 규칙이 담당합니다. 별도 함수나 보조 모듈 경계가 없으면
 `typescript/functions-extract-helpers-only-when-the-boundary-is-real`은 적용하지 않습니다.
 
-**Incorrect (렌더에서 응답 원본 구조를 가공합니다):**
+**Incorrect 1 (렌더에서 응답 원본 구조를 가공합니다):**
 
 ```tsx
 const responseProductListSuspense = useProductListSuspense();
@@ -795,7 +804,7 @@ const responseProductListSuspense = useProductListSuspense();
 />;
 ```
 
-**Correct (`query.select`에서 화면에 필요한 형태로 가공합니다):**
+**Correct 1 (`query.select`에서 화면에 필요한 형태로 가공합니다):**
 
 ```tsx
 /**
@@ -854,7 +863,7 @@ Suspense의 불필요한 대기 분기는 `runtime-avoid-ad-hoc-loading-branches
 실측 병목이 있을 때만 `perf-avoid-defensive-memoization`의 예외 기준을 따릅니다.
 반복 조회 인덱스는 `typescript/values-use-set-and-map-for-repeated-lookups`를 따릅니다.
 
-**Incorrect (화면 본문에서 두 응답을 꺼내 합칩니다):**
+**Incorrect 1 (화면 본문에서 두 응답을 꺼내 합칩니다):**
 
 ```tsx
 const responseProductListSuspense = useProductListSuspense();
@@ -868,7 +877,7 @@ const rows = responseProductListSuspense.data.products.map((product) => ({
 }));
 ```
 
-**Correct (값을 렌더하는 섹션이 인라인 `combine`으로 합칩니다):**
+**Correct 1 (값을 렌더하는 섹션이 인라인 `combine`으로 합칩니다):**
 
 ```tsx
 export const PgProductTableSection = () => {
@@ -913,7 +922,7 @@ export const PgProductTableSection = () => {
 | 쿼리 결과 가공 | `data-shape-query-data-with-select`에 따라 `query.select`에서 처리합니다. 받는 쪽의 별칭은 깊이를 줄이지 못하고 출처만 지웁니다 |
 | 프롭스 접근 | `composition-read-props-without-destructuring` |
 
-**Incorrect (구조분해로 출처가 흐려집니다):**
+**Incorrect 1 (구조분해로 출처가 흐려집니다):**
 
 ```tsx
 const {products, selectedProduct} = responseProductListSuspense.data;
@@ -924,7 +933,7 @@ const {products, selectedProduct} = responseProductListSuspense.data;
 </Fragment>;
 ```
 
-**Correct (원본 객체의 속성을 직접 읽어 출처를 유지합니다):**
+**Correct 1 (원본 객체의 속성을 직접 읽어 출처를 유지합니다):**
 
 ```tsx
 <Fragment>
@@ -933,7 +942,7 @@ const {products, selectedProduct} = responseProductListSuspense.data;
 </Fragment>;
 ```
 
-**Incorrect (이펙트 의존성도 구조분해한 이름으로 적어 출처가 드러나지 않습니다):**
+**Incorrect 2 (이펙트 의존성도 구조분해한 이름으로 적어 출처가 드러나지 않습니다):**
 
 ```ts
 const {products} = responseProductSearchSuspense.data;
@@ -947,7 +956,7 @@ useEffect(() => {
 }, [products, urlParams.keyword]);
 ```
 
-**Correct (이펙트 안에서도 원본 이름 그대로 씁니다):**
+**Correct 2 (이펙트 안에서도 원본 이름 그대로 씁니다):**
 
 ```ts
 /**
@@ -1115,7 +1124,7 @@ const mutationProductSave = useProductSave({
 });
 ```
 
-**Incorrect (현재 목록 키만 다시 읽어 다른 목록 조건과 요약 키를 놓칩니다):**
+**Incorrect 1 (현재 목록 키만 다시 읽어 다른 목록 조건과 요약 키를 놓칩니다):**
 
 ```tsx
 const mutationProductSave = useProductSave({
@@ -1127,7 +1136,7 @@ const mutationProductSave = useProductSave({
 });
 ```
 
-**Correct (바뀐 데이터를 소유한 키를 무효화합니다):**
+**Correct 1 (바뀐 데이터를 소유한 키를 무효화합니다):**
 
 ```tsx
 const queryClient = useQueryClient();
@@ -1175,7 +1184,7 @@ JSX에 직접 쓴 화살표 함수와 달리, 팩토리가 반환하는 함수�
 
 `query.select` 같은 훅 옵션의 일회성 문맥 콜백은 리액트 핸들러 구현이 아니므로 대상에서 제외합니다.
 
-**Incorrect (팩토리 반환 타입을 적지 않아 이벤트가 암시적 `any`가 됩니다):**
+**Incorrect 1 (팩토리 반환 타입을 적지 않아 이벤트가 암시적 `any`가 됩니다):**
 
 ```ts
 const handleRowSelectToggle = (rowId: string) => (event) => {
@@ -1184,7 +1193,7 @@ const handleRowSelectToggle = (rowId: string) => (event) => {
 };
 ```
 
-**Correct (팩토리 반환 타입을 기존 별칭으로 고정합니다):**
+**Correct 1 (팩토리 반환 타입을 기존 별칭으로 고정합니다):**
 
 ```ts
 import type {MouseEventHandler} from "react";
@@ -1200,7 +1209,7 @@ const handleRowSelectToggle =
 	};
 ```
 
-**Incorrect (래퍼를 쓰면서 라이브러리 원본 프롭스를 참조합니다):**
+**Incorrect 2 (래퍼를 쓰면서 라이브러리 원본 프롭스를 참조합니다):**
 
 ```ts
 import type {ButtonProps} from "@mui/material";
@@ -1210,7 +1219,7 @@ const handleSubmitClick: ButtonProps["onClick"] = (event) => {
 };
 ```
 
-**Correct (래퍼가 노출한 계약을 참조합니다):**
+**Correct 2 (래퍼가 노출한 계약을 참조합니다):**
 
 ```ts
 import type {UiButtonProps} from "@/component/ui/button/ui-button";
@@ -1484,6 +1493,14 @@ export const UiTextField = (props: UiTextFieldProps) => {
 기본은 프롭을 이름으로 하나씩 전달하는 것입니다.
 `{...props}`는 아래 세 조건을 **모두** 만족할 때만 씁니다.
 
+```mermaid
+flowchart LR
+	one{"안쪽 요소가<br>하나인가"} -- 예 --> own{"자기 프롭이<br>없는가"} -- 예 --> ext{"DOM 속성을<br>extends로 여는가"} -- 예 --> spread["{...props}로 넘긴다"]
+	one -- 아니요 --> named["이름으로 하나씩 넘긴다"]
+	own -- 아니요 --> dom["전달할 DOM 프롭만 선언하고<br>이름으로 넘긴다"]
+	ext -- 아니요 --> named
+```
+
 | 조건 | 확인 방법 |
 | --- | --- |
 | 안쪽 요소가 하나임 | 반환하는 JSX에 요소가 하나입니다 |
@@ -1670,7 +1687,7 @@ export const UiTableRow = (props: UiTableRowProps) => {
 렌더 프롭은 `strategy-prefer-children-over-render-props`를,
 공개 부품의 범위는 `strategy-expose-only-assembled-compound-parts`를 따릅니다.
 
-**Incorrect (단일 · 합성 · 변형을 구분하지 않고 한 컴포넌트에 모두 구현합니다):**
+**Incorrect 1 (단일 · 합성 · 변형을 구분하지 않고 한 컴포넌트에 모두 구현합니다):**
 
 ```tsx
 export interface WgProfileDialogProps {
@@ -1696,7 +1713,7 @@ export const WgProfileDialog = (props: WgProfileDialogProps) => {
 };
 ```
 
-**Correct (1단계 — 확장이 필요 없으면 단일 컴포넌트로 둡니다):**
+**Correct 1 (1단계 — 확장이 필요 없으면 단일 컴포넌트로 둡니다):**
 
 ```tsx
 /**
@@ -1875,7 +1892,7 @@ export const WgReadOnlyProfileDialog = (props: WgReadOnlyProfileDialogProps) => 
 상태 없는 합성에 상태를 추가할 때의 공개 이름은
 `strategy-choose-single-composition-compound-and-variants`를 따릅니다.
 
-**Incorrect (내부 구조를 전부 공개해 계약으로 굳힙니다):**
+**Incorrect 1 (내부 구조를 전부 공개해 계약으로 굳힙니다):**
 
 ```tsx
 // 사용처가 끼워 넣을 자리가 없는 래퍼와 여백 보정용 DOM까지 이름이 붙어 나갔다
@@ -1896,7 +1913,7 @@ export const UiPanel = {
 } as const;
 ```
 
-**Correct (조립에 필요한 것만 공개합니다):**
+**Correct 1 (조립에 필요한 것만 공개합니다):**
 
 ```tsx
 // 단순 클래스 래퍼는 모듈 안에 남기고 여백 보정용 DOM은 만들지 않는다
@@ -1933,7 +1950,7 @@ export const UiPanel = {
 불리언 개수 자체보다 서로 배타적인 모드를 조합으로 표현하는지 확인합니다.
 공개 부품을 `.Root`처럼 묶는 형태는 `strategy-choose-single-composition-compound-and-variants`를 따릅니다.
 
-**Incorrect (불리언 프롭 조합으로 공용 컴포넌트가 비대해집니다):**
+**Incorrect 1 (불리언 프롭 조합으로 공용 컴포넌트가 비대해집니다):**
 
 ```tsx
 export interface WgProductToolbarProps {
@@ -1956,7 +1973,7 @@ export const WgProductToolbar = (props: WgProductToolbarProps) => {
 };
 ```
 
-**Correct (모드를 변형 컴포넌트와 상태 없는 합성으로 분리합니다):**
+**Correct 1 (모드를 변형 컴포넌트와 상태 없는 합성으로 분리합니다):**
 
 ```tsx
 /**
@@ -2137,7 +2154,7 @@ const WgUserCard = ({ label, onSave }: WgUserCardProps) => {
 };
 ```
 
-**Incorrect (본문 첫 줄에서 구조분해합니다):**
+**Incorrect 1 (본문 첫 줄에서 구조분해합니다):**
 
 ```tsx
 const WgUserCard = (props: WgUserCardProps) => {
@@ -2146,7 +2163,7 @@ const WgUserCard = (props: WgUserCardProps) => {
 };
 ```
 
-**Correct (`props`로 읽어 출처를 남깁니다):**
+**Correct 1 (`props`로 읽어 출처를 남깁니다):**
 
 ```tsx
 const WgUserCard = (props: WgUserCardProps) => {
@@ -2168,7 +2185,7 @@ const WgUserCard = (props: WgUserCardProps) => {
 
 로컬에서 JSX 조각을 재사용하려면 독립 컴포넌트로 빼고 프롭스로 전달합니다.
 
-**Incorrect (렌더마다 새 컴포넌트 타입을 만듭니다):**
+**Incorrect 1 (렌더마다 새 컴포넌트 타입을 만듭니다):**
 
 ```tsx
 export const WgUserProfileCard = (props: WgUserProfileCardProps) => {
@@ -2193,7 +2210,7 @@ export const WgUserProfileCard = (props: WgUserProfileCardProps) => {
 };
 ```
 
-**Correct (컴포넌트를 바깥으로 분리하고 프롭스로 넘깁니다):**
+**Correct 1 (컴포넌트를 바깥으로 분리하고 프롭스로 넘깁니다):**
 
 ```tsx
 /**
@@ -2254,7 +2271,7 @@ JSX에는 이름 붙인 핸들러 참조만 넘깁니다.
 추가 인자를 넘기려고 `onClick={() => handleX(id)}` 같은 인라인 래퍼를 쓰지 않습니다.
 그 자리는 `events-curry-extra-handler-arguments`가 커링으로 정합니다.
 
-**Incorrect (분기와 비동기를 JSX 안에 숨깁니다):**
+**Incorrect 1 (분기와 비동기를 JSX 안에 숨깁니다):**
 
 ```tsx
 <UiButton
@@ -2270,7 +2287,7 @@ JSX에는 이름 붙인 핸들러 참조만 넘깁니다.
 </UiButton>
 ```
 
-**Correct (로직을 이름 붙인 핸들러로 뺍니다):**
+**Correct 1 (로직을 이름 붙인 핸들러로 뺍니다):**
 
 ```tsx
 import type {MouseEventHandler} from "react";
@@ -2449,7 +2466,7 @@ export const UiSearchInput = (props: UiSearchInputProps) => {
 | 동영상 재생 등 DOM 자체 동작을 멈춰야 함 | DOM 보존으로 계속될 수 있으므로 이펙트 정리에서 명시적으로 멈춥니다 |
 | 하위 트리가 무거움 | 숨겨도 업데이트 시 렌더되므로 습관적으로 보존하지 않습니다 |
 
-**Incorrect (초기화해야 할 폼을 숨겨 상태를 보존합니다):**
+**Incorrect 1 (초기화해야 할 폼을 숨겨 상태를 보존합니다):**
 
 ```tsx
 // 편집을 취소했다가 다시 들어가면 지난 입력이 그대로 남는다
@@ -2465,7 +2482,7 @@ return (
 );
 ```
 
-**Correct (폼 초기화가 필요하면 조건부 렌더링을 유지합니다):**
+**Correct 1 (폼 초기화가 필요하면 조건부 렌더링을 유지합니다):**
 
 ```tsx
 // 편집을 취소하면 폼이 해제돼서 다시 들어갈 때 빈 입력으로 시작한다
@@ -2477,7 +2494,7 @@ return (
 );
 ```
 
-**Incorrect (다시 보여 줄 때 필요한 상태를 조건부 렌더링으로 잃습니다):**
+**Incorrect 2 (다시 보여 줄 때 필요한 상태를 조건부 렌더링으로 잃습니다):**
 
 ```tsx
 // 사이드바: 접어 둔 노드와 스크롤 위치를 자기 상태로 갖는다
@@ -2491,7 +2508,7 @@ const PgProductSidebar = () => {
 return isSidebarOpen && <PgProductSidebar />;
 ```
 
-**Correct (다시 보여 줄 때 하위 트리 상태를 보존해야 하는 경우에만 씁니다):**
+**Correct 2 (다시 보여 줄 때 하위 트리 상태를 보존해야 하는 경우에만 씁니다):**
 
 ```tsx
 // 사이드바: 접어 둔 노드와 스크롤 위치를 자기 상태로 갖는다
@@ -2539,7 +2556,7 @@ return (
 | 컴포넌트가 아닌 함수의 객체 매개변수 | `typescript/functions-use-named-object-params-for-complex-signatures` |
 | 문서 주석 내용 | `typescript/types-document-custom-types-and-shapes` |
 
-**Incorrect (파일 위쪽에 타입을 모으고 내보내지 않습니다):**
+**Incorrect 1 (파일 위쪽에 타입을 모으고 내보내지 않습니다):**
 
 ```tsx
 interface UiBadgeProps {
@@ -2559,7 +2576,7 @@ export const UiChip = (props: UiChipProps) => {
 };
 ```
 
-**Correct (각 컴포넌트 바로 위에 선언하고 내보냅니다):**
+**Correct 1 (각 컴포넌트 바로 위에 선언하고 내보냅니다):**
 
 ```tsx
 /**
@@ -2591,7 +2608,7 @@ export const UiChip = (props: UiChipProps) => {
 };
 ```
 
-**Incorrect (설명이 컴포넌트에 붙어 계약과 떨어집니다):**
+**Incorrect 2 (설명이 컴포넌트에 붙어 계약과 떨어집니다):**
 
 ```tsx
 export interface UiPanelHeaderProps {
@@ -2606,7 +2623,7 @@ export const UiPanelHeader = (props: UiPanelHeaderProps) => {
 };
 ```
 
-**Correct (설명, 계약, 선언을 붙여 둡니다):**
+**Correct 2 (설명, 계약, 선언을 붙여 둡니다):**
 
 ```tsx
 /**
@@ -2642,7 +2659,7 @@ export const UiPanelHeader = (props: UiPanelHeaderProps) => {
 `<>`를 강제하는 `biome`의 `style/useFragmentSyntax`는 켜지 않습니다.
 설정은 `typescript/tooling-configure-biome-to-enforce-these-rules`를 따릅니다.
 
-**Incorrect (`Fragment` 단축 문법을 씁니다):**
+**Incorrect 1 (`Fragment` 단축 문법을 씁니다):**
 
 ```tsx
 export const PgProductScreen = () => {
@@ -2655,7 +2672,7 @@ export const PgProductScreen = () => {
 };
 ```
 
-**Correct (`Fragment`를 그대로 씁니다):**
+**Correct 1 (`Fragment`를 그대로 씁니다):**
 
 ```tsx
 import {Fragment} from "react";
@@ -2670,7 +2687,7 @@ export const PgProductScreen = () => {
 };
 ```
 
-**Incorrect (목록에서도 짧은 문법을 써서 `key`를 붙일 자리가 없습니다):**
+**Incorrect 2 (목록에서도 짧은 문법을 써서 `key`를 붙일 자리가 없습니다):**
 
 ```tsx
 export const PgProductRows = (props: PgProductRowsProps) => {
@@ -2683,7 +2700,7 @@ export const PgProductRows = (props: PgProductRowsProps) => {
 };
 ```
 
-**Correct (`key`가 필요해도 같은 형태를 씁니다):**
+**Correct 2 (`key`가 필요해도 같은 형태를 씁니다):**
 
 ```tsx
 import {Fragment} from "react";
@@ -2720,7 +2737,7 @@ JSX 분기는 각 요소 바로 앞에 표시 조건이 드러나도록 적습�
 `&&` 왼쪽에는 숫자를 두지 않습니다. 거짓으로 평가되는 `0`과 `NaN`도 화면에 그대로 렌더됩니다.
 길이 · 개수는 비교식으로 바꿔 불리언으로 판단합니다.
 
-**Incorrect (JSX 두 분기를 삼항 하나로 묶습니다):**
+**Incorrect 1 (JSX 두 분기를 삼항 하나로 묶습니다):**
 
 ```tsx
 return (
@@ -2730,7 +2747,7 @@ return (
 );
 ```
 
-**Correct (각 JSX 요소 앞에 표시 조건을 둡니다):**
+**Correct 1 (각 JSX 요소 앞에 표시 조건을 둡니다):**
 
 ```tsx
 return (
@@ -2741,19 +2758,19 @@ return (
 );
 ```
 
-**Incorrect (`&&` 왼쪽에 숫자를 둬서 `0`이 렌더됩니다):**
+**Incorrect 2 (`&&` 왼쪽에 숫자를 둬서 `0`이 렌더됩니다):**
 
 ```tsx
 return <section>{selectedRows.length && <PgProductBulkActionBar />}</section>;
 ```
 
-**Correct (`&&` 왼쪽에 불리언 비교식을 씁니다):**
+**Correct 2 (`&&` 왼쪽에 불리언 비교식을 씁니다):**
 
 ```tsx
 return <section>{selectedRows.length > 0 && <PgProductBulkActionBar selectedRows={selectedRows} />}</section>;
 ```
 
-**Incorrect (컴포넌트 전체를 표시하지 않을 때 `&&`를 씁니다):**
+**Incorrect 3 (컴포넌트 전체를 표시하지 않을 때 `&&`를 씁니다):**
 
 ```tsx
 const PgProductPanel = (props: PgProductPanelProps) => {
@@ -2761,7 +2778,7 @@ const PgProductPanel = (props: PgProductPanelProps) => {
 };
 ```
 
-**Correct (컴포넌트 전체를 표시하지 않으면 이른 반환합니다):**
+**Correct 3 (컴포넌트 전체를 표시하지 않으면 이른 반환합니다):**
 
 ```tsx
 const PgProductPanel = (props: PgProductPanelProps) => {
@@ -2802,7 +2819,7 @@ return <UiBadge tone={props.isSelected ? "accent" : "neutral"} />;
 구획 안에서는 선언 뒤에 참조한다는 조건만 지키고 별도 순서를 강제하지 않습니다.
 파생 값은 별도 구획으로 모으지 않고 `screen-keep-derived-values-close`에 따라 사용처에서 계산합니다.
 
-**Incorrect (같은 종류가 흩어지고 이펙트가 아래 선언을 의존성으로 참조합니다):**
+**Incorrect 1 (같은 종류가 흩어지고 이펙트가 아래 선언을 의존성으로 참조합니다):**
 
 ```tsx
 export const PgOrderToolbar = () => {
@@ -2833,7 +2850,7 @@ export const PgOrderToolbar = () => {
 };
 ```
 
-**Correct (네 구획이 순서대로 놓입니다):**
+**Correct 1 (네 구획이 순서대로 놓입니다):**
 
 ```tsx
 export const PgOrderToolbar = () => {
@@ -2901,7 +2918,7 @@ export const PgOrderToolbar = () => {
 뗀 파일의 이름은 `ownership-prefix-layer-names-on-files-and-symbols`를 따릅니다.
 자리는 `ownership-place-owner-files-in-role-folders`를 따릅니다.
 
-**Incorrect (컨텍스트를 읽어 분기만 하는 래퍼를 파일로 뗍니다):**
+**Incorrect 1 (컨텍스트를 읽어 분기만 하는 래퍼를 파일로 뗍니다):**
 
 ```tsx
 // component/widget/chatbot/_wg-chat-content.tsx: 어느 화면을 그릴지 고르기만 하고 상태를 소유하지 않는다
@@ -2917,7 +2934,7 @@ export const WgChatContent = () => {
 };
 ```
 
-**Correct (분기는 진입 파일에 남기고 상태를 소유한 부품만 뗍니다):**
+**Correct 1 (분기는 진입 파일에 남기고 상태를 소유한 부품만 뗍니다):**
 
 ```tsx
 // component/widget/chatbot/wg-chatbot.tsx
@@ -3088,7 +3105,7 @@ export const PgProductListSection = () => {
 | 함수 | `typescript/functions-extract-helpers-only-when-the-boundary-is-real` |
 | 훅 | `ownership-prefer-plain-ts-for-local-react-helpers` |
 
-**Incorrect (컴포넌트 하나만 쓰는 단계 보조 함수를 보조 모듈에 남깁니다):**
+**Incorrect 1 (컴포넌트 하나만 쓰는 단계 보조 함수를 보조 모듈에 남깁니다):**
 
 ```tsx
 const toEditHref = ({editHrefBase, row}: {editHrefBase: string; row: ProductRow}) =>
@@ -3108,7 +3125,7 @@ export const PgProductTable = (props: PgProductTableProps) => {
 };
 ```
 
-**Correct (작은 쿼리 가공과 `href` 조립은 사용처에 둡니다):**
+**Correct 1 (작은 쿼리 가공과 `href` 조립은 사용처에 둡니다):**
 
 ```tsx
 export const PgProductTable = (props: PgProductTableProps) => {
@@ -3303,7 +3320,7 @@ export const PgProductTreeSection = () => {
 
 이 규칙은 소유 파일 안에서 계산 위치를 정합니다. 소유자나 이름을 새로 정하는 기준은 위 규칙을 따릅니다.
 
-**Incorrect (쓰는 자리에서 먼 화면 상단에 플래그와 표시값을 쌓습니다):**
+**Incorrect 1 (쓰는 자리에서 먼 화면 상단에 플래그와 표시값을 쌓습니다):**
 
 ```tsx
 export const PgProductTableSection = () => {
@@ -3331,7 +3348,7 @@ export const PgProductTableSection = () => {
 };
 ```
 
-**Correct (선언을 그대로 두고 쓰는 자리에서 계산합니다):**
+**Correct 1 (선언을 그대로 두고 쓰는 자리에서 계산합니다):**
 
 ```tsx
 export const PgProductTableSection = () => {
@@ -3463,7 +3480,7 @@ export const PgProductTreeSection = () => {
 이 예외는 `typescript/docs-justify-convention-exceptions-with-a-reason-comment`에 따라 이유를 남깁니다.
 없는 값을 기본값으로 덮는 문제는 `typescript/absence-expose-optional-values-instead-of-silent-fallbacks`를 따릅니다.
 
-**Incorrect (`Suspense` 쿼리의 `isPending`을 다시 분기합니다. 타입이 `false`라 죽은 코드입니다):**
+**Incorrect 1 (`Suspense` 쿼리의 `isPending`을 다시 분기합니다. 타입이 `false`라 죽은 코드입니다):**
 
 ```tsx
 if (responseUserGetItemSuspense.isPending) {
@@ -3473,13 +3490,13 @@ if (responseUserGetItemSuspense.isPending) {
 return <UiUserName value={responseUserGetItemSuspense.data.name} />;
 ```
 
-**Correct (초기 로딩은 경계가 받으므로 본문은 데이터가 있는 경로만 렌더합니다):**
+**Correct 1 (초기 로딩은 경계가 받으므로 본문은 데이터가 있는 경로만 렌더합니다):**
 
 ```tsx
 return <UiUserName value={responseUserGetItemSuspense.data.name} />;
 ```
 
-**Incorrect (다시 불러오는 중에 화면 전체를 가립니다):**
+**Incorrect 2 (다시 불러오는 중에 화면 전체를 가립니다):**
 
 ```tsx
 if (responseUserGetItemSuspense.isFetching) {
@@ -3489,7 +3506,7 @@ if (responseUserGetItemSuspense.isFetching) {
 return <UiUserName value={responseUserGetItemSuspense.data.name} />;
 ```
 
-**Correct (갱신 상태는 이미 렌더된 화면을 보조하는 표시에만 씁니다):**
+**Correct 2 (갱신 상태는 이미 렌더된 화면을 보조하는 표시에만 씁니다):**
 
 ```tsx
 return (
@@ -3642,14 +3659,14 @@ export const PgProductRecommendationBoundary = () => {
 };
 ```
 
-**Incorrect (캐시가 있는 재조회 실패도 자동으로 경계에 전달된다고 가정합니다):**
+**Incorrect 1 (캐시가 있는 재조회 실패도 자동으로 경계에 전달된다고 가정합니다):**
 
 ```tsx
 // 이 화면은 낡은 추천을 계속 보여 주면 안 되지만 재조회 실패를 던지지 않는다
 return <UiProductRecommendations items={responseProductRecommendationsSuspense.data.items} />;
 ```
 
-**Correct (낡은 데이터를 허용하지 않는 화면만 재조회 실패를 경계로 보냅니다):**
+**Correct 1 (낡은 데이터를 허용하지 않는 화면만 재조회 실패를 경계로 보냅니다):**
 
 ```tsx
 // 추천을 확정하는 화면은 재조회 실패 시 이전 추천을 계속 선택하게 두지 않는다
@@ -3683,7 +3700,7 @@ return <UiProductRecommendations items={responseProductRecommendationsSuspense.d
 여러 화면이 공유하는 파생 판단을 스토어에 채우는 이펙트만 예외이며,
 허용 조건은 `state-store-derived-authority`를 따릅니다.
 
-**Incorrect (파생값을 이펙트로 다시 상태에 동기화합니다):**
+**Incorrect 1 (파생값을 이펙트로 다시 상태에 동기화합니다):**
 
 ```tsx
 const [selectedIds, setSelectedIds] = useState<string[]>([]);
@@ -3694,7 +3711,7 @@ useEffect(() => {
 }, [selectedIds]);
 ```
 
-**Correct (같은 `selectedIds`에서 렌더 중에 바로 계산합니다):**
+**Correct 1 (같은 `selectedIds`에서 렌더 중에 바로 계산합니다):**
 
 ```tsx
 const [selectedIds, setSelectedIds] = useState<string[]>([]);
@@ -3735,7 +3752,7 @@ return <UiSelectedCountBadge count={selectedIds.length} />;
 `Context`는 전역 상태 도구가 아니라 묶음 안의 전달 수단입니다.
 `strategy-choose-single-composition-compound-and-variants`의 상태 있는 합성도 이 방식으로 상태를 공유합니다.
 
-**Incorrect (전역 값과 서버 값까지 `useState`가 소유합니다):**
+**Incorrect 1 (전역 값과 서버 값까지 `useState`가 소유합니다):**
 
 ```ts
 const [isOpen, setIsOpen] = useState(false);
@@ -3748,7 +3765,7 @@ const responseUserGetItemSuspense = useUserGetItemSuspense();
 const [userName, setUserName] = useState(responseUserGetItemSuspense.data.name);
 ```
 
-**Correct (값의 소유자에 맞는 도구를 씁니다):**
+**Correct 1 (값의 소유자에 맞는 도구를 씁니다):**
 
 ```ts
 const [isOpen, setIsOpen] = useState(false);
@@ -3760,14 +3777,14 @@ const themeStore = useThemeStore();
 const responseUserGetItemSuspense = useUserGetItemSuspense();
 ```
 
-**Incorrect (링크 공유로 유지할 목록 필터를 `useState`에 둡니다):**
+**Incorrect 2 (링크 공유로 유지할 목록 필터를 `useState`에 둡니다):**
 
 ```ts
 const [keyword, setKeyword] = useState("");
 const [page, setPage] = useState(1);
 ```
 
-**Correct (주소가 소유한 값은 search 파라미터로 읽고 씁니다):**
+**Correct 2 (주소가 소유한 값은 search 파라미터로 읽고 씁니다):**
 
 ```ts
 const [urlParams, setUrlParams] = useQueryStates(productUrlParsers);
@@ -3849,7 +3866,7 @@ export const UiTabsRoot = (props: UiTabsRootProps) => {
 같은 판별을 화면마다 반복하지 않도록 한 곳에서 스토어를 채웁니다.
 이펙트가 스토어 객체 전체에 의존하면 `set`으로 참조가 바뀔 때 다시 실행되므로 피합니다.
 
-**Incorrect (개별 화면이 도메인 판별을 수행하고 스토어에 저장합니다):**
+**Incorrect 1 (개별 화면이 도메인 판별을 수행하고 스토어에 저장합니다):**
 
 ```ts
 const permissionStore = usePermissionStore();
@@ -3860,7 +3877,7 @@ useEffect(() => {
 }, [permissionStore, canEditProduct]);
 ```
 
-**Correct (화면은 스토어에 채워진 결과만 참조합니다):**
+**Correct 1 (화면은 스토어에 채워진 결과만 참조합니다):**
 
 ```ts
 const permissionStore = usePermissionStore();
@@ -3870,7 +3887,7 @@ if (permissionStore.canEditProduct) {
 }
 ```
 
-**Incorrect (스토어 전체에 의존하는 이펙트가 `set`마다 다시 실행됩니다):**
+**Incorrect 2 (스토어 전체에 의존하는 이펙트가 `set`마다 다시 실행됩니다):**
 
 ```ts
 // page/_layout/pg-app-layout.tsx
@@ -3884,7 +3901,7 @@ useEffect(() => {
 }, [permissionStore, responseAccessBootstrapSuspense.data]);
 ```
 
-**Correct (초기화 경계에서 스토어를 채우고 스토어에서는 `set` 함수만 선택합니다):**
+**Correct 2 (초기화 경계에서 스토어를 채우고 스토어에서는 `set` 함수만 선택합니다):**
 
 ```ts
 // page/_layout/pg-app-layout.tsx
@@ -3912,7 +3929,7 @@ useEffect(() => {
 한 이벤트 안에서 두 번 갱신하거나, `await` 뒤나 오래 사는 클로저 안에서 갱신하면 결과가 갈립니다.
 한 번만 부르는 갱신은 두 형태가 같은 결과를 내지만, 형태를 하나로 고정해 자리마다 다시 판단하지 않습니다.
 
-**Incorrect (오래 사는 콜백이 등록 시점의 상태를 붙잡습니다):**
+**Incorrect 1 (오래 사는 콜백이 등록 시점의 상태를 붙잡습니다):**
 
 ```tsx
 /**
@@ -3926,7 +3943,7 @@ useEffect(() => {
 }, []);
 ```
 
-**Correct (함수형 업데이터로 항상 최신 상태를 기준으로 갱신합니다):**
+**Correct 1 (함수형 업데이터로 항상 최신 상태를 기준으로 갱신합니다):**
 
 ```tsx
 /**
@@ -3969,7 +3986,7 @@ DOM 이벤트 매개변수나 커링을 덧붙이지 않고,
 `biome`도 `useEffectEvent`를 인식하는 최근 버전을 씁니다. 이전 버전은 아래 Correct 예제를 훅 규칙 위반으로 표시합니다.
 설정은 `typescript/tooling-configure-biome-to-enforce-these-rules`를 따릅니다.
 
-**Incorrect (최신 콜백을 읽기 위해 `ref`를 직접 동기화합니다):**
+**Incorrect 1 (최신 콜백을 읽기 위해 `ref`를 직접 동기화합니다):**
 
 ```tsx
 const onChangeRef = useRef(props.onChange);
@@ -3987,7 +4004,7 @@ useEffect(() => {
 }, [props.productId]);
 ```
 
-**Correct (비반응형 콜백은 `useEffectEvent`로 분리합니다):**
+**Correct 1 (비반응형 콜백은 `useEffectEvent`로 분리합니다):**
 
 ```tsx
 /**
@@ -4035,7 +4052,7 @@ useEffect(() => {
 파일명 · 심볼 표기는 `typescript/naming-use-consistent-file-and-symbol-naming`을 따릅니다.
 값을 주소에 둘지는 `state-choose-state-tools-by-source-of-truth`로 판단합니다.
 
-**Incorrect (파서 묶음의 역할이 이름에 드러나지 않습니다):**
+**Incorrect 1 (파서 묶음의 역할이 이름에 드러나지 않습니다):**
 
 ```ts
 // page/products/_constant/product-search.ts
@@ -4045,7 +4062,7 @@ export const productSearch = {
 };
 ```
 
-**Correct (파서 묶음은 `<범위>UrlParsers`로 소유자 `_constant` 폴더에 둡니다):**
+**Correct 1 (파서 묶음은 `<범위>UrlParsers`로 소유자 `_constant` 폴더에 둡니다):**
 
 ```ts
 // page/products/_constant/product-url-parsers.ts
@@ -4058,7 +4075,7 @@ export const productUrlParsers = {
 };
 ```
 
-**Incorrect (파싱 결과에 플랫폼 객체와 서버 요청용 이름을 섞어 씁니다):**
+**Incorrect 2 (파싱 결과에 플랫폼 객체와 서버 요청용 이름을 섞어 씁니다):**
 
 ```tsx
 const [searchParams, setSearchParams] = useQueryStates(productUrlParsers);
@@ -4067,7 +4084,7 @@ const query = searchParams.keyword;
 <UiSearchInput value={query} />;
 ```
 
-**Correct (파싱을 거친 값은 `urlParams`이고 별칭 없이 체인으로 읽습니다):**
+**Correct 2 (파싱을 거친 값은 `urlParams`이고 별칭 없이 체인으로 읽습니다):**
 
 ```tsx
 const [urlParams, setUrlParams] = useQueryStates(productUrlParsers);
@@ -4111,7 +4128,7 @@ const [searchParams] = useSearchParams();
 같은 컴포넌트에서 이름이 겹치지 않도록 대상이 다르면 대상 이름을 넣습니다.
 추가 인자 전달은 `events-curry-extra-handler-arguments`를 따릅니다.
 
-**Incorrect (구현에 `on*`을 쓰고 대상이 이름에 없어 같은 이름이 겹칩니다):**
+**Incorrect 1 (구현에 `on*`을 쓰고 대상이 이름에 없어 같은 이름이 겹칩니다):**
 
 ```ts
 import type {MouseEventHandler} from "react";
@@ -4132,7 +4149,7 @@ const onClick2: MouseEventHandler<HTMLButtonElement> = (event) => {
 };
 ```
 
-**Correct (`handle` 접두사와 대상 · 이벤트가 드러나는 이름을 씁니다):**
+**Correct 1 (`handle` 접두사와 대상 · 이벤트가 드러나는 이름을 씁니다):**
 
 ```ts
 import type {MouseEventHandler} from "react";
@@ -4179,19 +4196,19 @@ const handleSaveButtonClick: MouseEventHandler<HTMLButtonElement> = (event) => {
 
 안쪽 핸들러에 이름을 붙이면 팩토리 이름을 반복하고 같은 반환 타입도 두 번 적게 됩니다.
 
-**Incorrect (인라인 래퍼로 인자를 넘깁니다):**
+**Incorrect 1 (인라인 래퍼로 인자를 넘깁니다):**
 
 ```tsx
 <UiButton onClick={() => handleListItemClick(product.id)}>{product.name}</UiButton>;
 ```
 
-**Correct (JSX에는 팩토리 호출만 두고 감싸는 화살표를 만들지 않습니다):**
+**Correct 1 (JSX에는 팩토리 호출만 두고 감싸는 화살표를 만들지 않습니다):**
 
 ```tsx
 <UiButton onClick={handleListItemClick(product.id)}>{product.name}</UiButton>;
 ```
 
-**Incorrect (안쪽 핸들러에 별도 이름을 붙이고 팩토리에 `With` 접미사를 붙입니다):**
+**Incorrect 2 (안쪽 핸들러에 별도 이름을 붙이고 팩토리에 `With` 접미사를 붙입니다):**
 
 ```tsx
 const handleListItemClickWithProductId = (productId: string): MouseEventHandler<HTMLButtonElement> => {
@@ -4203,7 +4220,7 @@ const handleListItemClickWithProductId = (productId: string): MouseEventHandler<
 };
 ```
 
-**Correct (추가 인자는 바깥 함수, 이벤트는 안쪽 함수입니다):**
+**Correct 2 (추가 인자는 바깥 함수, 이벤트는 안쪽 함수입니다):**
 
 ```tsx
 import type {MouseEventHandler} from "react";
@@ -4230,7 +4247,7 @@ const handleListItemClick =
 액션 자체를 상태로 올린 뒤 `useEffect`가 나중에 실행하게 만들지 않습니다.
 그렇게 하면 무관한 의존성 변화에도 재실행되기 쉽고 흐름도 읽기 어려워집니다.
 
-**Incorrect (사용자 액션을 상태 + 이펙트로 모델링합니다):**
+**Incorrect 1 (사용자 액션을 상태 + 이펙트로 모델링합니다):**
 
 ```tsx
 /**
@@ -4259,7 +4276,7 @@ const handleSaveButtonClick: MouseEventHandler<HTMLButtonElement> = (_event) => 
 };
 ```
 
-**Correct (사용자 액션은 핸들러 안에서 바로 수행합니다):**
+**Correct 1 (사용자 액션은 핸들러 안에서 바로 수행합니다):**
 
 ```tsx
 /**
@@ -4317,7 +4334,7 @@ const handleSaveButtonClick: MouseEventHandler<HTMLButtonElement> = (_event) => 
 리액트 컴파일러가 없어도 같은 기준을 적용합니다.
 컴파일러가 같은 최적화를 이미 제공하면 수동 메모이제이션을 더하지 않습니다.
 
-**Incorrect (단순 가공을 습관적으로 메모이제이션합니다):**
+**Incorrect 1 (단순 가공을 습관적으로 메모이제이션합니다):**
 
 ```ts
 const columns = useMemo(() => {
@@ -4325,7 +4342,7 @@ const columns = useMemo(() => {
 }, [props.columns]);
 ```
 
-**Correct (근거가 없으면 감싸지 않고 그대로 계산합니다):**
+**Correct 1 (근거가 없으면 감싸지 않고 그대로 계산합니다):**
 
 ```ts
 const columns = toTableColumns(props.columns);
@@ -4375,14 +4392,14 @@ useEffect(() => {
 `localStorage`는 클라이언트에서만 읽습니다. 서버 렌더링과 hydration에서는 서버와 최초 클라이언트 렌더가 같아야 하므로,
 저장소를 읽는 시점은 화면의 클라이언트 초기화 계약을 따릅니다.
 
-**Incorrect (무거운 초기값 계산이 렌더마다 반복됩니다):**
+**Incorrect 1 (무거운 초기값 계산이 렌더마다 반복됩니다):**
 
 ```tsx
 const [searchIndex] = useState(toSearchIndex(product_list));
 const [draftFilter] = useState(parseStoredProductFilter(localStorage.getItem("product-filter")));
 ```
 
-**Correct (초기화 함수로 넘겨 이후 렌더에서 다시 계산하지 않습니다):**
+**Correct 1 (초기화 함수로 넘겨 이후 렌더에서 다시 계산하지 않습니다):**
 
 ```tsx
 const [searchIndex] = useState(() => toSearchIndex(product_list));
@@ -4424,7 +4441,7 @@ const [draftFilter] = useState(() => parseStoredProductFilter(localStorage.getIt
 `useDeferredValue`는 고정 지연 시간이 없고 요청 횟수를 줄이는 디바운스도 아닙니다.
 긴 동기 계산 하나는 실행 도중 중단되지 않으므로 렌더 지연만으로 입력 지연이 사라진다고 가정하지 않습니다.
 
-**Incorrect (행 20개 목록을 다시 렌더하는 갱신까지 트랜지션으로 감쌉니다):**
+**Incorrect 1 (행 20개 목록을 다시 렌더하는 갱신까지 트랜지션으로 감쌉니다):**
 
 ```tsx
 const [selectedTagId, setSelectedTagId] = useState("all");
@@ -4439,7 +4456,7 @@ const handleTagClick = (nextTagId: string) => {
 return <UiTagRows rows={tagRows} selectedTagId={selectedTagId} />;
 ```
 
-**Correct (측정 근거가 있는 갱신만 트랜지션으로 감싸고 행 20개 목록은 그대로 둡니다):**
+**Correct 1 (측정 근거가 있는 갱신만 트랜지션으로 감싸고 행 20개 목록은 그대로 둡니다):**
 
 ```tsx
 const handleTagClick = (nextTagId: string) => {
@@ -4547,7 +4564,7 @@ export const PgProductRows = memo((props: PgProductRowsProps) => {
 역할만으로 찾는 테스트가 통과해도 접근 가능한 이름이 있다는 뜻은 아닙니다.
 포커스 이동 위치는 이 규칙의 대상이 아닙니다.
 
-**Incorrect (클릭 가능한 `div`와 이름 없는 아이콘 버튼을 씁니다):**
+**Incorrect 1 (클릭 가능한 `div`와 이름 없는 아이콘 버튼을 씁니다):**
 
 ```tsx
 <Fragment>
@@ -4559,7 +4576,7 @@ export const PgProductRows = memo((props: PgProductRowsProps) => {
 </Fragment>
 ```
 
-**Correct (`button`으로 만들고 이름을 붙입니다):**
+**Correct 1 (`button`으로 만들고 이름을 붙입니다):**
 
 ```tsx
 <Fragment>
@@ -4613,7 +4630,7 @@ export const PgProductRows = memo((props: PgProductRowsProps) => {
 | 허용된 예외의 근거 주석 | `typescript/docs-justify-convention-exceptions-with-a-reason-comment` |
 | 문서 주석 형식과 태그 | `typescript/docs-write-doc-comments-as-multiline-blocks` |
 
-**Incorrect (주요 경계 선언에 의도 설명이 없습니다):**
+**Incorrect 1 (주요 경계 선언에 의도 설명이 없습니다):**
 
 ```ts
 const handleBackButtonClick: MouseEventHandler<HTMLButtonElement> = (_event) => {
@@ -4625,7 +4642,7 @@ useEffect(() => {
 }, [watchedProductIds]);
 ```
 
-**Correct (선언 의도를 바로 위에 여러 줄 블록으로 적습니다):**
+**Correct 1 (선언 의도를 바로 위에 여러 줄 블록으로 적습니다):**
 
 ```ts
 /**
@@ -4664,7 +4681,7 @@ JSX 자식 자리의 주석은 여러 줄 블록으로 씁니다.
 | 규칙이 허용한 예외의 이유 | `typescript/docs-justify-convention-exceptions-with-a-reason-comment`를 따르되, `//` 한 줄 대신 JSX 블록을 씁니다 |
 | 마크업이나 바로 아래 컴포넌트 이름 반복 | 새 정보가 없으므로 적지 않습니다 |
 
-**Incorrect (주석을 한 줄로 접고 마크업 이름을 되풀이합니다):**
+**Incorrect 1 (주석을 한 줄로 접고 마크업 이름을 되풀이합니다):**
 
 ```tsx
 <div className={clsx("pg_products__root")}>
@@ -4675,7 +4692,7 @@ JSX 자식 자리의 주석은 여러 줄 블록으로 씁니다.
 </div>;
 ```
 
-**Correct (구역이 무엇을 담당하는지 여러 줄 블록으로 적습니다):**
+**Correct 1 (구역이 무엇을 담당하는지 여러 줄 블록으로 적습니다):**
 
 ```tsx
 <div className={clsx("pg_products__root")}>
@@ -4687,7 +4704,7 @@ JSX 자식 자리의 주석은 여러 줄 블록으로 씁니다.
 </div>;
 ```
 
-**Incorrect (예외 이유를 한 줄로 접습니다):**
+**Incorrect 2 (예외 이유를 한 줄로 접습니다):**
 
 ```tsx
 {/* LegacyDatePicker는 className을 받지 않아 배치용 래퍼가 필요하다 */}
@@ -4696,7 +4713,7 @@ JSX 자식 자리의 주석은 여러 줄 블록으로 씁니다.
 </div>;
 ```
 
-**Correct (예외 이유도 같은 블록 형태로 적습니다):**
+**Correct 2 (예외 이유도 같은 블록 형태로 적습니다):**
 
 ```tsx
 {/**
@@ -4707,7 +4724,7 @@ JSX 자식 자리의 주석은 여러 줄 블록으로 씁니다.
 </div>;
 ```
 
-**Incorrect (여러 줄 블록 셋 중 하나에만 주석을 둡니다):**
+**Incorrect 3 (여러 줄 블록 셋 중 하나에만 주석을 둡니다):**
 
 ```tsx
 <section className={clsx("wg_orderTable__root")}>
@@ -4724,7 +4741,7 @@ JSX 자식 자리의 주석은 여러 줄 블록으로 씁니다.
 </section>;
 ```
 
-**Correct (여러 줄 블록마다 주석을 두어 블록과 함께 접히게 합니다):**
+**Correct 3 (여러 줄 블록마다 주석을 두어 블록과 함께 접히게 합니다):**
 
 ```tsx
 <section className={clsx("wg_orderTable__root")}>

@@ -40,7 +40,7 @@ tags: functions, declarations
 `useConsistentArrowReturn`은 인라인 콜백과 커링까지 강제하므로 켜지 않습니다.
 도구 설정은 `tooling-configure-biome-to-enforce-these-rules`를 따릅니다.
 
-**Incorrect (이름 붙인 함수를 `function`으로 선언합니다):**
+**Incorrect 1 (이름 붙인 함수를 `function`으로 선언합니다):**
 
 ```ts
 /**
@@ -51,7 +51,7 @@ export function toTrimmedTitle(rawTitle: string): string {
 }
 ```
 
-**Correct (같은 함수를 `const` 화살표와 블록 본문으로 선언합니다):**
+**Correct 1 (같은 함수를 `const` 화살표와 블록 본문으로 선언합니다):**
 
 ```ts
 /**
@@ -62,7 +62,7 @@ export const toTrimmedTitle = (rawTitle: string): string => {
 };
 ```
 
-**Incorrect (객체 프로퍼티의 함수를 메서드 축약형으로 씁니다):**
+**Incorrect 2 (객체 프로퍼티의 함수를 메서드 축약형으로 씁니다):**
 
 ```ts
 export const cellFormatterByValueType = {
@@ -72,7 +72,7 @@ export const cellFormatterByValueType = {
 } as const;
 ```
 
-**Correct (객체 프로퍼티의 함수는 화살표, 인라인 콜백은 한 줄로 씁니다):**
+**Correct 2 (객체 프로퍼티의 함수는 화살표, 인라인 콜백은 한 줄로 씁니다):**
 
 ```ts
 /**

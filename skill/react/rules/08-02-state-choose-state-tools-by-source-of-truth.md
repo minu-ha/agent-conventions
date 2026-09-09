@@ -38,7 +38,7 @@ tags: state, react-query, zustand
 `Context`는 전역 상태 도구가 아니라 묶음 안의 전달 수단입니다.
 `strategy-choose-single-composition-compound-and-variants`의 상태 있는 합성도 이 방식으로 상태를 공유합니다.
 
-**Incorrect (전역 값과 서버 값까지 `useState`가 소유합니다):**
+**Incorrect 1 (전역 값과 서버 값까지 `useState`가 소유합니다):**
 
 ```ts
 const [isOpen, setIsOpen] = useState(false);
@@ -51,7 +51,7 @@ const responseUserGetItemSuspense = useUserGetItemSuspense();
 const [userName, setUserName] = useState(responseUserGetItemSuspense.data.name);
 ```
 
-**Correct (값의 소유자에 맞는 도구를 씁니다):**
+**Correct 1 (값의 소유자에 맞는 도구를 씁니다):**
 
 ```ts
 const [isOpen, setIsOpen] = useState(false);
@@ -63,14 +63,14 @@ const themeStore = useThemeStore();
 const responseUserGetItemSuspense = useUserGetItemSuspense();
 ```
 
-**Incorrect (링크 공유로 유지할 목록 필터를 `useState`에 둡니다):**
+**Incorrect 2 (링크 공유로 유지할 목록 필터를 `useState`에 둡니다):**
 
 ```ts
 const [keyword, setKeyword] = useState("");
 const [page, setPage] = useState(1);
 ```
 
-**Correct (주소가 소유한 값은 search 파라미터로 읽고 씁니다):**
+**Correct 2 (주소가 소유한 값은 search 파라미터로 읽고 씁니다):**
 
 ```ts
 const [urlParams, setUrlParams] = useQueryStates(productUrlParsers);

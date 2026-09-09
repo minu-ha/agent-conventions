@@ -42,7 +42,7 @@ DOM 상태와 앱 상태의 구분은 `selector-use-pseudo-classes-for-dom-owned
 }
 ```
 
-**Incorrect (활성 버튼의 hover를 부정 조건으로 표현합니다):**
+**Incorrect 1 (활성 버튼의 hover를 부정 조건으로 표현합니다):**
 
 ```css
 .pg_products__cardButton {
@@ -52,7 +52,7 @@ DOM 상태와 앱 상태의 구분은 `selector-use-pseudo-classes-for-dom-owned
 }
 ```
 
-**Correct (네이티브 버튼의 활성 상태를 긍정 조건으로 표현합니다):**
+**Correct 1 (네이티브 버튼의 활성 상태를 긍정 조건으로 표현합니다):**
 
 ```css
 .pg_products__cardButton {

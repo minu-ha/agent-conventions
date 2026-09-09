@@ -17,7 +17,7 @@
 | 쉼표 목록의 선택자를 아래에서 단독으로 다시 선언함 | `no-duplicate-selectors`의 `disallowInList` 옵션 |
 | 중복 없이 쉼표로 묶기만 함 | 리뷰. 기계 검사는 묶음 자체를 막지 않습니다 |
 
-**Incorrect (`,`로 공통 선언을 묶고 아래에서 일부만 다시 엽니다):**
+**Incorrect 1 (`,`로 공통 선언을 묶고 아래에서 일부만 다시 엽니다):**
 
 ```css
 .pg_products__badge--draft,
@@ -33,7 +33,7 @@
 }
 ```
 
-**Correct (각 클래스가 자기 선언을 전부 가집니다):**
+**Correct 1 (각 클래스가 자기 선언을 전부 가집니다):**
 
 ```css
 .pg_products__badge--draft {

@@ -39,7 +39,7 @@ tags: functions, boundaries
 루트 `util`끼리의 직접 가져오기도 각 공개 진입점의 출처가 드러나므로 허용합니다.
 부르는 대표 함수나 소유자가 늘면 표의 다음 배치를 검토합니다.
 
-**Incorrect (여러 보조를 모은 파일에서 내보낸 함수가 세 단계로 이어집니다):**
+**Incorrect 1 (여러 보조를 모은 파일에서 내보낸 함수가 세 단계로 이어집니다):**
 
 ```ts
 // utils.ts
@@ -56,7 +56,7 @@ export const toProductSaveRequest = (values: ProductFormValues) => {
 };
 ```
 
-**Correct (소유자 아래 대표 함수 하나에 파일 하나를 둡니다):**
+**Correct 1 (소유자 아래 대표 함수 하나에 파일 하나를 둡니다):**
 
 ```ts
 // page/product-form/_function/to-product-save-request.ts
@@ -68,7 +68,7 @@ export const toProductSaveRequest = (values: ProductFormValues) => {
 };
 ```
 
-**Incorrect (대표 함수 하나만 부르는 보조를 대표 파일 아래 비공개 `const`로 쌓습니다):**
+**Incorrect 2 (대표 함수 하나만 부르는 보조를 대표 파일 아래 비공개 `const`로 쌓습니다):**
 
 ```txt
 page/report/_function/
@@ -79,7 +79,7 @@ page/report/_function/
 └── to-product-filter-request.ts
 ```
 
-**Correct (자기만 쓰는 보조가 생긴 대표 함수는 자기 이름 폴더를 갖고 보조는 `_` 파일입니다):**
+**Correct 2 (자기만 쓰는 보조가 생긴 대표 함수는 자기 이름 폴더를 갖고 보조는 `_` 파일입니다):**
 
 ```txt
 page/report/_function/
@@ -90,7 +90,7 @@ page/report/_function/
 └── to-product-filter-request.ts   보조가 없어 파일 하나
 ```
 
-**Incorrect (한 대표만 부르는 보조를 `_function` 바로 아래에 내보내 둡니다):**
+**Incorrect 3 (한 대표만 부르는 보조를 `_function` 바로 아래에 내보내 둡니다):**
 
 ```txt
 page/report/_function/
@@ -99,7 +99,7 @@ page/report/_function/
 └── to-trend-chart.ts            toProductOverview 만 부르는데 소유자의 공개 면에 놓임
 ```
 
-**Correct (두 대표가 부르게 된 뒤에 `_function` 바로 아래로 올리고 `_`를 뗍니다):**
+**Correct 3 (두 대표가 부르게 된 뒤에 `_function` 바로 아래로 올리고 `_`를 뗍니다):**
 
 ```txt
 page/report/_function/

@@ -35,7 +35,7 @@ tags: selector, responsive
 `@media` 조건에는 `var()`를 쓸 수 없으므로 이 숫자를 토큰으로 만들지 않습니다.
 블록 위치는 `layout-group-breakpoints-at-the-file-bottom` 규칙을 따릅니다.
 
-**Incorrect (기본 선언을 중간 폭에 맞추고 넓고 좁은 방향을 함께 씁니다):**
+**Incorrect 1 (기본 선언을 중간 폭에 맞추고 넓고 좁은 방향을 함께 씁니다):**
 
 ```css
 .pg_products__layout {
@@ -56,7 +56,7 @@ tags: selector, responsive
 }
 ```
 
-**Correct (기본 선언은 가장 넓은 화면에 맞추고 좁아질 때만 덮어씁니다):**
+**Correct 1 (기본 선언은 가장 넓은 화면에 맞추고 좁아질 때만 덮어씁니다):**
 
 ```css
 .pg_products__layout {
@@ -77,7 +77,7 @@ tags: selector, responsive
 }
 ```
 
-**Incorrect (`max-width`를 소수로 보정하고 좁은 쪽부터 씁니다):**
+**Incorrect 2 (`max-width`를 소수로 보정하고 좁은 쪽부터 씁니다):**
 
 ```css
 @media (max-width: 639.98px) {
@@ -93,7 +93,7 @@ tags: selector, responsive
 }
 ```
 
-**Correct (범위 표기로 적고 넓은 쪽부터 좁혀 갑니다):**
+**Correct 2 (범위 표기로 적고 넓은 쪽부터 좁혀 갑니다):**
 
 ```css
 @media (width < 1024px) {

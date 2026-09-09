@@ -20,7 +20,7 @@ tags: values, lookup, mapping
 조회표는 여러 키의 대응 관계 자체가 도메인이나 외부 계약일 때만 둡니다.
 선언 바로 위에는 어떤 계약의 대응 관계인지 확인할 수 있는 근거를 적습니다.
 
-**Incorrect (한 곳의 프롭 값을 고르려고 조회표를 만듭니다):**
+**Incorrect 1 (한 곳의 프롭 값을 고르려고 조회표를 만듭니다):**
 
 ```tsx
 const chart_toolbar_variant_by_card_variant = {
@@ -32,13 +32,13 @@ const chart_toolbar_variant_by_card_variant = {
 <UiChart.Toolbar variant={chart_toolbar_variant_by_card_variant[props.variant]} />;
 ```
 
-**Correct (값이 달라지는 조건을 사용처에 적습니다):**
+**Correct 1 (값이 달라지는 조건을 사용처에 적습니다):**
 
 ```tsx
 <UiChart.Toolbar variant={props.variant === "fill" ? "default" : props.variant} />;
 ```
 
-**Incorrect (계약 조회표를 근거 없이 둡니다):**
+**Incorrect 2 (계약 조회표를 근거 없이 둡니다):**
 
 ```ts
 const order_status_by_api_code = {
@@ -48,7 +48,7 @@ const order_status_by_api_code = {
 } as const satisfies Record<OrderStatusCode, OrderStatus>;
 ```
 
-**Correct (외부 코드와 화면 상태의 대응 관계가 계약이면 이유를 남기고 조회표를 둡니다):**
+**Correct 2 (외부 코드와 화면 상태의 대응 관계가 계약이면 이유를 남기고 조회표를 둡니다):**
 
 ```ts
 /**

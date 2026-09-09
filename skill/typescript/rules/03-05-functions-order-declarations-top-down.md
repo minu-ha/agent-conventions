@@ -25,7 +25,7 @@ tags: functions, ordering
 즉시 계산하는 선언은 자기가 부르는 선언 뒤에 둡니다.
 컴포넌트 본문의 훅 · 핸들러 · 이펙트 순서는 프레임워크 컨벤션이 정합니다.
 
-**Incorrect (내보낸 계약 타입이 함수 아래에 있어 시그니처를 읽으려면 파일을 끝까지 내려가야 합니다):**
+**Incorrect 1 (내보낸 계약 타입이 함수 아래에 있어 시그니처를 읽으려면 파일을 끝까지 내려가야 합니다):**
 
 ```ts
 // page/report/_function/to-summary-rows.ts
@@ -44,7 +44,7 @@ export interface ToSummaryRowsParams {
 }
 ```
 
-**Correct (내보낸 계약 타입이 먼저, 그 계약을 받는 함수가 바로 아래에 옵니다):**
+**Correct 1 (내보낸 계약 타입이 먼저, 그 계약을 받는 함수가 바로 아래에 옵니다):**
 
 ```ts
 // page/report/_function/to-summary-rows.ts
@@ -66,7 +66,7 @@ export const toSummaryRows = (params: ToSummaryRowsParams): SummaryRow[] => {
 };
 ```
 
-**Incorrect (모듈을 불러올 때 계산되는 선언이 자기가 부르는 선언보다 위에 있습니다):**
+**Incorrect 2 (모듈을 불러올 때 계산되는 선언이 자기가 부르는 선언보다 위에 있습니다):**
 
 ```ts
 const selectedLocaleSupported = isSupportedLocale(selectedLocale);
@@ -79,7 +79,7 @@ export const isSupportedLocale = (locale: string): boolean => {
 };
 ```
 
-**Correct (모듈을 불러올 때 계산되는 선언은 자기가 부르는 선언 뒤에 둡니다):**
+**Correct 2 (모듈을 불러올 때 계산되는 선언은 자기가 부르는 선언 뒤에 둡니다):**
 
 ```ts
 /**

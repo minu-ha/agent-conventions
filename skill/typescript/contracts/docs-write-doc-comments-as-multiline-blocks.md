@@ -11,7 +11,7 @@
 | 문서화할 선언 선택 | `docs-require-header-jsdoc-on-key-declarations`를 따릅니다 |
 | 태그 선택 | `docs-write-korean-comments-about-purpose-and-constraints`를 따릅니다 |
 
-**Incorrect (한 줄 블록과 `//`로 선언을 설명합니다):**
+**Incorrect 1 (한 줄 블록과 `//`로 선언을 설명합니다):**
 
 ```ts
 /** product 목록. 조회 실패는 호출부가 처리한다 */
@@ -25,7 +25,7 @@ export const saveProduct = async (product: Product): Promise<void> => {
 };
 ```
 
-**Correct (같은 내용을 여러 줄 블록으로 고정합니다):**
+**Correct 1 (같은 내용을 여러 줄 블록으로 고정합니다):**
 
 ```ts
 /**

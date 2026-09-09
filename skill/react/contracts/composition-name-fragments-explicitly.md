@@ -10,7 +10,7 @@
 `<>`를 강제하는 `biome`의 `style/useFragmentSyntax`는 켜지 않습니다.
 설정은 `typescript/tooling-configure-biome-to-enforce-these-rules`를 따릅니다.
 
-**Incorrect (`Fragment` 단축 문법을 씁니다):**
+**Incorrect 1 (`Fragment` 단축 문법을 씁니다):**
 
 ```tsx
 export const PgProductScreen = () => {
@@ -23,7 +23,7 @@ export const PgProductScreen = () => {
 };
 ```
 
-**Correct (`Fragment`를 그대로 씁니다):**
+**Correct 1 (`Fragment`를 그대로 씁니다):**
 
 ```tsx
 import {Fragment} from "react";

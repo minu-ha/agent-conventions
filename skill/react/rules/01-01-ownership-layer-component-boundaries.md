@@ -40,7 +40,7 @@ tags: ownership, widget, naming
 
 레이어를 정한 뒤 파일명과 심볼에는 `ownership-prefix-layer-names-on-files-and-symbols`를 적용합니다.
 
-**Incorrect (공용 레이어에 화면 전용 로직이 섞입니다):**
+**Incorrect 1 (공용 레이어에 화면 전용 로직이 섞입니다):**
 
 ```tsx
 // component/ui/delete-product-button/ui-delete-product-button.tsx
@@ -58,7 +58,7 @@ export const UiDeleteProductButton = () => {
 };
 ```
 
-**Correct (라우터 훅을 호출하는 코드는 화면 레이어에 둡니다):**
+**Correct 1 (라우터 훅을 호출하는 코드는 화면 레이어에 둡니다):**
 
 ```tsx
 // page/products/_pg-delete-product-button.tsx
@@ -76,7 +76,7 @@ export const PgDeleteProductButton = () => {
 };
 ```
 
-**Incorrect (화면 타입 · 훅과 무관한 부품을 사용 횟수만으로 화면 레이어에 둡니다):**
+**Incorrect 2 (화면 타입 · 훅과 무관한 부품을 사용 횟수만으로 화면 레이어에 둡니다):**
 
 ```tsx
 // page/detail/_pg-product-status-badge.tsx
@@ -86,7 +86,7 @@ export const PgProductStatusBadge = (props: PgProductStatusBadgeProps) => {
 };
 ```
 
-**Correct (화면 타입 · 훅과 무관한 도메인 부품은 `widget`에 둡니다):**
+**Correct 2 (화면 타입 · 훅과 무관한 도메인 부품은 `widget`에 둡니다):**
 
 ```tsx
 // component/widget/product-status-badge/wg-product-status-badge.tsx
@@ -95,7 +95,7 @@ export const WgProductStatusBadge = (props: WgProductStatusBadgeProps) => {
 };
 ```
 
-**Incorrect (도메인을 모르는 조합을 조립 규모만 보고 `widget`에 둡니다):**
+**Incorrect 3 (도메인을 모르는 조합을 조립 규모만 보고 `widget`에 둡니다):**
 
 ```tsx
 // component/widget/line-chart/wg-line-chart.tsx
@@ -105,7 +105,7 @@ export const WgLineChart = (props: WgLineChartProps) => {
 };
 ```
 
-**Correct (도메인 지식이 없는 조합은 `ui`, 있는 조합은 `widget`에 둡니다):**
+**Correct 3 (도메인 지식이 없는 조합은 `ui`, 있는 조합은 `widget`에 둡니다):**
 
 ```tsx
 // component/ui/line-chart/ui-line-chart.tsx

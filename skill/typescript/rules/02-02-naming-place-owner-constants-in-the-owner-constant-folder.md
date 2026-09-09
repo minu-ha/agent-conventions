@@ -29,7 +29,7 @@ tags: naming, constant
 계약 파일의 이름은 계약 규칙과 `naming-use-consistent-file-and-symbol-naming`을 따릅니다.
 소유자 아래에 `config`, `constants`, `common` 폴더는 만들지 않습니다.
 
-**Incorrect (한 소유자의 상수를 루트로 올립니다):**
+**Incorrect 1 (한 소유자의 상수를 루트로 올립니다):**
 
 ```ts
 // constant/chart.ts
@@ -37,7 +37,7 @@ tags: naming, constant
 export const chart_axis_tick_count = 6;
 ```
 
-**Correct (소유자 아래 주제 파일에 둡니다):**
+**Correct 1 (소유자 아래 주제 파일에 둡니다):**
 
 ```ts
 // page/product-detail/_constant/chart.ts
@@ -47,7 +47,7 @@ export const chart_axis_tick_count = 6;
 export const chart_axis_tick_count = 6;
 ```
 
-**Incorrect (파일명에 소유자 이름을 되풀이하고 주제를 객체 하나에 모읍니다):**
+**Incorrect 2 (파일명에 소유자 이름을 되풀이하고 주제를 객체 하나에 모읍니다):**
 
 ```ts
 // page/product-detail/_constant/product-detail.ts
@@ -57,7 +57,7 @@ export const product_detail_config = {
 } as const;
 ```
 
-**Correct (주제마다 파일을 나누고 상수를 개별 이름으로 내보냅니다):**
+**Correct 2 (주제마다 파일을 나누고 상수를 개별 이름으로 내보냅니다):**
 
 ```ts
 // page/product-detail/_constant/chart.ts

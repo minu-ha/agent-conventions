@@ -30,7 +30,7 @@ tags: types, interface, type
 추론되는 익명 결과와 외부 · 생성된 계약은 그대로 둡니다.
 같은 뜻의 기존 계약은 `types-reuse-existing-contracts-before-new-types`에 따라 재사용합니다.
 
-**Incorrect (독립된 필드 계약을 객체 `type` 별칭으로 선언합니다):**
+**Incorrect 1 (독립된 필드 계약을 객체 `type` 별칭으로 선언합니다):**
 
 ```ts
 /**
@@ -48,7 +48,7 @@ type ProductSummary = {
 };
 ```
 
-**Correct (필드 계약은 `interface`, 타입 조합은 `type`으로 구분합니다):**
+**Correct 1 (필드 계약은 `interface`, 타입 조합은 `type`으로 구분합니다):**
 
 ```ts
 /**

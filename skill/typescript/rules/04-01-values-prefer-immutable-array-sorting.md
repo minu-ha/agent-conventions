@@ -28,7 +28,7 @@ tags: functions, arrays, immutability
 입력을 수정하지 않는 정렬 함수는 `readonly` 배열을 매개변수로 받습니다.
 `.toSorted()`의 타입 선언만 추가해도 런타임 지원이 생기지는 않습니다.
 
-**Incorrect (매개변수로 받은 배열을 제자리에서 바꿉니다):**
+**Incorrect 1 (매개변수로 받은 배열을 제자리에서 바꿉니다):**
 
 ```ts
 const toSortedUsers = (users: User[]): User[] => {
@@ -36,7 +36,7 @@ const toSortedUsers = (users: User[]): User[] => {
 };
 ```
 
-**Correct (키 기준 정렬은 `sortBy`를 씁니다):**
+**Correct 1 (키 기준 정렬은 `sortBy`를 씁니다):**
 
 ```ts
 import {sortBy} from "es-toolkit";

@@ -14,7 +14,7 @@
 불리언 개수 자체보다 서로 배타적인 모드를 조합으로 표현하는지 확인합니다.
 공개 부품을 `.Root`처럼 묶는 형태는 `strategy-choose-single-composition-compound-and-variants`를 따릅니다.
 
-**Incorrect (불리언 프롭 조합으로 공용 컴포넌트가 비대해집니다):**
+**Incorrect 1 (불리언 프롭 조합으로 공용 컴포넌트가 비대해집니다):**
 
 ```tsx
 export interface WgProductToolbarProps {
@@ -37,7 +37,7 @@ export const WgProductToolbar = (props: WgProductToolbarProps) => {
 };
 ```
 
-**Correct (모드를 변형 컴포넌트와 상태 없는 합성으로 분리합니다):**
+**Correct 1 (모드를 변형 컴포넌트와 상태 없는 합성으로 분리합니다):**
 
 ```tsx
 /**

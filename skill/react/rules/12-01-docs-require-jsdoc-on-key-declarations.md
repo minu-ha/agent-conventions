@@ -31,7 +31,7 @@ tags: docs, handlers, effects
 | 허용된 예외의 근거 주석 | `typescript/docs-justify-convention-exceptions-with-a-reason-comment` |
 | 문서 주석 형식과 태그 | `typescript/docs-write-doc-comments-as-multiline-blocks` |
 
-**Incorrect (주요 경계 선언에 의도 설명이 없습니다):**
+**Incorrect 1 (주요 경계 선언에 의도 설명이 없습니다):**
 
 ```ts
 const handleBackButtonClick: MouseEventHandler<HTMLButtonElement> = (_event) => {
@@ -43,7 +43,7 @@ useEffect(() => {
 }, [watchedProductIds]);
 ```
 
-**Correct (선언 의도를 바로 위에 여러 줄 블록으로 적습니다):**
+**Correct 1 (선언 의도를 바로 위에 여러 줄 블록으로 적습니다):**
 
 ```ts
 /**

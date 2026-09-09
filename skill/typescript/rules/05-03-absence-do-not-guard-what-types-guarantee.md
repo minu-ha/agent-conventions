@@ -39,7 +39,7 @@ tags: absence
 
 없는 값을 무엇으로 대체할지는 `absence-expose-optional-values-instead-of-silent-fallbacks`가 정합니다.
 
-**Incorrect (타입이 `string`으로 보장한 값을 다시 검사합니다):**
+**Incorrect 1 (타입이 `string`으로 보장한 값을 다시 검사합니다):**
 
 ```ts
 const toRowLabel = (row: ProductRow): string => {
@@ -51,7 +51,7 @@ const toRowLabel = (row: ProductRow): string => {
 };
 ```
 
-**Correct (타입이 보장하는 조건은 다시 검사하지 않습니다):**
+**Correct 1 (타입이 보장하는 조건은 다시 검사하지 않습니다):**
 
 ```ts
 const toRowLabel = (row: ProductRow): string => {
@@ -59,7 +59,7 @@ const toRowLabel = (row: ProductRow): string => {
 };
 ```
 
-**Incorrect (생략과 `undefined`를 구분하지 않는 내부 계약에서 키를 조건부로 생략합니다):**
+**Incorrect 2 (생략과 `undefined`를 구분하지 않는 내부 계약에서 키를 조건부로 생략합니다):**
 
 ```ts
 // 이 내부 표시 계약은 stockCount의 undefined 대입을 허용하고 키 존재 여부를 읽지 않는다
@@ -69,7 +69,7 @@ return {
 };
 ```
 
-**Correct (생략과 같은 뜻이고 타입도 허용하면 `undefined`를 그대로 넣습니다):**
+**Correct 2 (생략과 같은 뜻이고 타입도 허용하면 `undefined`를 그대로 넣습니다):**
 
 ```ts
 // 이 내부 표시 계약은 stockCount의 undefined 대입을 허용하고 키 존재 여부를 읽지 않는다

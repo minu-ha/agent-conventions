@@ -22,7 +22,7 @@
 `tooling-configure-biome-to-enforce-these-rules`의 `style/noMagicNumbers`로 검사합니다.
 테스트 파일에서는 리터럴 자체가 기대 계약일 수 있어 이 검사를 끕니다.
 
-**Incorrect (뜻이 있는 숫자를 쓰는 자리에 적거나 지역 `const`로 자리만 옮깁니다):**
+**Incorrect 1 (뜻이 있는 숫자를 쓰는 자리에 적거나 지역 `const`로 자리만 옮깁니다):**
 
 ```ts
 // page/products/pg-products.tsx
@@ -37,7 +37,7 @@ const toPreviewRows = (rows: Row[]): Row[] => {
 };
 ```
 
-**Correct (`constant` 폴더에 선언하고 쓰는 자리에서 이름을 가리킵니다):**
+**Correct 1 (`constant` 폴더에 선언하고 쓰는 자리에서 이름을 가리킵니다):**
 
 ```ts
 // constant/retry.ts

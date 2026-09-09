@@ -35,7 +35,7 @@
 6. `showModal()`로 연 `dialog`나 열린 popover는 최상위 레이어입니다.
    일반 문서의 `z-index` 토큰으로 그 위에 올라가려 하지 않습니다.
 
-**Incorrect (숫자를 직접 쓰고 경쟁으로 올립니다):**
+**Incorrect 1 (숫자를 직접 쓰고 경쟁으로 올립니다):**
 
 ```css
 /* src/page/products/pg-products.css */
@@ -51,7 +51,7 @@
 }
 ```
 
-**Correct (층 토큰만 씁니다):**
+**Correct 1 (층 토큰만 씁니다):**
 
 ```css
 /* src/style/token.css */

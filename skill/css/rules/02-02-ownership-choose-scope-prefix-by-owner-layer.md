@@ -32,7 +32,7 @@ tags: ownership, scope, prefix
 소유자의 레이어가 바뀌면 접두사도 함께 바꿉니다.
 최상위 폴더의 선택과 파일 이름의 `_` 표식은 활성화된 프레임워크 규약이 정합니다.
 
-**Incorrect (최상위 폴더 대신 사용 횟수와 재사용 예상을 보고 접두사를 고릅니다):**
+**Incorrect 1 (최상위 폴더 대신 사용 횟수와 재사용 예상을 보고 접두사를 고릅니다):**
 
 ```txt
 page/detail/_pg-product-table-section.css
@@ -42,7 +42,7 @@ component/widget/chart/_wg-chart-header.css
   pg_chartHeader__root
 ```
 
-**Correct (소유 레이어대로 접두사를 붙입니다):**
+**Correct 1 (소유 레이어대로 접두사를 붙입니다):**
 
 ```txt
 page/detail/pg-detail.css

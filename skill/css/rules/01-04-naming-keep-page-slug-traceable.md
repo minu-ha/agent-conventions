@@ -29,7 +29,7 @@ tags: slug, page-scope, traceability
 중간 컴포넌트 이름은 넣지 않습니다.
 미리 붙이면 폴더가 깊어질수록 이름도 길어집니다.
 
-**Incorrect (화면 이름이 아닌 식별자를 씁니다):**
+**Incorrect 1 (화면 이름이 아닌 식별자를 씁니다):**
 
 ```txt
 pg_shell__body    <- 역할 낱말이라 어느 화면인지 안 나옴
@@ -37,7 +37,7 @@ pg_doc__content   <- 라우트에 없는 줄임말
 pg_x__root        <- 되짚을 이름이 없음
 ```
 
-**Correct (뼈대에는 라우트 세그먼트를 그대로 씁니다):**
+**Correct 1 (뼈대에는 라우트 세그먼트를 그대로 씁니다):**
 
 ```txt
 pg_ordersIndex__root    <- orders index 화면
@@ -45,28 +45,28 @@ pg_ordersDetail__body   <- orders/[id] 화면
 pg_document__body      <- document 화면
 ```
 
-**Incorrect (충돌이 없는데도 부모 식별자를 미리 붙입니다):**
+**Incorrect 2 (충돌이 없는데도 부모 식별자를 미리 붙입니다):**
 
 ```txt
 pg_detailProductTableOverviewSection__root
 pg_detailProductTableSummaryBand__root
 ```
 
-**Correct (화면 안의 컴포넌트는 자기 식별자만 씁니다):**
+**Correct 2 (화면 안의 컴포넌트는 자기 식별자만 씁니다):**
 
 ```txt
 pg_overviewSection__root
 pg_summaryBand__root
 ```
 
-**Incorrect (충돌을 피하려고 상위 경로 전체를 식별자에 붙입니다):**
+**Incorrect 3 (충돌을 피하려고 상위 경로 전체를 식별자에 붙입니다):**
 
 ```txt
 pg_detailProductTableOverviewSection__root
 pg_indexProductTableOverviewSection__root
 ```
 
-**Correct (충돌한 화면 이름만 최소로 덧붙입니다):**
+**Correct 3 (충돌한 화면 이름만 최소로 덧붙입니다):**
 
 ```txt
 pg_detailOverviewSection__root

@@ -19,7 +19,7 @@
 
 테마 조건은 `values-switch-themes-by-changing-token-values`에 따라 토큰 파일의 최상위 `@media`에 둡니다.
 
-**Incorrect (클래스 블록 안에 중첩해서 브레이크포인트가 흩어집니다):**
+**Incorrect 1 (클래스 블록 안에 중첩해서 브레이크포인트가 흩어집니다):**
 
 ```css
 .pg_products__toolbar {
@@ -41,7 +41,7 @@
 }
 ```
 
-**Correct (선언은 위에 두고 브레이크포인트는 파일 아래 한 곳에 모읍니다):**
+**Correct 1 (선언은 위에 두고 브레이크포인트는 파일 아래 한 곳에 모읍니다):**
 
 ```css
 .pg_products__toolbar {

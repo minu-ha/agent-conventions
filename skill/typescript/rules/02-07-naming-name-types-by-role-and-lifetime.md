@@ -48,7 +48,7 @@ tags: naming, types, ownership
 
 단순 가공 · 표시 결과에는 `VM` · `ViewModel` · 막연한 `Model`과 그 대응 파일명을 쓰지 않습니다.
 
-**Incorrect (소유자와 막연한 화면 계약 접미사를 반복합니다):**
+**Incorrect 1 (소유자와 막연한 화면 계약 접미사를 반복합니다):**
 
 ```ts
 /**
@@ -68,7 +68,7 @@ interface OrderReportViewModel {
 const orderReportVM: OrderReportViewModel = response.data;
 ```
 
-**Correct (한 조회 시점에 고정된 값이라는 역할을 이름에 표시합니다):**
+**Correct 1 (한 조회 시점에 고정된 값이라는 역할을 이름에 표시합니다):**
 
 ```ts
 // page/order-report/_type/report-snapshot.ts: 폴더가 이미 order-report 를 말한다

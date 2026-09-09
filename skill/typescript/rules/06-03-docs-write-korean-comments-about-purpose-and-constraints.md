@@ -30,7 +30,7 @@ tags: docs, comments
 선언 위 문서 주석은 `docs-write-doc-comments-as-multiline-blocks`,
 본문 설명은 `docs-keep-body-comments-for-intent-and-steps`에 따라 `//`로 씁니다.
 
-**Incorrect (영문이거나 선언 이름을 옮겨 적기만 합니다):**
+**Incorrect 1 (영문이거나 선언 이름을 옮겨 적기만 합니다):**
 
 ```ts
 /**
@@ -55,7 +55,7 @@ export interface PgProductTreeProps {
 }
 ```
 
-**Correct (이름에 없는 정보를 더합니다):**
+**Correct 1 (이름에 없는 정보를 더합니다):**
 
 ```ts
 /**
@@ -86,7 +86,7 @@ export interface PgProductTreeProps {
 }
 ```
 
-**Incorrect (역할 태그로 선언의 성격을 다시 적습니다):**
+**Incorrect 2 (역할 태그로 선언의 성격을 다시 적습니다):**
 
 ```ts
 /**
@@ -97,7 +97,7 @@ export const fetchProductList = async (): Promise<Product[]> => {
 };
 ```
 
-**Correct (태그를 지우고 헤더 첫 줄이 하는 일을 말합니다):**
+**Correct 2 (태그를 지우고 헤더 첫 줄이 하는 일을 말합니다):**
 
 ```ts
 /**

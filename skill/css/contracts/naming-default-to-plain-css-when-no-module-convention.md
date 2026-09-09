@@ -9,7 +9,7 @@
 `.module.css`를 새로 만들거나 클래스를 `styles.foo`처럼 객체 속성으로 참조하지 않습니다.
 CSS Modules가 공식 표준이고 별도의 이름 규칙과 실행 규칙이 있으면 그 프로젝트 규칙을 따릅니다.
 
-**Incorrect (프로젝트 표준이 없는데도 CSS Modules를 기본처럼 씁니다):**
+**Incorrect 1 (프로젝트 표준이 없는데도 CSS Modules를 기본처럼 씁니다):**
 
 ```tsx
 import styles from "./products.module.css";
@@ -29,7 +29,7 @@ import styles from "./products.module.css";
 }
 ```
 
-**Correct (기본으로 일반 CSS와 전역 고유 클래스 이름을 씁니다):**
+**Correct 1 (기본으로 일반 CSS와 전역 고유 클래스 이름을 씁니다):**
 
 ```tsx
 import {clsx} from "clsx";

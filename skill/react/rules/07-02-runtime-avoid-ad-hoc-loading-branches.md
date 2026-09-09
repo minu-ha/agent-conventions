@@ -31,7 +31,7 @@ tags: screen, loading, suspense
 이 예외는 `typescript/docs-justify-convention-exceptions-with-a-reason-comment`에 따라 이유를 남깁니다.
 없는 값을 기본값으로 덮는 문제는 `typescript/absence-expose-optional-values-instead-of-silent-fallbacks`를 따릅니다.
 
-**Incorrect (`Suspense` 쿼리의 `isPending`을 다시 분기합니다. 타입이 `false`라 죽은 코드입니다):**
+**Incorrect 1 (`Suspense` 쿼리의 `isPending`을 다시 분기합니다. 타입이 `false`라 죽은 코드입니다):**
 
 ```tsx
 if (responseUserGetItemSuspense.isPending) {
@@ -41,13 +41,13 @@ if (responseUserGetItemSuspense.isPending) {
 return <UiUserName value={responseUserGetItemSuspense.data.name} />;
 ```
 
-**Correct (초기 로딩은 경계가 받으므로 본문은 데이터가 있는 경로만 렌더합니다):**
+**Correct 1 (초기 로딩은 경계가 받으므로 본문은 데이터가 있는 경로만 렌더합니다):**
 
 ```tsx
 return <UiUserName value={responseUserGetItemSuspense.data.name} />;
 ```
 
-**Incorrect (다시 불러오는 중에 화면 전체를 가립니다):**
+**Incorrect 2 (다시 불러오는 중에 화면 전체를 가립니다):**
 
 ```tsx
 if (responseUserGetItemSuspense.isFetching) {
@@ -57,7 +57,7 @@ if (responseUserGetItemSuspense.isFetching) {
 return <UiUserName value={responseUserGetItemSuspense.data.name} />;
 ```
 
-**Correct (갱신 상태는 이미 렌더된 화면을 보조하는 표시에만 씁니다):**
+**Correct 2 (갱신 상태는 이미 렌더된 화면을 보조하는 표시에만 씁니다):**
 
 ```tsx
 return (
