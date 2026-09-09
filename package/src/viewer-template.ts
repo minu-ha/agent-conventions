@@ -1084,6 +1084,9 @@ const viewerClientScript = `(() => {
 	// 선 문자가 칸 가운데에서 어느 변으로 이어지는지. L R U D, r 은 둥근 모서리.
 	const LINES = {"─": "LR", "│": "UD", "┌": "RD", "┐": "LD", "└": "RU", "┘": "LU", "├": "UDR", "┤": "UDL", "┬": "LRD", "┴": "LRU", "┼": "LRUD", "╭": "RDr", "╮": "LDr", "╰": "RUr", "╯": "LUr"};
 	const ARROWS = {"►": "R", "◄": "L", "▼": "D", "▲": "U"};
+	// 상자의 세로 벽과 가로 테두리. 선과 화살촉은 벽 선이 지나는 칸 가운데까지 닿아야 붙어 보인다.
+	const isWall = (chr) => chr === "│" || chr === "◇" || chr === "├" || chr === "┤";
+	const isHBorder = (chr) => chr !== undefined && chr !== " " && chr !== ZW && (LINES[chr] !== undefined || chr === "◇");
 
 	function gridToSvg(ascii) {
 		const cw = 7.2, ch = 17, fs = 12;
@@ -1105,10 +1108,23 @@ const viewerClientScript = `(() => {
 				while (rgt < row.length && (row[rgt] === " " || row[rgt] === ZW)) rgt++;
 				return wall(row[l] || "") && wall(row[rgt] || "") ? [l, rgt] : null;
 			};
+			// 상자 안쪽 줄 수와 라벨 줄 수의 홀짝이 다르면 렌더러가 남는 빈 줄을 위에 두어 라벨이 반 줄 처진다. 그만큼 올린다.
+			const lift = (box) => {
+				const col = run.start;
+				let top = r - 1, bottom = r + 1;
+				while (top >= 0 && !isHBorder((rows[top] || "")[col])) top--;
+				while (bottom < rows.length && !isHBorder((rows[bottom] || "")[col])) bottom++;
+				let labelRows = 0;
+				for (let k = top + 1; k < bottom; k++) {
+					const inner = (rows[k] || "").slice(box[0] + 1, box[1]);
+					if (/[^s\u200B]/.test(inner)) labelRows++;
+				}
+				return (bottom - top - 1 - labelRows) % 2 === 1 ? -ch / 2 : 0;
+			};
 			const flush = () => {
 				if (!run) return;
-				const y = f(cy + fs * 0.35);
 				const box = walls(run.start, run.end);
+				const y = f(cy + fs * 0.35 + (box ? lift(box) : 0));
 				const x = box ? f(((box[0] + 1) * cw + box[1] * cw) / 2) : run.wide ? f((run.start * cw + run.end * cw) / 2) : run.xs.join(" ");
 				texts += '<text x="' + x + '" y="' + y + '">' + esc(run.chars.join("")) + "</text>";
 				run = null;
@@ -1133,8 +1149,11 @@ const viewerClientScript = `(() => {
 				const vertical = (v) => v !== undefined && LINES[v] !== undefined && /[UD]/.test(LINES[v]) || v === "◇";
 				if ((chr === "├" || chr === "┤") && !vertical(above) && !vertical(below)) {
 					flush();
-					const gapL = chr === "├" && row[c - 1] === " " ? x0 - cw : x0;
-					const gapR = chr === "┤" && row[c + 1] === " " ? x1 + cw : x1;
+					let l = c - 1, rgt = c + 1;
+					while (l >= 0 && row[l] === " ") l--;
+					while (rgt < row.length && row[rgt] === " ") rgt++;
+					const gapL = isWall(row[l]) ? l * cw + cw / 2 : x0;
+					const gapR = isWall(row[rgt]) ? rgt * cw + cw / 2 : x1;
 					path += "M" + f(gapL) + " " + f(cy) + "H" + f(gapR) + " ";
 					continue;
 				}
@@ -1146,8 +1165,9 @@ const viewerClientScript = `(() => {
 						const ax = ln.indexOf("L") >= 0 ? x0 : x1, by = ln.indexOf("U") >= 0 ? y0 : y1;
 						arcs += "M" + f(ax) + " " + f(cy) + "Q" + f(cx) + " " + f(cy) + " " + f(cx) + " " + f(by) + " ";
 					} else {
-						if (ln.indexOf("L") >= 0) path += "M" + f(x0) + " " + f(cy) + "H" + f(cx) + " ";
-						if (ln.indexOf("R") >= 0) path += "M" + f(cx) + " " + f(cy) + "H" + f(x1) + " ";
+						// 옆 칸이 벽이면 벽 선의 가운데까지 늘려 붙인다.
+						if (ln.indexOf("L") >= 0) path += "M" + f(isWall(row[c - 1]) ? x0 - cw / 2 : x0) + " " + f(cy) + "H" + f(cx) + " ";
+						if (ln.indexOf("R") >= 0) path += "M" + f(cx) + " " + f(cy) + "H" + f(isWall(row[c + 1]) ? x1 + cw / 2 : x1) + " ";
 						if (ln.indexOf("U") >= 0) path += "M" + f(cx) + " " + f(y0) + "V" + f(cy) + " ";
 						if (ln.indexOf("D") >= 0) path += "M" + f(cx) + " " + f(cy) + "V" + f(y1) + " ";
 					}
@@ -1157,11 +1177,14 @@ const viewerClientScript = `(() => {
 				const ar = ARROWS[chr];
 				if (ar) {
 					flush();
+					// 화살촉 끝은 다음 칸이 벽이면 벽 선의 가운데에 닿는다.
 					const w = cw * 0.9, h = ch * 0.42;
-					if (ar === "R") { path += "M" + f(x0) + " " + f(cy) + "H" + f(cx - 1) + " "; tris += "M" + f(cx - w / 2) + " " + f(cy - h / 2) + "L" + f(cx + w / 2) + " " + f(cy) + "L" + f(cx - w / 2) + " " + f(cy + h / 2) + "Z "; }
-					if (ar === "L") { path += "M" + f(cx + 1) + " " + f(cy) + "H" + f(x1) + " "; tris += "M" + f(cx + w / 2) + " " + f(cy - h / 2) + "L" + f(cx - w / 2) + " " + f(cy) + "L" + f(cx + w / 2) + " " + f(cy + h / 2) + "Z "; }
-					if (ar === "D") { path += "M" + f(cx) + " " + f(y0) + "V" + f(cy - 1) + " "; tris += "M" + f(cx - w / 2) + " " + f(cy - h / 2) + "L" + f(cx + w / 2) + " " + f(cy - h / 2) + "L" + f(cx) + " " + f(cy + h / 2) + "Z "; }
-					if (ar === "U") { path += "M" + f(cx) + " " + f(cy + 1) + "V" + f(y1) + " "; tris += "M" + f(cx - w / 2) + " " + f(cy + h / 2) + "L" + f(cx + w / 2) + " " + f(cy + h / 2) + "L" + f(cx) + " " + f(cy - h / 2) + "Z "; }
+					const tipR = isWall(row[c + 1]) ? x1 + cw / 2 : cx + w / 2, tipL = isWall(row[c - 1]) ? x0 - cw / 2 : cx - w / 2;
+					const tipD = isHBorder(below) ? y1 + ch / 2 : cy + h / 2, tipU = isHBorder(above) ? y0 - ch / 2 : cy - h / 2;
+					if (ar === "R") { path += "M" + f(x0) + " " + f(cy) + "H" + f(tipR - w) + " "; tris += "M" + f(tipR - w) + " " + f(cy - h / 2) + "L" + f(tipR) + " " + f(cy) + "L" + f(tipR - w) + " " + f(cy + h / 2) + "Z "; }
+					if (ar === "L") { path += "M" + f(tipL + w) + " " + f(cy) + "H" + f(x1) + " "; tris += "M" + f(tipL + w) + " " + f(cy - h / 2) + "L" + f(tipL) + " " + f(cy) + "L" + f(tipL + w) + " " + f(cy + h / 2) + "Z "; }
+					if (ar === "D") { path += "M" + f(cx) + " " + f(y0) + "V" + f(tipD - h) + " "; tris += "M" + f(cx - w / 2) + " " + f(tipD - h) + "L" + f(cx + w / 2) + " " + f(tipD - h) + "L" + f(cx) + " " + f(tipD) + "Z "; }
+					if (ar === "U") { path += "M" + f(cx) + " " + f(tipU + h) + "V" + f(y1) + " "; tris += "M" + f(cx - w / 2) + " " + f(tipU + h) + "L" + f(cx + w / 2) + " " + f(tipU + h) + "L" + f(cx) + " " + f(tipU) + "Z "; }
 					continue;
 				}
 
