@@ -22,10 +22,13 @@ tags: typing, wrapper, contracts
 
 ```mermaid
 flowchart LR
-	one{"안쪽 요소가<br>하나인가?"} -- 예 --> own{"선언한 프롭을<br>안쪽이 전부 받는가?"} -- 예 --> ext{"DOM 속성을<br>extends로 열 수 있는가?"} -- 예 --> spread("{...props}로 전달")
-	one -- 아니요 --> named1("이름으로 하나씩 전달")
-	own -- 아니요 --> dom("전달할 DOM 프롭만 선언하고<br>이름으로 전달")
-	ext -- 아니요 --> named2("이름으로 하나씩 전달")
+	q1("<small>01</small>안쪽 요소가<br>하나인가?"):::step == 예 ==> q2("<small>02</small>선언한 프롭을<br>안쪽이 전부 받는가?"):::step == 예 ==> q3("<small>03</small>DOM 속성을<br>extends로 열 수 있는가?"):::step == 예 ==> r3("{...props}로 전달")
+	q3 -- 아니요 --> r4("이름으로 하나씩 전달")
+	q2 -- 아니요 --> r2("전달할 DOM 프롭만 선언하고<br>이름으로 전달")
+	q1 -- 아니요 --> r1("이름으로 하나씩 전달")
+	%% 결과 상자를 한 열에 맞추는 보이지 않는 선
+	q3 ~~~ r2
+	q3 ~~~ r1
 ```
 
 | 조건 | 확인 방법 |

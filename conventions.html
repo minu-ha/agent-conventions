@@ -1127,15 +1127,21 @@ body:has(.dlg[open]) { overflow: hidden; }
 			// 판단(마름모)은 흐린 바탕, 처리(둥근 사각)는 카드색. 선은 1px, 갈래 라벨은 헤어라인 칩.
 			themeCSS: [
 				".node rect, .node polygon, .node path { stroke-width: 1px; }",
-				".node polygon { fill: " + v("--soft") + " !important; }",
 				".node .label { line-height: 1.4; }",
 				".node .label p { margin: 0; }",
+				// 판단(:::step)은 짙은 상자에 흐린 번호를 얹는다. 처리는 카드색 둥근 상자.
+				".node.step rect { fill: " + v("--ink") + " !important; stroke: " + v("--ink") + " !important; }",
+				".node.step .label, .node.step .label p { color: " + v("--card") + "; }",
+				".node.step small { display: block; margin-bottom: 3px; font-size: 10px; letter-spacing: .14em; color: " + v("--edge") + "; }",
+				// 주 경로(== 예 ==>)는 진하게, 갈래(-- 아니요 -->)는 흐리게. 어느 길이 기본인지 선 무게로 읽힌다.
 				".edgePath path, .flowchart-link { stroke-width: 1px; }",
+				".flowchart-link.edge-thickness-thick { stroke: " + v("--ink") + "; stroke-width: 1.5px; }",
+				".flowchart-link.edge-thickness-normal { stroke: " + v("--edge") + "; }",
 				".marker { stroke: none; }",
 				".edgeLabel p { margin: 0; padding: 1px 6px; font-size: 11.5px; line-height: 1.25; color: " + v("--muted") +
 					"; background: " + v("--card") + "; border: 1px solid " + v("--hair") + "; border-radius: 2px; }",
 			].join(" "),
-			flowchart: {nodeSpacing: 34, rankSpacing: 52, useMaxWidth: true, curve: "step", padding: 8, diagramPadding: 6},
+			flowchart: {nodeSpacing: 40, rankSpacing: 44, useMaxWidth: true, curve: "step", padding: 10, diagramPadding: 6},
 		});
 	}
 
