@@ -15,7 +15,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 	--code-bg: #fcfcfc; --code-fg: #0f1416;
 	--gut: #5c686e; --code-c: #3d4a51; --code-s: #1c5238; --code-k: #8f4025; --code-g: #5d4c39;
 	--dx-b: #46525a; --dx-a: #1b5896;
-	--flow-yes: #2b6cb0; --flow-no: #b0761f;
+	--flow-yes: #2f7d4f;
 	--sans: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
 	--mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 }
@@ -31,7 +31,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 		--code-bg: #12171a; --code-fg: #eef3f5;
 		--gut: #93a0a7; --code-c: #b3c0c6; --code-s: #94d6ae; --code-k: #f3ad90; --code-g: #d8bd99;
 		--dx-b: #aab7bd; --dx-a: #8dc2f2;
-	--flow-yes: #8dc2f2; --flow-no: #e0b06b;
+	--flow-yes: #6bb890;
 	}
 }
 
@@ -44,7 +44,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 	--code-bg: #12171a; --code-fg: #eef3f5;
 	--gut: #93a0a7; --code-c: #b3c0c6; --code-s: #94d6ae; --code-k: #f3ad90; --code-g: #d8bd99;
 	--dx-b: #aab7bd; --dx-a: #8dc2f2;
-	--flow-yes: #8dc2f2; --flow-no: #e0b06b;
+	--flow-yes: #6bb890;
 }
 
 body {
@@ -1104,7 +1104,7 @@ const viewerClientScript = `(() => {
 			m.id = marker.id + "-" + kind;
 			m.classList.add("marker-" + kind);
 			marker.parentNode.appendChild(m);
-			const sel = kind === "yes" ? ".flowchart-link.edge-thickness-thick" : ".flowchart-link.edge-thickness-normal";
+			const sel = kind === "yes" ? ".flowchart-link.edge-thickness-thick" : ".flowchart-link:not(.edge-thickness-thick)";
 			svg.querySelectorAll(sel).forEach((path) => { path.classList.add(kind); path.setAttribute("marker-end", "url(#" + m.id + ")"); });
 		}
 	}
@@ -1145,27 +1145,25 @@ const viewerClientScript = `(() => {
 				background: v("--card"),
 			},
 			// 판단(마름모)은 흐린 바탕, 처리(둥근 사각)는 카드색. 선은 1px, 갈래 라벨은 헤어라인 칩.
-			// 판단(마름모)은 흐린 바탕. 갈래는 색으로 가른다 — 예는 --flow-yes, 아니요는 --flow-no.
-			// 선 · 화살촉 · 라벨 칩 · 결과 상자(:::yes / :::no)가 같은 색 계열을 입는다.
+			// 판단(마름모)은 흐린 바탕. 예 갈래만 초록(--flow-yes)으로 선 · 화살촉 · 라벨 칩 · 결과 상자(:::yes)를 물들이고,
+			// 아니요 갈래는 연한 회색 선으로 물러난다. 주 경로가 색으로, 이른 반환이 무채색으로 읽힌다.
 			themeCSS: [
 				".node rect, .node polygon, .node path { stroke-width: 1px; }",
 				".node polygon { fill: " + v("--soft") + " !important; }",
 				".node .label { line-height: 1.4; }",
 				".node .label p { margin: 0; }",
 				".node.yes rect { fill: " + mix("--flow-yes", 10) + " !important; stroke: " + v("--flow-yes") + " !important; }",
-				".node.no rect { fill: " + mix("--flow-no", 10) + " !important; stroke: " + v("--flow-no") + " !important; }",
 				".edgePath path, .flowchart-link { stroke-width: 1.25px; }",
+				".flowchart-link.no { stroke: " + v("--edge") + "; }",
 				".flowchart-link.yes { stroke: " + v("--flow-yes") + "; stroke-width: 1.5px; }",
-				".flowchart-link.no { stroke: " + v("--flow-no") + "; }",
 				".marker { stroke: none; }",
+				".marker.marker-no { fill: " + v("--edge") + " !important; }",
 				".marker.marker-yes { fill: " + v("--flow-yes") + " !important; }",
-				".marker.marker-no { fill: " + v("--flow-no") + " !important; }",
 				".edgeLabel p { margin: 0; padding: 1px 6px; font-size: 11.5px; line-height: 1.25; color: " + v("--muted") +
 					"; background: " + v("--card") + "; border: 1px solid " + v("--hair") + "; border-radius: 2px; }",
 				".edgeLabel.yes p { color: " + v("--flow-yes") + "; border-color: " + mix("--flow-yes", 45) + "; background: " + mix("--flow-yes", 8) + "; }",
-				".edgeLabel.no p { color: " + v("--flow-no") + "; border-color: " + mix("--flow-no", 45) + "; background: " + mix("--flow-no", 8) + "; }",
 			].join(" "),
-			flowchart: {nodeSpacing: 44, rankSpacing: 56, useMaxWidth: true, curve: "step", padding: 8, diagramPadding: 6},
+			flowchart: {nodeSpacing: 40, rankSpacing: 56, useMaxWidth: true, curve: "step", padding: 8, diagramPadding: 6},
 		});
 	}
 
