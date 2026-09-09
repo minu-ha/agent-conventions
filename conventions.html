@@ -414,7 +414,7 @@ mark { background: color-mix(in srgb, var(--accent) 30%, transparent); color: in
 
 /* 흐름도. 카드 안에 가운데 두고 카드 폭에 맞춘다. 렌더러가 없으면 원문 코드가 그대로 보인다. */
 .acc-body .flow { margin: 0 0 .95em; padding: 14px 12px; background: var(--card); border: 1px solid var(--hair); border-radius: 3px; overflow-x: auto; }
-.acc-body .flow svg { display: block; max-width: 100%; height: auto; margin: 0 auto; --line: var(--muted); --fg: var(--ink); --paper: var(--card); }
+.acc-body .flow svg { display: block; max-width: 100%; height: auto; margin: 0 auto; --line: var(--muted); --fg: var(--ink2); --paper: var(--card); }
 .acc-body pre.mermaid { margin: 0 0 .95em; padding: 12px 14px; font: 12px/1.55 var(--mono); color: var(--code-fg); background: var(--code-bg); border: 1px solid var(--hair); border-radius: 3px; overflow-x: auto; }
 /* ---------- rule dialog ---------- */
 /* 참조 칩은 목록을 이동하는 대신 이 다이얼로그로 미리 보여준다. 보던 섹션을 잃지 않는다. */
@@ -1111,10 +1111,20 @@ document.dispatchEvent(new Event("flow-ready"));
 			const cy = r * ch + ch / 2, y0 = r * ch, y1 = y0 + ch;
 			let run = null;
 			// 영문만 있는 묶음은 칸마다 놓아 격자 느낌을 지키고, 한글이 섞인 묶음은 예약한 칸 가운데에 한 덩어리로 놓아 자간을 살린다.
+			// 상자 안 글자는 좌우 테두리 사이의 정확한 가운데에 한 덩어리로 놓는다. 격자 렌더러는 칸 수로 맞춰 반 칸씩 어긋난다.
+			// 선 위 라벨처럼 테두리가 없으면, 한글이 섞인 묶음은 예약 칸 가운데에, 영문 묶음은 칸마다 놓는다.
+			const wall = (chr) => chr === "│" || chr === "◇" || chr === "├" || chr === "┤";
+			const walls = (from, to) => {
+				let l = from - 1, rgt = to;
+				while (l >= 0 && (row[l] === " " || row[l] === ZW)) l--;
+				while (rgt < row.length && (row[rgt] === " " || row[rgt] === ZW)) rgt++;
+				return wall(row[l] || "") && wall(row[rgt] || "") ? [l, rgt] : null;
+			};
 			const flush = () => {
 				if (!run) return;
 				const y = f(cy + fs * 0.35);
-				const x = run.wide ? f((run.start * cw + run.end * cw) / 2) : run.xs.join(" ");
+				const box = walls(run.start, run.end);
+				const x = box ? f(((box[0] + 1) * cw + box[1] * cw) / 2) : run.wide ? f((run.start * cw + run.end * cw) / 2) : run.xs.join(" ");
 				texts += '<text x="' + x + '" y="' + y + '">' + esc(run.chars.join("")) + "</text>";
 				run = null;
 			};
@@ -1130,6 +1140,18 @@ document.dispatchEvent(new Event("flow-ready"));
 					const next = row[c + 1];
 					const joins = run && next !== undefined && next !== " " && next !== ZW && !LINES[next] && !ARROWS[next] && next !== "◇";
 					if (!joins) { flush(); continue; }
+				}
+
+				// 가로 배치에서 렌더러는 상자 오른쪽에 빈칸 하나를 두고 ├ 로 선을 시작한다. 세로로 이어지는 선이 없으면
+				// 갈래가 아니라 출발점이므로, 빈칸까지 메우는 가로선으로 그린다.
+				const above = rows[r - 1] ? rows[r - 1][c] : " ", below = rows[r + 1] ? rows[r + 1][c] : " ";
+				const vertical = (v) => v !== undefined && LINES[v] !== undefined && /[UD]/.test(LINES[v]) || v === "◇";
+				if ((chr === "├" || chr === "┤") && !vertical(above) && !vertical(below)) {
+					flush();
+					const gapL = chr === "├" && row[c - 1] === " " ? x0 - cw : x0;
+					const gapR = chr === "┤" && row[c + 1] === " " ? x1 + cw : x1;
+					path += "M" + f(gapL) + " " + f(cy) + "H" + f(gapR) + " ";
+					continue;
 				}
 
 				const ln = LINES[chr];
