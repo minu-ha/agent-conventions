@@ -1106,9 +1106,71 @@ const viewerClientScript = `(() => {
 	const isWall = (chr) => chr === "│" || chr === "◇" || chr === "├" || chr === "┤";
 	const isHBorder = (chr) => chr !== undefined && chr !== " " && chr !== ZW && (LINES[chr] !== undefined || chr === "◇");
 
+	// 렌더러는 라벨이 있는 가로 구간을 "라벨 + 3칸" 으로 고정해 선 조각이 한 칸씩만 남는다.
+	// 1) 어느 줄의 글자도 가르지 않는 열(라벨 뒤, 화살표 앞)에 열을 끼워 구간 길이를 라벨 + 6칸 이상으로 늘리고,
+	// 2) 줄마다 라벨을 구간 가운데로 옮겨 양쪽 선을 같게 한다. 줄 길이는 그대로라 세로 정렬이 유지된다.
+	function widenLabelGaps(rows) {
+		const width = Math.max.apply(null, rows.map((r) => r.length));
+		let grid = rows.map((r) => r.padEnd(width));
+		const H = new Set("─┬┴├┤┼◇┌┐└┘╭╮╰╯═╌►◄▶◀╔╗╚╝╟╢".split(""));
+		const ANCHOR = new Set("├┤┬┴┼└┘┌┐╭╮╰╯".split(""));
+		const END = new Set("►▶◄◀┤├┬┴┼┐┘┌└╮╯╭╰│".split(""));
+		const isTxt = (chr) => chr !== undefined && chr !== " " && chr !== ZW && chr !== "│" && !H.has(chr);
+		const txtish = (chr) => isTxt(chr) || chr === ZW;
+		const splittable = (col) => grid.every((r) => !(txtish(r[col - 1]) && txtish(r[col])));
+		const filler = (r, col) => {
+			const l = r[col - 1], rt = r[col];
+			if (l === undefined || rt === undefined) return " ";
+			if ((H.has(l) || txtish(l)) && (H.has(rt) || rt === "│" || txtish(rt)) && !(txtish(l) && txtish(rt))) {
+				if (!(H.has(l) || H.has(rt))) return " ";
+				return l === "╌" || rt === "╌" ? "╌" : "─";
+			}
+			return " ";
+		};
+		// 가로 선 위 라벨: 양쏀에 선 조각이 있거나 한쪽이 꺾임 · 화살표에 바로 닿는 글자 묶음
+		const runs = (row) => {
+			const out = [];
+			for (const m of row.matchAll(/(─*)((?:[가-힣A-Za-z0-9]​?)+)(─*)/g)) {
+				if (m[2].length === 0) continue;
+				const before = row[m.index - 1], after = row[m.index + m[0].length];
+				const leftOk = m[1].length > 0 || ANCHOR.has(before);
+				const rightOk = m[3].length > 0 || END.has(after);
+				if (leftOk && rightOk && (m[1].length + m[3].length > 0 || (ANCHOR.has(before) && END.has(after)))) {
+					out.push({start: m.index, label: m[2], left: m[1].length, right: m[3].length, end: m.index + m[0].length});
+				}
+			}
+			return out;
+		};
+		const want = 6;
+		// 1) 열 끼우기 — 오른쏀에서 왼쪽으로 처리해 앞선 자리가 밀리지 않게 한다
+		const inserts = [];
+		grid.forEach((row) => {
+			for (const run of runs(row)) {
+				const missing = want - (run.left + run.right);
+				if (missing > 0) inserts.push({at: run.end, alt: run.start + run.left, n: missing});
+			}
+		});
+		inserts.sort((x, y) => y.at - x.at);
+		for (const ins of inserts) {
+			const candidates = [ins.at, ins.at + 1, ins.at + 2, ins.alt, ins.alt - 1];
+			const col = candidates.find((c) => c > 0 && c < width + 40 && splittable(c));
+			if (col === undefined) continue;
+			grid = grid.map((r) => r.slice(0, col) + filler(r, col).repeat(ins.n) + r.slice(col));
+		}
+		// 2) 라벨을 구간 가운데로
+		return grid.map((row) => {
+			let out = row;
+			for (const run of runs(row).reverse()) {
+				const total = run.left + run.right, l = Math.floor(total / 2), rgt = total - l;
+				out = out.slice(0, run.start) + "─".repeat(l) + run.label + "─".repeat(rgt) + out.slice(run.end);
+			}
+			return out;
+		});
+	}
+
 	function gridToSvg(ascii) {
 		const cw = 7.2, ch = 17, fs = 12;
-		const rows = ascii.replace(/\\s+$/, "").split("\\n");
+		const rows = widenLabelGaps(ascii.replace(/\\s+$/, "").split("\\n"));
 		const cols = Math.max.apply(null, rows.map((r) => r.length));
 		const f = (n) => n.toFixed(1);
 		let path = "", bold = "", dashed = "", arcs = "", tris = "", marks = "", dots = "", texts = "";
@@ -1181,15 +1243,9 @@ const viewerClientScript = `(() => {
 				}
 				const chars = row.slice(c, e).split("").filter((chr) => chr !== ZW);
 				const mid = (segStart + segEnd) / 2, half = textWidth(chars) / 2 + 5;
-				// 구간이 좁아 라벨 양쪽에 선이 두 칸 반씩 남지 않으면, 선을 끊지 않고 라벨을 선 바로 위에 놓는다.
-				if (segEnd - segStart < half * 2 + cw * 5) {
-					path += "M" + f(drawStart) + " " + f(cy) + "H" + f(drawEnd) + " ";
-					texts += '<text x="' + f(mid) + '" y="' + f(cy - 4) + '">' + esc(chars.join("")) + "</text>";
-				} else {
-					path += "M" + f(drawStart) + " " + f(cy) + "H" + f(mid - half) + " ";
-					path += "M" + f(mid + half) + " " + f(cy) + "H" + f(drawEnd) + " ";
-					texts += '<text x="' + f(mid) + '" y="' + f(cy + fs * 0.35) + '">' + esc(chars.join("")) + "</text>";
-				}
+				path += "M" + f(drawStart) + " " + f(cy) + "H" + f(mid - half) + " ";
+				path += "M" + f(mid + half) + " " + f(cy) + "H" + f(drawEnd) + " ";
+				texts += '<text x="' + f(mid) + '" y="' + f(cy + fs * 0.35) + '">' + esc(chars.join("")) + "</text>";
 				for (let k = L; k <= R; k++) skip.add(k);
 				c = e - 1;
 			}
