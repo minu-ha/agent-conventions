@@ -22,10 +22,10 @@ tags: typing, wrapper, contracts
 
 ```mermaid
 flowchart LR
-	one{"안쪽 요소가 하나?"} -- 예 --> own{"자기 프롭 없음?"} -- 예 --> ext{"DOM 속성을<br>extends로 받음?"} -- 예 --> spread["{...props}로 전달"]
-	one -- 아니요 --> named1["이름으로 하나씩 전달"]
-	own -- 아니요 --> dom["전달할 DOM 프롭만 선언하고<br>이름으로 전달"]
-	ext -- 아니요 --> named2["이름으로 하나씩 전달"]
+	one{"안쪽 요소가<br>하나인가?"} -- 예 --> own{"선언한 프롭을<br>안쪽이 전부 받는가?"} -- 예 --> ext{"DOM 속성을<br>extends로 열 수 있는가?"} -- 예 --> spread("{...props}로 전달")
+	one -- 아니요 --> named1("이름으로 하나씩 전달")
+	own -- 아니요 --> dom("전달할 DOM 프롭만 선언하고<br>이름으로 전달")
+	ext -- 아니요 --> named2("이름으로 하나씩 전달")
 ```
 
 | 조건 | 확인 방법 |

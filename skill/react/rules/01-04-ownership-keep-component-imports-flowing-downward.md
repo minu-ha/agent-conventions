@@ -27,10 +27,10 @@ tags: ownership
 
 ```mermaid
 flowchart LR
-	router["라우터 · 앱 진입 파일"] --> page["page"]
-	page --> widget["component/widget"]
-	widget --> ui["component/ui"]
-	ui --> root["루트 레이어<br>util · constant · type · hook<br>store · service · config · asset"]
+	router("라우터 · 앱 진입 파일") --> page("page")
+	page --> widget("component/widget")
+	widget --> ui("component/ui")
+	ui --> root("루트 레이어<br>util · constant · type · hook<br>store · service · config · asset")
 ```
 
 | 가져오는 쪽 | 가져올 수 있는 레이어 |

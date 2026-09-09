@@ -1105,19 +1105,28 @@ const viewerClientScript = `(() => {
 				primaryTextColor: v("--ink"),
 				secondaryColor: v("--soft"),
 				tertiaryColor: v("--page"),
+				mainBkg: v("--card"),
+				nodeBorder: v("--edge"),
+				nodeTextColor: v("--ink"),
 				lineColor: v("--faint"),
+				defaultLinkColor: v("--faint"),
 				edgeLabelBackground: v("--card"),
+				clusterBkg: v("--page"),
+				clusterBorder: v("--hair"),
 				background: v("--card"),
 			},
+			// 판단(마름모)은 흐린 바탕, 처리(둥근 사각)는 카드색. 선은 1px, 갈래 라벨은 헤어라인 칩.
 			themeCSS: [
 				".node rect, .node polygon, .node path { stroke-width: 1px; }",
 				".node polygon { fill: " + v("--soft") + " !important; }",
-				".node .label { line-height: 1.35; }",
+				".node .label { line-height: 1.4; }",
+				".node .label p { margin: 0; }",
 				".edgePath path, .flowchart-link { stroke-width: 1px; }",
-				".edgeLabel, .edgeLabel p { font-size: 12px; color: " + v("--muted") + "; background: " + v("--card") + "; }",
-				".edgeLabel p { padding: 0 3px; }",
+				".marker { stroke: none; }",
+				".edgeLabel p { margin: 0; padding: 1px 6px; font-size: 11.5px; line-height: 1.25; color: " + v("--muted") +
+					"; background: " + v("--card") + "; border: 1px solid " + v("--hair") + "; border-radius: 2px; }",
 			].join(" "),
-			flowchart: {nodeSpacing: 30, rankSpacing: 48, useMaxWidth: true, curve: "step", padding: 6},
+			flowchart: {nodeSpacing: 34, rankSpacing: 52, useMaxWidth: true, curve: "step", padding: 8, diagramPadding: 6},
 		});
 	}
 
