@@ -410,9 +410,20 @@ mark { background: color-mix(in srgb, var(--accent) 30%, transparent); color: in
 .acc-body h4.sub:first-child { margin-top: .2em; }
 .acc-body h4.sub::after { content: ""; flex: 1; border-top: 1px solid var(--hair); }
 
-/* 흐름도. 카드 안에 가운데 두고 넘치면 가로로 민다. */
-.acc-body pre.mermaid { margin: 0 0 .95em; padding: 18px 16px; background: var(--card); border: 1px solid var(--hair); border-radius: 3px; display: flex; justify-content: center; overflow-x: auto; font-family: var(--sans); font-size: 13px; }
-.acc-body pre.mermaid svg { max-width: 100%; height: auto; }
+/* 흐름도. 카드 안에 가운데 두고 카드 폭에 맞춘다. 렌더러가 없으면 원문 코드가 그대로 보인다. */
+.acc-body .flow { margin: 0 0 .95em; padding: 14px 12px; background: var(--card); border: 1px solid var(--hair); border-radius: 3px; overflow-x: auto; }
+.acc-body .flow svg { display: block; max-width: 100%; height: auto; margin: 0 auto; }
+.acc-body pre.mermaid { margin: 0 0 .95em; padding: 12px 14px; font: 12px/1.55 var(--mono); color: var(--code-fg); background: var(--code-bg); border: 1px solid var(--hair); border-radius: 3px; overflow-x: auto; }
+/* 판단 흐름도 위계. 예 갈래는 초록, 아니요 갈래는 연한 회색, 결과는 작은 흐린 글자, 예의 마지막 결과만 초록 칩. */
+.flow .edge.yes { stroke: var(--flow-yes); }
+.flow .edge.no { stroke: var(--edge); }
+.flow marker.marker-yes path { fill: var(--flow-yes); }
+.flow marker.marker-no path { fill: var(--edge); }
+.flow .edge-label.yes text { fill: var(--flow-yes); font-weight: 500; }
+.flow .edge-label.no text { fill: var(--faint); }
+.flow .node.res text { font-size: 11.5px; fill: var(--muted); }
+.flow .node.yes rect { fill: color-mix(in srgb, var(--flow-yes) 10%, var(--card)); stroke: var(--flow-yes); }
+.flow .node.yes text { fill: var(--flow-yes); }
 
 /* ---------- rule dialog ---------- */
 /* 참조 칩은 목록을 이동하는 대신 이 다이얼로그로 미리 보여준다. 보던 섹션을 잃지 않는다. */
@@ -605,8 +616,8 @@ const viewerClientScript = `(() => {
 			// 문자열은 일반 줄, 객체는 코드 블록이다.
 			if (typeof p !== "string") {
 				flushAll();
-				// 흐름도는 mermaid 가 그린다. 라이브러리를 못 받았으면(오프라인) 원문을 코드로 보인다.
-				out += p.lang === "mermaid" && window.mermaid
+				// 흐름도 원문은 pre.mermaid 로 두고 drawDiagrams 가 SVG 로 바꾼다. 렌더러가 없으면(오프라인) 원문이 그대로 보인다.
+				out += p.lang === "mermaid"
 					? '<pre class="mermaid">' + esc(p.code) + "</pre>"
 					: '<pre class="code">' + hl(p.code, p.lang) + "</pre>";
 				continue;
@@ -1077,100 +1088,71 @@ const viewerClientScript = `(() => {
 		drawDiagrams();
 	}
 
-	// 새로 그린 흐름도만 렌더한다. mermaid 는 처리한 노드에 data-processed 를 남긴다.
+	// 흐름도 색은 뷰어 변수를 그대로 가리킨다. 테마를 바꾸면 SVG 를 다시 그리지 않아도 따라온다.
+	// 글꼴은 이름 하나만 받는다(스택을 넘기면 한 이름으로 묶여 깨진다). 간격은 카드 폭에 들도록 좁게 잡는다.
+	const FLOW_THEME = {
+		bg: "var(--card)", fg: "var(--ink)", line: "var(--faint)", accent: "var(--faint)", muted: "var(--muted)",
+		surface: "var(--soft)", border: "var(--edge)", font: "Pretendard Variable", transparent: true,
+		padding: 12, nodeSpacing: 14, layerSpacing: 26,
+	};
+
+	// 원문 pre.mermaid 를 SVG 로 바꾼다. 렌더러 모듈이 늦게 오면 flow-ready 에서 다시 돈다.
 	function drawDiagrams() {
-		if (!window.mermaid) return;
-		const nodes = document.querySelectorAll("pre.mermaid:not([data-processed])");
-		if (!nodes.length) return;
-		mermaid.run({nodes: nodes}).then(() => { for (const n of nodes) tintBranches(n.querySelector("svg")); }).catch(() => {});
+		if (!window.renderMermaidSVG) return;
+
+		document.querySelectorAll("pre.mermaid:not([data-processed])").forEach((pre) => {
+			const box = document.createElement("div");
+			box.className = "flow";
+
+			try {
+				// 글꼴 @import 는 구글 폰트를 가리켜 헛된 요청만 낸다. 떼어 낸다.
+				box.innerHTML = window.renderMermaidSVG(pre.textContent, FLOW_THEME).replace(/@import url\\([^)]*\\);?/, "");
+				tintBranches(box.querySelector("svg"));
+				pre.replaceWith(box);
+			} catch (_error) {
+				pre.dataset.processed = "error";
+			}
+		});
 	}
 
-	// 예 · 아니요 갈래에 색을 입힌다. mermaid 는 라벨과 화살촉에 갈래 구분을 남기지 않아 그린 뒤에 붙인다.
-	// 굵은 선(== ==>)이 없는 도식은 갈래가 없는 사슬이라 건너뛴다.
+	document.addEventListener("flow-ready", drawDiagrams);
+
+	// 판단 흐름도(굵은 선 == ==> 이 있는 도식)에 위계를 입힌다.
+	// 예 갈래는 선 · 화살촉 · 라벨 · 마지막 결과가 --flow-yes, 아니요 갈래는 연한 회색, 결과는 작은 흐린 글자.
 	function tintBranches(svg) {
-		if (!svg || !svg.querySelector(".edge-thickness-thick")) return;
-
-		// 판단은 polygon(마름모), 결과는 그 밖의 도형이다. 결과에 .res 를 붙여 작은 칩으로 물린다.
-		svg.querySelectorAll(".node").forEach((n) => { if (!n.querySelector("polygon")) n.classList.add("res"); });
-
-		svg.querySelectorAll(".edgeLabel p").forEach((p) => {
-			const t = p.textContent.trim();
-			if (t === "예" || t === "아니요") p.closest(".edgeLabel").classList.add(t === "예" ? "yes" : "no");
-		});
+		if (!svg || !svg.querySelector('.edge[data-style="thick"]')) return;
 
 		// 화살촉 marker 는 선 전체가 하나를 공유한다. 갈래마다 복제해 색을 따로 준다.
-		const marker = svg.querySelector("marker[id$='pointEnd']");
-		if (!marker) return;
+		const marker = svg.querySelector("marker#arrowhead");
+		const markers = {};
 
 		for (const kind of ["yes", "no"]) {
+			if (!marker) break;
 			const m = marker.cloneNode(true);
-			m.id = marker.id + "-" + kind;
+			m.id = "arrowhead-" + kind;
 			m.classList.add("marker-" + kind);
 			marker.parentNode.appendChild(m);
-			const sel = kind === "yes" ? ".flowchart-link.edge-thickness-thick" : ".flowchart-link:not(.edge-thickness-thick)";
-			svg.querySelectorAll(sel).forEach((path) => { path.classList.add(kind); path.setAttribute("marker-end", "url(#" + m.id + ")"); });
+			markers[kind] = m.id;
 		}
+
+		const yesTargets = new Set();
+
+		svg.querySelectorAll(".edge").forEach((edge) => {
+			const kind = edge.dataset.style === "thick" ? "yes" : "no";
+			edge.classList.add(kind);
+			if (markers[kind]) edge.setAttribute("marker-end", "url(#" + markers[kind] + ")");
+			if (kind === "yes") yesTargets.add(edge.dataset.to);
+		});
+		svg.querySelectorAll(".edge-label").forEach((label) => label.classList.add(label.dataset.label === "예" ? "yes" : "no"));
+		svg.querySelectorAll(".node").forEach((node) => {
+			if (node.dataset.shape === "diamond") return;
+			node.classList.add(yesTargets.has(node.dataset.id) ? "yes" : "res");
+		});
 	}
 
 	function isDark() {
 		const cur = document.documentElement.dataset.theme;
 		return cur ? cur === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
-	}
-
-	// 흐름도는 뷰어 팔레트를 그대로 입는다. 글꼴은 본문 산세리프, 선은 1px 직각 꺾임,
-	// 판단(마름모)은 흐린 바탕으로 결과(사각)와 갈라 읽힌다. 테마가 바뀌면 다시 초기화한다.
-	function initDiagrams() {
-		if (!window.mermaid) return;
-		const css = getComputedStyle(document.documentElement);
-		const v = (name) => css.getPropertyValue(name).trim();
-		const mix = (name, pct) => "color-mix(in srgb, " + v(name) + " " + pct + "%, " + v("--card") + ")";
-
-		mermaid.initialize({
-			startOnLoad: false,
-			securityLevel: "strict",
-			theme: "base",
-			fontFamily: v("--sans"),
-			themeVariables: {
-				fontSize: "13px",
-				primaryColor: v("--card"),
-				primaryBorderColor: v("--edge"),
-				primaryTextColor: v("--ink"),
-				secondaryColor: v("--soft"),
-				tertiaryColor: v("--page"),
-				mainBkg: v("--card"),
-				nodeBorder: v("--edge"),
-				nodeTextColor: v("--ink"),
-				lineColor: v("--faint"),
-				defaultLinkColor: v("--faint"),
-				edgeLabelBackground: v("--card"),
-				clusterBkg: v("--page"),
-				clusterBorder: v("--hair"),
-				background: v("--card"),
-			},
-			// 판단(마름모)은 흐린 바탕, 처리(둥근 사각)는 카드색. 선은 1px, 갈래 라벨은 헤어라인 칩.
-			// 위계: 판단(마름모)이 가장 크고 진하다. 결과(.res)는 작은 알약 칩에 흐린 글자로 물러나고,
-			// 예 갈래의 마지막 결과(:::yes)만 초록을 입는다. 갈래 라벨은 테두리 없는 색 글자다.
-			themeCSS: [
-				".node rect, .node polygon, .node path { stroke-width: 1px; }",
-				".node polygon { fill: " + v("--soft") + " !important; stroke: " + v("--edge") + " !important; }",
-				".node .label { line-height: 1.4; }",
-				".node .label p { margin: 0; }",
-				".node.res rect, .node.res path { fill: " + v("--card") + " !important; stroke: " + v("--hair") + " !important; }",
-				".node.res .label, .node.res .label p { font-size: 11.5px; color: " + v("--muted") + "; }",
-				".node.yes rect, .node.yes path { fill: " + mix("--flow-yes", 10) + " !important; stroke: " + v("--flow-yes") + " !important; }",
-				".node.yes .label, .node.yes .label p { color: " + v("--flow-yes") + "; font-weight: 600; }",
-				".edgePath path, .flowchart-link { stroke-width: 1.25px; }",
-				".flowchart-link.no { stroke: " + v("--edge") + "; }",
-				".flowchart-link.yes { stroke: " + v("--flow-yes") + "; stroke-width: 1.5px; }",
-				".marker { stroke: none; }",
-				".marker.marker-no { fill: " + v("--edge") + " !important; }",
-				".marker.marker-yes { fill: " + v("--flow-yes") + " !important; }",
-				".edgeLabel p { margin: 0; padding: 0 5px; font-size: 11px; line-height: 1.3; color: " + v("--faint") + "; background: " + v("--card") + "; }",
-				".edgeLabel.yes p { color: " + v("--flow-yes") + "; font-weight: 600; }",
-			].join(" "),
-			// 카드 폭(약 710px)을 넘으면 통째로 축소되어 글자가 작아지므로 간격은 그 안에 들도록 잡는다.
-			flowchart: {nodeSpacing: 26, rankSpacing: 40, useMaxWidth: true, curve: "step", padding: 6, diagramPadding: 4},
-		});
 	}
 
 	// 참조 미리 보기 다이얼로그. 목록 스크롤을 유지한 채 다른 규칙을 읽는다.
@@ -1241,10 +1223,6 @@ const viewerClientScript = `(() => {
 
 	document.getElementById("theme").addEventListener("click", () => {
 		document.documentElement.dataset.theme = isDark() ? "light" : "dark";
-		// 흐름도 색은 초기화 때 굳는다. 테마를 바꾸면 다시 초기화하고 다시 그린다.
-		initDiagrams();
-		render();
-		renderDialog();
 	});
 
 	// 끄는 동안에는 상태를 건드리지 않는다. 매번 다시 그리면 끌기가 끊긴다.
@@ -1427,7 +1405,6 @@ const viewerClientScript = `(() => {
 		if (e.key === "Escape" && e.target.id === "q") { e.target.value = ""; state.q = ""; render(); e.target.blur(); }
 	});
 
-	initDiagrams();
 	render();
 })();`;
 
@@ -1464,8 +1441,13 @@ ${viewerStyles}
 </head>
 <body>
 ${viewerBodyMarkup}
-<script src="https://cdn.jsdelivr.net/npm/mermaid@11.15.0/dist/mermaid.min.js"></script>
 <script src="conventions-data.js"></script>
+<script type="module">
+// 흐름도 렌더러. ELK 가 선을 직각으로 정리한다. 모듈은 뒤늦게 오므로 준비되면 알린다. 오프라인이면 원문 코드가 남는다.
+import {renderMermaidSVG} from "https://cdn.jsdelivr.net/npm/beautiful-mermaid@1.1.3/+esm";
+window.renderMermaidSVG = renderMermaidSVG;
+document.dispatchEvent(new Event("flow-ready"));
+</script>
 <script>
 ${viewerClientScript}
 </script>
