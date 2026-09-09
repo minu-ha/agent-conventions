@@ -403,7 +403,7 @@ mark { background: color-mix(in srgb, var(--accent) 30%, transparent); color: in
 .x-lb { display: inline-block; vertical-align: .1em; margin-right: .55em; font-family: var(--mono); font-size: 9.5px; line-height: 1.3; letter-spacing: .06em; color: var(--faint); border: 1px solid var(--hair); border-radius: 2px; padding: 1px 5px; white-space: nowrap; }
 
 /* 흐름도. 카드 안에 가운데 두고 넘치면 가로로 민다. */
-.acc-body pre.mermaid { margin: 0 0 .95em; padding: 14px 16px; background: var(--card); border: 1px solid var(--hair); border-radius: 3px; display: flex; justify-content: center; overflow-x: auto; }
+.acc-body pre.mermaid { margin: 0 0 .95em; padding: 18px 16px; background: var(--card); border: 1px solid var(--hair); border-radius: 3px; display: flex; justify-content: center; overflow-x: auto; font-family: var(--sans); font-size: 13px; }
 .acc-body pre.mermaid svg { max-width: 100%; height: auto; }
 
 /* ---------- rule dialog ---------- */
@@ -1077,15 +1077,38 @@ const viewerClientScript = `(() => {
 		return cur ? cur === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
 	}
 
+	// 흐름도는 뷰어 팔레트를 그대로 입는다. 글꼴은 본문 산세리프, 선은 1px 직각 꺾임,
+	// 판단(마름모)은 흐린 바탕으로 결과(사각)와 갈라 읽힌다. 테마가 바뀌면 다시 초기화한다.
 	function initDiagrams() {
 		if (!window.mermaid) return;
+		const css = getComputedStyle(document.documentElement);
+		const v = (name) => css.getPropertyValue(name).trim();
+
 		mermaid.initialize({
 			startOnLoad: false,
 			securityLevel: "strict",
-			theme: isDark() ? "dark" : "neutral",
-			fontFamily: "inherit",
-			// 마름모가 글자 길이대로 부풀어 세로로 길어진다. 간격을 줄이고 폭은 카드에 맞춘다.
-			flowchart: {nodeSpacing: 28, rankSpacing: 40, useMaxWidth: true},
+			theme: "base",
+			fontFamily: v("--sans"),
+			themeVariables: {
+				fontSize: "13px",
+				primaryColor: v("--card"),
+				primaryBorderColor: v("--edge"),
+				primaryTextColor: v("--ink"),
+				secondaryColor: v("--soft"),
+				tertiaryColor: v("--page"),
+				lineColor: v("--faint"),
+				edgeLabelBackground: v("--card"),
+				background: v("--card"),
+			},
+			themeCSS: [
+				".node rect, .node polygon, .node path { stroke-width: 1px; }",
+				".node polygon { fill: " + v("--soft") + " !important; }",
+				".node .label { line-height: 1.35; }",
+				".edgePath path, .flowchart-link { stroke-width: 1px; }",
+				".edgeLabel, .edgeLabel p { font-size: 12px; color: " + v("--muted") + "; background: " + v("--card") + "; }",
+				".edgeLabel p { padding: 0 3px; }",
+			].join(" "),
+			flowchart: {nodeSpacing: 30, rankSpacing: 48, useMaxWidth: true, curve: "step", padding: 6},
 		});
 	}
 
