@@ -20,6 +20,9 @@ tags: ownership
 가져오기는 아래 레이어 방향과 소유자 경계를 **모두** 지킵니다.
 모든 경로가 `@/`로 시작하므로 경로 모양이 아니라 가져오는 파일의 위치로 판정합니다.
 소유자 · 진입 파일 · 역할 폴더의 정의는 `ownership-place-owner-files-in-role-folders`를 따릅니다.
+
+### 레이어 방향
+
 가져오기는 화살표 방향으로만 흐르고, 중간 레이어는 건너뛸 수 있습니다.
 
 ```mermaid
@@ -41,6 +44,8 @@ flowchart LR
 루트 레이어는 `util` · `constant` · `type` · `hook` · `store` · `service` · `config` · `asset`입니다.
 같은 레이어의 공개 컴포넌트끼리 조립할 수 있지만 순환 가져오기는 만들지 않습니다.
 
+### 소유자 경계
+
 | 가져오려는 대상 | 가져올 수 있는 파일 |
 | --- | --- |
 | `ui`, `widget`의 진입 파일 | 레이어 방향을 지키는 파일 |
@@ -55,6 +60,8 @@ flowchart LR
 배치는 `typescript/naming-place-project-constants-in-the-root-constant-folder`와
 `typescript/functions-promote-owner-free-functions-to-root-util`을 따릅니다.
 `_hook`도 `ownership-keep-lifecycle-in-the-owning-component`에 따라 여러 소유자가 공유하는 생명주기를 공개합니다.
+
+### 여러 자식이 함께 쓰는 컴포넌트
 
 여러 자식이 같은 컴포넌트를 쓰면 부모가 조립해 프롭 · `children`으로 내려보내거나,
 화면 조립에 종속되지 않을 때 `ui` · `widget`으로 옮깁니다. 짧은 조각은 중복해서 써도 됩니다.

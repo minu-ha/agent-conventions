@@ -436,6 +436,9 @@ page/detail/
 가져오기는 아래 레이어 방향과 소유자 경계를 **모두** 지킵니다.
 모든 경로가 `@/`로 시작하므로 경로 모양이 아니라 가져오는 파일의 위치로 판정합니다.
 소유자 · 진입 파일 · 역할 폴더의 정의는 `ownership-place-owner-files-in-role-folders`를 따릅니다.
+
+### 레이어 방향
+
 가져오기는 화살표 방향으로만 흐르고, 중간 레이어는 건너뛸 수 있습니다.
 
 ```mermaid
@@ -457,6 +460,8 @@ flowchart LR
 루트 레이어는 `util` · `constant` · `type` · `hook` · `store` · `service` · `config` · `asset`입니다.
 같은 레이어의 공개 컴포넌트끼리 조립할 수 있지만 순환 가져오기는 만들지 않습니다.
 
+### 소유자 경계
+
 | 가져오려는 대상 | 가져올 수 있는 파일 |
 | --- | --- |
 | `ui`, `widget`의 진입 파일 | 레이어 방향을 지키는 파일 |
@@ -471,6 +476,8 @@ flowchart LR
 배치는 `typescript/naming-place-project-constants-in-the-root-constant-folder`와
 `typescript/functions-promote-owner-free-functions-to-root-util`을 따릅니다.
 `_hook`도 `ownership-keep-lifecycle-in-the-owning-component`에 따라 여러 소유자가 공유하는 생명주기를 공개합니다.
+
+### 여러 자식이 함께 쓰는 컴포넌트
 
 여러 자식이 같은 컴포넌트를 쓰면 부모가 조립해 프롭 · `children`으로 내려보내거나,
 화면 조립에 종속되지 않을 때 `ui` · `widget`으로 옮깁니다. 짧은 조각은 중복해서 써도 됩니다.
@@ -1490,15 +1497,17 @@ export const UiTextField = (props: UiTextFieldProps) => {
 
 **Impact: HIGH (각 프롭이 전달되는 요소를 코드에서 확인할 수 있습니다)**
 
+### 전달 방식 고르기
+
 기본은 프롭을 이름으로 하나씩 전달하는 것입니다.
 `{...props}`는 아래 세 조건을 **모두** 만족할 때만 씁니다.
 
 ```mermaid
 flowchart LR
-	one{"안쪽 요소가<br>하나인가"} -- 예 --> own{"자기 프롭이<br>없는가"} -- 예 --> ext{"DOM 속성을<br>extends로 여는가"} -- 예 --> spread["{...props}로 넘긴다"]
-	one -- 아니요 --> named["이름으로 하나씩 넘긴다"]
-	own -- 아니요 --> dom["전달할 DOM 프롭만 선언하고<br>이름으로 넘긴다"]
-	ext -- 아니요 --> named
+	one{"안쪽 요소가 하나?"} -- 예 --> own{"자기 프롭 없음?"} -- 예 --> ext{"DOM 속성을<br>extends로 받음?"} -- 예 --> spread["{...props}로 전달"]
+	one -- 아니요 --> named1["이름으로 하나씩 전달"]
+	own -- 아니요 --> dom["전달할 DOM 프롭만 선언하고<br>이름으로 전달"]
+	ext -- 아니요 --> named2["이름으로 하나씩 전달"]
 ```
 
 | 조건 | 확인 방법 |
@@ -1510,6 +1519,8 @@ flowchart LR
 자기 프롭이 있으면 3단계처럼 전달할 DOM 프롭만 선언하고, 전부 이름으로 넘깁니다.
 스프레드는 초과 프롭을 검사하지 않으므로 리뷰에서 확인합니다.
 안쪽 라이브러리가 걸러 주지 않으면 `icon` 같은 자기 프롭이 DOM에 새거나 잘못된 값 경고가 날 수 있습니다.
+
+### 계약이 커질 때
 
 | 계약이 커지는 상황 | 처리 |
 | --- | --- |
