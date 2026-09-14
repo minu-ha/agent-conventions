@@ -689,7 +689,7 @@ const reactRuleRouting = {
 		reviewWith: ["ownership-layer-component-boundaries", "ownership-group-route-frames-with-outlets"],
 	},
 	"ownership-group-route-frames-with-outlets": {
-		appliesWhen: "라우트 트리나 Outlet 진입 파일을 추가, 변경할 때. `page` 아래 라우트 그룹을 만들거나 화면을 그룹 사이로 옮길 때.",
+		appliesWhen: "라우트 트리나 `Outlet` 진입 파일을 추가, 변경할 때. `page` 아래 라우트 그룹을 만들거나 화면을 그룹 사이로 옮길 때.",
 		reviewWith: ["ownership-prefix-layer-names-on-files-and-symbols", "runtime-place-error-boundaries-by-blast-radius"],
 	},
 	"ownership-prefer-plain-ts-for-local-react-helpers": {

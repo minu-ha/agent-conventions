@@ -1,10 +1,10 @@
 ---
 title: Group Route Frames with Outlets
-titleKo: 공통 라우트 프레임은 Outlet 그룹으로 묶습니다
+titleKo: 공통 라우트 프레임은 `Outlet` 그룹으로 묶습니다
 impact: HIGH
 impactDescription: 라우트 중첩을 폴더로 드러내면서 화면 아래 한 겹 소유 경계를 지킵니다
 appliesWhen:
-  - 라우트 트리나 Outlet 진입 파일을 추가, 변경할 때
+  - 라우트 트리나 `Outlet` 진입 파일을 추가, 변경할 때
   - '`page` 아래 라우트 그룹을 만들거나 화면을 그룹 사이로 옮길 때'
 requiresSelected: ownership-place-owner-files-in-role-folders, ownership-keep-component-imports-flowing-downward
 reviewWith: ownership-prefix-layer-names-on-files-and-symbols, runtime-place-error-boundaries-by-blast-radius
@@ -16,7 +16,7 @@ tags: ownership, routing
 **Impact: HIGH (라우트 중첩을 폴더로 드러내면서 화면 아래 한 겹 소유 경계를 지킵니다)**
 
 라우트의 중첩과 화면 안 컴포넌트의 중첩은 서로 다른 축입니다.
-공통 외곽이 필요한 자리에만 Outlet 프레임을 두고, 폴더의 포함 관계를 라우트 선언과 맞춥니다.
+공통 외곽이 필요한 자리에만 `Outlet` 프레임을 두고, 폴더의 포함 관계를 라우트 선언과 맞춥니다.
 파일 기반 라우터를 쓰는 프로젝트는 그 라우터가 강제하는 표기를 먼저 따릅니다.
 
 ### 진입 파일과 그룹
@@ -25,10 +25,10 @@ tags: ownership, routing
 | --- | --- |
 | 기본 프레임 | `page/pg-outlet.tsx`. 모든 화면의 공통 외곽과 `Outlet`을 소유합니다 |
 | 경로 없는 그룹 | `page/(main)/pg-main-outlet.tsx`. 폴더의 `(이름)`과 진입 파일의 `pg-<이름>-outlet`을 맞춥니다 |
-| 화면 | `page/(main)/products/pg-products.tsx`. 그룹이 아니라 화면 폴더가 소유자입니다 |
+| 화면 | 지원 코드가 있으면 `page/(main)/products/pg-products.tsx`, 없으면 `page/pg-not-found.tsx`. 각각 독립 소유자입니다 |
 | 라우터 | URL과 진입 파일의 중첩 관계를 선언합니다 |
 
-그룹은 `page` 바로 아래나 다른 그룹 아래에 두고, 그룹마다 자식 라우트를 감싸는 Outlet 진입 파일을 둡니다.
+그룹은 `page` 바로 아래나 다른 그룹 아래에 두고, 그룹마다 자식 라우트를 감싸는 `Outlet` 진입 파일을 둡니다.
 분류만 하는 그룹과 `Outlet`만 렌더하는 빈 프레임은 만들지 않습니다.
 `(이름)` 폴더는 URL에 나타나지 않으며, 폴더를 만드는 것만으로 라우트가 생기지도 않습니다.
 기본 프레임도 공통 외곽이 필요할 때만 만들고, `page` 전체를 한 번 더 감싸는 `(app)` 같은 그룹은 두지 않습니다.
@@ -40,6 +40,7 @@ tags: ownership, routing
 더 깊은 URL이 필요해도 화면 폴더는 다른 화면과 형제로 두고 중첩은 라우터가 선언합니다.
 
 기본 프레임, 그룹 프레임, 각 화면은 서로 다른 소유자입니다.
+폴더 없이 둔 화면도 같은 폴더의 프레임 내부 파일을 가져오지 않습니다.
 다른 프레임이나 화면의 `_` 부품과 역할 폴더는 같은 그룹 안에서도 가져오지 않습니다.
 부품 프롭스의 `import type` 예외는 `ownership-keep-component-imports-flowing-downward`를 따릅니다.
 프레임은 자식 화면을 직접 가져오지 않고 `Outlet`으로 받으며, 진입 파일을 가져오는 것은 라우터뿐입니다.
@@ -52,7 +53,7 @@ tags: ownership, routing
 
 같은 화면을 여러 URL에서 열면 라우터가 같은 진입 파일을 연결할 수 있습니다.
 분석 모드와 복귀 목록 같은 차이는 params나 명시적인 진입 프롭으로 전달합니다.
-URL마다 빈 화면 파일을 만들거나, 같은 본문을 쓴다는 이유만으로 Outlet 프레임이나 `widget`을 추가하지 않습니다.
+URL마다 빈 화면 파일을 만들거나, 같은 본문을 쓴다는 이유만으로 `Outlet` 프레임이나 `widget`을 추가하지 않습니다.
 
 ### 프레임이 유지하는 것
 
