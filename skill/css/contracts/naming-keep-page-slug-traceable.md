@@ -17,6 +17,7 @@ flowchart LR
 | 대상 | 식별자 |
 | --- | --- |
 | 라우트 진입 파일 | 라우트 세그먼트나 폴더 이름과 같은 낱말. 어느 화면에나 붙는 `shell`, `page`, `content`는 쓰지 않습니다 |
+| Outlet 프레임 | 활성화된 프레임워크 규약이 정한 진입 파일 이름을 씁니다. `pg-outlet.tsx`는 `pg_outlet`, `pg-main-outlet.tsx`는 `pg_mainOutlet`입니다 |
 | `:id`처럼 값이 런타임에 정해지는 동적 세그먼트 | 화면의 역할로 바꿉니다. `orders/:id`라면 라우트 폴더는 `order-detail`, 식별자는 `pg_orderDetail`입니다 |
 | 화면 안의 컴포넌트 | 자기 이름만 씁니다 |
 

@@ -32,8 +32,9 @@
     - 1.2 [Prefix Layer Names on Files and Symbols](#12-prefix-layer-names-on-files-and-symbols)
     - 1.3 [Place Owner Files in Role Folders](#13-place-owner-files-in-role-folders)
     - 1.4 [Keep Component Imports Flowing Downward](#14-keep-component-imports-flowing-downward)
-    - 1.5 [Do Not Create Screen-local Custom Hooks for Pure Logic](#15-do-not-create-screen-local-custom-hooks-for-pure-logic)
-    - 1.6 [Keep Library Lifecycle in the Owning Component](#16-keep-library-lifecycle-in-the-owning-component)
+    - 1.5 [Group Route Frames with Outlets](#15-group-route-frames-with-outlets)
+    - 1.6 [Do Not Create Screen-local Custom Hooks for Pure Logic](#16-do-not-create-screen-local-custom-hooks-for-pure-logic)
+    - 1.7 [Keep Library Lifecycle in the Owning Component](#17-keep-library-lifecycle-in-the-owning-component)
 2. [Server Data Flow](#2-server-data-flow) — **HIGH**
     - 2.1 [Name Query and Mutation Bindings Consistently](#21-name-query-and-mutation-bindings-consistently)
     - 2.2 [Shape React Query Data in query.select](#22-shape-react-query-data-in-query-select)
@@ -100,7 +101,7 @@
 
 **Impact: CRITICAL**
 
-`ui`, `widget`, `page` 세 레이어의 소유 경계가 분명해야 코드를 예측 가능하게 배치할 수 있습니다. 레이어와 역할에 맞춰 이름과 폴더를 정하고, 가져오기는 하위 레이어로만 향합니다. 생명주기는 해당 컴포넌트가 관리하고 순수 계산은 훅으로 감싸지 않습니다.
+`ui`, `widget`, `page` 세 레이어의 소유 경계가 분명해야 코드를 예측 가능하게 배치할 수 있습니다. 레이어와 역할에 맞춰 이름과 폴더를 정하고, 가져오기는 하위 레이어로만 향합니다. 공통 라우트 프레임은 Outlet 그룹으로 묶고 화면 아래 소유자는 한 겹으로 유지합니다. 생명주기는 해당 컴포넌트가 관리하고 순수 계산은 훅으로 감싸지 않습니다.
 
 ### 1.1 Keep UI, Widget, and Page Ownership Separate
 
@@ -334,12 +335,13 @@ component/widget/chatbot/
 
 **Applies when:** 소유자 아래 `_constant`, `_function`, `_hook`, `_type` 폴더나 하위 소유자 폴더를 만들거나 옮길 때. 추출한 컴포넌트, 함수, 타입의 배치 위치를 정할 때. 제외: 기존 파일 내부 구현만 바꾸는 경우.
 
-**Review with:** `css/ownership-choose-scope-prefix-by-owner-layer`, `ownership-keep-component-imports-flowing-downward`
+**Review with:** `css/ownership-choose-scope-prefix-by-owner-layer`, `ownership-group-route-frames-with-outlets`, `ownership-keep-component-imports-flowing-downward`
 
 **Impact: HIGH (추출한 파일의 소유자와 역할을 경로에서 확인할 수 있습니다)**
 
 추출한 파일은 소유자 폴더에 두고, 역할과 공개 범위에 맞춰 이름을 정합니다.
-호출 계층은 폴더를 중첩하지 않고 진입 파일의 조립으로 드러냅니다.
+화면 내부의 호출 계층은 폴더를 중첩하지 않고 진입 파일의 조립으로 드러냅니다.
+라우트 그룹과 Outlet 프레임의 자리는 `ownership-group-route-frames-with-outlets`가 정합니다.
 
 ### 배치와 이름
 
@@ -348,13 +350,14 @@ component/widget/chatbot/
 | 소유자 | 자기만 쓰는 파일이 있거나 여러 하위 소유자가 함께 쓰는 컴포넌트는 자기 이름의 폴더를 갖습니다 |
 | 진입 파일 | 레이어 접두사를 뺀 이름을 폴더와 맞춥니다. 한 폴더에 라우트가 여럿이면 첫 진입은 `pg-<folder>`, 나머지는 `pg-<folder>-<변형>`입니다 |
 | 부품 | 역할 폴더에 넣지 않고 소유자 폴더의 `_` 파일로 두며, `_` 파일은 같은 폴더에서만 가져옵니다. 동반 `.css`도 같은 이름을 씁니다 |
-| 하위 소유자 | 소유자 폴더 안에 한 겹만 두고, 이름은 `panel`처럼 역할 낱말 하나로 짓지 않습니다 |
+| 하위 소유자 | 각 화면, `ui`, `widget` 소유자 안에 한 겹만 두고, 이름은 `panel`처럼 역할 낱말 하나로 짓지 않습니다 |
 | 역할 폴더 | 필요한 것만 만들고 파일이 하나여도 유지합니다. 아래 네 종류만 허용합니다 |
 | 함수의 보조 파일 | 전용 보조 파일이 있는 함수만 `_function` 아래 자기 이름 폴더를 갖습니다 |
 
 부품 하나만 있어도 소유자 폴더를 만들고, 라우트는 항상 소유자입니다.
 함수의 보조 파일은 `_`로 시작하며 그 안에 역할 폴더를 다시 만들지 않습니다.
-역할 폴더 네 개를 제외한 폴더는 모두 하위 소유자입니다.
+소유자 안에서 역할 폴더 네 개를 제외한 폴더는 모두 하위 소유자입니다.
+라우트 그룹은 소유자가 아니고, 그 안의 화면 폴더는 각각 독립 소유자입니다.
 더 깊어지면 형제로 올리거나 `widget`으로 분리할지 판단합니다.
 
 ### 역할 폴더
@@ -373,7 +376,7 @@ component/widget/chatbot/
 
 ### 폴더 이름 기준
 
-폴더 이름은 단수로 쓰되 프레임워크가 강제하는 이름은 예외입니다.
+폴더 이름은 단수로 쓰되 프레임워크가 강제하는 이름과 라우트 그룹 표기는 예외입니다.
 소유자 아래에 `component`, `util`, `helper`, `config`, `constants`, `common`, `shared` 폴더를 만들지 않습니다.
 루트의 `constant`, `type`, `hook`은 프로젝트가 소유하는 역할 폴더이므로 같은 규칙을 따르되 `_`를 붙이지 않습니다.
 
@@ -453,13 +456,14 @@ page/product-detail/
 
 **Requires selected:** `typescript/naming-import-by-absolute-path` (함께 적용)
 
-**Review with:** `ownership-layer-component-boundaries`
+**Review with:** `ownership-group-route-frames-with-outlets`, `ownership-layer-component-boundaries`
 
 **Impact: CRITICAL (공개 범위를 벗어난 가져오기를 막아 컴포넌트의 소유 관계를 유지합니다)**
 
 가져오기는 아래 레이어 방향과 소유자 경계를 **모두** 지킵니다.
 모든 경로가 `@/`로 시작하므로 경로 모양이 아니라 가져오는 파일의 위치로 판정합니다.
 소유자, 진입 파일, 역할 폴더의 정의는 `ownership-place-owner-files-in-role-folders`를 따릅니다.
+라우트 그룹과 Outlet 프레임은 `ownership-group-route-frames-with-outlets`를 따릅니다.
 
 ### 레이어 방향
 
@@ -489,8 +493,8 @@ flowchart LR
 | 가져오려는 대상 | 가져올 수 있는 파일 |
 | --- | --- |
 | `ui`, `widget`의 진입 파일 | 레이어 방향을 지키는 파일 |
-| 라우트 진입 파일 `page/<route>/pg-<route>` | 라우터 |
-| 다른 라우트 안의 파일 | 없음 |
+| 화면과 Outlet 프레임의 진입 파일 | 라우터 |
+| 다른 화면이나 Outlet 프레임 안의 파일 | 없음. 같은 그룹 안의 화면끼리도 같습니다 |
 | 하위 소유자의 진입 파일 | 그 하위 소유자를 담은 소유자 폴더 아래의 파일 |
 | `_`로 시작하는 파일 | 같은 폴더의 파일 |
 | `_function`, `_type`, `_constant`, `_hook`의 파일 | 레이어 방향을 지키는 파일. 다른 라우트의 역할 폴더는 제외합니다 |
@@ -589,9 +593,128 @@ import type {ChartSeries} from "@/component/ui/line-chart/_type/chart-series";
 import {chart_series_line} from "@/component/ui/line-chart/_constant/series";
 ```
 
-### 1.5 Do Not Create Screen-local Custom Hooks for Pure Logic
+### 1.5 Group Route Frames with Outlets
 
-**Rule:** `R01-05` · `ownership-prefer-plain-ts-for-local-react-helpers`
+**Rule:** `R01-05` · `ownership-group-route-frames-with-outlets`
+
+**Applies when:** 라우트 트리나 Outlet 진입 파일을 추가, 변경할 때. `page` 아래 라우트 그룹을 만들거나 화면을 그룹 사이로 옮길 때.
+
+**Requires selected:** `ownership-keep-component-imports-flowing-downward`, `ownership-place-owner-files-in-role-folders` (함께 적용)
+
+**Review with:** `ownership-prefix-layer-names-on-files-and-symbols`, `runtime-place-error-boundaries-by-blast-radius`
+
+**Impact: HIGH (라우트 중첩을 폴더로 드러내면서 화면 아래 한 겹 소유 경계를 지킵니다)**
+
+라우트의 중첩과 화면 안 컴포넌트의 중첩은 서로 다른 축입니다.
+공통 외곽이 필요한 자리에만 Outlet 프레임을 두고, 폴더의 포함 관계를 라우트 선언과 맞춥니다.
+파일 기반 라우터를 쓰는 프로젝트는 그 라우터가 강제하는 표기를 먼저 따릅니다.
+
+### 진입 파일과 그룹
+
+| 대상 | 배치와 책임 |
+| --- | --- |
+| 기본 프레임 | `page/pg-outlet.tsx`. 모든 화면의 공통 외곽과 `Outlet`을 소유합니다 |
+| 경로 없는 그룹 | `page/(main)/pg-main-outlet.tsx`. 폴더의 `(이름)`과 진입 파일의 `pg-<이름>-outlet`을 맞춥니다 |
+| 화면 | `page/(main)/products/pg-products.tsx`. 그룹이 아니라 화면 폴더가 소유자입니다 |
+| 라우터 | URL과 진입 파일의 중첩 관계를 선언합니다 |
+
+그룹은 `page` 바로 아래나 다른 그룹 아래에 두고, 그룹마다 자식 라우트를 감싸는 Outlet 진입 파일을 둡니다.
+분류만 하는 그룹과 `Outlet`만 렌더하는 빈 프레임은 만들지 않습니다.
+`(이름)` 폴더는 URL에 나타나지 않으며, 폴더를 만드는 것만으로 라우트가 생기지도 않습니다.
+기본 프레임도 공통 외곽이 필요할 때만 만들고, `page` 전체를 한 번 더 감싸는 `(app)` 같은 그룹은 두지 않습니다.
+
+### 깊이와 소유자 경계
+
+화면 폴더부터는 하위 소유자 한 겹 제한이 그대로 적용되고, 그룹의 깊이는 여기에 더하지 않습니다.
+화면이나 하위 소유자 아래에는 그룹을 만들지 않습니다.
+더 깊은 URL이 필요해도 화면 폴더는 다른 화면과 형제로 두고 중첩은 라우터가 선언합니다.
+
+기본 프레임, 그룹 프레임, 각 화면은 서로 다른 소유자입니다.
+다른 프레임이나 화면의 `_` 부품과 역할 폴더는 같은 그룹 안에서도 가져오지 않습니다.
+부품 프롭스의 `import type` 예외는 `ownership-keep-component-imports-flowing-downward`를 따릅니다.
+프레임은 자식 화면을 직접 가져오지 않고 `Outlet`으로 받으며, 진입 파일을 가져오는 것은 라우터뿐입니다.
+`children`을 받는 범용 셸은 라우트 프레임이 아니라 `widget`이므로 레이어 방향대로 가져옵니다.
+
+모든 자식 화면에 적용하는 인증 가드는 기본 프레임이 직접 소유할 수 있습니다.
+별도 실행 경계가 필요할 때만 자기 `_` 부품으로 분리합니다.
+인증 확인이 끝나기 전에는 `Outlet` 아래를 렌더하지 않습니다.
+화면마다 다른 접근 정책은 라우터가 연결하며, `page`는 라우터의 구현을 가져오지 않습니다.
+
+같은 화면을 여러 URL에서 열면 라우터가 같은 진입 파일을 연결할 수 있습니다.
+분석 모드와 복귀 목록 같은 차이는 params나 명시적인 진입 프롭으로 전달합니다.
+URL마다 빈 화면 파일을 만들거나, 같은 본문을 쓴다는 이유만으로 Outlet 프레임이나 `widget`을 추가하지 않습니다.
+
+### 프레임이 유지하는 것
+
+자식 화면이 바뀌어도 남아야 하는 제목, 탭은 그 프레임이 소유하고, 화면마다 다른 데이터는 프레임에 모으지 않습니다.
+프레임보다 위에서 URL 경로마다 `key`를 바꾸면 프레임까지 다시 마운트되므로 쓰지 않습니다.
+오류와 로딩 경계의 자리는 `runtime-place-error-boundaries-by-blast-radius`와
+`runtime-place-suspense-boundaries-at-the-section-owner`를 따릅니다.
+
+**Incorrect 1 (화면 아래에 그룹을 만들어 소유자를 한 겹 더 쌓습니다):**
+
+```txt
+page/
+├── pg-outlet.tsx
+└── (main)/
+    ├── pg-main-outlet.tsx
+    ├── products/
+    │   ├── pg-products.tsx
+    │   ├── product-table-section/
+    │   │   └── pg-product-table-section.tsx
+    │   └── (detail)/
+    │       ├── pg-detail-outlet.tsx
+    │       └── product-detail/
+    │           └── pg-product-detail.tsx
+    └── orders/
+        └── pg-orders.tsx
+```
+
+**Correct 1 (더 깊은 URL을 쓰는 화면도 그룹 밖 형제 소유자로 둡니다):**
+
+```txt
+page/
+├── pg-outlet.tsx
+├── (main)/
+│   ├── pg-main-outlet.tsx
+│   ├── products/
+│   │   ├── pg-products.tsx
+│   │   └── product-table-section/
+│   │       └── pg-product-table-section.tsx
+│   └── orders/
+│       └── pg-orders.tsx
+└── product-detail/
+    └── pg-product-detail.tsx
+```
+
+**Correct (라우터가 프레임과 화면의 진입 파일을 중첩으로 잇습니다):**
+
+```tsx
+// route/app-routes.tsx
+import {PgOutlet} from "@/page/pg-outlet";
+import {PgMainOutlet} from "@/page/(main)/pg-main-outlet";
+import {PgOrders} from "@/page/(main)/orders/pg-orders";
+import {PgProducts} from "@/page/(main)/products/pg-products";
+import {PgProductDetail} from "@/page/product-detail/pg-product-detail";
+
+export const AppRoutes = () => {
+	return (
+		<Routes>
+			<Route path="/" element={<PgOutlet />}>
+				<Route element={<PgMainOutlet />}>
+					<Route path="products" element={<PgProducts />} />
+					<Route path="orders" element={<PgOrders />} />
+				</Route>
+				<Route path="products/:productId" element={<PgProductDetail />} />
+			</Route>
+		</Routes>
+	);
+};
+```
+
+### 1.6 Do Not Create Screen-local Custom Hooks for Pure Logic
+
+**Rule:** `R01-06` · `ownership-prefer-plain-ts-for-local-react-helpers`
 
 **Applies when:** 화면 전용 계산, 정규화, 전송 값 조립을 커스텀 훅으로 추출하려 할 때. 화면 전용 순수 로직을 별도 보조 모듈로 옮기려 할 때. 화면 지역 함수에 `use` 접두사를 붙이거나 커스텀 훅 이름을 바꿀 때. 제외: 상태, 컨텍스트, 다른 훅 호출 순서를 실제로 캡슐화하는 경우.
 
@@ -675,9 +798,9 @@ export const PgMediaUploadPanel = (props: PgMediaUploadPanelProps) => {
 };
 ```
 
-### 1.6 Keep Library Lifecycle in the Owning Component
+### 1.7 Keep Library Lifecycle in the Owning Component
 
-**Rule:** `R01-06` · `ownership-keep-lifecycle-in-the-owning-component`
+**Rule:** `R01-07` · `ownership-keep-lifecycle-in-the-owning-component`
 
 **Applies when:** 외부 라이브러리 인스턴스 생성, 크기 변경, 구독, 정리를 한 컴포넌트가 소유할 때. 생명주기 코드를 커스텀 훅으로 옮겨 파일을 줄이려 할 때. 제외: 여러 소유자가 같은 생명주기 계약을 실제로 호출하는 경우.
 

@@ -77,4 +77,4 @@ export const WgChartCard = (props: WgChartCardProps) => {
 };
 ```
 
-> 나머지 예시와 예외는 [full rule](../rules/01-06-ownership-keep-lifecycle-in-the-owning-component.md)에 있습니다.
+> 나머지 예시와 예외는 [full rule](../rules/01-07-ownership-keep-lifecycle-in-the-owning-component.md)에 있습니다.

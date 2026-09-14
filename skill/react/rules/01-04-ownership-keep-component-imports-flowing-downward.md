@@ -9,7 +9,7 @@ appliesWhen:
   - 여러 자식이 같은 컴포넌트를 써야 해서 배치를 다시 정할 때
   - 제외: 같은 소유자 안에서만 역할 폴더 네 개의 파일을 가져오는 경우
 requiresSelected: typescript/naming-import-by-absolute-path
-reviewWith: ownership-layer-component-boundaries
+reviewWith: ownership-layer-component-boundaries, ownership-group-route-frames-with-outlets
 tags: ownership
 ---
 
@@ -20,6 +20,7 @@ tags: ownership
 가져오기는 아래 레이어 방향과 소유자 경계를 **모두** 지킵니다.
 모든 경로가 `@/`로 시작하므로 경로 모양이 아니라 가져오는 파일의 위치로 판정합니다.
 소유자, 진입 파일, 역할 폴더의 정의는 `ownership-place-owner-files-in-role-folders`를 따릅니다.
+라우트 그룹과 Outlet 프레임은 `ownership-group-route-frames-with-outlets`를 따릅니다.
 
 ### 레이어 방향
 
@@ -49,8 +50,8 @@ flowchart LR
 | 가져오려는 대상 | 가져올 수 있는 파일 |
 | --- | --- |
 | `ui`, `widget`의 진입 파일 | 레이어 방향을 지키는 파일 |
-| 라우트 진입 파일 `page/<route>/pg-<route>` | 라우터 |
-| 다른 라우트 안의 파일 | 없음 |
+| 화면과 Outlet 프레임의 진입 파일 | 라우터 |
+| 다른 화면이나 Outlet 프레임 안의 파일 | 없음. 같은 그룹 안의 화면끼리도 같습니다 |
 | 하위 소유자의 진입 파일 | 그 하위 소유자를 담은 소유자 폴더 아래의 파일 |
 | `_`로 시작하는 파일 | 같은 폴더의 파일 |
 | `_function`, `_type`, `_constant`, `_hook`의 파일 | 레이어 방향을 지키는 파일. 다른 라우트의 역할 폴더는 제외합니다 |

@@ -689,6 +689,32 @@
 					"naming-use-consistent-file-and-symbol-naming"
 				]
 			}
+		},
+		{
+			"id": "react-outlet-route-group-placement",
+			"prompt": "Move the existing products and orders screen folders under src/page/(main), move the shared list frame to src/page/(main)/pg-main-outlet.tsx, and update only the matching route imports and nesting in src/route/app-routes.tsx. Preserve component bodies, styles, handlers, and runtime boundaries. Keep screen internals at one child-owner level; do not put a route group below a screen or import between sibling screens.",
+			"files": [
+				"src/route/app-routes.tsx",
+				"src/page/(main)/pg-main-outlet.tsx",
+				"src/page/(main)/products/pg-products.tsx",
+				"src/page/(main)/orders/pg-orders.tsx"
+			],
+			"expectedSkills": [
+				"react",
+				"typescript"
+			],
+			"expectedSelected": {
+				"react": [
+					"ownership-prefix-layer-names-on-files-and-symbols",
+					"ownership-place-owner-files-in-role-folders",
+					"ownership-keep-component-imports-flowing-downward",
+					"ownership-group-route-frames-with-outlets"
+				],
+				"typescript": [
+					"naming-use-consistent-file-and-symbol-naming",
+					"naming-import-by-absolute-path"
+				]
+			}
 		}
 	]
 }

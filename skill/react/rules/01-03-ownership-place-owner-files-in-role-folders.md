@@ -8,7 +8,8 @@ appliesWhen:
   - 추출한 컴포넌트, 함수, 타입의 배치 위치를 정할 때
   - 제외: 기존 파일 내부 구현만 바꾸는 경우
 reviewWith: >-
-  ownership-keep-component-imports-flowing-downward, css/ownership-choose-scope-prefix-by-owner-layer
+  ownership-keep-component-imports-flowing-downward, ownership-group-route-frames-with-outlets,
+  css/ownership-choose-scope-prefix-by-owner-layer
 tags: ownership
 ---
 
@@ -17,7 +18,8 @@ tags: ownership
 **Impact: HIGH (추출한 파일의 소유자와 역할을 경로에서 확인할 수 있습니다)**
 
 추출한 파일은 소유자 폴더에 두고, 역할과 공개 범위에 맞춰 이름을 정합니다.
-호출 계층은 폴더를 중첩하지 않고 진입 파일의 조립으로 드러냅니다.
+화면 내부의 호출 계층은 폴더를 중첩하지 않고 진입 파일의 조립으로 드러냅니다.
+라우트 그룹과 Outlet 프레임의 자리는 `ownership-group-route-frames-with-outlets`가 정합니다.
 
 ### 배치와 이름
 
@@ -26,13 +28,14 @@ tags: ownership
 | 소유자 | 자기만 쓰는 파일이 있거나 여러 하위 소유자가 함께 쓰는 컴포넌트는 자기 이름의 폴더를 갖습니다 |
 | 진입 파일 | 레이어 접두사를 뺀 이름을 폴더와 맞춥니다. 한 폴더에 라우트가 여럿이면 첫 진입은 `pg-<folder>`, 나머지는 `pg-<folder>-<변형>`입니다 |
 | 부품 | 역할 폴더에 넣지 않고 소유자 폴더의 `_` 파일로 두며, `_` 파일은 같은 폴더에서만 가져옵니다. 동반 `.css`도 같은 이름을 씁니다 |
-| 하위 소유자 | 소유자 폴더 안에 한 겹만 두고, 이름은 `panel`처럼 역할 낱말 하나로 짓지 않습니다 |
+| 하위 소유자 | 각 화면, `ui`, `widget` 소유자 안에 한 겹만 두고, 이름은 `panel`처럼 역할 낱말 하나로 짓지 않습니다 |
 | 역할 폴더 | 필요한 것만 만들고 파일이 하나여도 유지합니다. 아래 네 종류만 허용합니다 |
 | 함수의 보조 파일 | 전용 보조 파일이 있는 함수만 `_function` 아래 자기 이름 폴더를 갖습니다 |
 
 부품 하나만 있어도 소유자 폴더를 만들고, 라우트는 항상 소유자입니다.
 함수의 보조 파일은 `_`로 시작하며 그 안에 역할 폴더를 다시 만들지 않습니다.
-역할 폴더 네 개를 제외한 폴더는 모두 하위 소유자입니다.
+소유자 안에서 역할 폴더 네 개를 제외한 폴더는 모두 하위 소유자입니다.
+라우트 그룹은 소유자가 아니고, 그 안의 화면 폴더는 각각 독립 소유자입니다.
 더 깊어지면 형제로 올리거나 `widget`으로 분리할지 판단합니다.
 
 ### 역할 폴더
@@ -51,7 +54,7 @@ tags: ownership
 
 ### 폴더 이름 기준
 
-폴더 이름은 단수로 쓰되 프레임워크가 강제하는 이름은 예외입니다.
+폴더 이름은 단수로 쓰되 프레임워크가 강제하는 이름과 라우트 그룹 표기는 예외입니다.
 소유자 아래에 `component`, `util`, `helper`, `config`, `constants`, `common`, `shared` 폴더를 만들지 않습니다.
 루트의 `constant`, `type`, `hook`은 프로젝트가 소유하는 역할 폴더이므로 같은 규칙을 따르되 `_`를 붙이지 않습니다.
 

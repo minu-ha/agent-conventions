@@ -192,6 +192,7 @@ const reactRuleUniverse = [
 	"ownership-prefix-layer-names-on-files-and-symbols",
 	"ownership-place-owner-files-in-role-folders",
 	"ownership-keep-component-imports-flowing-downward",
+	"ownership-group-route-frames-with-outlets",
 	"ownership-prefer-plain-ts-for-local-react-helpers",
 	"ownership-keep-lifecycle-in-the-owning-component",
 	"data-name-query-and-mutation-bindings-consistently",
@@ -676,12 +677,20 @@ const reactRuleRouting = {
 	"ownership-place-owner-files-in-role-folders": {
 		appliesWhen:
 			"소유자 아래 `_constant`, `_function`, `_hook`, `_type` 폴더나 하위 소유자 폴더를 만들거나 옮길 때. 추출한 컴포넌트, 함수, 타입의 배치 위치를 정할 때. 제외: 기존 파일 내부 구현만 바꾸는 경우.",
-		reviewWith: ["ownership-keep-component-imports-flowing-downward", "css/ownership-choose-scope-prefix-by-owner-layer"],
+		reviewWith: [
+			"ownership-keep-component-imports-flowing-downward",
+			"ownership-group-route-frames-with-outlets",
+			"css/ownership-choose-scope-prefix-by-owner-layer",
+		],
 	},
 	"ownership-keep-component-imports-flowing-downward": {
 		appliesWhen:
 			"소유자 폴더 안의 컴포넌트 파일을 가져올 때. 다른 소유자나 다른 라우트의 파일을 가져오려 할 때. 여러 자식이 같은 컴포넌트를 써야 해서 배치를 다시 정할 때. 제외: 같은 소유자 안에서만 역할 폴더 네 개의 파일을 가져오는 경우.",
-		reviewWith: ["ownership-layer-component-boundaries"],
+		reviewWith: ["ownership-layer-component-boundaries", "ownership-group-route-frames-with-outlets"],
+	},
+	"ownership-group-route-frames-with-outlets": {
+		appliesWhen: "라우트 트리나 Outlet 진입 파일을 추가, 변경할 때. `page` 아래 라우트 그룹을 만들거나 화면을 그룹 사이로 옮길 때.",
+		reviewWith: ["ownership-prefix-layer-names-on-files-and-symbols", "runtime-place-error-boundaries-by-blast-radius"],
 	},
 	"ownership-prefer-plain-ts-for-local-react-helpers": {
 		appliesWhen:
@@ -967,6 +976,10 @@ const reactRuleRouting = {
 const mandatoryRuleRouting = {
 	react: {
 		"ownership-keep-component-imports-flowing-downward": ["typescript/naming-import-by-absolute-path"],
+		"ownership-group-route-frames-with-outlets": [
+			"ownership-place-owner-files-in-role-folders",
+			"ownership-keep-component-imports-flowing-downward",
+		],
 		"data-name-query-and-mutation-bindings-consistently": [
 			"typescript/naming-use-consistent-file-and-symbol-naming",
 			"docs-require-jsdoc-on-key-declarations",
@@ -1822,6 +1835,28 @@ const reactScenarioStages = {
 					"docs-write-jsx-comments-as-multiline-blocks",
 				],
 				typescript: ["naming-use-consistent-file-and-symbol-naming"],
+			},
+		},
+	},
+	"react-outlet-route-group-placement": {
+		initial: {
+			prompt:
+				"Move the existing products and orders screen folders under src/page/(main), move the shared list frame to src/page/(main)/pg-main-outlet.tsx, and update only the matching route imports and nesting in src/route/app-routes.tsx. Preserve component bodies, styles, handlers, and runtime boundaries. Keep screen internals at one child-owner level; do not put a route group below a screen or import between sibling screens.",
+			files: [
+				"src/route/app-routes.tsx",
+				"src/page/(main)/pg-main-outlet.tsx",
+				"src/page/(main)/products/pg-products.tsx",
+				"src/page/(main)/orders/pg-orders.tsx",
+			],
+			expectedSkills: ["react", "typescript"],
+			expectedSelected: {
+				react: [
+					"ownership-prefix-layer-names-on-files-and-symbols",
+					"ownership-place-owner-files-in-role-folders",
+					"ownership-keep-component-imports-flowing-downward",
+					"ownership-group-route-frames-with-outlets",
+				],
+				typescript: ["naming-use-consistent-file-and-symbol-naming", "naming-import-by-absolute-path"],
 			},
 		},
 	},
@@ -2779,7 +2814,7 @@ test("TypeScript SKILL.md is a compact router without receipt or audit machinery
 	assertMentions(extractSection(body, 1), ["React", "CSS", "companion"], "typescript 1절");
 });
 
-test("React progressive metadata and all 52 rule routes match Appendix B exactly", async () => {
+test("React progressive metadata and all 54 rule routes match Appendix B exactly", async () => {
 	const skillPaths = getSkillPaths("react", realSkillRootDir);
 	const document = await readSkillDocument(skillPaths);
 
@@ -2790,7 +2825,7 @@ test("React progressive metadata and all 52 rule routes match Appendix B exactly
 		{skill: "typescript", mode: "required"},
 		{skill: "css", mode: "conditional", appliesWhen: "class contract, stylesheet 또는 styling surface를 변경한다."},
 	]);
-	assert.equal(document.rules.length, 53);
+	assert.equal(document.rules.length, 54);
 	assert.deepEqual(
 		Object.fromEntries(document.rules.map((rule) => [getRuleId(rule), {appliesWhen: rule.appliesWhen, reviewWith: rule.reviewWith}])),
 		reactRuleRouting,
@@ -2835,10 +2870,10 @@ test("React routing manifest matches the reviewed scenarios with full positive c
 		manifest.scenarios.map((scenario) => scenario.id),
 		expectedScenarioIds,
 	);
-	assert.equal(manifest.scenarios.length, 25);
+	assert.equal(manifest.scenarios.length, 26);
 	assert.equal(
 		manifest.scenarios.reduce((count, scenario) => count + (scenario.scopeDrift ? 2 : 1), 0),
-		26,
+		27,
 	);
 
 	const universeBySkillName: Record<string, readonly string[]> = {
@@ -2943,7 +2978,7 @@ test("React generated index and handbook preserve canonical local rules and comp
 		entries.map((entry) => entry.id),
 		reactRuleUniverse,
 	);
-	assert.equal(entries.length, 53);
+	assert.equal(entries.length, 54);
 
 	for (const entry of entries) {
 		assert.equal(entry.fileName, `${entry.id}.md`);

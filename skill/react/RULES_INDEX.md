@@ -1,7 +1,7 @@
 # React 컨벤션 Rule Index
 
 - Skill: `react`
-- Routing digest: `sha256:0d2313afc5bd850d3aede5ee2e4e24fe7cc858f107e480d20e1ab1a913400336`
+- Routing digest: `sha256:cddc04751dcd1a848bd2c3a2d234b04187c984f87d91af86653a06ab02848c5b`
 
 ## Direct Companions
 
@@ -12,10 +12,11 @@
 
 - R01-01 | ownership-layer-component-boundaries | 컴포넌트를 \`ui\`, \`widget\`, \`page\` 중 어느 소유 레이어에 둘지 정할 때. 컴포넌트를 레이어 사이에서 옮기거나 공용화할 때. | reviewWith: css/ownership-choose-scope-prefix-by-owner-layer, ownership-place-owner-files-in-role-folders
 - R01-02 | ownership-prefix-layer-names-on-files-and-symbols | 컴포넌트 파일이나 심볼 이름을 새로 지을 때. 컴포넌트를 다른 레이어로 옮기면서 이름을 바꿀 때. 부품이나 하위 소유자의 이름을 짓거나 바꿀 때. | reviewWith: ownership-layer-component-boundaries, typescript/naming-use-consistent-file-and-symbol-naming
-- R01-03 | ownership-place-owner-files-in-role-folders | 소유자 아래 \`\_constant\`, \`\_function\`, \`\_hook\`, \`\_type\` 폴더나 하위 소유자 폴더를 만들거나 옮길 때. 추출한 컴포넌트, 함수, 타입의 배치 위치를 정할 때. 제외: 기존 파일 내부 구현만 바꾸는 경우. | reviewWith: css/ownership-choose-scope-prefix-by-owner-layer, ownership-keep-component-imports-flowing-downward
-- R01-04 | ownership-keep-component-imports-flowing-downward | 소유자 폴더 안의 컴포넌트 파일을 가져올 때. 다른 소유자나 다른 라우트의 파일을 가져오려 할 때. 여러 자식이 같은 컴포넌트를 써야 해서 배치를 다시 정할 때. 제외: 같은 소유자 안에서만 역할 폴더 네 개의 파일을 가져오는 경우. | reviewWith: ownership-layer-component-boundaries
-- R01-05 | ownership-prefer-plain-ts-for-local-react-helpers | 화면 전용 계산, 정규화, 전송 값 조립을 커스텀 훅으로 추출하려 할 때. 화면 전용 순수 로직을 별도 보조 모듈로 옮기려 할 때. 화면 지역 함수에 \`use\` 접두사를 붙이거나 커스텀 훅 이름을 바꿀 때. 제외: 상태, 컨텍스트, 다른 훅 호출 순서를 실제로 캡슐화하는 경우. | reviewWith: ownership-keep-lifecycle-in-the-owning-component, ownership-place-owner-files-in-role-folders, typescript/functions-extract-helpers-only-when-the-boundary-is-real, typescript/naming-use-direct-imports-and-public-entry-points
-- R01-06 | ownership-keep-lifecycle-in-the-owning-component | 외부 라이브러리 인스턴스 생성, 크기 변경, 구독, 정리를 한 컴포넌트가 소유할 때. 생명주기 코드를 커스텀 훅으로 옮겨 파일을 줄이려 할 때. 제외: 여러 소유자가 같은 생명주기 계약을 실제로 호출하는 경우. | reviewWith: ownership-prefer-plain-ts-for-local-react-helpers
+- R01-03 | ownership-place-owner-files-in-role-folders | 소유자 아래 \`\_constant\`, \`\_function\`, \`\_hook\`, \`\_type\` 폴더나 하위 소유자 폴더를 만들거나 옮길 때. 추출한 컴포넌트, 함수, 타입의 배치 위치를 정할 때. 제외: 기존 파일 내부 구현만 바꾸는 경우. | reviewWith: css/ownership-choose-scope-prefix-by-owner-layer, ownership-group-route-frames-with-outlets, ownership-keep-component-imports-flowing-downward
+- R01-04 | ownership-keep-component-imports-flowing-downward | 소유자 폴더 안의 컴포넌트 파일을 가져올 때. 다른 소유자나 다른 라우트의 파일을 가져오려 할 때. 여러 자식이 같은 컴포넌트를 써야 해서 배치를 다시 정할 때. 제외: 같은 소유자 안에서만 역할 폴더 네 개의 파일을 가져오는 경우. | reviewWith: ownership-group-route-frames-with-outlets, ownership-layer-component-boundaries
+- R01-05 | ownership-group-route-frames-with-outlets | 라우트 트리나 Outlet 진입 파일을 추가, 변경할 때. \`page\` 아래 라우트 그룹을 만들거나 화면을 그룹 사이로 옮길 때. | reviewWith: ownership-prefix-layer-names-on-files-and-symbols, runtime-place-error-boundaries-by-blast-radius
+- R01-06 | ownership-prefer-plain-ts-for-local-react-helpers | 화면 전용 계산, 정규화, 전송 값 조립을 커스텀 훅으로 추출하려 할 때. 화면 전용 순수 로직을 별도 보조 모듈로 옮기려 할 때. 화면 지역 함수에 \`use\` 접두사를 붙이거나 커스텀 훅 이름을 바꿀 때. 제외: 상태, 컨텍스트, 다른 훅 호출 순서를 실제로 캡슐화하는 경우. | reviewWith: ownership-keep-lifecycle-in-the-owning-component, ownership-place-owner-files-in-role-folders, typescript/functions-extract-helpers-only-when-the-boundary-is-real, typescript/naming-use-direct-imports-and-public-entry-points
+- R01-07 | ownership-keep-lifecycle-in-the-owning-component | 외부 라이브러리 인스턴스 생성, 크기 변경, 구독, 정리를 한 컴포넌트가 소유할 때. 생명주기 코드를 커스텀 훅으로 옮겨 파일을 줄이려 할 때. 제외: 여러 소유자가 같은 생명주기 계약을 실제로 호출하는 경우. | reviewWith: ownership-prefer-plain-ts-for-local-react-helpers
 - R02-01 | data-name-query-and-mutation-bindings-consistently | React Query 쿼리, 뮤테이션 훅의 지역 바인딩을 추가하거나 이름을 바꿀 때. 쿼리나 뮤테이션 훅의 반환값을 새 지역 변수에 담을 때. | reviewWith: data-preserve-origin-chaining
 - R02-02 | data-shape-query-data-with-select | 서버 응답의 목록, 항목, 메타 등을 렌더에서 가공하거나 반복 소비할 때. React Query \`select\`의 결과 형태를 추가, 변경할 때. 제외: 이미 가공한 항목을 \`.map\`으로 JSX 요소에 대응시키기만 하는 경우. | reviewWith: data-name-query-and-mutation-bindings-consistently, data-preserve-origin-chaining
 - R02-03 | data-combine-multiple-queries-with-combine | 쿼리 결과 둘 이상을 하나의 값으로 합치는 코드를 추가, 변경할 때. 화면 본문에서 두 \`data\`를 꺼내 함께 계산하는 코드를 넣거나 뺄 때. 여러 쿼리의 병렬 실행과 앞 응답에 의존하는 순차 실행을 바꿀 때. | reviewWith: data-shape-query-data-with-select, screen-keep-derived-values-close
