@@ -42,7 +42,7 @@ flowchart LR
 | --- | --- |
 | `component` | `component/ui`, `component/widget` |
 | `page` | 화면과 라우트 프레임. 그룹 표기와 진입 파일의 자리는 활성화된 프레임워크 규약이 정합니다. 내부 파일은 그 소유자만, 진입 파일은 라우터만 가져옵니다 |
-| `route` | 라우트 트리 선언. `page`의 진입 파일을 가져와 URL과 잇습니다 |
+| `route` 또는 `routes.tsx` | 라우트 트리 선언. 파일 하나면 `src/routes.tsx`로 두고, 여러 선언 파일이 필요하면 `src/route`로 묶습니다. `page`의 진입 파일을 가져와 URL과 잇습니다 |
 | `constant` | 프로젝트 전반의 상수 |
 | `config` | 환경마다 달라지는 값 |
 | `util` | 프로젝트 전반의 함수. 받는 값의 종류별 폴더로 묶습니다 |
