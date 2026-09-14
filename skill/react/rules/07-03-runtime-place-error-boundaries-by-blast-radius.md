@@ -51,9 +51,11 @@ flowchart LR
 
 ### 경계 구현과 재시도
 
-오류 경계 클래스는 `ui`의 `UiErrorBoundary` 하나에 둡니다. 리액트 오류 경계 구현에는 클래스가 필요합니다.
-화면 경계는 `react-router` 라우트 설정의 `errorElement`로 두고,
-라우트 밖에서 감싸야 하면 `UiErrorBoundary`로 진입 컴포넌트를 감쌉니다.
+오류 포착 구현은 `ui`의 `UiErrorBoundary`에서 한 번만 제공합니다.
+직접 구현하면 클래스가 필요하지만, `react-error-boundary` 같은 라이브러리에 맡기고 함수형 래퍼를 둘 수 있습니다.
+데이터 라우터에서는 `errorElement`를 사용할 수 있고, 선언형 `Routes`나 Host 라우터 아래에서는
+`UiErrorBoundary`로 화면 또는 `Outlet`을 감쌉니다. 같은 실패 범위에 두 방식을 겹치지 않습니다.
+정상 화면은 유지하면서 오류 상태만 초기화하도록 URL 변경은 `resetKeys`에 연결하고, 경계의 `key`는 바꾸지 않습니다.
 
 재시도 버튼은 대체 화면에서 오류 경계의 재시도 함수를 호출합니다.
 경계의 `onReset`에는 `@tanstack/react-query`의 `useQueryErrorResetBoundary`가 주는 `reset`을 연결합니다.
