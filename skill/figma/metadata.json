@@ -1,0 +1,26 @@
+{
+	"title": "Figma 구현 컨벤션",
+	"version": "1.0.0",
+	"organization": "Agent Conventions",
+	"date": "2026년 9월",
+	"abstract": "Figma 디자인을 코드로 옮기는 팀을 위한 컨벤션입니다. Figma는 참고 자료이고 스펙은 코드입니다. 화면은 스크린샷과 메타데이터로 먼저 읽고, `get_design_context`는 저장소에 대응물이 없는 가장 작은 노드에만 불러 LLM 토큰을 아낍니다. 숨긴 레이어, UX 메모, 그려지지 않은 상태를 구현 전에 모으고, 값은 프로젝트 토큰으로, 구조는 기존 컴포넌트로 옮기며, 완료 전에 렌더 값을 실측합니다. 디자인 파일의 레이어가 정리돼 있든, Code Connect가 있든 없든 결과 품질이 크게 흔들리지 않게 합니다. TSX를 바꿀 때는 React 규칙을, 스타일을 바꿀 때는 CSS 규칙을 함께 봅니다. 규칙 본문의 정본은 `rules/*.md`입니다.",
+	"progressiveDisclosure": true,
+	"companions": [
+		{
+			"skill": "react",
+			"mode": "conditional",
+			"appliesWhen": "TSX 화면이나 컴포넌트를 추가하거나 수정한다."
+		},
+		{
+			"skill": "css",
+			"mode": "conditional",
+			"appliesWhen": "stylesheet, className, 토큰 값을 추가하거나 수정한다."
+		}
+	],
+	"references": [
+		"https://developers.figma.com/docs/figma-mcp-server/",
+		"https://help.figma.com/hc/en-us/articles/39166810751895-Figma-skills-for-MCP",
+		"https://github.com/figma/mcp-server-guide",
+		"https://github.com/jeltehomminga/figma-design-skills"
+	]
+}

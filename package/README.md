@@ -32,7 +32,7 @@ progressive rule frontmatter의 `reviewWith`는 조건부 재평가, `requiresSe
 - `npm run dev:all`: 모든 skill에 `validate` 후 `build`를 실행합니다.
 - `npm run check:generated -- --skill=<name>`: 파일을 수정하지 않고 한 skill과 progressive companion closure의 generated index/contract가 source와 일치하는지 확인합니다.
 - `npm run check:generated:all`: 모든 progressive `RULES_INDEX.md`와 `contracts/*.md`의 missing/stale/orphan output, companion link를 확인합니다.
-- `npm run check:generated:{react,css,typescript}`: progressive skill과 그 companion closure의 generated index/contract를 확인합니다.
+- `npm run check:generated:{react,css,typescript,figma}`: progressive skill과 그 companion closure의 generated index/contract를 확인합니다.
 - `npm run check:handbooks:all`: 모든 buildable skill의 generated `HANDBOOK.md`를 source renderer와 byte-for-byte 비교합니다.
 - `npm run check:artifacts`: generated index/contract, full handbook, viewer freshness를 한 번에 확인합니다.
 - `npm run test`: CLI, build, progressive routing, `routing-evals.json`, documentation contract 회귀 테스트를 실행합니다.
@@ -64,8 +64,9 @@ npm --prefix package run biome:check:all
 | `react` | progressive | required `typescript`; conditional `css` |
 | `css` | progressive | conditional `typescript` |
 | `typescript` | progressive | none |
+| `figma` | progressive | conditional `react`, `css` |
 
-Progressive skill은 `SKILL.md` → activated `RULES_INDEX.md` 전체 scan과 completion gate → Selected/Unknown `contracts/*.md` → CRITICAL 또는 판정 근거가 필요한 `rules/*.md` full expansion → Unknown 해소 → final Selected의 `requiresSelected` closure 순서로 소비합니다. 형태를 정하는 규칙은 원문의 `Correct` 예제도 읽습니다. 새 selection이나 companion이 생기면 고정점까지 반복합니다. 현재 제공하는 skill은 위 표의 세 가지입니다.
+Progressive skill은 `SKILL.md` → activated `RULES_INDEX.md` 전체 scan과 completion gate → Selected/Unknown `contracts/*.md` → CRITICAL 또는 판정 근거가 필요한 `rules/*.md` full expansion → Unknown 해소 → final Selected의 `requiresSelected` closure 순서로 소비합니다. 형태를 정하는 규칙은 원문의 `Correct` 예제도 읽습니다. 새 selection이나 companion이 생기면 고정점까지 반복합니다. 현재 제공하는 skill은 위 표의 네 가지입니다.
 
 progressive owner는 `extends` 대신 `companions`를 사용하고 companion target도 progressive여야 합니다. non-progressive owner의 legacy `extends`와 local `HANDBOOK.md` 계약은 계속 지원합니다.
 
@@ -78,6 +79,7 @@ progressive owner는 `extends` 대신 `companions`를 사용하고 companion tar
 - `react`
 - `css`
 - `typescript`
+- `figma`
 
 예시:
 

@@ -45,7 +45,7 @@ skill/react/
 생성물은 `HANDBOOK.md`, `RULES_INDEX.md`, `contracts/*.md` 셋.
 직접 고치면 다음 build에서 사라지고 `check:generated`가 실패한다.
 
-`react`, `typescript`, `css` 셋이 전부이고 셋 다 progressive라 세 생성물을 모두 만든다.
+`react`, `typescript`, `css`, `figma` 넷이 전부이고 넷 다 progressive라 세 생성물을 모두 만든다.
 
 ---
 
@@ -124,7 +124,7 @@ tags: tag1, tag2
 | `appliesWhen` | 필수 | `- ` 조건 항목 리스트 또는 한 줄 스칼라. 항목이면 라우팅 문장은 이어 붙여 자동 생성된다. 라우팅 문장은 한 줄 160자 |
 | `requiresSelected` | 선택 | 걸리면 target도 반드시 함께 적용 |
 | `reviewWith` | 선택 | 자동 선택이 아니라 다시 판정하라는 재평가 힌트 |
-| `requiredOnCompletion` | 선택 | 마무리 시 항상 적용. 지금 쓰는 규칙이 없다. 새로 켤 때는 세 `SKILL.md` 3절에 `completionGate` 지시를 함께 넣는다 |
+| `requiredOnCompletion` | 선택 | 마무리 시 항상 적용. 지금은 `figma`의 `verify` 규칙 둘만 쓴다. 모든 `SKILL.md` 3절이 `completionGate` 지시를 싣는다 |
 | `tags` | 선택 | 검색용 |
 
 `titleKo`는 영어 제목의 직역이 아니라 같은 뜻의 자연스러운 한국어로 쓴다.

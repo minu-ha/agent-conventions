@@ -107,6 +107,7 @@ interface PreparedSkillBuild {
 
 const conventionTitleBySkillName: Record<string, string> = {
 	css: "CSS Convention",
+	figma: "Figma Convention",
 	react: "React Convention",
 	typescript: "TypeScript Convention",
 };

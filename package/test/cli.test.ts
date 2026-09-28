@@ -27,8 +27,8 @@ const tsxCliPath = path.join(packageDir, "node_modules", "tsx", "dist", "cli.mjs
 const buildModulePath = path.join(packageDir, "src", "build.ts");
 const checkGeneratedModulePath = path.join(packageDir, "src", "check-generated.ts");
 const checkHandbooksModulePath = path.join(packageDir, "src", "check-handbooks.ts");
-const expectedSkillScriptNames = ["react", "css", "typescript"] as const;
-const expectedProgressiveSkillNames = ["css", "react", "typescript"] as const;
+const expectedSkillScriptNames = ["react", "css", "typescript", "figma"] as const;
+const expectedProgressiveSkillNames = ["css", "figma", "react", "typescript"] as const;
 
 /**
  * @summary exact Markdown section 조회 조건
@@ -365,7 +365,7 @@ test("package.json exposes all-skill and per-skill script aliases", async () => 
 		"npm run check:generated:all && npm run check:handbooks:all && npm run check:viewer",
 	);
 
-	for (const skillName of ["react", "css", "typescript"] as const) {
+	for (const skillName of expectedSkillScriptNames) {
 		assert.ok(packageJson.scripts[`check:generated:${skillName}`]);
 	}
 });

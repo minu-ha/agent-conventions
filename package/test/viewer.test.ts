@@ -128,7 +128,7 @@ test("parseRuleBody handles every rule in the repository", async () => {
 		}
 	}
 
-	assert.equal(ruleCount, 130);
+	assert.equal(ruleCount, 146);
 	assert.ok(blockCount > 300, `expected 300+ code blocks, found ${blockCount}`);
 });
 
@@ -234,9 +234,9 @@ test("parseSections leaves titleKo empty when the line is absent", () => {
 test("buildViewerPayload collects only progressive skills", async () => {
 	const payload = await buildViewerPayload();
 
-	assert.equal(payload.skills.length, 3);
-	assert.equal(payload.rules.length, 130);
-	assert.equal(payload.sections.length, 28);
+	assert.equal(payload.skills.length, 4);
+	assert.equal(payload.rules.length, 146);
+	assert.equal(payload.sections.length, 33);
 
 	const react = payload.skills.find((skill) => skill.name === "react");
 	assert.equal(react?.title, "React 컨벤션");
@@ -245,7 +245,7 @@ test("buildViewerPayload collects only progressive skills", async () => {
 
 	assert.deepEqual(
 		payload.skills.map((skill) => skill.name),
-		["css", "react", "typescript"],
+		["css", "figma", "react", "typescript"],
 	);
 });
 
@@ -260,6 +260,12 @@ test("buildViewerPayload carries companion declarations for the header hint", as
 
 	const css = payload.skills.find((skill) => skill.name === "css");
 	assert.deepEqual(css?.companions, [{skill: "typescript", mode: "conditional"}]);
+
+	const figma = payload.skills.find((skill) => skill.name === "figma");
+	assert.deepEqual(figma?.companions, [
+		{skill: "react", mode: "conditional"},
+		{skill: "css", mode: "conditional"},
+	]);
 });
 
 test("buildViewerPayload gives every rule a resolvable section and parsed examples", async () => {
@@ -464,9 +470,9 @@ test("generateViewerArtifacts keeps the payload in the data script and stays byt
 	assert.ok(encoded, "expected a global assignment in the data script");
 
 	const payload = JSON.parse(encoded);
-	assert.equal(payload.rules.length, 130);
-	assert.equal(payload.skills.length, 3);
-	assert.equal(payload.sections.length, 28);
+	assert.equal(payload.rules.length, 146);
+	assert.equal(payload.skills.length, 4);
+	assert.equal(payload.sections.length, 33);
 });
 
 test("renderViewerDataScript escapes closing script sequences", () => {

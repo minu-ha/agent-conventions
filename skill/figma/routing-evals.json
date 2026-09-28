@@ -1,0 +1,217 @@
+{
+	"version": 1,
+	"skill": "figma",
+	"scenarios": [
+		{
+			"id": "FGE01-product-table-style-parity",
+			"prompt": "match the existing products table spacing, divider, and text colors to this Figma wrapper URL (figma.com/design/Ab12Cd34Ef56Gh78Ij90Kl/...?node-id=12-340) by editing only src/page/products/pg-products.css; the stock divider arrives from get_design_context as rotated wrapper divs and the Figma variables are named Spacing 12 and Content/Border/Normal.",
+			"files": [
+				"src/page/products/pg-products.css"
+			],
+			"expectedSkills": [
+				"figma",
+				"css"
+			],
+			"expectedSelected": {
+				"figma": [
+					"read-start-with-screenshot-and-metadata",
+					"read-choose-the-node-each-tool-reads",
+					"read-call-design-context-only-on-small-unmatched-nodes",
+					"source-map-figma-values-to-project-tokens",
+					"transcription-do-not-copy-layer-structure",
+					"verify-measure-rendered-values-before-claiming-parity",
+					"verify-report-reads-decisions-and-gaps"
+				],
+				"css": [
+					"selector-declare-each-class-in-one-block",
+					"values-fall-back-only-outside-core-tokens"
+				]
+			}
+		},
+		{
+			"id": "FGE02-new-product-list-screen",
+			"prompt": "build the new products route screen from this Figma wrapper URL in src/page/products/pg-products.tsx and src/page/products/pg-products.css: read the product list query, render the table with sortable price column, status badges and a stock warning chip that has no project component, a filter icon, and the hidden reset button state; the UX memo says default sort is newest first while the GUI shows name order, layer names differ from the rendered column labels, and loading and empty states are not drawn.",
+			"files": [
+				"src/page/products/pg-products.tsx",
+				"src/page/products/pg-products.css"
+			],
+			"expectedSkills": [
+				"figma",
+				"react",
+				"typescript",
+				"css"
+			],
+			"expectedSelected": {
+				"figma": [
+					"read-start-with-screenshot-and-metadata",
+					"read-choose-the-node-each-tool-reads",
+					"read-call-design-context-only-on-small-unmatched-nodes",
+					"read-take-copy-from-the-render-not-layer-names",
+					"read-collect-hidden-layers-and-annotations",
+					"intent-ask-when-ux-notes-and-gui-disagree",
+					"intent-fill-undrawn-states-with-project-parts",
+					"intent-treat-frame-sizes-and-sample-text-as-samples",
+					"intent-implement-interactions-the-design-implies",
+					"source-map-figma-values-to-project-tokens",
+					"source-separate-static-copy-from-server-data",
+					"transcription-reuse-project-components-before-new-markup",
+					"transcription-do-not-copy-layer-structure",
+					"transcription-use-existing-icons-or-downloaded-assets",
+					"verify-measure-rendered-values-before-claiming-parity",
+					"verify-report-reads-decisions-and-gaps"
+				],
+				"react": [
+					"ownership-prefix-layer-names-on-files-and-symbols",
+					"data-name-query-and-mutation-bindings-consistently",
+					"composition-render-one-branch-with-and",
+					"runtime-place-suspense-boundaries-at-the-section-owner",
+					"runtime-avoid-ad-hoc-loading-branches",
+					"runtime-place-error-boundaries-by-blast-radius",
+					"a11y-give-interactive-elements-an-accessible-name",
+					"docs-require-jsdoc-on-key-declarations"
+				],
+				"typescript": [
+					"types-document-custom-types-and-shapes",
+					"naming-use-consistent-file-and-symbol-naming",
+					"naming-import-by-absolute-path",
+					"docs-require-header-jsdoc-on-key-declarations",
+					"docs-write-korean-comments-about-purpose-and-constraints",
+					"docs-write-doc-comments-as-multiline-blocks"
+				],
+				"css": [
+					"naming-use-scope-slug-element-modifier-syntax",
+					"naming-name-elements-and-modifiers-by-role",
+					"ownership-give-each-file-one-scope-slug",
+					"ownership-choose-scope-prefix-by-owner-layer",
+					"composition-compose-classes-with-clsx",
+					"values-fall-back-only-outside-core-tokens",
+					"layout-keep-layout-intent-explicit",
+					"layout-reach-for-intrinsic-sizing-before-breakpoints"
+				]
+			}
+		},
+		{
+			"id": "FGE03-filter-icon-asset-swap",
+			"prompt": "the filter glyph in this Figma node no longer matches UiFilterIcon; replace its svg with the Figma asset in src/component/ui/filter-icon/ui-filter-icon.tsx and commit the downloaded src/asset/icon/filter.svg without calling get_design_context.",
+			"files": [
+				"src/component/ui/filter-icon/ui-filter-icon.tsx",
+				"src/asset/icon/filter.svg"
+			],
+			"expectedSkills": [
+				"figma",
+				"react",
+				"typescript"
+			],
+			"expectedSelected": {
+				"figma": [
+					"read-start-with-screenshot-and-metadata",
+					"read-choose-the-node-each-tool-reads",
+					"transcription-use-existing-icons-or-downloaded-assets",
+					"verify-measure-rendered-values-before-claiming-parity",
+					"verify-report-reads-decisions-and-gaps"
+				],
+				"react": [],
+				"typescript": [
+					"naming-import-by-absolute-path"
+				]
+			}
+		},
+		{
+			"id": "FGE04-figma-link-with-data-mapping-only",
+			"prompt": "a Figma link is attached for context, but only read order total from the renamed response field in src/page/orders/pg-orders.tsx; change no rendered copy, markup, or styling.",
+			"files": [
+				"src/page/orders/pg-orders.tsx"
+			],
+			"expectedSkills": [
+				"react",
+				"typescript"
+			],
+			"expectedSelected": {
+				"react": [
+					"data-preserve-origin-chaining"
+				],
+				"typescript": []
+			},
+			"scopeDrift": {
+				"evidence": "the user then asks to match the orders column labels and count copy to the attached Figma screen, whose layer names differ from the rendered labels; skills add figma with no new companion rule.",
+				"files": [
+					"src/page/orders/pg-orders.tsx"
+				],
+				"expectedSkills": [
+					"react",
+					"typescript",
+					"figma"
+				],
+				"expectedSelected": {
+					"react": [
+						"data-preserve-origin-chaining"
+					],
+					"typescript": [],
+					"figma": [
+						"read-start-with-screenshot-and-metadata",
+						"read-choose-the-node-each-tool-reads",
+						"read-take-copy-from-the-render-not-layer-names",
+						"source-separate-static-copy-from-server-data",
+						"verify-measure-rendered-values-before-claiming-parity",
+						"verify-report-reads-decisions-and-gaps"
+					]
+				}
+			}
+		},
+		{
+			"id": "FGE05-hidden-reset-state-and-memo",
+			"prompt": "the Figma wrapper for the product filter has a hidden selected chip and reset button, a memo that says the reset appears once any filter is chosen, and a change log that contradicts the GUI; add the reset button, labeled as rendered rather than by its layer name, with the existing UiButton in src/component/widget/product-filter/wg-product-filter.tsx.",
+			"files": [
+				"src/component/widget/product-filter/wg-product-filter.tsx"
+			],
+			"expectedSkills": [
+				"figma",
+				"react",
+				"typescript"
+			],
+			"expectedSelected": {
+				"figma": [
+					"read-start-with-screenshot-and-metadata",
+					"read-choose-the-node-each-tool-reads",
+					"read-take-copy-from-the-render-not-layer-names",
+					"read-collect-hidden-layers-and-annotations",
+					"intent-ask-when-ux-notes-and-gui-disagree",
+					"intent-implement-interactions-the-design-implies",
+					"source-separate-static-copy-from-server-data",
+					"transcription-reuse-project-components-before-new-markup",
+					"verify-measure-rendered-values-before-claiming-parity",
+					"verify-report-reads-decisions-and-gaps"
+				],
+				"react": [
+					"composition-render-one-branch-with-and",
+					"events-name-handlers-predictably",
+					"a11y-give-interactive-elements-an-accessible-name"
+				],
+				"typescript": []
+			}
+		},
+		{
+			"id": "FGE06-fixed-frame-widths-to-fluid-table",
+			"prompt": "the Figma 1920 frame fixes order table columns at 60px and 270px with 54px rows; make src/component/widget/order-table/wg-order-table.css follow the frame without copying fixed sizes, keeping long customer names on one line.",
+			"files": [
+				"src/component/widget/order-table/wg-order-table.css"
+			],
+			"expectedSkills": [
+				"figma",
+				"css"
+			],
+			"expectedSelected": {
+				"figma": [
+					"read-start-with-screenshot-and-metadata",
+					"intent-treat-frame-sizes-and-sample-text-as-samples",
+					"verify-measure-rendered-values-before-claiming-parity",
+					"verify-report-reads-decisions-and-gaps"
+				],
+				"css": [
+					"values-fall-back-only-outside-core-tokens",
+					"layout-reach-for-intrinsic-sizing-before-breakpoints"
+				]
+			}
+		}
+	]
+}
