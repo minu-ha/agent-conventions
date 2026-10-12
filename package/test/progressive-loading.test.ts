@@ -25,7 +25,9 @@ const packageDir = path.resolve(currentDir, "..");
 const tsxCliPath = path.join(packageDir, "node_modules", "tsx", "dist", "cli.mjs");
 const validateModulePath = path.join(packageDir, "src", "validate.ts");
 
-/** 계약 생성이 반드시 실패하는 본문. build 트랜잭션이 기존 생성물을 덮지 않는지 확인하는 데 쓴다. */
+/**
+ * 계약 생성이 반드시 실패하는 본문. build 트랜잭션이 기존 생성물을 덮지 않는지 확인용
+ */
 const EmptyExampleBody = [
 	"---",
 	"title: Fixture Rule",
@@ -396,7 +398,7 @@ test("generated MEDIUM contract preserves the normative prefix and carries only 
 });
 
 test("long Impact and Description declarations may fold across source lines", () => {
-	// 규칙 본문. 접어 써도 계약에는 한 줄로 들어간다
+	// 규칙 본문. 접어 써도 계약에는 한 줄로 들어감
 	const foldedRule = createRoutingDocument().rules[0];
 	foldedRule.impact = "MEDIUM";
 	foldedRule.body = [
@@ -422,14 +424,14 @@ test("long Impact and Description declarations may fold across source lines", ()
 
 	assert.match(generateRuleContractMarkdown(foldedRule), /^\*\*Impact: MEDIUM \(State impact\.\)\*\*$/m);
 
-	// 접었다고 frontmatter 와 어긋나도 되는 건 아니다
+	// 접었다고 frontmatter와 어긋나도 되는 건 아님
 	const driftedRule = createRoutingDocument().rules[0];
 	driftedRule.impact = "MEDIUM";
 	driftedRule.body = foldedRule.body.replace("impact.)**", "impact drift.)**");
 
 	assert.throws(() => generateRuleContractMarkdown(driftedRule), /state-observe.*Impact declaration matching frontmatter/i);
 
-	// _sections.md 의 Description 도 마찬가지다
+	// _sections.md의 Description도 마찬가지
 	const sections = parseSections(
 		[
 			"# 섹션",
@@ -458,7 +460,7 @@ test("generated rule contract rejects missing boundaries and oversized normative
 	unfencedExamplesRule.body = "## Observe State\n\n**Impact: HIGH (State impact.)**\n\nNormative guidance.\n\n**Incorrect**\n\n**Correct**";
 	assert.throws(() => generateRuleContractMarkdown(unfencedExamplesRule), /state-observe.*Incorrect.*fenced example/i);
 
-	// 도구 설정처럼 대비가 뜻이 없는 규칙은 Correct 만 둘 수 있다. MEDIUM 계약은 그 첫 Correct 를 싣는다.
+	// 도구 설정처럼 대비가 뜻이 없는 규칙은 Correct만 가능. MEDIUM 계약은 그 첫 Correct를 실음
 	const correctOnlyRule = createRoutingDocument().rules[0];
 	correctOnlyRule.impact = "MEDIUM";
 	correctOnlyRule.body =
@@ -1096,19 +1098,19 @@ test("companion appliesWhen stays literal Markdown for progressive and non-progr
 			await captureConsoleLogs(async () => buildSkill(ownerPaths));
 			const handbook = await readFile(ownerPaths.outputPath, "utf8");
 
-			// companion 줄은 전부 이스케이프한다. 목록 항목이라 코드 스팬까지 살릴 필요가 없다.
+			// companion 줄은 전부 이스케이프. 목록 항목이라 코드 스팬까지 살릴 필요 없음
 			const companionLine = handbook.split("\n").find((line) => line.includes("다음 조건에서 함께 적용합니다.")) ?? "";
 			assert.match(companionLine, /다음 조건에서 함께 적용합니다\. \\\[x\\\]\\\(https:\/\/example\.invalid\\\) \\\*strong\\\* \\`code\\`/);
 			for (const live of [/\[x\]\(https:\/\/example\.invalid\)/, /\*strong\*/, /`code`/]) {
 				assert.doesNotMatch(companionLine, live);
 			}
 
-			// 링크와 강조는 어느 줄에서도 살아나면 안 된다.
+			// 링크와 강조는 어느 줄에서도 살아나면 안 됨
 			assert.doesNotMatch(handbook, /[^\\]\[x\]\(https:\/\/example\.invalid\)/);
 			assert.doesNotMatch(handbook, /[^\\]\*strong\*/);
 
 			if (progressiveDisclosure) {
-				// 링크와 강조는 무력화하고, 코드 스팬은 그대로 살린다.
+				// 링크와 강조는 무력화하고 코드 스팬은 그대로 유지
 				assert.match(handbook, /\*\*Applies when:\*\* \\\[x\\\]\\\(https:\/\/example\.invalid\\\) \\\*strong\\\* `code`/);
 			}
 		}
@@ -1661,7 +1663,7 @@ test("validate CLI recognizes a symlinked entry path", async (context) => {
 test("progressive rules require a short, non-empty, one-line appliesWhen", async () => {
 	const invalidConditions = [
 		{appliesWhen: undefined, expected: /appliesWhen.*one-line.*160/i},
-		// 값 없는 키는 block list 시작으로 읽히므로 항목 없음 오류가 된다.
+		// 값 없는 키는 block list 시작으로 읽혀 항목 없음 오류
 		{appliesWhen: "", expected: /appliesWhen.*no "- " items/i},
 		{appliesWhen: `line one\nline two`, expected: /Invalid frontmatter line.*one line/i},
 		{appliesWhen: "x".repeat(161), expected: /appliesWhen.*one-line.*160/i},

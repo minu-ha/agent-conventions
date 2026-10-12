@@ -17,18 +17,19 @@ const skillRootDir = path.join(repoDir, "skill");
 export const packagePaths: PackagePaths = {currentDir, packageDir, repoDir, skillRootDir};
 
 /**
- * @summary 사람이 읽는 생성 viewer 문서 경로
+ * @summary 사람이 읽는 생성 뷰어 문서 경로
  */
 export const viewerOutputPath = path.join(repoDir, "conventions.html");
 
 /**
- * @summary viewer 문서가 script src로 로드하는 생성 데이터 파일 경로.
- * `file://`에서는 fetch가 막혀 JSON 대신 전역 할당 JS 파일을 쓴다.
+ * @summary 뷰어 문서가 script src로 읽는 생성 데이터 파일 경로
+ *
+ * `file://`에서는 fetch가 막혀 JSON 대신 전역 할당 JS 파일 사용
  */
 export const viewerDataOutputPath = path.join(repoDir, "conventions-data.js");
 
 /**
- * @helper configured skill root가 symlink가 아닌 실제 directory인지 검증
+ * @helper 설정된 skill 루트가 심볼릭 링크가 아닌 실제 디렉터리인지 검증
  */
 const assertRealSkillRootDirectory = async (targetSkillRootDir: string): Promise<void> => {
 	const resolvedSkillRootDir = path.resolve(targetSkillRootDir);
@@ -98,7 +99,7 @@ export const getSkillPaths = (skillName: string, targetSkillRootDir: string = sk
 };
 
 /**
- * @api configured root와 skill이 symlink가 아닌 실제 direct-child directory인지 검증
+ * @api 설정된 루트와 skill이 심볼릭 링크가 아닌 실제 직속 하위 디렉터리인지 검증
  */
 export const assertRealSkillDirectory = async (skillPaths: SkillPaths): Promise<void> => {
 	const configuredSkillRootDir = path.dirname(skillPaths.skillDir);
@@ -130,7 +131,7 @@ export const listSkillNames = async (targetSkillRootDir: string = skillRootDir):
 };
 
 /**
- * @description `rules/` 기반 build/validate 대상 skill 여부 확인
+ * @description `rules/` 기반 build, validate 대상 skill 여부 확인
  */
 export const isBuildableSkill = async (skillName: string, targetSkillRootDir: string = skillRootDir): Promise<boolean> => {
 	const skillPaths = getSkillPaths(skillName, targetSkillRootDir);

@@ -21,13 +21,13 @@ export interface DiagramReport {
 }
 
 /**
- * 뷰어와 같은 옵션으로 그린다. 한글은 전각이라 폭 0 문자를 덧붙여 두 칸을 예약한다
+ * 뷰어와 같은 옵션으로 그림. 한글은 전각이라 폭 0 문자를 덧붙여 두 칸 확보
  */
 const wideCharacter = /[ᄀ-ᇿ　-〿㄰-㆏가-힯一-鿿぀-ヿ＀-｠]/g;
 const widenCjk = (source: string): string => source.replace(wideCharacter, (character) => `${character}​`);
 
 /**
- * @api 모든 규칙의 mermaid 펜스를 문자 격자로 그려 폭, 높이, 오류를 모은다
+ * @api 모든 규칙의 mermaid 펜스를 문자 격자로 그려 폭, 높이, 오류 수집
  */
 export const checkDiagrams = async (): Promise<DiagramReport[]> => {
 	const reports: DiagramReport[] = [];
@@ -45,7 +45,7 @@ export const checkDiagrams = async (): Promise<DiagramReport[]> => {
 					return;
 				}
 
-				// 격자 렌더러는 라벨 안의 괄호에서 글을 잘라 낸다. 라벨에 괄호가 있으면 오류로 잡는다.
+				// 격자 렌더러는 라벨 안 괄호에서 글을 자름. 라벨에 괄호가 있으면 오류
 				const parenthesizedLabel = [...fence.code.matchAll(/(?<=[[({])"([^"\n]*)"/g)].find((match) => /[()]/.test(match[1] ?? ""));
 
 				if (parenthesizedLabel) {

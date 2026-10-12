@@ -3,7 +3,7 @@ import path from "node:path";
 import {fileURLToPath} from "node:url";
 
 /**
- * @helper CLI entry와 현재 module의 real path 동일성 확인
+ * @helper CLI 진입점과 현재 모듈의 실제 경로가 같은지 확인
  */
 export const isDirectExecution = async (moduleUrl: string, entryPath: string | undefined = process.argv[1]): Promise<boolean> => {
 	if (!entryPath) {

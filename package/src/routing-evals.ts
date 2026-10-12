@@ -15,38 +15,38 @@ import type {
 } from "./types.js";
 
 /**
- * @summary strict JSON object validation에 사용하는 unknown value record
+ * @summary 엄격한 JSON 객체 검증에 쓰는 unknown 값 레코드
  */
 type JsonObject = Record<string, unknown>;
 
 /**
- * @summary owner manifest 검증 결과와 fixture-root document cache
+ * @summary 소유 매니페스트 검증 결과와 fixture 루트 문서 캐시
  */
 interface ManifestValidationResult {
 	/**
-	 * @field manifest 검증 중 읽은 structured skill document cache
+	 * @field 매니페스트 검증 중 읽은 구조화 skill 문서 캐시
 	 */
 	documents: Map<string, LoadedSkillDocument>;
 	/**
-	 * @field strict parsing과 partition 검증을 통과한 owner manifest
+	 * @field 엄격한 파싱과 분할 검증을 통과한 소유 매니페스트
 	 */
 	manifest: RoutingEvalManifest;
 }
 
 /**
- * @summary exact-key JSON object 검증 인자
+ * @summary 정확한 키 JSON 객체 검증 인자
  */
 interface AssertExactKeysArgs {
 	/**
-	 * @field key set을 검사할 JSON object
+	 * @field 키 집합을 검사할 JSON 객체
 	 */
 	value: JsonObject;
 	/**
-	 * @field 반드시 존재해야 하는 key 목록
+	 * @field 반드시 있어야 하는 키 목록
 	 */
 	requiredKeys: string[];
 	/**
-	 * @field 존재해도 되는 선택 key 목록
+	 * @field 있어도 되는 선택 키 목록
 	 */
 	optionalKeys: string[];
 	/**
@@ -56,11 +56,11 @@ interface AssertExactKeysArgs {
 }
 
 /**
- * @summary string array parsing 인자
+ * @summary 문자열 배열 파싱 인자
  */
 interface ParseStringArrayArgs {
 	/**
-	 * @field string array인지 검사할 unknown JSON 값
+	 * @field 문자열 배열인지 검사할 unknown JSON 값
 	 */
 	value: unknown;
 	/**
@@ -74,7 +74,7 @@ interface ParseStringArrayArgs {
 }
 
 /**
- * @summary fixture-root skill document 조회 인자
+ * @summary fixture 루트 skill 문서 조회 인자
  */
 interface ReadExpectedSkillDocumentArgs {
 	/**
@@ -82,69 +82,69 @@ interface ReadExpectedSkillDocumentArgs {
 	 */
 	skillName: string;
 	/**
-	 * @field fixture 또는 repository skill root 절대 경로
+	 * @field fixture 또는 저장소 skill 루트 절대 경로
 	 */
 	skillRootDir: string;
 	/**
-	 * @field 같은 manifest 검증 호출에서 공유할 document cache
+	 * @field 같은 매니페스트 검증 호출에서 공유할 문서 캐시
 	 */
 	documents: Map<string, LoadedSkillDocument>;
 }
 
 /**
- * @summary progressive skill exact rule partition 검증 인자
+ * @summary progressive skill의 정확한 규칙 분할 검증 인자
  */
 interface ValidateRulePartitionArgs {
 	/**
-	 * @field 오류 메시지에 사용할 scenario 또는 drift 위치
+	 * @field 오류 메시지에 쓸 시나리오 또는 드리프트 위치
 	 */
 	label: string;
 	/**
-	 * @field local rule universe를 제공하는 progressive skill document
+	 * @field local 규칙 전체를 제공하는 progressive skill 문서
 	 */
 	document: LoadedSkillDocument;
 	/**
-	 * @field 선택된 local rule stable ID 목록
+	 * @field 선택된 local 규칙 stable ID 목록
 	 */
 	selected: string[];
 }
 
 /**
- * @summary activated skill closure와 partition 검증 인자
+ * @summary 활성 skill 전체와 분할 검증 인자
  */
 interface ValidateExpectedPartitionArgs {
 	/**
-	 * @field 오류 메시지에 사용할 scenario 또는 drift 위치
+	 * @field 오류 메시지에 쓸 시나리오 또는 드리프트 위치
 	 */
 	label: string;
 	/**
-	 * @field 검증할 activated skill 및 exact rule partition
+	 * @field 검증할 활성 skill과 정확한 규칙 분할
 	 */
 	partition: RoutingExpectedPartition;
 	/**
-	 * @field fixture 또는 repository skill root 절대 경로
+	 * @field fixture 또는 저장소 skill 루트 절대 경로
 	 */
 	skillRootDir: string;
 	/**
-	 * @field 같은 manifest 검증 호출에서 공유할 document cache
+	 * @field 같은 매니페스트 검증 호출에서 공유할 문서 캐시
 	 */
 	documents: Map<string, LoadedSkillDocument>;
 }
 
 /**
- * @summary scope drift monotonicity 검증 인자
+ * @summary 범위 드리프트 단조성 검증 인자
  */
 interface ValidateMonotonicDriftArgs {
 	/**
-	 * @field 오류 메시지에 사용할 scenario 위치
+	 * @field 오류 메시지에 쓸 시나리오 위치
 	 */
 	label: string;
 	/**
-	 * @field 최초 routing selection oracle
+	 * @field 최초 라우팅 선택 오라클
 	 */
 	scenario: RoutingEvalScenario;
 	/**
-	 * @field 범위 확장 뒤 routing selection oracle
+	 * @field 범위 확장 뒤 라우팅 선택 오라클
 	 */
 	drift: RoutingScopeDrift;
 }
@@ -245,7 +245,7 @@ const parseScenario = (value: unknown, index: number): RoutingEvalScenario => {
 };
 
 /**
- * @api strict JSON routing evaluation manifest 로드
+ * @api 엄격한 JSON 라우팅 평가 매니페스트 로드
  */
 export const readRoutingEvalManifest = async (skillPaths: SkillPaths): Promise<RoutingEvalManifest> => {
 	let parsed: unknown;
@@ -505,14 +505,14 @@ const validateManifest = async (skillPaths: SkillPaths): Promise<ManifestValidat
 };
 
 /**
- * @api progressive skill 하나가 소유한 routing manifest 검증
+ * @api progressive skill 하나가 소유한 라우팅 매니페스트 검증
  */
 export const validateRoutingEvalManifest = async (skillPaths: SkillPaths): Promise<void> => {
 	await validateManifest(skillPaths);
 };
 
 /**
- * @api skill root의 모든 progressive manifest와 cross-manifest positive coverage 검증
+ * @api skill 루트의 모든 progressive 매니페스트와 매니페스트 간 적용 사례 커버리지 검증
  */
 export const validateRoutingEvalManifests = async (skillRootDir: string = packagePaths.skillRootDir): Promise<void> => {
 	const progressiveDocuments = new Map<string, LoadedSkillDocument>();

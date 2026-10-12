@@ -7,7 +7,7 @@ import {buildViewerPayload} from "./viewer-payload.js";
 import {encodeViewerPayload, renderViewerDataScript, renderViewerHtml} from "./viewer-template.js";
 
 /**
- * @summary viewer 생성물 쌍. 문서와, 문서가 script src로 로드하는 데이터 파일
+ * @summary 뷰어 생성물 쌍. 문서와 문서가 script src로 읽는 데이터 파일
  */
 export interface ViewerArtifacts {
 	/**
@@ -15,20 +15,20 @@ export interface ViewerArtifacts {
 	 */
 	html: string;
 	/**
-	 * @field `conventions-data.js` 본문. 전체 규칙 페이로드를 전역으로 싣는다
+	 * @field `conventions-data.js` 본문. 전체 규칙 페이로드를 전역으로 실음
 	 */
 	dataScript: string;
 }
 
 /**
- * @description 현재 source 기준 viewer 생성물 쌍을 write 없이 렌더링
+ * @description 현재 원본 기준 뷰어 생성물 쌍을 쓰기 없이 렌더링
  */
 export const generateViewerArtifacts = async (): Promise<ViewerArtifacts> => {
 	return {html: renderViewerHtml(), dataScript: renderViewerDataScript(encodeViewerPayload(await buildViewerPayload()))};
 };
 
 /**
- * @description viewer 문서와 데이터 파일을 생성해 repo 루트에 기록
+ * @description 뷰어 문서와 데이터 파일을 생성해 저장소 루트에 기록
  */
 export const buildViewer = async (): Promise<void> => {
 	const artifacts = await generateViewerArtifacts();

@@ -133,8 +133,8 @@ test("parseRuleBody handles every rule in the repository", async () => {
 });
 
 test("every example label is a 합쇼체 sentence", async () => {
-	// 라벨은 뷰어에서 예시 제목으로 선다. 명사 종결이 섞이면 목록이 뚝뚝 끊겨 읽힌다.
-	// 규범 산문과 같은 합쇼체로 고정한다.
+	// 라벨은 뷰어에서 예시 제목으로 쓰임. 명사 종결이 섞이면 목록이 뚝뚝 끊겨 읽힘
+	// 규범 산문과 같은 합쇼체로 고정
 	const offenders: string[] = [];
 	let labelCount = 0;
 
@@ -161,7 +161,7 @@ test("every example label is a 합쇼체 sentence", async () => {
 	}
 
 	assert.deepEqual(offenders, [], "합쇼체로 끝나지 않는 예시 라벨");
-	// 정확한 수는 예제를 손볼 때마다 바뀐다. 문체가 검사 대상이고 개수는 검사가 살아 있다는 표시다.
+	// 정확한 수는 예제를 손볼 때마다 바뀜. 문체가 검사 대상이고 개수는 검사가 살아 있다는 표시
 	assert.ok(labelCount > 380, `예시 라벨이 ${labelCount}개뿐이다. 검사가 대상을 못 찾고 있다`);
 });
 
@@ -359,14 +359,14 @@ test("viewer markup lists skills as rail chips, not a dropdown", () => {
 
 	assert.match(html, /id="f-skill"/);
 	assert.equal(/<select/.test(html), false, "skill selection must be rail chips, not a dropdown");
-	// 동반 skill 힌트는 뺐다. 노출되는 skill 이 셋뿐이라 칩만으로 충분하다.
+	// 동반 skill 힌트는 없음. 노출되는 skill이 셋뿐이라 칩만으로 충분
 	assert.equal(/id="companion"/.test(html), false, "companion hint row must stay removed");
 	assert.match(html, /<span class="grp-lb">영향도<\/span>/);
 	// rail 4개 그룹: skill, impact, section, tag
 	assert.match(html, /id="f-impact"/);
 	assert.match(html, /id="f-section"/);
 	assert.match(html, /id="f-tags"/);
-	// skill 은 단일 선택이라 그룹 해제 버튼이 없고 안내만 둔다
+	// skill은 단일 선택이라 그룹 해제 버튼 없이 안내만 둠
 	assert.equal(/data-clear="skills?"/.test(html), false, "single-select skill group has no clear button");
 	assert.match(html, /단일 선택/);
 });
@@ -374,17 +374,17 @@ test("viewer markup lists skills as rail chips, not a dropdown", () => {
 test("viewer layout cannot overflow: grids shrink and code wraps", () => {
 	const html = renderViewerHtml();
 
-	// 1fr 만 쓰면 grid item이 콘텐츠 intrinsic min-width 아래로 줄지 못해
-	// 긴 코드 한 줄이 컬럼을 밀어내고 박스가 행 밖으로 삐져나간다.
+	// 1fr만 쓰면 grid item이 콘텐츠 intrinsic min-width 아래로 못 줄어
+	// 긴 코드 한 줄이 컬럼을 밀어내고 박스가 행 밖으로 삐져나감
 	assert.match(html, /\.pane\s*\{[^}]*minmax\(0,\s*1fr\)/);
 	assert.match(html, /\.pane\s*>\s*main\s*\{[^}]*min-width:\s*0/);
 	assert.match(html, /\.row-hd\s*\{[^}]*minmax\(0,\s*1fr\)/);
-	// BEFORE/AFTER 는 기본이 한 열이고, 1000px 이상에서만 가운데 잡이를 낀 세 칸으로 선다.
-	// 좁은 폭에서 세 칸을 유지하면 잡이가 끌 것도 없이 자리만 먹고 코드가 넘친다.
+	// BEFORE/AFTER는 기본 한 열, 1000px 이상에서만 가운데 잡이를 낀 세 칸
+	// 좁은 폭에서 세 칸을 유지하면 잡이가 끌 것도 없이 자리만 먹고 코드가 넘침
 	assert.match(html, /\.diff\s*\{[^}]*grid-template-columns:\s*minmax\(0, 1fr\)/);
 	assert.match(html, /@media \(min-width: 1000px\) \{[^}]*minmax\(0, var\(--split, 50%\)\) 11px minmax\(0, 1fr\)/);
-	// 예시 코드는 접지 않고 가로로 민다. 접으면 한 줄이 서너 줄이 되어 diff 대응이 무너진다.
-	// 대신 스크롤을 컨테이너 안에 가둬야 페이지가 통째로 밀리지 않는다.
+	// 예시 코드는 접지 않고 가로 스크롤. 접으면 한 줄이 서너 줄이 되어 diff 대응이 무너짐
+	// 대신 스크롤을 컨테이너 안에 가둬야 페이지가 통째로 밀리지 않음
 	assert.match(html, /\.cd\s*\{[^}]*minmax\(0, 1fr\)/);
 	assert.match(html, /\.cd-wrap\s*\{[^}]*overflow-x:\s*auto/);
 	assert.match(html, /\.cd \.c\s*\{[^}]*white-space:\s*pre;/);
@@ -394,8 +394,8 @@ test("viewer layout cannot overflow: grids shrink and code wraps", () => {
 });
 
 test("viewer template literals stay closed: CSS and script comments must not contain backticks", async () => {
-	// viewerStyles, viewerClientScript 는 백틱 템플릿 리터럴이다. 주석에 백틱을 하나 쓰면
-	// 리터럴이 그 자리에서 끊겨 빌드가 깨진다. 세 번 겪어서 기계로 막는다.
+	// viewerStyles, viewerClientScript는 백틱 템플릿 리터럴. 주석에 백틱을 하나 쓰면
+	// 리터럴이 그 자리에서 끊겨 빌드가 깨짐. 세 번 겪어서 기계로 차단
 	const source = await readFile(new URL("../src/viewer-template.ts", import.meta.url), "utf8");
 
 	for (const [name, open, close] of [
@@ -409,7 +409,7 @@ test("viewer template literals stay closed: CSS and script comments must not con
 
 		const body = source.slice(start + open.length, source.indexOf(close, start + open.length));
 
-		// escape 한 백틱은 리터럴 안에서 정상이다. 앞에 backslash 가 없는 것만 잡는다.
+		// escape한 백틱은 리터럴 안에서 정상. 앞에 backslash가 없는 것만 검출
 		assert.equal(/\/\*(?:[^*]|\*(?!\/))*?(?<!\\)`/.test(body), false, `${name}: 블록 주석 안에 escape 하지 않은 백틱이 있다`);
 		assert.equal(/\/\/[^\n]*?(?<!\\)`/.test(body), false, `${name}: 줄 주석 안에 escape 하지 않은 백틱이 있다`);
 	}
@@ -430,12 +430,12 @@ test("viewer client script indexes both languages plus code, and keeps cross-ski
 
 	assert.match(html, /titleKo/);
 	assert.match(html, /appliesWhen/);
-	// 참조 칩은 skill 과 무관하게 byKey 전체 색인으로 열린다.
+	// 참조 칩은 skill과 무관하게 byKey 전체 색인으로 열림
 	assert.match(html, /data-goto/);
 	assert.match(html, /openDialog\(t\.dataset\.goto\)/);
 	assert.match(html, /localStorage/);
 	assert.match(html, /const DATA = window\.CONVENTION_DATA/);
-	// 규칙 번호는 필터와 무관한 고정값이어야 한다. 목록 위치로 번호를 매기면 안 된다.
+	// 규칙 번호는 필터와 무관한 고정값이어야 함. 목록 위치로 번호를 매기면 안 됨
 	assert.match(html, /r\.number/);
 	assert.equal(/padStart\(3, "0"\)/.test(html), false, "rule numbers must come from the payload, not the list index");
 });
@@ -443,15 +443,15 @@ test("viewer client script indexes both languages plus code, and keeps cross-ski
 test("viewer previews referenced rules in a dialog instead of leaving the current section", () => {
 	const html = renderViewerHtml();
 
-	// 참조 칩은 목록 스크롤을 잃지 않게 다이얼로그로 미리 보여준다.
+	// 참조 칩은 목록 스크롤을 잃지 않게 다이얼로그로 미리 보기
 	assert.match(html, /<dialog class="dlg" id="dlg"/);
 	assert.match(html, /openDialog\(t\.dataset\.goto\)/);
 	assert.match(html, /showModal/);
-	// 다이얼로그 조작은 닫기 X 하나뿐이고, 열려 있는 동안 뒤 목록은 스크롤되지 않는다.
+	// 다이얼로그 조작은 닫기 X 하나뿐, 열려 있는 동안 뒤 목록 스크롤 금지
 	assert.match(html, /class="dlg-x" data-close/);
 	assert.equal(/data-jump/.test(html), false, "dialog must expose only a close button");
 	assert.match(html, /body:has\(\.dlg\[open\]\)\s*\{\s*overflow:\s*hidden/);
-	// 적용 조건은 불렛 목록으로 렌더한다.
+	// 적용 조건은 불렛 목록으로 렌더
 	assert.match(html, /appliesWhenBullets/);
 	assert.match(html, /class="li-x"/);
 });
@@ -462,7 +462,7 @@ test("generateViewerArtifacts keeps the payload in the data script and stays byt
 	assert.deepEqual(first, second, "viewer output must be deterministic");
 	assert.ok(first.html.startsWith("<!doctype html>"));
 	assert.match(first.html.slice(0, 400), /<meta charset="utf-8">/);
-	// 데이터는 html에 인라인하지 않고 같은 폴더의 데이터 파일이 싣는다.
+	// 데이터는 html에 인라인하지 않고 같은 폴더의 데이터 파일이 실음
 	assert.match(first.html, /<script src="conventions-data\.js"><\/script>/);
 	assert.equal(first.html.includes('id="viewer-data"'), false, "payload must live in the data script, not inline");
 

@@ -6,13 +6,13 @@ import type {RuleCodeBlock, RuleExample} from "./rule-body.js";
 import type {CompanionMode} from "./types.js";
 
 /**
- * 섹션 하나가 가질 수 있는 규칙 수의 상한. 섹션 순서를 앞자리로 밀어 정렬 키를 만든다
+ * 섹션 하나에 둘 수 있는 규칙 수의 상한. 섹션 순서를 앞자리로 밀어 정렬 키 생성
  */
 const sectionOrderStride = 1_000;
 
 /**
- * @summary 화면용 산문 노드. 일반 줄은 문자열, 코드 블록은 객체다
- * @description `{"type":"line","text":…}` 래퍼를 벗겨 인라인 JSON 크기를 줄인다. 산문 줄이 1,500개라 래퍼 비용이 크다.
+ * @summary 화면용 산문 노드. 일반 줄은 문자열, 코드 블록은 객체
+ * @description `{"type":"line","text":…}` 래퍼를 벗겨 인라인 JSON 크기 절감. 산문 줄이 1,500개라 래퍼 비용이 큼
  */
 export type ViewerProseNode = string | RuleCodeBlock;
 
@@ -57,27 +57,27 @@ export interface ViewerSkill {
 }
 
 /**
- * @summary 화면에 나열할 단일 rule
+ * @summary 화면에 나열할 규칙 하나
  */
 export interface ViewerRule {
 	/**
-	 * @field 이 rule을 소유한 skill 이름
+	 * @field 이 규칙을 소유한 skill 이름
 	 */
 	skill: string;
 	/**
-	 * @field 확장자를 뗀 rule 파일명. 규칙 stable ID이다
+	 * @field 확장자를 뗀 규칙 파일명. 규칙 stable ID
 	 */
 	id: string;
 	/**
-	 * @field `<section order>.<section 내 순번>` 형식의 고정 규칙 번호. `HANDBOOK.md` 헤딩 번호와 같다
+	 * @field `<section order>.<section 내 순번>` 형식의 고정 규칙 번호. `HANDBOOK.md` 헤딩 번호와 같음
 	 */
 	number: string;
 	/**
-	 * @field 영어 rule 제목. 화면 제목이 아니라 식별자와 검색에 쓴다
+	 * @field 영어 규칙 제목. 화면 제목이 아니라 식별자와 검색용
 	 */
 	title: string;
 	/**
-	 * @field 화면에 노출할 한국어 제목. 비어 있으면 영어 제목으로 대체된다
+	 * @field 화면에 노출할 한국어 제목. 비면 영어 제목으로 대체
 	 */
 	titleKo: string;
 	/**
@@ -89,11 +89,11 @@ export interface ViewerRule {
 	 */
 	impactDescription: string;
 	/**
-	 * @field 이 rule이 걸리는 작업 조건
+	 * @field 이 규칙이 걸리는 작업 조건
 	 */
 	appliesWhen: string;
 	/**
-	 * @field 사람이 읽는 화면에 노출할 적용 조건 불렛 목록. 비어 있으면 appliesWhen 원문을 보여준다
+	 * @field 사람이 읽는 화면에 노출할 적용 조건 불렛 목록. 비면 appliesWhen 원문 표시
 	 */
 	appliesWhenBullets: string[];
 	/**
@@ -101,19 +101,19 @@ export interface ViewerRule {
 	 */
 	tags: string[];
 	/**
-	 * @field 함께 적용해야 하는 rule stable ID 목록
+	 * @field 함께 적용해야 하는 규칙 stable ID 목록
 	 */
 	requiresSelected: string[];
 	/**
-	 * @field 함께 검토할 rule stable ID 목록
+	 * @field 함께 검토할 규칙 stable ID 목록
 	 */
 	reviewWith: string[];
 	/**
-	 * @field 소속 section prefix
+	 * @field 소속 섹션 접두사
 	 */
 	sectionPrefix: string;
 	/**
-	 * @field 첫 예시 이전 산문. 일반 줄은 문자열, 코드 블록은 객체다
+	 * @field 첫 예시 이전 산문. 일반 줄은 문자열, 코드 블록은 객체
 	 */
 	prose: ViewerProseNode[];
 	/**
@@ -135,7 +135,7 @@ export interface ViewerSection {
 	 */
 	order: number;
 	/**
-	 * @field rule 파일명과 연결되는 prefix
+	 * @field 규칙 파일명과 연결되는 접두사
 	 */
 	prefix: string;
 	/**
@@ -143,7 +143,7 @@ export interface ViewerSection {
 	 */
 	title: string;
 	/**
-	 * @field 한국어 section 제목. 비어 있으면 영어로 대체된다
+	 * @field 한국어 section 제목. 비면 영어로 대체
 	 */
 	titleKo: string;
 	/**
@@ -165,14 +165,14 @@ export interface ViewerPayload {
 	 */
 	sections: ViewerSection[];
 	/**
-	 * @field 전체 rule 목록. skill 이름, rule ID 순
+	 * @field 전체 규칙 목록. skill 이름, 규칙 ID 순
 	 */
 	rules: ViewerRule[];
 }
 
 /**
  * @api `skill/` 전체를 읽어 화면용 페이로드로 조립
- * @description 출력은 결정적이어야 한다. 신선도 검사가 재렌더 결과를 바이트 비교하므로 타임스탬프를 넣지 않는다.
+ * @description 출력은 결정적이어야 함. 신선도 검사가 재렌더 결과를 바이트 비교해 타임스탬프 금지
  */
 export const buildViewerPayload = async (): Promise<ViewerPayload> => {
 	const skills: ViewerSkill[] = [];
@@ -188,7 +188,7 @@ export const buildViewerPayload = async (): Promise<ViewerPayload> => {
 
 		const document = await readSkillDocument(getSkillPaths(skillName));
 
-		// 핸드북은 완성된 progressive skill 만 노출한다. 나머지는 아직 작성 중이다.
+		// 핸드북은 완성된 progressive skill만 노출. 나머지는 작성 중
 		if (document.metadata.progressiveDisclosure !== true) {
 			continue;
 		}
@@ -212,8 +212,8 @@ export const buildViewerPayload = async (): Promise<ViewerPayload> => {
 			});
 		}
 
-		// `HANDBOOK.md`와 같은 번호를 붙인다. build.ts 가 쓰는 것과 같은 정렬을 재사용해야
-		// 두 문서의 `1.1`, `3.2`가 같은 규칙을 가리킨다.
+		// `HANDBOOK.md`와 같은 번호. build.ts와 같은 정렬을 재사용해야
+		// 두 문서의 `1.1`, `3.2`가 같은 규칙을 가리킴
 		const numberByFileName = new Map<string, string>();
 
 		for (const section of document.sections) {
@@ -246,7 +246,7 @@ export const buildViewerPayload = async (): Promise<ViewerPayload> => {
 		}
 	}
 
-	// skill 순 → 규칙 번호 순. `HANDBOOK.md`의 나열 순서와 같아진다.
+	// skill 순 → 규칙 번호 순. `HANDBOOK.md`의 나열 순서와 같음
 	rules.sort((left, right) => {
 		if (left.skill !== right.skill) {
 			return left.skill.localeCompare(right.skill, "en-US");

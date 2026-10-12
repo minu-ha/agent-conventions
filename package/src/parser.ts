@@ -19,12 +19,12 @@ const allowedRuleFrontmatterKeys = new Set([
 ]);
 
 /**
- * @field 한 줄 scalar 외에 `- ` 항목 block list도 허용하는 frontmatter 키. 항목은 줄바꿈으로 이어 붙인다
+ * @field 한 줄 scalar 외에 `- ` 항목 block list도 받는 frontmatter 키. 항목은 줄바꿈으로 연결
  */
 const blockListCapableFrontmatterKeys = new Set(["appliesWhen"]);
 
 /**
- * @helper optional boolean frontmatter scalar 해석
+ * @helper 선택적 boolean frontmatter scalar 해석
  */
 const parseBooleanScalar = (value: string | undefined, key: string): boolean => {
 	if (value === undefined) {
@@ -39,7 +39,7 @@ const parseBooleanScalar = (value: string | undefined, key: string): boolean => 
 };
 
 /**
- * @helper frontmatter scalar의 matching quote pair 해제
+ * @helper frontmatter scalar의 짝 따옴표 해제
  */
 const parseScalarValue = (rawValueSource: string, key: string): string => {
 	const rawValue = rawValueSource.trim();
@@ -57,12 +57,12 @@ const parseScalarValue = (rawValueSource: string, key: string): string => {
 };
 
 /**
- * @field YAML folded scalar 표기. 값을 여러 줄로 쓰고 공백 한 칸으로 접는다
+ * @field YAML folded scalar 표기. 여러 줄 값을 공백 한 칸으로 접음
  */
 const foldedScalarMarker = /^\s*>-?\s*$/;
 
 /**
- * @helper markdown frontmatter와 본문 분리
+ * @helper Markdown frontmatter와 본문 분리
  */
 export const parseFrontmatter = (source: string): {frontmatter: Record<string, string>; body: string} => {
 	const normalizedSource = source.replace(/\r\n/g, "\n");
@@ -99,7 +99,7 @@ export const parseFrontmatter = (source: string): {frontmatter: Record<string, s
 			throw new Error(`Duplicate frontmatter key "${key}".`);
 		}
 
-		// YAML block list. 값 없이 키만 쓰면 이어지는 `- ` 항목을 조건 불렛으로 읽는다.
+		// YAML block list. 값 없이 키만 쓰면 이어지는 `- ` 항목을 조건 불렛으로 읽음
 		if (blockListCapableFrontmatterKeys.has(key) && (rawValueSource ?? "").trim().length === 0) {
 			const items: string[] = [];
 
@@ -112,12 +112,12 @@ export const parseFrontmatter = (source: string): {frontmatter: Record<string, s
 				throw new Error(`Block list frontmatter key "${key}" has no "- " items.`);
 			}
 
-			// 항목이 하나여도 scalar와 구분되도록 `- ` 접두사를 남긴다.
+			// 항목이 하나여도 scalar와 구분되도록 `- ` 접두사 유지
 			frontmatter[key] = items.map((item) => `- ${item}`).join("\n");
 			continue;
 		}
 
-		// YAML folded scalar. 긴 조건문을 소스에서 여러 줄로 쓰되 값은 한 줄로 접는다.
+		// YAML folded scalar. 긴 조건문을 소스에서는 여러 줄로, 값은 한 줄로 접음
 		if (rawValueSource !== undefined && foldedScalarMarker.test(rawValueSource)) {
 			const foldedLines: string[] = [];
 
@@ -141,7 +141,7 @@ export const parseFrontmatter = (source: string): {frontmatter: Record<string, s
 };
 
 /**
- * @helper `rules/_sections.md` 원문에서 section 메타데이터 추출
+ * @helper `rules/_sections.md` 원문에서 섹션 메타데이터 추출
  */
 export const parseSections = (source: string): SkillSection[] => {
 	const normalizedSource = source.replace(/\r\n/g, "\n");
@@ -157,7 +157,7 @@ export const parseSections = (source: string): SkillSection[] => {
 	const sections = blocks.map((block) => {
 		const headerMatch = block.match(/^## (\d+)\.\s+(.+?)\s+\(([^)]+)\)$/m);
 		const impactMatch = block.match(/^\*\*Impact:\*\*\s+(.+)$/m);
-		// Description 정규식이 탐욕적이라 TitleKo 는 반드시 Description 앞에 와야 한다.
+		// Description 정규식이 탐욕적이라 TitleKo는 반드시 Description 앞
 		const titleKoMatch = block.match(/^\*\*TitleKo:\*\*\s+(.+)$/m);
 		const descriptionMatch = block.match(/^\*\*Description:\*\*\s+([\s\S]+)$/m);
 
@@ -175,7 +175,7 @@ export const parseSections = (source: string): SkillSection[] => {
 
 		const [, order, title, prefix] = headerMatch;
 
-		// description 은 여러 줄로 써도 된다. 소스에서만 접고 값은 한 줄로 편다
+		// description은 여러 줄로 써도 됨. 소스에서만 접고 값은 한 줄로 폄
 		const description = descriptionMatch[1].trim().replace(/\s+/g, " ");
 
 		return {
@@ -192,7 +192,7 @@ export const parseSections = (source: string): SkillSection[] => {
 };
 
 /**
- * @helper markdown anchor용 제목 slug 정규화
+ * @helper Markdown 앵커용 제목 slug 정규화
  */
 export const slugify = (value: string): string => {
 	return value
@@ -203,7 +203,7 @@ export const slugify = (value: string): string => {
 };
 
 /**
- * @helper heading/목차 표시용 제목에서 markdown 장식을 제거
+ * @helper 헤딩, 목차 표시용 제목에서 Markdown 장식 제거
  */
 export const normalizeHeadingTitle = (value: string): string => {
 	const codeSpans: string[] = [];
@@ -221,7 +221,7 @@ export const normalizeHeadingTitle = (value: string): string => {
 };
 
 /**
- * @helper heading anchor용 제목에서 markdown/code token을 slug-friendly 텍스트로 정리
+ * @helper 헤딩 앵커용 제목에서 Markdown, 코드 토큰을 slug용 텍스트로 정리
  */
 const normalizeAnchorTitle = (value: string): string => {
 	return normalizeHeadingTitle(value)
@@ -232,14 +232,14 @@ const normalizeAnchorTitle = (value: string): string => {
 };
 
 /**
- * @helper section heading anchor 문자열 생성
+ * @helper 섹션 헤딩 앵커 문자열 생성
  */
 export const buildSectionAnchor = (sectionOrder: number, title: string): string => {
 	return `#${slugify(`${sectionOrder}. ${normalizeAnchorTitle(title)}`)}`;
 };
 
 /**
- * @helper 개별 rule heading anchor 문자열 생성
+ * @helper 개별 규칙 헤딩 앵커 문자열 생성
  */
 export const buildRuleAnchor = (sectionOrder: number, ruleOrder: number, title: string): string => {
 	return `#${slugify(`${sectionOrder}.${ruleOrder} ${normalizeAnchorTitle(title)}`)}`;
@@ -253,7 +253,7 @@ export interface ReplaceRuleHeadingArgs {
 }
 
 /**
- * @helper rule 본문의 제목을 compiled guide 번호 제목으로 교체
+ * @helper 규칙 본문의 제목을 컴파일 가이드 번호 제목으로 교체
  */
 export const replaceRuleHeading = (args: ReplaceRuleHeadingArgs): string => {
 	return args.body.replace(/^## .+$/m, `### ${args.sectionOrder}.${args.ruleOrder} ${normalizeHeadingTitle(args.title)}`);
@@ -277,7 +277,7 @@ export const readSkillSections = async (skillPaths: SkillPaths): Promise<SkillSe
 };
 
 /**
- * @description build 대상 rule 파일명 목록 조회
+ * @description build 대상 규칙 파일명 목록 조회
  */
 export const readSkillRuleFileNames = async (skillPaths: SkillPaths): Promise<string[]> => {
 	return (await readdir(skillPaths.rulesDir))
@@ -286,7 +286,7 @@ export const readSkillRuleFileNames = async (skillPaths: SkillPaths): Promise<st
 };
 
 /**
- * @description build 대상 rule markdown 본문과 frontmatter 로드
+ * @description build 대상 규칙 Markdown 본문과 frontmatter 로드
  */
 export const readSkillRules = async (skillPaths: SkillPaths): Promise<SkillRule[]> => {
 	const ruleFileNames = await readSkillRuleFileNames(skillPaths);
@@ -295,7 +295,7 @@ export const readSkillRules = async (skillPaths: SkillPaths): Promise<SkillRule[
 	for (const ruleFileName of ruleFileNames) {
 		const source = await readFile(path.join(skillPaths.rulesDir, ruleFileName), "utf8");
 		const {frontmatter, body} = parseFrontmatter(source);
-		// 번호 prefix(`NN-MM-`)를 뗀 stable ID의 첫 토큰이 section prefix다.
+		// 번호 접두사(`NN-MM-`)를 뗀 stable ID의 첫 토큰이 section 접두사
 		const prefix = getRuleStableId(ruleFileName).split("-")[0];
 
 		rules.push({
@@ -318,8 +318,10 @@ export const readSkillRules = async (skillPaths: SkillPaths): Promise<SkillRule[
 };
 
 /**
- * @helper appliesWhen 값을 라우팅용 한 줄 문장과 표시용 불렛 목록으로 해석.
- * block list면 불렛을 마침표로 이어 라우팅 문장을 만들고, scalar면 원문을 그대로 라우팅 문장으로 쓴다.
+ * @helper appliesWhen 값을 라우팅용 한 줄 문장과 표시용 불렛 목록으로 해석
+ *
+ * - block list: 불렛을 마침표로 이어 라우팅 문장 생성
+ * - scalar: 원문을 그대로 라우팅 문장으로 사용
  */
 const resolveAppliesWhen = (value: string | undefined): {appliesWhen?: string; appliesWhenBullets: string[]} => {
 	if (value === undefined) {
@@ -360,7 +362,7 @@ export const readSkillDocument = async (skillPaths: SkillPaths): Promise<LoadedS
 };
 
 /**
- * @helper 중복 없이 inheritance 순서를 유지하며 skill 문서 배열 정리
+ * @helper 중복 없이 상속 순서를 유지하며 skill 문서 배열 정리
  */
 const dedupeResolvedSkillDocuments = (documents: LoadedSkillDocument[]): LoadedSkillDocument[] => {
 	const seenSkillNames = new Set<string>();
@@ -377,17 +379,17 @@ const dedupeResolvedSkillDocuments = (documents: LoadedSkillDocument[]): LoadedS
 
 interface ResolutionState {
 	/**
-	 * @field 단일 resolution 호출 안에서 읽은 local 문서 cache
+	 * @field 해석 호출 한 번 안에서 읽은 local 문서 캐시
 	 */
 	documentCache: Map<string, LoadedSkillDocument>;
 	/**
-	 * @field dependency까지 정렬 완료한 문서 배열 cache
+	 * @field 의존성까지 정렬을 마친 문서 배열 캐시
 	 */
 	resolvedDocumentCache: Map<string, LoadedSkillDocument[]>;
 }
 
 /**
- * @helper cache를 공유하며 dependency 문서 집합 재귀 해석
+ * @helper 캐시를 공유하며 의존성 문서 집합 재귀 해석
  */
 const resolveSkillDocuments = async (skillPaths: SkillPaths, lineage: string[], state: ResolutionState): Promise<LoadedSkillDocument[]> => {
 	const cachedDocuments = state.resolvedDocumentCache.get(skillPaths.skillName);

@@ -7,12 +7,12 @@ const args = process.argv.slice(2);
 const npmCommand = process.platform === "win32" ? "npm.cmd" : "npm";
 const packageBinDir = path.join(packagePaths.packageDir, "node_modules/.bin");
 const nodeBinDir = path.dirname(process.execPath);
-// biome-ignore lint/style/useNamingConvention: PATH 는 OS 가 정한 환경변수 이름이라 우리가 바꿀 수 없다
+// biome-ignore lint/style/useNamingConvention: PATH는 OS가 정한 환경변수 이름이라 변경 불가
 const commandEnv = {...process.env, PATH: [packageBinDir, nodeBinDir, process.env.PATH ?? ""].join(path.delimiter)};
 const tsxBinPath = path.join(packageBinDir, "tsx");
 
 /**
- * @helper 현재 실행 환경에서 npm command 사용 가능 여부 확인
+ * @helper 현재 실행 환경에서 npm 명령 사용 가능 여부 확인
  */
 const canRunNpm = (): boolean => {
 	const result = spawnSync(npmCommand, ["--version"], {cwd: packagePaths.packageDir, encoding: "utf8", env: commandEnv});

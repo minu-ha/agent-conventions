@@ -21,7 +21,7 @@ const reactAgentsPath = path.join(repoDir, "skill/react/HANDBOOK.md");
 const npmCommand = process.platform === "win32" ? "npm.cmd" : "npm";
 const packageBinDir = path.join(packageDir, "node_modules/.bin");
 const nodeBinDir = path.dirname(process.execPath);
-// biome-ignore lint/style/useNamingConvention: PATH 는 OS 가 정한 환경변수 이름이라 우리가 바꿀 수 없다
+// biome-ignore lint/style/useNamingConvention: PATH는 OS가 정한 환경변수 이름이라 변경 불가
 const commandEnv = {...process.env, PATH: [packageBinDir, nodeBinDir, process.env.PATH ?? ""].join(path.delimiter)};
 const tsxCliPath = path.join(packageDir, "node_modules", "tsx", "dist", "cli.mjs");
 const buildModulePath = path.join(packageDir, "src", "build.ts");
@@ -43,7 +43,7 @@ interface MarkdownSectionQuery {
 	 */
 	heading: string;
 	/**
-	 * @field heading level
+	 * @field 헤딩 단계
 	 */
 	level: number;
 }
@@ -373,7 +373,7 @@ test("package.json exposes all-skill and per-skill script aliases", async () => 
 test("project template stays a standalone KISS starter, not a convention router", async () => {
 	const template = await readFile(templatePath, "utf8");
 
-	// 다른 프로젝트가 그대로 복사한다. 짧아야 지켜진다.
+	// 다른 프로젝트가 그대로 복사함. 짧아야 지켜짐
 	assert.equal(template.length < 6_000, true, "starter template must stay compact");
 
 	// 번호 매긴 섹션 골격
@@ -403,7 +403,7 @@ test("project template stays a standalone KISS starter, not a convention router"
 	// 프로젝트가 채울 자리
 	assert.ok(template.includes("이 절만 채운다"));
 
-	// 이 레포에 종속되지 않는다. 복사해 간 프로젝트에서 해석 불가능한 참조가 없어야 한다.
+	// 이 저장소에 종속 금지. 복사해 간 프로젝트에서 해석 불가능한 참조가 없어야 함
 	for (const coupling of ["RULES_INDEX", "contracts/", "appliesWhen", "requiresSelected", "agent-conventions/"]) {
 		assert.ok(!template.includes(coupling), `template must not depend on this repo: ${coupling}`);
 	}
@@ -475,12 +475,12 @@ test("repository documentation distinguishes source, router, and generated artif
 		"package/README.md",
 	);
 
-	// README 는 라우팅 문서다. 규범 계약 표를 싣지 않는다.
+	// README는 라우팅 문서. 규범 계약 표를 싣지 않음
 	assert.match(repositoryReadme, /AGENTS\.template\.md/);
 	assert.match(repositoryReadme, /CONTRIBUTING\.md/);
 	assert.doesNotMatch(repositoryReadme, /^## .*Structured Skill Artifact Contract$/m);
 
-	// 사람용 문서는 같은 골격을 쓴다: H1, 한 문단 요약, 그리고 번호 매긴 섹션.
+	// 사람용 문서는 같은 골격: H1, 한 문단 요약, 번호 매긴 섹션
 	for (const [documentName, source] of [
 		["README.md", repositoryReadme],
 		["CONTRIBUTING.md", await readFile(path.join(repoDir, "CONTRIBUTING.md"), "utf8")],
@@ -490,7 +490,7 @@ test("repository documentation distinguishes source, router, and generated artif
 		assert.match(source, /^# .+\n\n[^#>\n]/, `${documentName} must open with a one-paragraph summary`);
 		assert.match(source, /^## 목차$/m, `${documentName} must have a table of contents`);
 		assert.match(source, /^## 1\. /m, `${documentName} must use numbered sections`);
-		// 목차는 HANDBOOK.md 와 같은 번호 목록으로 쓴다. 불릿 목차는 쓰지 않는다.
+		// 목차는 HANDBOOK.md와 같은 번호 목록. 불릿 목차 금지
 		const tableOfContents = extractMarkdownSection({source, heading: "목차", level: 2});
 		assert.match(tableOfContents, /^1\. \[/m, `${documentName} table of contents must be numbered`);
 		assert.doesNotMatch(tableOfContents, /^- \[/m, `${documentName} table of contents must not use bullets`);
@@ -627,7 +627,7 @@ test("build script regenerates HANDBOOK.md for the react skill", async () => {
 		agentsSource,
 		/^- \[CSS Convention\]\(\.\.\/css\/HANDBOOK\.md\) — 다음 조건에서 함께 적용합니다\. class contract, stylesheet 또는 styling surface를 변경한다\.$/m,
 	);
-	// 핸드북의 companion 목록은 사람이 읽는 경로라 상대 skill 의 handbook 을 가리킨다.
+	// 핸드북의 companion 목록은 사람이 읽는 경로라 상대 skill의 핸드북을 가리킴
 	assert.match(agentsSource, /\.\.\/typescript\/HANDBOOK\.md/);
 	assert.match(agentsSource, /\.\.\/css\/HANDBOOK\.md/);
 	assert.match(agentsSource, /^## 1\. Ownership and Boundaries$/m);

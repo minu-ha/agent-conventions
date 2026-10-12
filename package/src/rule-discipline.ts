@@ -3,25 +3,26 @@ import type {RuleExample} from "./rule-body.js";
 import type {LoadedSkillDocument, SkillRule} from "./types.js";
 
 /**
- * 한글은 두 칸으로 세는 최대 산문 폭. `docs/semantic-wrap.py`의 MAX와 같아야 한다.
+ * 한글을 두 칸으로 세는 최대 산문 폭. `docs/semantic-wrap.py`의 MAX와 같아야 함
  */
 const maxProseWidth = 120;
 
 /**
- * 위반 메시지에 실어 보내는 원문 길이. 어느 줄인지 알아볼 만큼만 자른다.
+ * 위반 메시지에 싣는 원문 길이. 어느 줄인지 알아볼 만큼만
  */
 const violationExcerptLength = 40;
 
 /**
- * 인덴트를 탭으로 강제하는 코드 펜스 언어. `text`, `md`는 디렉터리 트리와 목록에 공백을 쓴다.
+ * 인덴트를 탭으로 강제하는 코드 펜스 언어. `text`, `md`는 디렉터리 트리와 목록이라 공백
  */
 const tabIndentedFenceLanguages = new Set(["ts", "tsx", "css", "js", "json"]);
 
 /**
- * 이 저장소가 지어냈던 역어와 그 대체어.
- * 기준은 하나다 — MDN, React, TypeScript 한국어 문서에 역어가 있으면 그것, 없으면 통용 외래어.
- * 그 낱말로 검색할 사람이 있는데 저장소 밖 어디에도 없는 말이면 규칙을 못 찾는다.
- * `쌓임 맥락`, `단언`, `좁히기`는 표준 역어라 목록에 없다.
+ * 이 저장소가 지어냈던 역어와 그 대체어
+ *
+ * - 기준: MDN, React, TypeScript 한국어 문서에 역어가 있으면 그것, 없으면 통용 외래어
+ * - 저장소 밖 어디에도 없는 말이면 그 낱말로 검색해도 규칙을 못 찾음
+ * - `쌓임 맥락`, `단언`, `좁히기`는 표준 역어라 목록에 없음
  */
 const bannedTerms: ReadonlyArray<readonly [string, string]> = [
 	["분기점", "브레이크포인트"],
@@ -51,7 +52,7 @@ const bannedTerms: ReadonlyArray<readonly [string, string]> = [
 ];
 
 /**
- * 받침 유무로 갈리는 조사 짝. 같은 식별자가 파일마다 다른 쪽을 쓰면 둘 중 하나가 틀린 것이다.
+ * 받침 유무로 갈리는 조사 짝. 같은 식별자가 파일마다 다른 쪽을 쓰면 둘 중 하나가 틀림
  */
 const josaPairs = [
 	["이", "가"],
@@ -61,96 +62,100 @@ const josaPairs = [
 ] as const;
 
 /**
- * 백틱으로 감싼 규칙 ID, 식별자와 바로 뒤에 붙은 조사.
+ * 백틱으로 감싼 규칙 ID, 식별자와 바로 뒤에 붙은 조사
  */
 const backtickedIdentifierJosa = /`([a-z][a-z0-9/-]{6,})`(이|가|은|는|을|를|과|와)(?![가-힣])/g;
 
 /**
- * 이름 붙여 선언한 화살표 함수와 `=>` 뒤에 남은 꼬리.
- * 꼬리가 비었으면 다음 줄로 이어지는 선언이고, `{`로 시작하면 블록 본문이다.
+ * 이름 붙여 선언한 화살표 함수와 `=>` 뒤에 남은 꼬리
+ *
+ * 꼬리가 비면 다음 줄로 이어지는 선언, `{`로 시작하면 블록 본문
  */
 const namedArrowBody = /^\s*(?:export\s+)?const\s+\w+(?:\s*:\s*[^=]+?)?\s*=\s*(?:async\s+)?\([^)]*\)(?:\s*:\s*[^=]+?)?\s*=>\s*(.*)$/;
 
 /**
- * 커링의 바깥 화살표. 안쪽 함수를 그대로 돌려주는 자리라 블록 본문을 요구하지 않는다.
+ * 커링의 바깥 화살표. 안쪽 함수를 그대로 돌려주는 자리라 블록 본문 불필요
  */
 const curriedTail = /^\([^)]*\)(?:\s*:\s*[^=]+?)?\s*=>/;
 
 /**
- * 객체 리터럴의 메서드 축약형. `this`가 묶여서 떼어 내면 동작이 달라진다.
+ * 객체 리터럴의 메서드 축약형. `this`가 묶여 떼어 내면 동작이 달라짐
  */
 const objectLiteralMethod = /^\t+[a-z]\w*\([^)]*\)\s*(?::\s*[^{]+?)?\s*\{\s*$/;
 
 /**
- * 결과를 말해 주지 않는 첫 동사. `functions-name-functions-by-what-comes-out`의 금지 목록이다.
- * 호출은 보지 않고 우리가 짓는 선언 이름만 본다 — 외부 패키지의 `createClient()`는 그대로 쓴다.
+ * 결과를 말하지 않는 첫 동사. `functions-name-functions-by-what-comes-out`의 금지 목록
+ *
+ * 호출은 보지 않고 우리가 짓는 선언 이름만 검사. 외부 패키지의 `createClient()`는 그대로 사용
  */
 const emptyVerbDeclaration = /^\s*(?:export\s+)?const\s+(build|create|make|process|manage|do|perform|execute|filter)[A-Z]/;
 
 /**
- * 상대경로 가져오기. 예제가 규범을 어기는 것을 막는다.
+ * 상대경로 가져오기. 예제의 규범 위반 방지
  */
 const relativeImport = /^\s*import\s[^"']*["']\.\.?\//;
 
 /**
- * 선언 좌변의 객체 구조분해. `const [a, b] =` 같은 배열, 튜플은 잡지 않는다.
+ * 선언 좌변의 객체 구조분해. `const [a, b] =` 같은 배열, 튜플은 제외
  */
 const objectDestructuringDeclaration = /^\s*(?:const|let|var)\s*\{/;
 
 /**
- * 매개변수 자리의 객체 구조분해. `({a, b}: T)`와 `({a, b})` 둘 다 본다.
+ * 매개변수 자리의 객체 구조분해. `({a, b}: T)`와 `({a, b})` 둘 다 검사
  */
 const objectDestructuringParameter = /=\s*(?:async\s*)?\(\s*\{[^}]*\}\s*(?::|\))/;
 
 /**
- * 누르는 요소가 아닌 태그에 `onClick`을 단 것. `a11y-give-interactive-elements-an-accessible-name`이 `button`을 요구한다.
+ * 누르는 요소가 아닌 태그에 단 `onClick`. `a11y-give-interactive-elements-an-accessible-name`이 `button` 요구
  */
 const nonButtonClick = /<(?:li|div|span|td|tr|section|article)\b[^>]*\bonClick=/;
 
 /**
- * `??`, `||` 오른쪽의 리터럴. `absence-expose-optional-values-instead-of-silent-fallbacks`가 선언된 이름만 허용한다.
+ * `??`, `||` 오른쪽의 리터럴. `absence-expose-optional-values-instead-of-silent-fallbacks`가 선언된 이름만 허용
  */
 const literalFallback = /(?:\?\?|\|\|)\s*(?:"[^"]*"|'[^']*'|\d+(?:\.\d+)?|\[\]|\{\})/;
 
 /**
- * 손으로 쓴 값 보조. `values-use-es-toolkit-for-value-helpers`, `values-prefer-immutable-array-sorting`이 es-toolkit 을 요구한다.
- * `.toSorted(`는 키로 못 적는 비교에 허용되므로 `.sort(`만 잡는다.
+ * 손으로 쓴 값 보조. `values-use-es-toolkit-for-value-helpers`, `values-prefer-immutable-array-sorting`이 es-toolkit 요구
+ *
+ * `.toSorted(`는 키로 못 적는 비교에 허용되므로 `.sort(`만 검출
  */
 const handRolledValueHelper = /(?<!to)\.sort\(|\.reduce\(|Array\.from\(new Set|\[\.\.\.new Set/;
 
 /**
- * 한 줄 JSX 주석. `docs-write-jsx-comments-as-multiline-blocks`가 블록만 허용한다.
+ * 한 줄 JSX 주석. `docs-write-jsx-comments-as-multiline-blocks`가 블록만 허용
  */
 const singleLineJsxComment = /\{\/\*[^*]/;
 
 /**
- * 헤더 JSDoc 이 필요한 내보낸 화살표 함수 선언.
+ * 헤더 JSDoc이 필요한 내보낸 화살표 함수 선언
  */
 const exportedArrowDeclaration = /^export const [a-z]\w*(?::\s*[^=]+?)?\s*=\s*(?:async\s*)?\(/;
 
 /**
- * JSX 요소 둘을 고르는 삼항. `composition-render-one-branch-with-and`가 `&&` 두 줄을 요구한다.
+ * JSX 요소 둘을 고르는 삼항. `composition-render-one-branch-with-and`가 `&&` 두 줄 요구
  */
 const jsxBranchTernary = /\?\s*\(\n[\s\S]*?\n\s*\)\s*:\s*\(/;
 
 /**
- * 공통 토큰에 붙인 대체값. `values-fall-back-only-outside-core-tokens`가 `--app-*`에는 대체값을 금지한다.
+ * 공통 토큰에 붙인 대체값. `values-fall-back-only-outside-core-tokens`가 `--app-*`에는 대체값 금지
  */
 const coreTokenFallback = /var\(--app-[a-z0-9-]+\s*,/;
 
 /**
- * 예제 스택 밖 라이브러리 이름. 허용 스택은 react-router, nuqs, react-query, zustand, @mui, es-toolkit, dayjs, clsx 다.
+ * 예제 스택 밖 라이브러리 이름. 허용 스택은 react-router, nuqs, react-query, zustand, @mui, es-toolkit, dayjs, clsx
  */
 const foreignStackTerms = ["ag-grid", "echarts", "EChartsType", "antd", "zod", "Kubb", "dataSource=", "treeData=", "UploadFile"];
 
 /**
- * 백틱 없는 라틴 낱말 뒤에 띄어 쓴 조사. 조사는 붙여 쓴다(맞춤법 제41항).
+ * 백틱 없는 라틴 낱말 뒤에 띄어 쓴 조사. 조사는 붙여 씀(맞춤법 제41항)
  */
 const spacedJosaAfterLatin = /(?<![`\w/-])[A-Za-z][A-Za-z0-9_-]+ (?:로|가|를|은|는|이|와|과|의|에|도|만)(?=[\s,.)])/;
 
 /**
- * 터미널에서 두 칸을 차지하는 코드포인트 구간. 각 경계가 아니라 표 전체가 하나의 뜻이다.
- * 출처는 Unicode East Asian Width 의 Wide, Fullwidth 구간이다.
+ * 터미널에서 두 칸을 차지하는 코드포인트 구간. 각 경계가 아니라 표 전체가 하나의 뜻
+ *
+ * 출처는 Unicode East Asian Width의 Wide, Fullwidth 구간
  */
 const wideCodePointRanges = {
 	hangulJamo: {first: 0x1100, last: 0x115f},
@@ -163,7 +168,7 @@ const wideCodePointRanges = {
 } as const;
 
 /**
- * @helper 한글, 전각 문자를 두 칸으로 세어 표시 폭을 구한다
+ * @helper 한글, 전각 문자를 두 칸으로 센 표시 폭
  */
 const displayWidth = (text: string): number => {
 	let width = 0;
@@ -180,7 +185,7 @@ const displayWidth = (text: string): number => {
 };
 
 /**
- * @helper 규칙 하나의 오류 목록을 모은다. 첫 위반에서 던지지 않고 한 번에 보여 준다
+ * @helper 규칙 하나의 오류 목록. 첫 위반에서 던지지 않고 한 번에 보여 줌
  */
 const collectRuleViolations = (rule: SkillRule): string[] => {
 	const violations: string[] = [];
@@ -208,11 +213,11 @@ const collectRuleViolations = (rule: SkillRule): string[] => {
 		}
 	}
 
-	// 라벨 괄호 설명은 검사하지 않는다. 실제 규칙은 모두 갖췄고,
-	// 테스트 fixture 는 다른 검사를 확인하려고 라벨만 최소로 쓴다.
+	// 라벨 괄호 설명은 검사 안 함
+	// 실제 규칙은 모두 갖췄고, 테스트 fixture는 다른 검사 확인용으로 라벨만 최소로 씀
 	//
-	// Incorrect 를 앞에 모으라는 제약은 뺐다. 뷰어는 같은 짝 번호를 단 `Incorrect`·`Correct` 만
-	// 좌우 diff 로 그리므로, 짝이 되는 것끼리 붙여 쓰는 편이 읽기에 낫다.
+	// Incorrect를 앞에 모으라는 제약은 없음
+	// 뷰어가 같은 짝 번호의 `Incorrect`, `Correct`만 좌우 diff로 그려 짝끼리 붙여 쓰는 편이 읽기 좋음
 	const pairSlots = new Map<number, Partial<Record<RuleExample["kind"], RuleExample>>>();
 
 	for (const example of parsed.examples) {
@@ -252,8 +257,8 @@ const collectRuleViolations = (rule: SkillRule): string[] => {
 		});
 	}
 
-	// 예시 차례는 짝(Incorrect n, Correct n 이 붙어서) → 홀로 선 Incorrect → 홀로 선 Correct 다.
-	// 뷰어가 이 차례로 그리고, 계약이 첫 짝을 싣는다. 모양이 같은 Incorrect, Correct 가 붙어 있으면 반드시 짝이다.
+	// 예시 차례는 짝(Incorrect n, Correct n이 붙어서) → 홀로 선 Incorrect → 홀로 선 Correct
+	// 뷰어가 이 차례로 그리고 계약이 첫 짝을 실음. 모양이 같은 Incorrect, Correct가 붙어 있으면 반드시 짝
 	const exampleShape = (example: RuleExample): string => example.blocks.map((block) => block.lang).join("+");
 	let phase = 0;
 	let expectedPair = 1;
@@ -324,7 +329,7 @@ const collectRuleViolations = (rule: SkillRule): string[] => {
 				continue;
 			}
 
-			// 클래스 메서드는 축약형이 규범이라, 클래스가 든 펜스에서는 축약형 검사를 끈다
+			// 클래스 메서드는 축약형이 규범이라 클래스가 든 펜스에서는 축약형 검사 끔
 			const hasClass = /^\s*(?:export\s+)?(?:abstract\s+)?class\s/m.test(block.code);
 
 			if (block.code.includes("mutateAsync") && !/\btry\s*\{/.test(block.code)) {
@@ -394,7 +399,7 @@ const collectRuleViolations = (rule: SkillRule): string[] => {
 					violations.push(`Correct 예제의 프롭스 타입은 컴포넌트 위에 선언한다: "${line.trim()}"`);
 				}
 
-				// 스타일시트는 상대경로가 규범이다. `naming-import-by-absolute-path` 도 `.css` 만 예외로 둔다.
+				// 스타일시트는 상대경로가 규범. `naming-import-by-absolute-path`도 `.css`만 예외
 				if (relativeImport.test(line) && !line.includes(".css")) {
 					violations.push(`Correct 예제의 가져오기는 절대경로다: "${line.trim()}"`);
 				}
@@ -424,16 +429,16 @@ const collectRuleViolations = (rule: SkillRule): string[] => {
 };
 
 /**
- * @helper 금칙어를 찾을 때 훑는 텍스트. 본문과 라우팅, 표시에 쓰이는 frontmatter 를 함께 본다
+ * @helper 금칙어 검사 대상 텍스트. 본문, 라우팅과 표시에 쓰이는 frontmatter 포함
  */
 const searchableText = (rule: SkillRule): string => {
 	return [rule.titleKo, rule.impactDescription, ...(rule.appliesWhenBullets ?? []), rule.body].join("\n");
 };
 
 /**
- * @helper 같은 백틱 식별자가 규칙마다 다른 조사를 달고 있는지 모은다
- * @description 받침은 식별자마다 하나로 정해지므로 표기가 갈리면 한쪽은 반드시 틀렸다.
- *   어느 쪽이 맞는지는 기계가 모르지만 갈렸다는 사실은 셀 수 있다.
+ * @helper 같은 백틱 식별자가 규칙마다 다른 조사를 단 경우 수집
+ * @description 받침은 식별자마다 하나라 표기가 갈리면 한쪽은 반드시 틀림
+ *   어느 쪽이 맞는지는 기계가 모르지만 갈렸다는 사실은 셀 수 있음
  */
 const collectJosaConflicts = (document: LoadedSkillDocument): string[] => {
 	const seen = new Map<string, Map<string, string>>();
@@ -463,10 +468,10 @@ const collectJosaConflicts = (document: LoadedSkillDocument): string[] => {
 };
 
 /**
- * @api 규칙 본문이 이 저장소가 스스로 정한 형식, 예제 규율을 지키는지 검증
- * @description 문장 검토는 사람이 하지만 기계가 셀 수 있는 것은 여기서 막는다.
- *   과거에 표본만 본 검토가 위반 4곳을 지목했을 때 실제로는 13곳이었다.
- *   `Correct` 예제만 규칙 위반으로 본다. `Incorrect`는 일부러 어기는 자리다.
+ * @api 규칙 본문이 이 저장소가 정한 형식, 예제 규율을 지키는지 검증
+ * @description 문장 검토는 사람 몫, 기계가 셀 수 있는 것은 여기서 차단
+ *   표본만 본 검토가 위반 4곳을 지목했을 때 실제로는 13곳
+ *   `Correct` 예제만 규칙 위반으로 봄. `Incorrect`는 일부러 어기는 자리
  */
 export const assertRuleDiscipline = (document: LoadedSkillDocument): void => {
 	const failures: string[] = [];

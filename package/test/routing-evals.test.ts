@@ -32,7 +32,7 @@ const repoDir = path.resolve(currentDir, "../..");
 const flattenWhitespace = (text: string): string => text.replace(/\s+/g, " ");
 
 /**
- * @helper inline scalar, YAML folded scalar, `- ` block list 를 모두 받아 frontmatter 값만 돌려준다
+ * @helper inline scalar, YAML folded scalar, `- ` block list를 모두 받아 frontmatter 값만 반환
  */
 const readFrontmatterValue = (source: string, key: string): string => {
 	const inline = new RegExp(`^${key}: (?!>)(.+)$`, "m").exec(source);
@@ -69,7 +69,7 @@ const readAppliesWhen = (source: string): string => readFrontmatterValue(source,
 const realSkillRootDir = path.join(repoDir, "skill");
 
 /**
- * @helper 에이전트가 실제로 읽게 되는 텍스트. 링크만 남긴 CRITICAL, HIGH contract 는 원문까지 이어 읽는다
+ * @helper 에이전트가 실제로 읽는 텍스트. 링크만 남긴 CRITICAL, HIGH contract는 원문까지 이어 읽음
  */
 const readAgentFacingRule = async (skill: string, ruleId: string): Promise<string> => {
 	const contract = await readFile(path.join(realSkillRootDir, skill, "contracts", `${ruleId}.md`), "utf8");
@@ -89,7 +89,7 @@ const readAgentFacingRule = async (skill: string, ruleId: string): Promise<strin
 };
 
 /**
- * @helper stable ID로 rule 원문을 읽는다. 파일명에 사람용 번호 prefix(`NN-MM-`)가 붙어 있어도 찾는다
+ * @helper stable ID로 규칙 원문 읽기. 파일명에 사람용 번호 접두사(`NN-MM-`)가 붙어 있어도 찾음
  */
 const readRuleSource = async (skillName: string, ruleId: string): Promise<string> => {
 	const rulesDir = path.join(realSkillRootDir, skillName, "rules");
@@ -2359,7 +2359,7 @@ const createValidManifest = (skill: string = "owner"): RoutingEvalManifest => ({
 });
 
 /**
- * @helper fixture metadata 의 의존성 부분. progressive 는 companions 를, 아니면 extends 를 쓴다
+ * @helper fixture metadata의 의존성 부분. progressive는 companions, 아니면 extends
  */
 const toDependencyMetadata = (progressive: boolean, companions: SkillCompanion[], extendedSkills: string[]): Record<string, unknown> => {
 	if (progressive) {
@@ -2426,7 +2426,7 @@ const writeFixtureSkill = async (args: WriteFixtureSkillArgs): Promise<void> => 
 };
 
 /**
- * @helper 첫 시나리오의 `scopeDrift` 를 꺼낸다. 없으면 fixture 가 깨진 것이라 바로 던진다
+ * @helper 첫 시나리오의 `scopeDrift`. 없으면 fixture가 깨진 것이라 바로 던짐
  */
 const toFirstScopeDrift = (candidate: RoutingEvalManifest): RoutingScopeDrift => {
 	const drift = candidate.scenarios[0]?.scopeDrift;
@@ -2666,7 +2666,7 @@ test("JSDoc routing closure and query-select ownership stay exact across every m
 	const queryShaping = reactManifest.scenarios.find(({id}) => id === "RTE12-query-shaping");
 	assert.ok(queryShaping);
 	assert.ok(queryShaping.expectedSelected.react?.includes("data-shape-query-data-with-select"));
-	// `select` 안 변환은 7.4 몫이다. 추출 경계 규칙이 같이 걸리면 두 규칙이 같은 코드를 두 번 판정한다.
+	// `select` 안 변환은 7.4 몫. 추출 경계 규칙이 같이 걸리면 두 규칙이 같은 코드를 두 번 판정
 	assert.equal(queryShaping.expectedSelected.typescript?.includes("functions-extract-helpers-only-when-the-boundary-is-real"), false);
 });
 
@@ -2708,7 +2708,7 @@ test("induced naming closure and activated finish gates stay mandatory across ev
 	assert.match(originRule, /^reviewWith:[^\n]+screen-keep-derived-values-close/m);
 	assert.match(bindingRule, /^requiresSelected:[^\n]+typescript\/naming-use-consistent-file-and-symbol-naming/m);
 
-	// companion router 도 두 gate 를 가르쳐야 한다. 문구가 아니라 언급과 극성으로 본다
+	// companion 라우터도 두 gate를 가르쳐야 함. 문구가 아니라 언급과 극성으로 검사
 	for (const skillName of ["typescript", "css"] as const) {
 		const {body} = splitFrontmatter(await readFile(path.join(realSkillRootDir, skillName, "SKILL.md"), "utf8"));
 		const apply = extractSection(body, 3);
@@ -2810,7 +2810,7 @@ test("TypeScript SKILL.md is a compact router without receipt or audit machinery
 	assertRouterProtocol(body);
 	assertRemovedApparatusStaysGone(body);
 
-	// companion 경계. typescript 는 companion 으로 들어오므로 React/CSS 경계만 되짚는다
+	// companion 경계. typescript는 companion으로 들어오므로 React, CSS 경계만 되짚음
 	assertMentions(extractSection(body, 1), ["React", "CSS", "companion"], "typescript 1절");
 });
 
@@ -2819,7 +2819,7 @@ test("React progressive metadata and all 54 rule routes match Appendix B exactly
 	const document = await readSkillDocument(skillPaths);
 
 	assert.equal(document.metadata.progressiveDisclosure, true);
-	// abstract 는 사람이 읽는 개요다. 로딩 경로 설명을 넣지 않는다.
+	// abstract는 사람이 읽는 개요. 로딩 경로 설명 금지
 	assert.doesNotMatch(document.metadata.abstract, /SKILL\.md|RULES_INDEX\.md|contracts\/|opt-in/);
 	assert.deepEqual(document.metadata.companions, [
 		{skill: "typescript", mode: "required"},
@@ -2849,7 +2849,7 @@ test("React progressive metadata and all 54 rule routes match Appendix B exactly
 	assert.match(readAppliesWhen(template), / /);
 	assert.doesNotMatch(template, /^reviewWith:/m);
 
-	// frontmatter 작성 규칙은 스킬마다 복제하지 않고 공통 기여 문서 한 곳에 둔다.
+	// frontmatter 작성 규칙은 스킬마다 복제하지 않고 공통 기여 문서 한 곳에 둠
 	const contributing = await readFile(path.join(repoDir, "CONTRIBUTING.md"), "utf8");
 	assert.match(contributing, /appliesWhen.*한 줄.*160/);
 	assert.match(contributing, /reviewWith.*자동 선택이 아니라.*재평가/i);
@@ -3023,14 +3023,14 @@ test("React SKILL.md is a compact router with required TypeScript and conditiona
 	assertRouterProtocol(body);
 	assertRemovedApparatusStaysGone(body);
 
-	// companion 경계. typescript 는 무조건, css 는 styling surface 가 바뀔 때만 켠다
+	// companion 경계. typescript는 무조건, css는 스타일 영역이 바뀔 때만 켬
 	const reactScope = extractSection(body, 1);
 
 	assertMentions(reactScope, ["`convention-typescript`", "`convention-css`", "class contract"], "react 1절");
 	assert.match(reactScope, /(때|경우)만/, "react 1절: `convention-css` 조건부 경계가 없다");
 	assert.equal(isNegated(blockContaining(reactScope, "`convention-css`")), true, "react 1절: css 미적용 조건이 없다");
 
-	// 현재 companion은 모두 progressive이므로 각 라우터와 인덱스를 읽는다.
+	// 현재 companion은 모두 progressive라 각 라우터와 인덱스를 읽음
 	assertMentions(extractSection(body, 2), ["SKILL.md", "RULES_INDEX.md"], "react 2절");
 	assert.doesNotMatch(extractSection(body, 2), /non-progressive/);
 });
@@ -3040,7 +3040,7 @@ test("CSS progressive metadata and rule routing match Appendix C exactly", async
 	const document = await readSkillDocument(skillPaths);
 
 	assert.equal(document.metadata.progressiveDisclosure, true);
-	// abstract 는 사람이 읽는 개요다. 로딩 경로 설명을 넣지 않는다.
+	// abstract는 사람이 읽는 개요. 로딩 경로 설명 금지
 	assert.doesNotMatch(document.metadata.abstract, /SKILL\.md|RULES_INDEX\.md|contracts\/|opt-in/);
 	assert.deepEqual(document.metadata.companions, [
 		{skill: "typescript", mode: "conditional", appliesWhen: "TS/TSX 클래스 계약, 래퍼 Props 또는 style import를 함께 변경한다."},
@@ -3107,7 +3107,7 @@ test("CSS progressive metadata and rule routing match Appendix C exactly", async
 	assert.match(readAppliesWhen(template), / /);
 	assert.doesNotMatch(template, /^reviewWith:/m);
 
-	// frontmatter 작성 규칙은 스킬마다 복제하지 않고 공통 기여 문서 한 곳에 둔다.
+	// frontmatter 작성 규칙은 스킬마다 복제하지 않고 공통 기여 문서 한 곳에 둠
 	const contributing = await readFile(path.join(repoDir, "CONTRIBUTING.md"), "utf8");
 	assert.match(contributing, /appliesWhen.*한 줄.*160/);
 	assert.match(contributing, /reviewWith.*자동 선택이 아니라.*재평가/i);
@@ -3226,8 +3226,8 @@ test("routing activation and generated indexes use only the changed semantic del
 		path.join(realSkillRootDir, "typescript", "SKILL.md"),
 		path.join(realSkillRootDir, "css", "SKILL.md"),
 	];
-	// 변경 범위 계약은 라우터가 진다. rules/_template.md 는 규칙 작성 스캐폴드라
-	// 같은 문장을 복제하지 않고 CONTRIBUTING.md 를 가리킨다.
+	// 변경 범위 계약은 라우터 몫. rules/_template.md는 규칙 작성 스캐폴드라
+	// 같은 문장을 복제하지 않고 CONTRIBUTING.md를 가리킴
 	for (const source of await Promise.all(routerPaths.map((filePath) => readFile(filePath, "utf8")))) {
 		assert.match(source, /변경 (?:semantic )?delta|실제 변경|실제로 바꾼 것|변경 범위/i);
 		assert.match(source, /추가, 삭제, 이동|추가, 삭제, 이동, 이름 변경/);
@@ -3347,7 +3347,7 @@ test("v16 boundary contracts distinguish semantic role changes from contextual a
 	]) {
 		const contextualCallback = await readRule("typescript", ruleId);
 
-		// 제외 표지는 항목 앞(`제외:`)에도 문장 끝(`… 제외한다`)에도 올 수 있다. 순서가 아니라 개념 존재만 본다.
+		// 제외 표지는 항목 앞(`제외:`)에도 문장 끝(`… 제외한다`)에도 올 수 있음. 순서가 아니라 개념 존재만 검사
 		assertMentions(
 			readAppliesWhen(contextualCallback),
 			[/타입 표기/i, "없이", /일회성/i, /문맥으로 추론/i, /제외/],
@@ -3506,7 +3506,7 @@ test("v17 TypeScript boundaries exclude React props and prevent self-created dup
 	assert.match(namedObjectParams, /뜻이 같은 계약이 이미 있으면 그대로 씁니다[\s\S]*`\*Params`[\s\S]*`\*Args`[\s\S]*새로 만들지 않/i);
 
 	const documentedShape = await readRule("typescript", "types-document-custom-types-and-shapes");
-	// 위와 같은 이유로 순서를 박지 않는다.
+	// 위와 같은 이유로 순서를 고정하지 않음
 	assertMentions(
 		readAppliesWhen(documentedShape),
 		[/외부, 생성된, 읽기 전용, 공용/, /그대로 쓰거나/, /N\/A|제외/],
@@ -3923,7 +3923,7 @@ test("CSS SKILL.md is a compact router with companion boundaries", async () => {
 	assertRouterProtocol(body);
 	assertRemovedApparatusStaysGone(body);
 
-	// companion 경계. 순수 CSS 변경이면 둘 다 켜지 않는다
+	// companion 경계. 순수 CSS 변경이면 둘 다 켜지 않음
 	const cssScope = extractSection(body, 1);
 
 	assertMentions(cssScope, ["`convention-react`", "`convention-typescript`", "순수 CSS"], "css 1절");

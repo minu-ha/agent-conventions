@@ -1,10 +1,10 @@
 /**
- * 코드 펜스를 여닫는 표시. 뒤에 붙은 언어 이름은 이 길이만큼 잘라 낸다
+ * 코드 펜스를 여닫는 표시. 언어 이름은 이 길이만큼 잘라 낸 나머지
  */
 const fenceMarker = "```";
 
 /**
- * @summary rule 본문 코드 블록 하나
+ * @summary 규칙 본문 코드 블록 하나
  */
 export interface RuleCodeBlock {
 	/**
@@ -34,7 +34,9 @@ export interface RuleExample {
 	 */
 	blocks: RuleCodeBlock[];
 	/**
-	 * @field 짝 번호. `**Incorrect 1**`과 `**Correct 1**`처럼 같은 번호가 좌우 diff 로 마주 선다. 없으면 홀로 선 예시다
+	 * @field 짝 번호. 없으면 홀로 선 예시
+	 *
+	 * `**Incorrect 1**`과 `**Correct 1**`처럼 같은 번호끼리 좌우 diff로 마주 섬
 	 */
 	pair?: number;
 }
@@ -45,11 +47,11 @@ export interface RuleExample {
 export type RuleProseNode = {type: "line"; text: string} | {type: "code"; lang: string; code: string};
 
 /**
- * @summary rule 본문 분해 결과
+ * @summary 규칙 본문 분해 결과
  */
 export interface ParsedRuleBody {
 	/**
-	 * @field 첫 예시 이전 산문. 표와 코드 블록을 포함한다
+	 * @field 첫 예시 이전 산문. 표와 코드 블록 포함
 	 */
 	prose: RuleProseNode[];
 	/**
@@ -59,8 +61,9 @@ export interface ParsedRuleBody {
 }
 
 /**
- * 라벨 본문에 `clsx()`, `:is()`처럼 괄호가 들어가므로 마지막 `)`까지 greedy 로 잡는다.
- * `[^)]*`로 잡으면 첫 `)`에서 끊겨 라벨이 인식되지 않고 예시가 앞 카드에 병합된다.
+ * 라벨 본문에 `clsx()`, `:is()`처럼 괄호가 들어가 마지막 `)`까지 greedy로 매칭
+ *
+ * `[^)]*`면 첫 `)`에서 끊겨 라벨을 못 찾고 예시가 앞 카드에 병합됨
  */
 const examplePattern = /^\*\*(Incorrect|Correct)(?:\s+(\d+))?\s*(?:\((.+)\))?\s*:?\*\*/;
 
@@ -104,7 +107,7 @@ const trimBlankEdges = (prose: RuleProseNode[]): RuleProseNode[] => {
 };
 
 /**
- * @api rule markdown 본문을 화면용 prose와 예시로 분해
+ * @api 규칙 Markdown 본문을 화면용 산문과 예시로 분해
  */
 export const parseRuleBody = (body: string): ParsedRuleBody => {
 	const lines = body.replace(/\r\n/g, "\n").split("\n");

@@ -6,7 +6,7 @@ import {readGeneratedRegularFile} from "./generated-files.js";
 import {generateViewerArtifacts} from "./viewer.js";
 
 /**
- * @helper 생성물 하나가 현재 source renderer 결과와 byte 단위로 일치하는지 확인
+ * @helper 생성물 하나가 현재 렌더러 결과와 바이트 단위로 일치하는지 확인
  */
 const assertGeneratedFileMatches = async (targetPath: string, expected: string): Promise<void> => {
 	let actual: string;
@@ -27,7 +27,7 @@ const assertGeneratedFileMatches = async (targetPath: string, expected: string):
 };
 
 /**
- * @description 생성된 viewer 문서와 데이터 파일이 현재 source와 일치하는지 write 없이 확인
+ * @description 생성된 뷰어 문서와 데이터 파일이 현재 원본과 일치하는지 쓰기 없이 확인
  */
 export const checkGeneratedViewer = async (): Promise<void> => {
 	const expected = await generateViewerArtifacts();

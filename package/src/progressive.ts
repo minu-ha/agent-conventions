@@ -3,7 +3,7 @@ import {readFile} from "node:fs/promises";
 import type {LoadedSkillDocument, SkillPaths} from "./types.js";
 
 /**
- * @api progressive skill activation entrypoint 파일 가독성 검증
+ * @api progressive skill 활성화 진입점 파일 가독성 검증
  */
 export const assertProgressiveSkillEntrypoint = async (skillPaths: SkillPaths, document: LoadedSkillDocument): Promise<void> => {
 	if (document.metadata.progressiveDisclosure !== true) {
@@ -26,7 +26,7 @@ export const assertProgressiveSkillEntrypoint = async (skillPaths: SkillPaths, d
 };
 
 /**
- * @helper progressive owner가 가리키는 direct companion source 계약 검증
+ * @helper progressive 소유자가 가리키는 직접 companion 원본 계약 검증
  */
 export const assertProgressiveCompanionSource = (ownerDocument: LoadedSkillDocument, companionDocument: LoadedSkillDocument): void => {
 	if (ownerDocument.metadata.progressiveDisclosure !== true) {

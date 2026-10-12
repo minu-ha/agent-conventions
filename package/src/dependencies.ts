@@ -3,19 +3,19 @@ import path from "node:path";
 import type {SkillCompanion} from "./types.js";
 
 /**
- * @summary 검증을 마친 단일 skill dependency 선언
+ * @summary 검증을 마친 단일 skill 의존성 선언
  */
 export interface DependencyDeclaration {
 	/**
-	 * @field dependency 선언 방식
+	 * @field 의존성 선언 방식
 	 */
 	kind: "extends" | "companions";
 	/**
-	 * @field 검증된 직접 dependency skill 이름 목록
+	 * @field 검증된 직접 의존 skill 이름 목록
 	 */
 	skillNames: string[];
 	/**
-	 * @field 같은 schema 계약으로 정규화한 direct companion 목록
+	 * @field 같은 스키마 계약으로 정규화한 직접 companion 목록
 	 */
 	companions: SkillCompanion[];
 }
@@ -24,15 +24,16 @@ export const maximumConditionLength = 160;
 const safeStableNamePattern = /^[A-Za-z0-9][A-Za-z0-9._@-]*$/;
 
 /**
- * @helper rule 파일명에서 stable ID 계산.
- * 사람이 번호로 찾도록 파일명 앞에 붙이는 `NN-MM-` prefix는 ID에서 제외해 참조가 번호 변경에 흔들리지 않게 한다.
+ * @helper 규칙 파일명에서 stable ID 계산
+ *
+ * 사람이 번호로 찾도록 붙인 `NN-MM-` 접두사는 ID에서 제외. 번호가 바뀌어도 참조 유지
  */
 export const getRuleStableId = (fileName: string): string => {
 	return fileName.replace(/\.md$/, "").replace(/^\d+-\d+-/, "");
 };
 
 /**
- * @helper unknown 값의 metadata object 여부 검증
+ * @helper unknown 값의 metadata 객체 여부 검증
  */
 export const assertMetadataObject = (value: unknown, skillName: string): Record<string, unknown> => {
 	if (typeof value !== "object" || value === null || Array.isArray(value)) {
@@ -43,7 +44,7 @@ export const assertMetadataObject = (value: unknown, skillName: string): Record<
 };
 
 /**
- * @helper skill 이름이 지정 root의 immediate child 이름인지 검증
+ * @helper skill 이름이 지정 루트 바로 아래 자식 이름인지 검증
  */
 export const assertValidSkillName = (value: unknown, owner: string = "Skill"): string => {
 	const valid =
@@ -67,7 +68,7 @@ export const assertValidSkillName = (value: unknown, owner: string = "Skill"): s
 };
 
 /**
- * @helper Markdown routing에서 code span과 path segment로 쓰는 stable identifier 검증
+ * @helper Markdown 라우팅에서 코드 스팬과 경로 마디로 쓰는 stable ID 검증
  */
 export const assertValidRoutingIdentifier = (value: unknown, owner: string): string => {
 	if (typeof value !== "string" || !safeStableNamePattern.test(value)) {
@@ -80,7 +81,7 @@ export const assertValidRoutingIdentifier = (value: unknown, owner: string): str
 };
 
 /**
- * @helper local 또는 cross-skill rule target stable identifier 검증
+ * @helper local 또는 cross-skill 규칙 대상 stable ID 검증
  */
 export const assertValidRuleTarget = (value: unknown, owner: string, fieldName: "requiresSelected" | "reviewWith"): string => {
 	if (typeof value !== "string") {
@@ -112,7 +113,7 @@ export const assertRoutingCondition = (value: unknown, owner: string): string =>
 };
 
 /**
- * @helper legacy extends 목록 검증 및 정규화
+ * @helper 옛 extends 목록 검증과 정규화
  */
 const parseExtends = (skillName: string, rawExtends: unknown): string[] => {
 	if (!Array.isArray(rawExtends)) {
@@ -135,7 +136,7 @@ const parseExtends = (skillName: string, rawExtends: unknown): string[] => {
 };
 
 /**
- * @helper companion 객체와 required/conditional 계약 검증 및 정규화
+ * @helper companion 객체와 required, conditional 계약 검증과 정규화
  */
 const parseCompanions = (skillName: string, rawCompanions: unknown): SkillCompanion[] => {
 	if (!Array.isArray(rawCompanions)) {
@@ -186,7 +187,7 @@ const parseCompanions = (skillName: string, rawCompanions: unknown): SkillCompan
 };
 
 /**
- * @helper metadata의 legacy extends 또는 companion dependency 계약 파싱
+ * @helper metadata의 옛 extends 또는 companion 의존성 계약 파싱
  */
 export const parseDependencyDeclaration = (skillName: string, metadata: unknown): DependencyDeclaration => {
 	const metadataObject = assertMetadataObject(metadata, skillName);

@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
-"""규칙 문서의 줄 폭을 120칸 이하로 맞춘다.
+"""규칙 문서의 줄 폭을 120칸 이하로 맞춤
 
-세 단계로 끊는다.
+끊는 단계 셋
   1. 문장 경계 (semantic line breaks)
   2. 그래도 길면 절 경계 (쉼표, 연결어미)
   3. 그래도 길면 공백 기준 하드랩
 
-Markdown 은 문단 안의 줄바꿈을 다시 합치므로 렌더링 결과는 바뀌지 않는다.
-frontmatter, 코드 펜스, 표, 헤딩은 건드리지 않는다. 표는 줄을 끊으면 깨지고
-frontmatter 는 YAML 스칼라라 한 줄이어야 한다.
+Markdown은 문단 안의 줄바꿈을 다시 합쳐 렌더링 결과는 그대로
+frontmatter, 코드 펜스, 표, 헤딩은 손대지 않음. 표는 줄을 끊으면 깨지고
+frontmatter는 YAML 스칼라라 한 줄 필수
 
 사용:
     python3 docs/semantic-wrap.py                       # skill/*/rules/*.md 전체
@@ -22,9 +22,9 @@ import unicodedata
 
 MAX = 120
 
-# 문장 끝. "e.g." 같은 한 글자 약어를 피하려고 앞 두 글자를 요구한다.
+# 문장 끝. "e.g." 같은 한 글자 약어를 피하려고 앞 두 글자 필요
 SENTENCE = re.compile("(?<=[가-힣)\\]`\\w]{2}\\.)\\s+(?=[가-힣A-Za-z`\\[(\x00])")
-# 절 경계. 쉼표와 대표적인 연결어미.
+# 절 경계. 쉼표와 대표적인 연결어미
 CLAUSE = re.compile(r"(?<=[,、])\s+|(?<=하고)\s+|(?<=하며)\s+|(?<=지만)\s+|(?<=하면)\s+|(?<=되면)\s+")
 
 
@@ -33,7 +33,7 @@ def width(text: str) -> int:
 
 
 def mask_inline(text: str) -> tuple[str, list[str]]:
-    """인라인 코드와 링크를 자리표시자로 바꿔 그 안에서 끊기지 않게 한다."""
+    """인라인 코드와 링크를 자리표시자로 바꿔 그 안에서 끊기지 않게 함"""
     holes: list[str] = []
 
     def stash(match: re.Match[str]) -> str:
@@ -48,7 +48,7 @@ def unmask(text: str, holes: list[str]) -> str:
 
 
 def hard_wrap(text: str, indent: str) -> list[str]:
-    """공백 기준으로 MAX 칸에 맞춰 접는다."""
+    """공백 기준으로 MAX 칸에 맞춰 접음"""
     masked, holes = mask_inline(text)
     out: list[str] = []
     line = ""
@@ -71,7 +71,7 @@ def split_by(pattern: re.Pattern[str], text: str) -> list[str]:
 
 
 def wrap_line(line: str) -> list[str]:
-    """한 줄을 120칸 이하 여러 줄로 만든다."""
+    """한 줄을 120칸 이하 여러 줄로 나눔"""
     bullet = re.match(r"^(\s*(?:[-*+]|\d+\.)\s+)", line)
     indent = " " * width(bullet.group(1)) if bullet else ""
 
@@ -81,7 +81,7 @@ def wrap_line(line: str) -> list[str]:
             pieces.append(sentence)
             continue
 
-        # 절 경계마다 끊지 않고, MAX 를 넘기 직전까지 모아 담는다.
+        # 절 경계마다 끊지 않고 MAX를 넘기 직전까지 모아 담음
         packed = ""
         for clause in split_by(CLAUSE, sentence):
             for chunk in [clause] if width(clause) <= MAX else hard_wrap(clause, indent):
@@ -96,7 +96,7 @@ def wrap_line(line: str) -> list[str]:
 
     if not bullet or len(pieces) < 2:
         return pieces
-    # 불릿의 이어지는 줄은 항목 안에 남도록 들여쓴다.
+    # 불릿의 이어지는 줄은 항목 안에 남도록 들여씀
     return [pieces[0], *[f"{indent}{p}" for p in pieces[1:]]]
 
 
@@ -109,7 +109,7 @@ def process(text: str) -> str:
     in_comment = False
 
     def flush() -> None:
-        """모아 둔 문단이나 목록 항목을 한 줄로 이어 붙인 뒤 다시 접는다."""
+        """모아 둔 문단이나 목록 항목을 한 줄로 이어 붙인 뒤 다시 접음"""
         if not paragraph:
             return
         joined = " ".join(part.strip() for part in paragraph)
@@ -146,7 +146,7 @@ def process(text: str) -> str:
             out.append(line)
             continue
 
-        # HTML 주석은 정렬된 표를 담는 경우가 있어 원문 그대로 둔다.
+        # HTML 주석은 정렬된 표를 담는 경우가 있어 원문 그대로 유지
         if stripped.startswith("<!--"):
             flush()
             in_comment = True
@@ -156,15 +156,15 @@ def process(text: str) -> str:
                 in_comment = False
             continue
 
-        # 표, 헤딩, 들여쓴 블록, 구조 마커는 그대로 둔다.
-        # **Impact:** / **Incorrect ...** / **Correct ...** 는 build 가 한 줄로 파싱하는
-        # 구조 마커다. 접으면 "첫 Incorrect 뒤의 prose" 로 오인돼 계약 검사에 걸린다.
+        # 표, 헤딩, 들여쓴 블록, 구조 마커는 그대로 유지
+        # **Impact:**, **Incorrect ...**, **Correct ...**는 build가 한 줄로 파싱하는 구조 마커
+        # 접으면 "첫 Incorrect 뒤의 산문"으로 오인돼 계약 검사에 걸림
         if line[:1] in {"|", "#", "\t"} or line.startswith("    ") or stripped.startswith("**"):
             flush()
             out.append(line.rstrip())
             continue
 
-        # 목록 항목은 항목 단위로 모은다. 새 항목을 만나면 앞 항목을 마무리한다.
+        # 목록 항목은 항목 단위로 모음. 새 항목을 만나면 앞 항목 마무리
         if re.match(r"^\s*(?:[-*+]|\d+\.)\s", line):
             flush()
             paragraph.append(line.rstrip())

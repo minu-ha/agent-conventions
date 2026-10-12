@@ -7,7 +7,7 @@ import {readGeneratedRegularFile} from "./generated-files.js";
 import type {SkillPaths} from "./types.js";
 
 /**
- * @description 단일 skill의 compiled `HANDBOOK.md`가 현재 source renderer와 일치하는지 write 없이 확인
+ * @description 단일 skill의 컴파일 `HANDBOOK.md`가 현재 원본 렌더러와 일치하는지 쓰기 없이 확인
  */
 export const checkGeneratedHandbook = async (skillPaths: SkillPaths): Promise<void> => {
 	const expectedHandbook = await generateCompiledSkillMarkdown(skillPaths);
@@ -29,7 +29,7 @@ export const checkGeneratedHandbook = async (skillPaths: SkillPaths): Promise<vo
 };
 
 /**
- * @description CLI 입력 기준 compiled handbook freshness 확인
+ * @description CLI 입력 기준 컴파일 핸드북 신선도 확인
  */
 export const main = async (): Promise<void> => {
 	const {all, skill, skillRootDir = packagePaths.skillRootDir} = parseCliArgs(process.argv.slice(2));

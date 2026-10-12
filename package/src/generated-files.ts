@@ -4,71 +4,71 @@ import {lstat, readFile, readdir, rename, rm, writeFile} from "node:fs/promises"
 import path from "node:path";
 
 /**
- * @summary 단일 generated file write 또는 delete 계획
+ * @summary 생성 파일 하나의 쓰기 또는 삭제 계획
  */
 export interface GeneratedFileMutation {
 	/**
-	 * @field 교체하거나 삭제할 generated file absolute path
+	 * @field 교체하거나 삭제할 생성 파일 절대 경로
 	 */
 	targetPath: string;
 	/**
-	 * @field 새 UTF-8 본문이며 undefined이면 기존 generated file 삭제
+	 * @field 새 UTF-8 본문. undefined면 기존 생성 파일 삭제
 	 */
 	content?: string;
 }
 
 /**
- * @summary generated file transaction 완료 결과
+ * @summary 생성 파일 트랜잭션 완료 결과
  */
 export interface GeneratedFileTransactionResult {
 	/**
-	 * @field 실제로 존재해서 삭제한 generated file 경로
+	 * @field 실제로 있어서 삭제한 생성 파일 경로
 	 */
 	deletedPaths: string[];
 }
 
 /**
- * @summary generated file transaction에서 사용하는 filesystem operation 경계
+ * @summary 생성 파일 트랜잭션이 쓰는 파일 시스템 작업 경계
  */
 export interface GeneratedFileOperations {
 	/**
-	 * @field target 상태 조회 operation
+	 * @field 대상 상태 조회
 	 */
 	lstat: (targetPath: string) => Promise<Stats>;
 	/**
-	 * @field same-filesystem atomic rename operation
+	 * @field 같은 파일 시스템 안 원자적 이름 변경
 	 */
 	rename: (sourcePath: string, targetPath: string) => Promise<void>;
 	/**
-	 * @field rollback과 backup cleanup용 remove operation
+	 * @field 롤백과 백업 정리용 삭제
 	 */
 	rm: (targetPath: string, options: {force: boolean}) => Promise<void>;
 	/**
-	 * @field exclusive UTF-8 temp file write operation
+	 * @field UTF-8 임시 파일 배타적 쓰기
 	 */
 	writeFile: (targetPath: string, content: string, options: {encoding: "utf8"; flag: "wx"}) => Promise<void>;
 }
 
 /**
- * @summary rollback에 필요한 상태를 결합한 prepared generated file mutation
+ * @summary 롤백에 필요한 상태를 묶은 준비된 생성 파일 변경
  */
 interface PreparedMutation extends GeneratedFileMutation {
 	/**
-	 * @field 기존 target을 임시 보존할 same-directory backup 경로
+	 * @field 기존 대상을 임시 보존할 같은 디렉터리 백업 경로
 	 */
 	backupPath: string;
 	/**
-	 * @field transaction 시작 시 target 존재 여부
+	 * @field 트랜잭션 시작 시 대상 존재 여부
 	 */
 	existed: boolean;
 	/**
-	 * @field 새 본문을 먼저 기록할 same-directory temp 경로
+	 * @field 새 본문을 먼저 기록할 같은 디렉터리 임시 경로
 	 */
 	temporaryPath?: string;
 }
 
 /**
- * @summary production filesystem operation 구현
+ * @summary 실제 파일 시스템 작업 구현
  */
 const defaultGeneratedFileOperations: GeneratedFileOperations = {
 	lstat: async (targetPath) => await lstat(targetPath),
@@ -78,7 +78,7 @@ const defaultGeneratedFileOperations: GeneratedFileOperations = {
 };
 
 /**
- * @api optional generated directory가 실제 directory인지 확인하고 regular file 이름을 정렬해 반환
+ * @api 선택적 생성 디렉터리가 실제 디렉터리인지 확인하고 일반 파일 이름을 정렬해 반환
  */
 export const readGeneratedDirectoryFileNames = async (directoryPath: string): Promise<string[]> => {
 	let directoryStats: Stats;
@@ -109,7 +109,7 @@ export const readGeneratedDirectoryFileNames = async (directoryPath: string): Pr
 };
 
 /**
- * @api generated Markdown가 symlink가 아닌 regular file인지 확인한 뒤 UTF-8 본문 반환
+ * @api 생성 Markdown이 심볼릭 링크가 아닌 일반 파일인지 확인 후 UTF-8 본문 반환
  */
 export const readGeneratedRegularFile = async (targetPath: string): Promise<string> => {
 	const stats = await lstat(targetPath);
@@ -122,7 +122,7 @@ export const readGeneratedRegularFile = async (targetPath: string): Promise<stri
 };
 
 /**
- * @api ENOENT를 undefined로 정규화하며 generated target 상태 조회
+ * @api ENOENT를 undefined로 정규화하며 생성 대상 상태 조회
  */
 const readTargetStats = async (targetPath: string, operations: GeneratedFileOperations): Promise<Stats | undefined> => {
 	try {
@@ -137,7 +137,7 @@ const readTargetStats = async (targetPath: string, operations: GeneratedFileOper
 };
 
 /**
- * @api rollback과 cleanup filesystem step을 순서대로 실행하며 실패 수집
+ * @api 롤백과 정리 단계를 순서대로 실행하며 실패 수집
  */
 const runCleanupSteps = async (steps: (() => Promise<void>)[]): Promise<unknown[]> => {
 	const errors: unknown[] = [];
@@ -154,7 +154,7 @@ const runCleanupSteps = async (steps: (() => Promise<void>)[]): Promise<unknown[
 };
 
 /**
- * @api 같은 디렉터리 temp/backup을 사용해 generated file 집합을 교체하고 실패 시 rollback
+ * @api 같은 디렉터리의 임시, 백업 파일로 생성 파일 집합을 교체하고 실패 시 롤백
  */
 export const replaceGeneratedFiles = async (
 	mutations: GeneratedFileMutation[],

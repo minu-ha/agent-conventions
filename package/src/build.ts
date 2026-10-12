@@ -24,7 +24,7 @@ import type {CompiledSkillSection, LoadedSkillDocument, SkillCompanion, SkillMet
 const tocIndentWidth = 4;
 
 /**
- * @summary compiled handbook에 표시할 companion skill 링크와 activation 선언
+ * @summary 컴파일 핸드북에 표시할 companion skill 링크와 활성화 선언
  */
 interface CompanionSkill {
 	/**
@@ -32,7 +32,7 @@ interface CompanionSkill {
 	 */
 	skillName: string;
 	/**
-	 * @field agent가 활성화할 convention skill 이름
+	 * @field 에이전트가 활성화할 컨벤션 skill 이름
 	 */
 	conventionName: string;
 	/**
@@ -40,11 +40,11 @@ interface CompanionSkill {
 	 */
 	title: string;
 	/**
-	 * @field legacy companion의 full handbook 상대 경로
+	 * @field 옛 companion의 전체 핸드북 상대 경로
 	 */
 	agentsGuidePath: string;
 	/**
-	 * @field progressive companion의 activation router 상대 경로
+	 * @field progressive companion의 활성화 라우터 상대 경로
 	 */
 	skillEntrypointPath: string;
 	/**
@@ -52,33 +52,33 @@ interface CompanionSkill {
 	 */
 	rulesIndexPath: string;
 	/**
-	 * @field owner metadata의 companions가 선언한 direct activation mode와 조건
+	 * @field 소유 metadata의 companions가 선언한 직접 활성화 모드와 조건
 	 */
 	declaration?: SkillCompanion;
 	/**
-	 * @field companion target이 compact routing index를 제공하는지 여부
+	 * @field companion 대상이 compact 라우팅 index를 제공하는지 여부
 	 */
 	progressiveDisclosure: boolean;
 }
 
 /**
- * @summary compiled handbook markdown renderer 입력
+ * @summary 컴파일 핸드북 Markdown 렌더러 입력
  */
 interface GenerateMarkdownArgs {
 	/**
-	 * @field build 대상 root skill 디렉터리 이름
+	 * @field build 대상 루트 skill 디렉터리 이름
 	 */
 	skillName: string;
 	/**
-	 * @field handbook header와 progressive mode를 제공하는 root metadata
+	 * @field 핸드북 헤더와 progressive 모드를 제공하는 루트 metadata
 	 */
 	metadata: SkillMetadata;
 	/**
-	 * @field handbook 본문에 포함할 local compiled section 목록
+	 * @field 핸드북 본문에 포함할 local 컴파일 섹션 목록
 	 */
 	sections: CompiledSkillSection[];
 	/**
-	 * @field handbook에 안내할 direct 또는 legacy resolved companion 목록
+	 * @field 핸드북에 안내할 직접 또는 옛 방식으로 해석한 companion 목록
 	 */
 	companionSkills: CompanionSkill[];
 	/**
@@ -86,21 +86,21 @@ interface GenerateMarkdownArgs {
 	 */
 	references: string[];
 	/**
-	 * @field progressive full handbook에서 그대로 노출할 stable rule ID별 canonical ordinal
+	 * @field progressive 전체 핸드북에서 그대로 노출할 규칙 stable ID별 기준 순번
 	 */
 	routingOrdinalByRuleId: Map<string, string>;
 }
 
 /**
- * @summary read-only renderer와 transactional build가 공유하는 compiled handbook 입력
+ * @summary 읽기 전용 렌더러와 트랜잭션 build가 공유하는 컴파일 핸드북 입력
  */
 interface PreparedSkillBuild {
 	/**
-	 * @field source resolution이 끝난 root skill 문서
+	 * @field 원본 해석이 끝난 루트 skill 문서
 	 */
 	rootDocument: LoadedSkillDocument;
 	/**
-	 * @field 현재 source에서 렌더링한 expected HANDBOOK.md
+	 * @field 현재 원본에서 렌더링한 기대 HANDBOOK.md
 	 */
 	localMarkdown: string;
 }
@@ -115,7 +115,7 @@ const conventionSkillNameBySkillName: Record<string, string> = {};
 const nestedTocIndent = " ".repeat(tocIndentWidth);
 
 /**
- * @helper skill 이름 기준 영어 convention 표시명 계산
+ * @helper skill 이름 기준 영어 컨벤션 표시명 계산
  */
 const getConventionTitle = (skillName: string, fallbackTitle: string): string => {
 	return conventionTitleBySkillName[skillName] ?? fallbackTitle;
@@ -133,7 +133,7 @@ const getConventionSkillName = (skillName: string): string => {
 };
 
 /**
- * @helper inheritance 결과를 최종 markdown section 묶음으로 변환
+ * @helper 상속 결과를 최종 Markdown 섹션 묶음으로 변환
  */
 const buildCompiledSections = (rootSkillName: string, documents: LoadedSkillDocument[]): CompiledSkillSection[] => {
 	const compiledSections = documents.flatMap((document) =>
@@ -163,14 +163,14 @@ const buildCompiledSections = (rootSkillName: string, documents: LoadedSkillDocu
 };
 
 /**
- * @helper inheritance에 포함된 전체 참고 링크를 중복 없이 수집
+ * @helper 상속에 포함된 전체 참고 링크를 중복 없이 수집
  */
 const collectReferenceLinks = (documents: LoadedSkillDocument[]): string[] => {
 	return Array.from(new Set(documents.flatMap((document) => document.metadata.references ?? [])));
 };
 
 /**
- * @helper root skill과 함께 로드할 companion skill 메타데이터 계산
+ * @helper 루트 skill과 함께 로드할 companion skill 메타데이터 계산
  */
 const collectCompanionSkills = (rootDocument: LoadedSkillDocument, documents: LoadedSkillDocument[]): CompanionSkill[] => {
 	const dependencyDeclaration = parseDependencyDeclaration(rootDocument.skillName, rootDocument.metadata);
@@ -204,7 +204,7 @@ const collectCompanionSkills = (rootDocument: LoadedSkillDocument, documents: Lo
 };
 
 /**
- * @helper companion 을 언제 함께 적용하는지 한 줄로 적는다
+ * @helper companion을 함께 적용하는 조건 한 줄
  */
 const toCompanionCondition = (declaration: SkillCompanion): string => {
 	if (declaration.mode === "required") {
@@ -219,7 +219,7 @@ const toCompanionCondition = (declaration: SkillCompanion): string => {
 };
 
 /**
- * @helper 의존성을 어느 metadata 키에서 읽었는지 돌려준다. 둘 다 없으면 undefined 다
+ * @helper 의존성을 읽은 metadata 키. 둘 다 없으면 undefined
  */
 const toDependencySourceKey = (metadata: SkillMetadata): string | undefined => {
 	if (metadata.companions !== undefined) {
@@ -234,7 +234,7 @@ const toDependencySourceKey = (metadata: SkillMetadata): string | undefined => {
 };
 
 /**
- * @helper metadata와 resolved section을 compiled markdown 본문으로 조립
+ * @helper metadata와 해석한 섹션을 컴파일한 Markdown 본문으로 조립
  */
 export const generateMarkdown = (args: GenerateMarkdownArgs): string => {
 	const {skillName, metadata, sections, companionSkills, references, routingOrdinalByRuleId} = args;
@@ -398,7 +398,7 @@ export const generateMarkdown = (args: GenerateMarkdownArgs): string => {
 };
 
 /**
- * @helper skill source와 companion closure에서 현재 compiled handbook 입력 준비
+ * @helper skill 원본과 companion 전체에서 현재 컴파일 핸드북 입력 준비
  */
 const prepareSkillBuild = async (skillPaths: SkillPaths): Promise<PreparedSkillBuild> => {
 	const documents = await readResolvedSkillDocuments(skillPaths);
@@ -427,21 +427,21 @@ const prepareSkillBuild = async (skillPaths: SkillPaths): Promise<PreparedSkillB
 };
 
 /**
- * @description 단일 skill의 현재 source 기준 expected `HANDBOOK.md`를 write 없이 렌더링
+ * @description 단일 skill의 현재 원본 기준 기대 `HANDBOOK.md`를 쓰기 없이 렌더링
  */
 export const generateCompiledSkillMarkdown = async (skillPaths: SkillPaths): Promise<string> => {
 	return (await prepareSkillBuild(skillPaths)).localMarkdown;
 };
 
 /**
- * @description 단일 skill의 compiled `HANDBOOK.md` 생성
+ * @description 단일 skill의 컴파일 `HANDBOOK.md` 생성
  */
 export const buildSkill = async (skillPaths: SkillPaths): Promise<void> => {
 	const {rootDocument, localMarkdown} = await prepareSkillBuild(skillPaths);
 	const dependencies = parseDependencyDeclaration(rootDocument.skillName, rootDocument.metadata);
 	const rulesIndexMarkdown =
 		rootDocument.metadata.progressiveDisclosure === true ? generateRulesIndexMarkdown(rootDocument, dependencies.companions) : undefined;
-	// contract 파일명은 번호 prefix 없는 stable ID 기준이라 rule 파일명이 번호로 바뀌어도 참조가 유지된다.
+	// contract 파일명은 번호 접두사 없는 stable ID 기준. 규칙 파일 번호가 바뀌어도 참조 유지
 	const contractMarkdownByFileName = new Map<string, string>(
 		rootDocument.metadata.progressiveDisclosure === true
 			? rootDocument.rules.map((rule) => [`${getRuleId(rule)}.md`, generateRuleContractMarkdown(rule)])
@@ -487,7 +487,7 @@ export const buildSkill = async (skillPaths: SkillPaths): Promise<void> => {
 };
 
 /**
- * @description CLI 입력 기준 build 대상 skill compiled guide 생성
+ * @description CLI 입력 기준 build 대상 skill 컴파일 가이드 생성
  */
 export const main = async (): Promise<void> => {
 	const {all, skill, skillRootDir = packagePaths.skillRootDir} = parseCliArgs(process.argv.slice(2));

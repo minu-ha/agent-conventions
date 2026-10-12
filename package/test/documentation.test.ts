@@ -275,7 +275,7 @@ test("routing eval module reserves role tags for exported file boundaries", asyn
 	const source = await readPackageFile("src/routing-evals.ts");
 
 	assert.doesNotMatch(source, /@helper /, "module-local parsing and validation sub-steps should not claim reusable helper boundaries.");
-	assert.match(source, /@summary strict JSON object/, "JsonObject should have a summary declaration.");
+	assert.match(source, /@summary 엄격한 JSON 객체/, "JsonObject should have a summary declaration.");
 	assert.doesNotMatch(
 		source,
 		/scenario\.scopeDrift\?\.[^\n]+\?\? false/,

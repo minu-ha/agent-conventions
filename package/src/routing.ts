@@ -4,7 +4,7 @@ import {assertRoutingCondition, assertValidRoutingIdentifier, assertValidRuleTar
 import type {LoadedSkillDocument, SkillCompanion, SkillRule, SkillSection} from "./types.js";
 
 /**
- * 섹션 하나가 가질 수 있는 규칙 수의 상한. 섹션 순서를 앞자리로 밀어 정렬 키를 만든다
+ * 섹션 하나에 둘 수 있는 규칙 수의 상한. 섹션 순서를 앞자리로 밀어 정렬 키 생성
  */
 const sectionOrdinalStride = 1_000;
 
@@ -21,15 +21,16 @@ const contractRendererVersion = 4;
 const supportedImpactLevels = new Set(["CRITICAL", "HIGH", "MEDIUM"]);
 
 /**
- * @helper generated Markdown display text를 단일 행 literal text로 escape
+ * @helper 생성 Markdown 표시 글을 한 줄 리터럴 글로 이스케이프
  */
 export const escapeMarkdownText = (value: string): string => {
 	return value.replace(/[\r\n]+/g, " ").replace(/([\\`*_[\]()<>!|])/g, "\\$1");
 };
 
 /**
- * @helper 표가 아닌 단독 줄에 넣을 scalar 정리.
- * 코드 스팬 안은 그대로 두어 `React.*` 같은 표기를 살리고, 스팬 밖의 링크, 강조 구문만 무력화한다.
+ * @helper 표가 아닌 단독 줄에 넣을 scalar 정리
+ *
+ * 코드 스팬 안은 그대로 둬 `React.*` 같은 표기 유지. 스팬 밖의 링크, 강조 구문만 무력화
  */
 export const escapeMarkdownProse = (value: string): string => {
 	return value
@@ -40,7 +41,7 @@ export const escapeMarkdownProse = (value: string): string => {
 };
 
 /**
- * @helper arbitrary scalar를 안전한 CommonMark inline code span으로 렌더링
+ * @helper 임의 scalar를 안전한 CommonMark 인라인 코드 스팬으로 렌더링
  */
 const formatInlineCode = (value: string): string => {
 	const normalizedValue = value.replace(/[\r\n]+/g, " ");
@@ -53,12 +54,12 @@ const formatInlineCode = (value: string): string => {
 };
 
 /**
- * @helper generated relative link의 단일 path segment URL encoding
+ * @helper 생성 상대 링크의 경로 마디 하나 URL 인코딩
  */
 const encodePathSegment = (value: string): string => encodeURIComponent(value);
 
 /**
- * @summary canonical routing source 조립 입력
+ * @summary 기준 라우팅 원본 조립 입력
  */
 interface CanonicalRoutingSourceArgs {
 	/**
@@ -70,18 +71,18 @@ interface CanonicalRoutingSourceArgs {
 	 */
 	sections: SkillSection[];
 	/**
-	 * @field stable 순서로 정렬된 direct companion 목록
+	 * @field 고정 순서로 정렬한 직접 companion 목록
 	 */
 	companions: SkillCompanion[];
 }
 
 /**
- * @helper rule 파일명에서 stable ID 계산
+ * @helper 규칙 파일명에서 stable ID 계산
  */
 export const getRuleId = (rule: SkillRule): string => getRuleStableId(rule.fileName);
 
 /**
- * @helper 파일명 번호 prefix에서 section 내 정렬 키 계산. 번호가 없으면 제목 정렬로 넘어간다
+ * @helper 파일명 번호 접두사에서 section 안 정렬 키 계산. 번호가 없으면 제목 정렬
  */
 const getRuleFileOrder = (rule: SkillRule): number => {
 	const numbered = /^(\d+)-(\d+)-/.exec(rule.fileName);
@@ -90,12 +91,12 @@ const getRuleFileOrder = (rule: SkillRule): number => {
 };
 
 /**
- * @helper routing edge target를 generated surface와 validator가 공유하는 code-point 순서로 정렬
+ * @helper 라우팅 간선 대상을 생성물과 검증기가 공유하는 코드 포인트 순서로 정렬
  */
 export const getCanonicalRoutingTargets = (targets: string[]): string[] => [...targets].sort(compareRoutingText);
 
 /**
- * @helper section prefix 기준 local rule 목록 정렬
+ * @helper 섹션 접두사 기준 local 규칙 목록 정렬
  */
 export const getRulesForSection = (section: SkillSection, rules: SkillRule[]): SkillRule[] => {
 	return rules
@@ -109,7 +110,7 @@ export const getRulesForSection = (section: SkillSection, rules: SkillRule[]): S
 };
 
 /**
- * @helper compact index 전용 codepoint 순서로 section local rule 목록 정렬
+ * @helper compact index 전용 코드 포인트 순서로 섹션 local 규칙 목록 정렬
  */
 const getRoutingRulesForSection = (section: SkillSection, rules: SkillRule[]): SkillRule[] => {
 	return rules
@@ -125,13 +126,13 @@ const getRoutingRulesForSection = (section: SkillSection, rules: SkillRule[]): S
 const exampleMarkerPattern = /^ {0,3}\*\*(Incorrect|Correct)(?:\s+\d+)?(?:\s+\(.+\))?:?\*\*[ \t]*$/;
 
 /**
- * 규범 산문 안에 둘 수 있는 유일한 펜스 언어. 흐름도는 예시가 아니라 산문의 일부라 Incorrect 경계 앞에 온다
+ * 규범 산문 안에 둘 수 있는 유일한 펜스 언어. 흐름도는 예시가 아니라 산문의 일부라 Incorrect 경계 앞
  */
 const proseFenceLanguage = "mermaid";
 const fencePattern = /^ {0,3}(`{3,}|~{3,})(.*)$/;
 
 /**
- * @helper generated contract 줄 끝 공백을 제거하고 Markdown hard break 의미는 backslash로 보존
+ * @helper 생성 contract 줄 끝 공백 제거. Markdown 강제 줄바꿈 의미는 백슬래시로 보존
  */
 const normalizeContractLine = (line: string): string => {
 	const hasMarkdownHardBreak = / {2,}$/.test(line);
@@ -145,9 +146,9 @@ const normalizeContractLine = (line: string): string => {
 };
 
 /**
- * @helper 여러 줄로 접어 쓴 `**Impact: ...**` 선언을 한 줄로 되돌린다.
+ * @helper 여러 줄로 접어 쓴 `**Impact: ...**` 선언을 한 줄로 복원
  *
- * 선언이 길면 소스에서 가로로 넘친다. 접어 쓰고 여기서 다시 이어 붙여 계약 비교는 한 줄 기준을 지킨다.
+ * 긴 선언은 소스에서 접어 쓰고 여기서 이어 붙임. 계약 비교는 한 줄 기준 유지
  */
 const joinFoldedImpactDeclaration = (lines: readonly string[]): string[] => {
 	const joined: string[] = [];
@@ -168,21 +169,23 @@ const joinFoldedImpactDeclaration = (lines: readonly string[]): string[] => {
 };
 
 /**
- * full rule 본문에서 뽑은 compact contract 조각
+ * 전체 규칙 본문에서 뽑은 compact contract 조각
  */
 interface NormativeRuleContract {
 	/**
-	 * 첫 예시 라벨(Incorrect 또는 Correct) 앞 규범 산문. 헤딩은 `#`으로 올린다
+	 * 첫 예시 라벨(Incorrect 또는 Correct) 앞 규범 산문. 헤딩은 `#` 한 단계 올림
 	 */
 	normativeBody: string;
 	/**
-	 * 첫 예시 라벨부터 첫 Correct 펜스가 닫히는 줄까지. Incorrect 가 없는 규칙은 첫 Correct 하나다. MEDIUM contract 에 그대로 실린다
+	 * 첫 예시 라벨부터 첫 Correct 펜스가 닫히는 줄까지. MEDIUM contract에 그대로 실림
+	 *
+	 * Incorrect가 없는 규칙은 첫 Correct 하나
 	 */
 	firstExamplePair: string;
 }
 
 /**
- * @helper full rule body에서 fenced example 밖의 첫 Incorrect 경계와 normative prefix 검증
+ * @helper 전체 규칙 본문에서 펜스 예시 밖의 첫 Incorrect 경계와 규범 앞부분 검증
  */
 const readNormativeRuleContract = (rule: SkillRule): NormativeRuleContract => {
 	const normalizedBody = rule.body.replace(/\r\n?/g, "\n");
@@ -251,7 +254,7 @@ const readNormativeRuleContract = (rule: SkillRule): NormativeRuleContract => {
 					throw new Error(`${getRuleId(rule)}: ${pendingExampleMarker} marker must be followed by a fenced example.`);
 				}
 
-				// 첫 예시 라벨이 규범과 예시의 경계다. 도구 설정처럼 대비가 뜻이 없는 규칙은 Correct 만 둘 수 있다.
+				// 첫 예시 라벨이 규범과 예시의 경계. 도구 설정처럼 대비가 뜻이 없는 규칙은 Correct만 가능
 				if (incorrectBoundaryOffset === undefined) {
 					incorrectBoundaryOffset = currentOffset;
 				}
@@ -316,7 +319,7 @@ const readNormativeRuleContract = (rule: SkillRule): NormativeRuleContract => {
 };
 
 /**
- * @helper selected/unknown rule가 기본 로드할 generated compact contract 생성
+ * @helper Selected, Unknown 규칙이 기본 로드할 compact contract 생성
  */
 export const generateRuleContractMarkdown = (rule: SkillRule): string => {
 	if (!supportedImpactLevels.has(rule.impact)) {
@@ -350,7 +353,7 @@ export const generateRuleContractMarkdown = (rule: SkillRule): string => {
 };
 
 /**
- * @helper section을 선언 순서와 stable tie-breaker로 정렬
+ * @helper 섹션을 선언 순서와 고정 보조 기준으로 정렬
  */
 const getOrderedSections = (sections: SkillSection[]): SkillSection[] => {
 	return [...sections].sort(
@@ -360,14 +363,14 @@ const getOrderedSections = (sections: SkillSection[]): SkillSection[] => {
 };
 
 /**
- * @helper compact index와 같은 순서의 local rule stable ID 목록 계산
+ * @helper compact index와 같은 순서의 local 규칙 stable ID 목록 계산
  */
 export const getCanonicalRoutingRuleIds = (document: LoadedSkillDocument): string[] => {
 	return getOrderedSections(document.sections).flatMap((section) => getRoutingRulesForSection(section, document.rules).map(getRuleId));
 };
 
 /**
- * @helper direct companion을 stable routing 순서로 정렬
+ * @helper 직접 companion을 고정 라우팅 순서로 정렬
  */
 const getOrderedCompanions = (companions: SkillCompanion[]): SkillCompanion[] => {
 	return [...companions].sort(
@@ -379,7 +382,7 @@ const getOrderedCompanions = (companions: SkillCompanion[]): SkillCompanion[] =>
 };
 
 /**
- * @helper local rule stable ID와 section assignment 무결성 검증
+ * @helper local 규칙 stable ID와 섹션 배정 무결성 검증
  */
 const assertRuleAssignments = (document: LoadedSkillDocument, sections: SkillSection[]): void => {
 	assertValidRoutingIdentifier(document.skillName, `${document.skillName}: routing index skill name`);
@@ -428,7 +431,7 @@ const assertRuleAssignments = (document: LoadedSkillDocument, sections: SkillSec
 };
 
 /**
- * @helper direct companion 목록의 stable ID 중복 검증
+ * @helper 직접 companion 목록의 stable ID 중복 검증
  */
 const assertDirectCompanions = (skillName: string, companions: SkillCompanion[]): void => {
 	for (const companion of companions) {
@@ -444,7 +447,7 @@ const assertDirectCompanions = (skillName: string, companions: SkillCompanion[])
 };
 
 /**
- * @helper routing에 영향을 주는 값만 canonical JSON으로 직렬화
+ * @helper 라우팅에 영향을 주는 값만 정규 JSON으로 직렬화
  */
 const createCanonicalRoutingSource = (args: CanonicalRoutingSourceArgs): string => {
 	const {document, sections, companions} = args;
@@ -477,7 +480,7 @@ const createCanonicalRoutingSource = (args: CanonicalRoutingSourceArgs): string 
 };
 
 /**
- * @helper skill 이름 기준 local ordinal prefix 계산
+ * @helper skill 이름 기준 local 순번 접두사 계산
  */
 export const getRoutingOrdinalPrefix = (skillName: string): string => {
 	const firstAlphanumericCharacter = Array.from(skillName).find((character) => /[A-Za-z0-9]/.test(character));
@@ -490,9 +493,10 @@ export const getRoutingOrdinalPrefix = (skillName: string): string => {
 };
 
 /**
- * @helper rule 파일명의 `NN-MM-` 번호로 local ordinal 계산.
- * 핸드북이 부르는 번호와 `rules/` 파일명의 번호가 같아야 사람이 규칙을 바로 찾는다.
- * 파일명 번호는 validate가 선택으로 두므로 번호가 없으면 예전처럼 순번으로 매긴다.
+ * @helper 규칙 파일명의 `NN-MM-` 번호로 local 순번 계산
+ *
+ * 핸드북 번호와 `rules/` 파일명 번호가 같아야 사람이 규칙을 바로 찾음
+ * 파일명 번호는 validate에서 선택이라 번호가 없으면 예전처럼 순번
  */
 export const getRoutingOrdinal = (skillName: string, fileName: string, localOrdinal: number): string => {
 	const ordinalPrefix = getRoutingOrdinalPrefix(skillName);
@@ -508,7 +512,7 @@ export const getRoutingOrdinal = (skillName: string, fileName: string, localOrdi
 };
 
 /**
- * @helper compact index와 같은 순서의 rule ID별 local ordinal 계산
+ * @helper compact index와 같은 순서의 규칙 ID별 local 순번 계산
  */
 export const getCanonicalRoutingOrdinals = (document: LoadedSkillDocument): Map<string, string> => {
 	const canonicalRules = getOrderedSections(document.sections).flatMap((section) => getRoutingRulesForSection(section, document.rules));
@@ -522,7 +526,7 @@ export const getCanonicalRoutingOrdinals = (document: LoadedSkillDocument): Map<
 };
 
 /**
- * @helper compact deterministic `RULES_INDEX.md` 생성
+ * @helper 결정적인 compact `RULES_INDEX.md` 생성
  */
 export const generateRulesIndexMarkdown = (document: LoadedSkillDocument, directCompanions: SkillCompanion[]): string => {
 	const orderedSections = getOrderedSections(document.sections);

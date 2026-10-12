@@ -10,7 +10,7 @@ import {generateRuleContractMarkdown, generateRulesIndexMarkdown, getRuleId} fro
 import type {SkillPaths} from "./types.js";
 
 /**
- * @helper progressive companion closure를 순회하며 generated output 최신 상태 확인
+ * @helper progressive companion 전체를 돌며 생성물 최신 상태 확인
  */
 const checkGeneratedSkillTree = async (skillPaths: SkillPaths, visiting: Set<string>, completed: Set<string>): Promise<boolean> => {
 	if (completed.has(skillPaths.skillName)) {
@@ -85,7 +85,7 @@ const checkGeneratedSkillTree = async (skillPaths: SkillPaths, visiting: Set<str
 		throw new Error(`${skillPaths.skillName}: stale generated RULES_INDEX.md at ${skillPaths.rulesIndexPath}. Run the skill build.`);
 	}
 
-	// contract 파일명은 번호 prefix 없는 stable ID 기준이다.
+	// contract 파일명은 번호 접두사 없는 stable ID 기준
 	const expectedContracts = new Map<string, string>(
 		localDocument.rules.map((rule) => [`${getRuleId(rule)}.md`, generateRuleContractMarkdown(rule)]),
 	);
@@ -127,14 +127,14 @@ const checkGeneratedSkillTree = async (skillPaths: SkillPaths, visiting: Set<str
 };
 
 /**
- * @description 단일 skill과 progressive companion closure의 generated routing 산출물 최신 상태 확인
+ * @description 단일 skill과 progressive companion 전체의 라우팅 생성물 최신 상태 확인
  */
 export const checkGeneratedSkill = async (skillPaths: SkillPaths): Promise<boolean> => {
 	return await checkGeneratedSkillTree(skillPaths, new Set(), new Set());
 };
 
 /**
- * @description CLI 입력 기준 generated routing index 최신 상태 확인
+ * @description CLI 입력 기준 라우팅 index 생성물 최신 상태 확인
  */
 export const main = async (): Promise<void> => {
 	const {all, skill, skillRootDir = packagePaths.skillRootDir} = parseCliArgs(process.argv.slice(2));
