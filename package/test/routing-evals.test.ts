@@ -405,7 +405,7 @@ const typescriptRuleRouting = {
 	},
 	"values-handle-dates-with-dayjs": {
 		appliesWhen:
-			"날짜를 파싱하거나 형식을 맞추거나 더하고 뺄 때. `new Date`, `getTime()`, `setDate()`, `toLocaleDateString()`을 쓸 때. 제외: 서버가 준 시각 문자열을 파싱 없이 그대로 보여주는 경우.",
+			"날짜를 파싱하거나 형식을 맞추거나 더하고 뺄 때. `new Date`, `getTime()`, `setDate()`, `toLocaleDateString()`을 쓸 때. 제외: 서버가 준 시각 문자열을 파싱 없이 그대로 보여 주는 경우.",
 		reviewWith: ["values-use-es-toolkit-for-value-helpers", "naming-place-project-constants-in-the-root-constant-folder"],
 	},
 	"values-decide-once-and-carry-the-result": {
@@ -463,7 +463,7 @@ const typescriptRuleRouting = {
 		reviewWith: [],
 	},
 	"docs-write-doc-comments-as-multiline-blocks": {
-		appliesWhen: "선언 위 문서 주석을 새로 쓰거나 형식을 바꿀 때. 한 줄 `/** … */`이나 `//`로 선언을 설명하려 할 때.",
+		appliesWhen: "선언 위 문서 주석을 새로 쓰거나 형식을 바꿀 때. 한 줄 `/** … */`나 `//`로 선언을 설명하려 할 때.",
 		reviewWith: ["docs-require-header-jsdoc-on-key-declarations"],
 	},
 	"docs-justify-convention-exceptions-with-a-reason-comment": {
@@ -751,7 +751,7 @@ const reactRuleRouting = {
 	},
 	"typing-open-dom-props-in-three-steps": {
 		appliesWhen:
-			"래퍼 프롭스가 `HTMLAttributes`를 `extends` 하거나 그 상속을 뗄 때. 라이브러리 프롭과 DOM 프롭의 이름이 부딪혀 컴파일이 막힐 때. 제외: DOM 프롭이 아닌 표시 프롭만 더하거나 빼는 경우.",
+			"래퍼 프롭스가 `HTMLAttributes`를 `extends`하거나 그 상속을 뗄 때. 라이브러리 프롭과 DOM 프롭의 이름이 부딪혀 컴파일이 막힐 때. 제외: DOM 프롭이 아닌 표시 프롭만 더하거나 빼는 경우.",
 		reviewWith: [
 			"typing-narrow-library-wrapper-contracts",
 			"css/composition-do-not-style-through-the-style-attribute",

@@ -55,10 +55,10 @@ flowchart LR
 ```txt
 page/orders/_function/to-order-summary.ts
   toOrderSummary     내보낸 함수. 본문은 세 줄이고 나머지는 아래 함수로 갔다
-  toComparisonRows   toOrderSummary 만 부름
-  toStatusGroups     toOrderSummary 만 부름
-  toStockCard        toOrderSummary 만 부름
-  formatAmount       toComparisonRows 와 toStatusGroups 가 부름
+  toComparisonRows   toOrderSummary만 부름
+  toStatusGroups     toOrderSummary만 부름
+  toStockCard        toOrderSummary만 부름
+  formatAmount       toComparisonRows와 toStatusGroups가 부름
 ```
 
 ```ts

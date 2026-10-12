@@ -4,7 +4,7 @@ titleKo: 래퍼에 DOM 속성을 열 때는 세 단계를 차례로 시도합니
 impact: HIGH
 impactDescription: 프롭 타입 충돌을 해결하면서 필요한 DOM 속성과 이벤트를 유지합니다
 appliesWhen:
-  - 래퍼 프롭스가 `HTMLAttributes`를 `extends` 하거나 그 상속을 뗄 때
+  - 래퍼 프롭스가 `HTMLAttributes`를 `extends`하거나 그 상속을 뗄 때
   - 라이브러리 프롭과 DOM 프롭의 이름이 부딪혀 컴파일이 막힐 때
   - 제외: DOM 프롭이 아닌 표시 프롭만 더하거나 빼는 경우
 reviewWith: >-
@@ -71,7 +71,7 @@ export interface UiButtonProps {
 }
 ```
 
-**Correct 1 (1단계 — 같은 이름의 프롭도 호환되면 그대로 상속합니다):**
+**Correct 1 (1단계. 같은 이름의 프롭도 호환되면 그대로 상속합니다):**
 
 ```tsx
 import {Button} from "@mui/material";
@@ -96,7 +96,7 @@ export const UiButton = (props: UiButtonProps) => {
 };
 ```
 
-**Correct (2단계 — 호환되지 않는 정렬 프롭만 빼고 다시 엽니다):**
+**Correct (2단계. 호환되지 않는 정렬 프롭만 빼고 다시 엽니다):**
 
 ```tsx
 import {TableCell} from "@mui/material";
@@ -125,7 +125,7 @@ export const UiTableCell = (props: UiTableCellProps) => {
 };
 ```
 
-**Correct (3단계 — 요소 타입이 달라 필요한 프롭만 선언합니다):**
+**Correct (3단계. 요소 타입이 달라 필요한 프롭만 선언합니다):**
 
 ```tsx
 import {TextField} from "@mui/material";

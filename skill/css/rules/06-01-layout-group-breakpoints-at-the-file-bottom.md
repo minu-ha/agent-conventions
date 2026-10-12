@@ -55,7 +55,7 @@ tags: selector, responsive
 }
 ```
 
-**Correct 1 (선언은 위에 두고 브레이크포인트는 파일 아래 한 곳에 모읍니다):**
+**Correct 1 (선언은 위에 두고 브레이크포인트는 파일 아래 한곳에 모읍니다):**
 
 ```css
 .pg_products__toolbar {

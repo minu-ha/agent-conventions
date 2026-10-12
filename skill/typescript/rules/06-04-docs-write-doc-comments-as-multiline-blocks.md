@@ -5,7 +5,7 @@ impact: MEDIUM
 impactDescription: 선언 위 주석 형태가 파일마다 같아 주석을 검색하고 훑어보기 쉬워집니다
 appliesWhen:
   - 선언 위 문서 주석을 새로 쓰거나 형식을 바꿀 때
-  - 한 줄 `/** … */`이나 `//`로 선언을 설명하려 할 때
+  - 한 줄 `/** … */`나 `//`로 선언을 설명하려 할 때
 reviewWith: docs-require-header-jsdoc-on-key-declarations
 tags: docs, declarations
 ---

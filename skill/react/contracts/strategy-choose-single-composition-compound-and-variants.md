@@ -51,7 +51,7 @@ export const WgProfileDialog = (props: WgProfileDialogProps) => {
 };
 ```
 
-**Correct 1 (1단계 — 확장이 필요 없으면 단일 컴포넌트로 둡니다):**
+**Correct 1 (1단계. 확장이 필요 없으면 단일 컴포넌트로 둡니다):**
 
 ```tsx
 /**

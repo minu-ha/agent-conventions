@@ -86,7 +86,7 @@ const toStateLabel: UserFormatters["toStateLabel"] = (state) => {
 
 ```ts
 /**
- * 앞뒤 공백을 걷어낸 요청 문자열
+ * 앞뒤 공백을 걷어 낸 요청 문자열
  */
 const toRequest = (request: string): string => {
 	return request.trim();
@@ -109,7 +109,7 @@ const toSearchRequest = (request: string): string => {
 type ToRequest = (request: string) => string;
 
 /**
- * 앞뒤 공백을 걷어낸 요청 문자열
+ * 앞뒤 공백을 걷어 낸 요청 문자열
  */
 const toRequest: ToRequest = (request) => {
 	return request.trim();

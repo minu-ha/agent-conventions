@@ -12,7 +12,7 @@
 
 ## 개요
 
-에이전트 협업 팀을 위한 React 코딩 컨벤션입니다. `ui`·`widget`·`page` 세 레이어의 소유 경계, 컴포넌트 조립, 핸들러와 프롭 계약, 서버 데이터와 상태의 출처, 렌더와 이펙트의 수명, 성능 판단과 문서화를 다룹니다. TypeScript 규칙을 항상 함께 따르고, 클래스 계약이나 스타일시트를 바꿀 때는 CSS 규칙도 함께 봅니다. React 19·19.2 전용 API는 프로젝트의 지원 버전을 확인한 뒤 적용합니다. 규칙 본문의 정본은 `rules/*.md`입니다.
+에이전트 협업 팀을 위한 React 코딩 컨벤션입니다. `ui`, `widget`, `page` 세 레이어의 소유 경계, 컴포넌트 조립, 핸들러와 프롭 계약, 서버 데이터와 상태의 출처, 렌더와 이펙트의 수명, 성능 판단과 문서화를 다룹니다. TypeScript 규칙을 항상 함께 따르고, 클래스 계약이나 스타일시트를 바꿀 때는 CSS 규칙도 함께 봅니다. React 19, 19.2 전용 API는 프로젝트의 지원 버전을 확인한 뒤 적용합니다. 규칙 본문의 정본은 `rules/*.md`입니다.
 
 이 문서에는 React 컨벤션 규칙만 담겨 있습니다. 아래 규칙도 함께 따릅니다.
 
@@ -326,7 +326,7 @@ component/widget/chatbot/
 └── chat-panel/
     ├── wg-chat-panel.tsx          # WgChatPanel, wg_chatPanel
     ├── _wg-chat-panel-header.tsx  # WgChatPanelHeader
-    └── _wg-history-pane.tsx       # WgHistoryPane. history 가 뜻을 만들어 소유자 이름이 필요 없다
+    └── _wg-history-pane.tsx       # WgHistoryPane. history가 뜻을 만들어 소유자 이름이 필요 없다
 ```
 
 ### 1.3 Place Owner Files in Role Folders
@@ -440,7 +440,7 @@ page/product-detail/
 │   ├── to-product-summary.ts
 │   └── to-trend-chart/                자기만 쓰는 보조가 있어 폴더
 │       ├── to-trend-chart.ts
-│       └── _to-chart-range.ts         toTrendChart 만 부름
+│       └── _to-chart-range.ts         toTrendChart만 부름
 ├── _type/
 │   └── product-detail-view-model.ts
 └── product-table-section/             자기만 쓰는 파일이 있어 하위 소유자 폴더가 됨
@@ -1535,7 +1535,7 @@ export const UiTableCell = (props: UiTableCellProps) => {
 
 **Rule:** `R03-03` · `typing-open-dom-props-in-three-steps`
 
-**Applies when:** 래퍼 프롭스가 `HTMLAttributes`를 `extends` 하거나 그 상속을 뗄 때. 라이브러리 프롭과 DOM 프롭의 이름이 부딪혀 컴파일이 막힐 때. 제외: DOM 프롭이 아닌 표시 프롭만 더하거나 빼는 경우.
+**Applies when:** 래퍼 프롭스가 `HTMLAttributes`를 `extends`하거나 그 상속을 뗄 때. 라이브러리 프롭과 DOM 프롭의 이름이 부딪혀 컴파일이 막힐 때. 제외: DOM 프롭이 아닌 표시 프롭만 더하거나 빼는 경우.
 
 **Review with:** `css/composition-do-not-style-through-the-style-attribute`, `typescript/types-reuse-existing-contracts-before-new-types`, `typing-narrow-library-wrapper-contracts`
 
@@ -1595,7 +1595,7 @@ export interface UiButtonProps {
 }
 ```
 
-**Correct 1 (1단계 — 같은 이름의 프롭도 호환되면 그대로 상속합니다):**
+**Correct 1 (1단계. 같은 이름의 프롭도 호환되면 그대로 상속합니다):**
 
 ```tsx
 import {Button} from "@mui/material";
@@ -1620,7 +1620,7 @@ export const UiButton = (props: UiButtonProps) => {
 };
 ```
 
-**Correct (2단계 — 호환되지 않는 정렬 프롭만 빼고 다시 엽니다):**
+**Correct (2단계. 호환되지 않는 정렬 프롭만 빼고 다시 엽니다):**
 
 ```tsx
 import {TableCell} from "@mui/material";
@@ -1649,7 +1649,7 @@ export const UiTableCell = (props: UiTableCellProps) => {
 };
 ```
 
-**Correct (3단계 — 요소 타입이 달라 필요한 프롭만 선언합니다):**
+**Correct (3단계. 요소 타입이 달라 필요한 프롭만 선언합니다):**
 
 ```tsx
 import {TextField} from "@mui/material";
@@ -1947,7 +1947,7 @@ export const WgProfileDialog = (props: WgProfileDialogProps) => {
 };
 ```
 
-**Correct 1 (1단계 — 확장이 필요 없으면 단일 컴포넌트로 둡니다):**
+**Correct 1 (1단계. 확장이 필요 없으면 단일 컴포넌트로 둡니다):**
 
 ```tsx
 /**
@@ -1978,7 +1978,7 @@ export const WgProfileDialog = (props: WgProfileDialogProps) => {
 };
 ```
 
-**Correct (2단계 — 사용처가 부품을 조립해야 하면 상태 없는 합성으로 엽니다):**
+**Correct (2단계. 사용처가 부품을 조립해야 하면 상태 없는 합성으로 엽니다):**
 
 ```txt
 component/widget/profile-dialog/
@@ -2032,7 +2032,7 @@ export const WgProfileDialog = {
 } as const;
 ```
 
-**Correct (3단계 — 부품이 같은 상태를 읽으면 공개 이름을 그대로 두고 컨텍스트만 더합니다):**
+**Correct (3단계. 부품이 같은 상태를 읽으면 공개 이름을 그대로 두고 컨텍스트만 더합니다):**
 
 ```ts
 // component/widget/profile-dialog/_hook/use-profile-dialog.ts
@@ -2077,7 +2077,7 @@ export const WgProfileDialogRoot = (props: WgProfileDialogPartProps) => {
 };
 ```
 
-**Correct (4단계 — 같은 조합이 반복되면 이름 붙인 변형으로 감쌉니다):**
+**Correct (4단계. 같은 조합이 반복되면 이름 붙인 변형으로 감쌉니다):**
 
 ```tsx
 /**
@@ -3126,7 +3126,7 @@ flowchart TD
 이펙트의 인자와 의존성 배열은 해당 줄에서 평가되므로, 이펙트를 마지막 훅으로 두어 앞선 선언을 참조합니다.
 이른 반환은 모든 훅 뒤에 두어 렌더마다 훅 호출 개수를 유지합니다.
 구획 안에서는 선언 뒤에 참조한다는 조건만 지키고 별도 순서를 강제하지 않습니다.
-파생 값은 별도 구획으로 모으지 않고 `screen-keep-derived-values-close`에 따라 사용처에서 계산합니다.
+파생값은 별도 구획으로 모으지 않고 `screen-keep-derived-values-close`에 따라 사용처에서 계산합니다.
 
 **Incorrect 1 (같은 종류가 흩어지고 이펙트가 아래 선언을 의존성으로 참조합니다):**
 
@@ -3512,7 +3512,7 @@ export const PgProducts = () => {
 
 ```ts
 /**
- * 등록 화면과 수정 화면이 저장 실패를 같은 문구로 보여야 해서 한 곳에 묶음
+ * 등록 화면과 수정 화면이 저장 실패를 같은 문구로 보여야 해서 한곳에 묶음
  * 두 화면 모두 이 훅을 부르므로 한쪽만 고치면 표시가 갈림
  */
 export const useProductEditor = () => {
@@ -4114,7 +4114,7 @@ flowchart LR
 
 | 혼동하기 쉬운 상태 | 소유 기준 |
 | --- | --- |
-| 새로고침, 뒤로 가기, 링크 공유로 유지할 필터, 정렬, 페이지, 선택 행 | search 파라미터에 두고 `useState`로 복제하지 않습니다 |
+| 새로 고침, 뒤로 가기, 링크 공유로 유지할 필터, 정렬, 페이지, 선택 행 | search 파라미터에 두고 `useState`로 복제하지 않습니다 |
 | 열림, 닫힘, 마우스 올림, 입력 중인 임시 값 | 주소에 올리지 않습니다 |
 | 합성 부품이나 작은 묶음의 두세 단계 아래에서 공유하는 UI | `useState`가 소유하고 `Context`로 전달합니다 |
 | 묶음 밖의 화면, 레이아웃에서도 읽거나 바꾸는 UI | `Context`를 위로 올리지 않고 전역 스토어로 옮깁니다. 파생값이 아닌 탭 `selectedId`도 같습니다 |
@@ -4830,7 +4830,7 @@ flowchart LR
 | 트랜지션 진행 표시가 필요함 | 대기 상태를 주지 않는 `startTransition` 대신 `useTransition`의 `isPending`을 씁니다 |
 
 입력값 자체, 폼 오류, 즉시 비활성화 같은 급한 반응은 트랜지션에 넣지 않습니다.
-`await` 뒤에는 리액트가 트랜지션 문맥을 이어가지 못하므로 상태 갱신을 다시 `startTransition`으로 감쌉니다.
+`await` 뒤에는 리액트가 트랜지션 문맥을 이어 가지 못하므로 상태 갱신을 다시 `startTransition`으로 감쌉니다.
 
 ### 최적화 조건
 

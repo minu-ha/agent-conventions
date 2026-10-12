@@ -86,9 +86,9 @@ flowchart LR
 ```txt
 before
   component/widget/chart-card/wg-chart-card.tsx      product-detail 화면의 뷰모델 타입을 받음
-  component/widget/chart-card/wg-chart-card.css      pg_productDetail 만 내부를 덮어쓰고 있었음
+  component/widget/chart-card/wg-chart-card.css      pg_productDetail만 내부를 덮어쓰고 있었음
 
 after
   page/product-detail/_pg-chart-card.tsx
-  page/product-detail/_pg-chart-card.css  pg_chartCard__* 로 소유자 하나
+  page/product-detail/_pg-chart-card.css  pg_chartCard__*로 소유자 하나
 ```

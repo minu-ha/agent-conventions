@@ -440,7 +440,7 @@ const toStateLabel: UserFormatters["toStateLabel"] = (state) => {
 
 ```ts
 /**
- * 앞뒤 공백을 걷어낸 요청 문자열
+ * 앞뒤 공백을 걷어 낸 요청 문자열
  */
 const toRequest = (request: string): string => {
 	return request.trim();
@@ -463,7 +463,7 @@ const toSearchRequest = (request: string): string => {
 type ToRequest = (request: string) => string;
 
 /**
- * 앞뒤 공백을 걷어낸 요청 문자열
+ * 앞뒤 공백을 걷어 낸 요청 문자열
  */
 const toRequest: ToRequest = (request) => {
 	return request.trim();
@@ -512,7 +512,7 @@ const toSearchRequest: ToRequest = (request) => {
 익명 결과에 이 규칙을 적용하려고 필드 주석이나 새 타입을 만들지 않습니다.
 함수 선언의 헤더 주석은 `docs-require-header-jsdoc-on-key-declarations`가 별도로 판단합니다.
 
-**Incorrect 1 (필드 설명을 생략하거나 예전 방식으로 헤더에 몰아씁니다):**
+**Incorrect 1 (필드 설명을 생략하거나 예전 방식으로 헤더에 몰아 씁니다):**
 
 ```ts
 /**
@@ -1635,10 +1635,10 @@ flowchart LR
 ```txt
 page/orders/_function/to-order-summary.ts
   toOrderSummary     내보낸 함수. 본문은 세 줄이고 나머지는 아래 함수로 갔다
-  toComparisonRows   toOrderSummary 만 부름
-  toStatusGroups     toOrderSummary 만 부름
-  toStockCard        toOrderSummary 만 부름
-  formatAmount       toComparisonRows 와 toStatusGroups 가 부름
+  toComparisonRows   toOrderSummary만 부름
+  toStatusGroups     toOrderSummary만 부름
+  toStockCard        toOrderSummary만 부름
+  formatAmount       toComparisonRows와 toStatusGroups가 부름
 ```
 
 ```ts
@@ -1832,8 +1832,8 @@ export const toProductSaveRequest = (values: ProductFormValues) => {
 page/product-detail/_function/
 ├── to-product-overview.ts
 │     toProductOverview      내보낸 함수
-│     toTrendChart           toProductOverview 가 차트 둘에서 부름
-│     toTrendPoints          toTrendChart 가 두 자리에서 부름
+│     toTrendChart           toProductOverview가 차트 둘에서 부름
+│     toTrendPoints          toTrendChart가 두 자리에서 부름
 └── to-product-filter-request.ts
 ```
 
@@ -1843,8 +1843,8 @@ page/product-detail/_function/
 page/product-detail/_function/
 ├── to-product-overview/           자기만 쓰는 보조가 있어 폴더
 │   ├── to-product-overview.ts     대표. 폴더와 같은 이름
-│   ├── _to-trend-chart.ts         toProductOverview 만 부름
-│   └── _to-trend-points.ts        _to-trend-chart 만 부름. 폴더 안은 평평
+│   ├── _to-trend-chart.ts         toProductOverview만 부름
+│   └── _to-trend-points.ts        _to-trend-chart만 부름. 폴더 안은 평평
 └── to-product-filter-request.ts   보조가 없어 파일 하나
 ```
 
@@ -1854,7 +1854,7 @@ page/product-detail/_function/
 page/product-detail/_function/
 ├── to-product-overview.ts
 ├── to-product-digest.ts
-└── to-trend-chart.ts            toProductOverview 만 부르는데 소유자의 공개 면에 놓임
+└── to-trend-chart.ts            toProductOverview만 부르는데 소유자의 공개 면에 놓임
 ```
 
 **Correct 3 (두 대표가 부르게 된 뒤에 `_function` 바로 아래로 올리고 `_`를 뗍니다):**
@@ -1863,7 +1863,7 @@ page/product-detail/_function/
 page/product-detail/_function/
 ├── to-product-overview/
 │   └── to-product-overview.ts
-├── to-product-digest.ts           toTrendChart 를 함께 부르기 시작함
+├── to-product-digest.ts           toTrendChart를 함께 부르기 시작함
 └── to-trend-chart.ts              대표 둘이 불러 공개 면으로 올라옴
 ```
 
@@ -2983,7 +2983,7 @@ const trimmedKeyword = keyword.trim();
 
 **Rule:** `T04-07` · `values-handle-dates-with-dayjs`
 
-**Applies when:** 날짜를 파싱하거나 형식을 맞추거나 더하고 뺄 때. `new Date`, `getTime()`, `setDate()`, `toLocaleDateString()`을 쓸 때. 제외: 서버가 준 시각 문자열을 파싱 없이 그대로 보여주는 경우.
+**Applies when:** 날짜를 파싱하거나 형식을 맞추거나 더하고 뺄 때. `new Date`, `getTime()`, `setDate()`, `toLocaleDateString()`을 쓸 때. 제외: 서버가 준 시각 문자열을 파싱 없이 그대로 보여 주는 경우.
 
 **Review with:** `naming-place-project-constants-in-the-root-constant-folder`, `values-use-es-toolkit-for-value-helpers`
 
@@ -3825,7 +3825,7 @@ export const fetchProductList = async (): Promise<Product[]> => {
 
 **Rule:** `T06-04` · `docs-write-doc-comments-as-multiline-blocks`
 
-**Applies when:** 선언 위 문서 주석을 새로 쓰거나 형식을 바꿀 때. 한 줄 `/** … */`이나 `//`로 선언을 설명하려 할 때.
+**Applies when:** 선언 위 문서 주석을 새로 쓰거나 형식을 바꿀 때. 한 줄 `/** … */`나 `//`로 선언을 설명하려 할 때.
 
 **Review with:** `docs-require-header-jsdoc-on-key-declarations`
 

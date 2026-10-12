@@ -118,7 +118,7 @@ page/product-detail/
 │   ├── to-product-summary.ts
 │   └── to-trend-chart/                자기만 쓰는 보조가 있어 폴더
 │       ├── to-trend-chart.ts
-│       └── _to-chart-range.ts         toTrendChart 만 부름
+│       └── _to-chart-range.ts         toTrendChart만 부름
 ├── _type/
 │   └── product-detail-view-model.ts
 └── product-table-section/             자기만 쓰는 파일이 있어 하위 소유자 폴더가 됨

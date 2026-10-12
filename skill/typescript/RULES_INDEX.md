@@ -1,7 +1,7 @@
 # TypeScript 컨벤션 Rule Index
 
 - Skill: `typescript`
-- Routing digest: `sha256:e04ca1baccdc0eb083f13bf2349a8eca49e166fd14a0b69c588ccc222f434e71`
+- Routing digest: `sha256:ece9bdd6aa86b21b96da7557782bb30413f9356230c6d7f779fd4dcb9eb9d89c`
 
 ## Local Rules
 
@@ -35,7 +35,7 @@
 - T04-04 | values-declare-meaningful-numbers | 비교, 계산, 호출 인자에 숫자 리터럴을 새로 적을 때. 제외: 관용값이나 배열 인덱스처럼 뜻이 없는 숫자를 쓰는 경우. | reviewWith: absence-expose-optional-values-instead-of-silent-fallbacks, naming-place-project-constants-in-the-root-constant-folder
 - T04-05 | values-avoid-lookup-tables-for-simple-choices | 상태나 \`variant\`에 따라 쓸 값 하나를 고르는 객체, Map을 추가, 변경할 때. 조회표의 키로 프롭이나 상태를 읽어 값을 넘기는 코드를 추가, 변경할 때.
 - T04-06 | values-use-es-toolkit-for-value-helpers | 배열, 객체, 문자열, 숫자를 다루는 보조 코드를 추가, 변경할 때. \`reduce\`, \`Object.entries\`, \`Array.from\`, 정규식으로 값을 다시 짜는 코드를 쓸 때. 제외: 표준 메서드 하나로 끝나는 경우. | reviewWith: values-handle-dates-with-dayjs, values-prefer-immutable-array-sorting
-- T04-07 | values-handle-dates-with-dayjs | 날짜를 파싱하거나 형식을 맞추거나 더하고 뺄 때. \`new Date\`, \`getTime\(\)\`, \`setDate\(\)\`, \`toLocaleDateString\(\)\`을 쓸 때. 제외: 서버가 준 시각 문자열을 파싱 없이 그대로 보여주는 경우. | reviewWith: naming-place-project-constants-in-the-root-constant-folder, values-use-es-toolkit-for-value-helpers
+- T04-07 | values-handle-dates-with-dayjs | 날짜를 파싱하거나 형식을 맞추거나 더하고 뺄 때. \`new Date\`, \`getTime\(\)\`, \`setDate\(\)\`, \`toLocaleDateString\(\)\`을 쓸 때. 제외: 서버가 준 시각 문자열을 파싱 없이 그대로 보여 주는 경우. | reviewWith: naming-place-project-constants-in-the-root-constant-folder, values-use-es-toolkit-for-value-helpers
 - T04-08 | values-decide-once-and-carry-the-result | 같은 입력에 같은 판정, 정규화, 포맷을 두 자리 이상에서 할 때. 포맷하거나 정리한 값을 소비처에서 다시 파싱하거나 정리할 때. 두 함수가 같은 판정 함수를 부르게 되어 공유 보조를 만들려 할 때. | reviewWith: absence-resolve-defaults-at-the-boundary, functions-extract-helpers-only-when-the-boundary-is-real
 - T05-01 | absence-expose-optional-values-instead-of-silent-fallbacks | 선택 값을 읽거나 정규화하거나 넘기는 방식을 바꿀 때. \`??\`, \`\|\|\`, 기본값, 빈 값 대체 분기를 추가, 변경할 때. | reviewWith: absence-resolve-defaults-at-the-boundary, naming-place-owner-constants-in-the-owner-constant-folder, naming-place-project-constants-in-the-root-constant-folder
 - T05-02 | absence-resolve-defaults-at-the-boundary | 선택 값의 기본값을 어디서 채울지 정할 때. 같은 선택 값에 \`??\` 기본값 해소가 둘 이상의 사용처에 흩어질 때. search 스키마, 응답 매핑, 쿼리 \`select\`에 기본값 채움을 추가, 변경할 때. | reviewWith: absence-expose-optional-values-instead-of-silent-fallbacks, functions-name-a-value-only-for-recompute-or-judgment, values-read-objects-through-chains
@@ -44,6 +44,6 @@
 - T06-01 | docs-keep-body-comments-for-intent-and-steps | 함수 본문의 \`//\` 주석을 추가, 수정, 유지할 때. 도메인 규칙, 예외 방어, 외부 제약, 부수효과 순서, 긴 절차의 단계를 주석으로 설명할 때. | reviewWith: docs-justify-convention-exceptions-with-a-reason-comment, docs-write-korean-comments-about-purpose-and-constraints
 - T06-02 | docs-require-header-jsdoc-on-key-declarations | 쿼리, 뮤테이션, 원격 함수, 커스텀 훅, 스토어, 포매터 선언을 추가, 변경할 때. 분기나 \`await\`나 두 개 이상의 동작이 있는 핸들러와 이펙트를 추가, 변경할 때. 다시 쓰거나 내보낸 보조 함수를 추가, 변경할 때.
 - T06-03 | docs-write-korean-comments-about-purpose-and-constraints | TypeScript, TSX의 문서 주석이나 인라인 주석 문구를 추가, 수정, 번역하거나 검토할 때. 문서 주석에 태그를 붙이거나 뺄 때.
-- T06-04 | docs-write-doc-comments-as-multiline-blocks | 선언 위 문서 주석을 새로 쓰거나 형식을 바꿀 때. 한 줄 \`/\*\* … \*/\`이나 \`//\`로 선언을 설명하려 할 때. | reviewWith: docs-require-header-jsdoc-on-key-declarations
+- T06-04 | docs-write-doc-comments-as-multiline-blocks | 선언 위 문서 주석을 새로 쓰거나 형식을 바꿀 때. 한 줄 \`/\*\* … \*/\`나 \`//\`로 선언을 설명하려 할 때. | reviewWith: docs-require-header-jsdoc-on-key-declarations
 - T06-05 | docs-justify-convention-exceptions-with-a-reason-comment | 규칙이 허용한 예외를 코드에 남길 때. 이미 있는 예외 주석의 내용을 바꿀 때. 제외: 규칙이 요구하지 않은 일반 설명 주석인 경우. | reviewWith: docs-write-korean-comments-about-purpose-and-constraints
 - T07-01 | tooling-configure-biome-to-enforce-these-rules | 프로젝트에 \`biome\` 설정을 처음 넣거나 lint 규칙을 바꿀 때. \`biome.json\`의 \`linter.rules\`에 항목을 추가, 삭제할 때.

@@ -600,11 +600,11 @@ flowchart LR
 ```txt
 before
   component/widget/chart-card/wg-chart-card.tsx      product-detail 화면의 뷰모델 타입을 받음
-  component/widget/chart-card/wg-chart-card.css      pg_productDetail 만 내부를 덮어쓰고 있었음
+  component/widget/chart-card/wg-chart-card.css      pg_productDetail만 내부를 덮어쓰고 있었음
 
 after
   page/product-detail/_pg-chart-card.tsx
-  page/product-detail/_pg-chart-card.css  pg_chartCard__* 로 소유자 하나
+  page/product-detail/_pg-chart-card.css  pg_chartCard__*로 소유자 하나
 ```
 
 ## 3. Class Composition in TSX
@@ -2399,7 +2399,7 @@ flowchart LR
 
 **Impact: MEDIUM**
 
-클래스명과 선언에 배치 의도를 드러내고, 폭에 따른 변경은 한곳에 모읍니다. 브레이크포인트를 추가하기 전에 고유 크기 지정으로 해결할 수 있는지 확인합니다. 뷰포트 브레이크포인트는 파일 아래 한 곳에 모으고 데스크톱 퍼스트로 정한 세 값만 씁니다. 컴포넌트가 받은 폭에 따라 구조를 바꿔야 하면 컨테이너 쿼리를 씁니다.
+클래스명과 선언에 배치 의도를 드러내고, 폭에 따른 변경은 한곳에 모읍니다. 브레이크포인트를 추가하기 전에 고유 크기 지정으로 해결할 수 있는지 확인합니다. 뷰포트 브레이크포인트는 파일 아래 한곳에 모으고 데스크톱 퍼스트로 정한 세 값만 씁니다. 컴포넌트가 받은 폭에 따라 구조를 바꿔야 하면 컨테이너 쿼리를 씁니다.
 
 ### 6.1 Group Breakpoints at the Bottom of the File
 
@@ -2450,7 +2450,7 @@ flowchart LR
 }
 ```
 
-**Correct 1 (선언은 위에 두고 브레이크포인트는 파일 아래 한 곳에 모읍니다):**
+**Correct 1 (선언은 위에 두고 브레이크포인트는 파일 아래 한곳에 모읍니다):**
 
 ```css
 .pg_products__toolbar {

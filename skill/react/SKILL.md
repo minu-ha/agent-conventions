@@ -32,7 +32,7 @@ class contract, stylesheet, styling surface가 바뀔 때만 `convention-css`를
 
 활성화한 skill마다 그 `SKILL.md`의 load 계약을 따른다.
 이 skill과 현재 companion은 모두 progressive이므로 각각의 `RULES_INDEX.md`를 끝까지 훑는다.
-이 skill의 인덱스는 [RULES_INDEX.md](./RULES_INDEX.md) 이다.
+이 skill의 인덱스는 [RULES_INDEX.md](./RULES_INDEX.md)이다.
 각 규칙의 `appliesWhen`을 변경 범위와 대조하고 첫 match에서 멈추지 않는다.
 애매하면 적용되는 쪽으로 본다.
 

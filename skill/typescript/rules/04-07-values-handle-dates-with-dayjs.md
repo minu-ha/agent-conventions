@@ -6,7 +6,7 @@ impactDescription: 날짜의 단위와 타임존을 드러내고 파싱과 표�
 appliesWhen:
   - 날짜를 파싱하거나 형식을 맞추거나 더하고 뺄 때
   - `new Date`, `getTime()`, `setDate()`, `toLocaleDateString()`을 쓸 때
-  - 제외: 서버가 준 시각 문자열을 파싱 없이 그대로 보여주는 경우
+  - 제외: 서버가 준 시각 문자열을 파싱 없이 그대로 보여 주는 경우
 reviewWith: values-use-es-toolkit-for-value-helpers, naming-place-project-constants-in-the-root-constant-folder
 tags: values, dayjs
 ---

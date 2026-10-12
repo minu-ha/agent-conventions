@@ -66,7 +66,7 @@ export const WgProfileDialog = (props: WgProfileDialogProps) => {
 };
 ```
 
-**Correct 1 (1단계 — 확장이 필요 없으면 단일 컴포넌트로 둡니다):**
+**Correct 1 (1단계. 확장이 필요 없으면 단일 컴포넌트로 둡니다):**
 
 ```tsx
 /**
@@ -97,7 +97,7 @@ export const WgProfileDialog = (props: WgProfileDialogProps) => {
 };
 ```
 
-**Correct (2단계 — 사용처가 부품을 조립해야 하면 상태 없는 합성으로 엽니다):**
+**Correct (2단계. 사용처가 부품을 조립해야 하면 상태 없는 합성으로 엽니다):**
 
 ```txt
 component/widget/profile-dialog/
@@ -151,7 +151,7 @@ export const WgProfileDialog = {
 } as const;
 ```
 
-**Correct (3단계 — 부품이 같은 상태를 읽으면 공개 이름을 그대로 두고 컨텍스트만 더합니다):**
+**Correct (3단계. 부품이 같은 상태를 읽으면 공개 이름을 그대로 두고 컨텍스트만 더합니다):**
 
 ```ts
 // component/widget/profile-dialog/_hook/use-profile-dialog.ts
@@ -196,7 +196,7 @@ export const WgProfileDialogRoot = (props: WgProfileDialogPartProps) => {
 };
 ```
 
-**Correct (4단계 — 같은 조합이 반복되면 이름 붙인 변형으로 감쌉니다):**
+**Correct (4단계. 같은 조합이 반복되면 이름 붙인 변형으로 감쌉니다):**
 
 ```tsx
 /**

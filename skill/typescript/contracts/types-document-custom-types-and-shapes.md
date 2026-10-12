@@ -29,7 +29,7 @@
 
 **Requires selected:** `docs-write-doc-comments-as-multiline-blocks`, `docs-write-korean-comments-about-purpose-and-constraints` (함께 적용)
 
-**Incorrect 1 (필드 설명을 생략하거나 예전 방식으로 헤더에 몰아씁니다):**
+**Incorrect 1 (필드 설명을 생략하거나 예전 방식으로 헤더에 몰아 씁니다):**
 
 ```ts
 /**

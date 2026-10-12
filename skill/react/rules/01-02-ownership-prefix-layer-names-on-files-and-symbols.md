@@ -99,5 +99,5 @@ component/widget/chatbot/
 └── chat-panel/
     ├── wg-chat-panel.tsx          # WgChatPanel, wg_chatPanel
     ├── _wg-chat-panel-header.tsx  # WgChatPanelHeader
-    └── _wg-history-pane.tsx       # WgHistoryPane. history 가 뜻을 만들어 소유자 이름이 필요 없다
+    └── _wg-history-pane.tsx       # WgHistoryPane. history가 뜻을 만들어 소유자 이름이 필요 없다
 ```
