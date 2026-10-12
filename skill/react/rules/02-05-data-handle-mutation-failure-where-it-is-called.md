@@ -21,7 +21,7 @@ tags: data, mutation, errors
 
 ### 호출 방식 고르기
 
-호출 방식을 고르는 차례입니다.
+결과를 기다린 뒤 핸들러가 이어서 실행되는지 보고 호출 방식을 고릅니다.
 
 ```mermaid
 flowchart LR

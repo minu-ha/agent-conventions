@@ -20,7 +20,7 @@ tags: data, query
 
 ### 합치는 방법 고르기
 
-합칠 방법을 고르는 차례입니다.
+결과를 하나로 합치는지 먼저 보고, 합치면 Suspense 쿼리인지에 따라 훅을 고릅니다.
 
 ```mermaid
 flowchart LR
@@ -41,7 +41,7 @@ flowchart LR
 
 `useSuspenseQuery`, `useSuspenseQueries`는 `enabled`를 받지 않습니다.
 필수 입력이 없으면 쿼리를 호출하는 자식의 렌더를 보류합니다.
-독립적인 Suspense 쿼리도 같은 컴포넌트에서 따로 호출하면 앞 요청부터 순서대로 진행됩니다.
+독립적인 Suspense 쿼리도 같은 컴포넌트에서 따로 호출하면 앞 요청부터 순서대로 실행됩니다.
 Suspense의 불필요한 대기 분기는 `runtime-avoid-ad-hoc-loading-branches`를 따릅니다.
 
 | 함께 판단할 내용 | 기준 |

@@ -27,7 +27,7 @@ tags: accessibility, focus, interaction
 | 강제 색상 모드 | `forced-colors: active`에서는 `box-shadow`가 없어집니다. 투명한 `outline`을 함께 두거나 조건 안에서 시스템 색 외곽선을 제공합니다 |
 | 사용자 색상 설정 | `forced-color-adjust: none`으로 끄지 않습니다 |
 
-`:focus-visible`의 적용은 브라우저가 입력 방식과 사용자 설정으로 판단합니다.
+`:focus-visible`을 적용할지는 브라우저가 입력 방식과 사용자 설정으로 판단합니다.
 버튼 클릭에서 숨고 키보드 이동이나 텍스트 입력에서 보이는 경향을 고정 규칙으로 가정하지 않습니다.
 
 WCAG 2.2 SC 1.4.11(AA)은 인접 색 대비를 다룹니다.

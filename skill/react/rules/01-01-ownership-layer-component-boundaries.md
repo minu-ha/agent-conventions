@@ -18,7 +18,7 @@ tags: ownership, widget, naming
 
 ### 판정 차례
 
-무엇을 아는지 확인하는 차례입니다.
+화면의 데이터와 흐름을 아는지 먼저 확인하고, 모르면 도메인을 아는지 확인합니다.
 
 ```mermaid
 flowchart LR
@@ -44,7 +44,8 @@ flowchart LR
 특정 화면의 데이터나 흐름을 아는지 확인합니다.
 
 한 화면에서만 쓴다는 사실은 `page` 조건이 아니므로 사용 횟수만으로 레이어를 바꾸지 않습니다.
-여러 `ui` 부품을 조립해도 도메인을 모르면 `ui`입니다. 조립 규모로 `widget`을 고르지 않습니다.
+여러 `ui` 부품을 조립해도 도메인을 모르면 `ui`입니다.
+조립 규모로 `widget`을 고르지 않습니다.
 
 레이어를 정한 뒤 파일명과 심볼에는 `ownership-prefix-layer-names-on-files-and-symbols`를 적용합니다.
 

@@ -32,9 +32,11 @@ Figma 노드는 `get_screenshot`, `get_metadata`, `get_variable_defs` 순서로 
 
 ### 호출 순서
 
-1. URL에서 `fileKey`와 노드 id를 뽑습니다. 노드 고르기는 `read-choose-the-node-each-tool-reads`가 정합니다.
+1. URL에서 `fileKey`와 노드 id를 뽑습니다.
+   노드 고르기는 `read-choose-the-node-each-tool-reads`가 정합니다.
 2. `get_screenshot`을 화면 프레임에 `maxDimension: 1600`으로 부릅니다.
-3. `get_metadata`를 URL의 노드에 부릅니다. 메모와 이력이 붙은 래퍼면 그 래퍼째 부릅니다.
+3. `get_metadata`를 URL의 노드에 부릅니다.
+   메모와 이력이 붙은 래퍼면 그 래퍼째 부릅니다.
 4. `get_variable_defs`를 화면 프레임에 부릅니다.
 5. 스크린샷과 메타데이터에서 본 요소를 저장소 컴포넌트에 대응시킵니다.
 6. 대응물이 없는 요소만 `get_design_context`로 읽습니다.
@@ -42,11 +44,13 @@ Figma 노드는 `get_screenshot`, `get_metadata`, `get_variable_defs` 순서로 
 
 `get_screenshot` 응답은 이미지가 아니라 단기 URL입니다.
 바로 내려받아 파일로 읽고, 셸로 URL을 받을 수 없을 때만 `enableBase64Response`를 켭니다.
-스크린샷이 시각 기준입니다. 레이어 값이 스크린샷과 다르면 스크린샷을 따릅니다.
+스크린샷이 시각 기준입니다.
+레이어 값이 스크린샷과 다르면 스크린샷을 따릅니다.
 
 ### 예산
 
-한 화면의 목표는 LLM 토큰 20k 안입니다. 화면 둘 이상에서 다시 재기 전까지는 잠정값입니다.
+한 화면의 목표는 LLM 토큰 20k 안입니다.
+화면 둘 이상에서 다시 재기 전까지는 잠정값입니다.
 부르기 전에 스크린샷은 가로×세로÷750, 메타데이터는 노드 수×35로 어림합니다.
 
 | 상황 | 처리 |
@@ -56,7 +60,8 @@ Figma 노드는 `get_screenshot`, `get_metadata`, `get_variable_defs` 순서로 
 | 한 요청에 화면이나 기기 폭 프레임이 여럿 | 첫 화면에서 만든 컴포넌트, 토큰 대응표를 다음 화면에 그대로 쓰고 달라진 노드만 읽습니다 |
 | 어림한 합계가 목표를 넘음 | 더 부르기 전에 멈추고, 이미 받은 응답으로 풀 수 있는지 다시 봅니다 |
 
-같은 노드를 같은 도구로 두 번 부르지 않습니다. 앞 응답에 필요한 값이 있으면 그것을 씁니다.
+같은 노드를 같은 도구로 두 번 부르지 않습니다.
+앞 응답에 필요한 값이 있으면 그 값을 씁니다.
 
 **Incorrect 1 (화면 전체에 `get_design_context`를 먼저 부르고 성긴 응답을 코드로 강제합니다):**
 

@@ -21,7 +21,7 @@ tags: absence
 기본값은 필요한지 먼저 확인하고, 필요하면 값이 들어오는 경계에서 한 번 채웁니다.
 기본값 표현은 `absence-expose-optional-values-instead-of-silent-fallbacks`를 따릅니다.
 
-기본값을 채울 자리를 고르는 차례입니다.
+기본값이 필요한지 먼저 보고, 필요하면 경계에서 채울 수 있는지에 따라 채울 자리를 고릅니다.
 
 ```mermaid
 flowchart LR

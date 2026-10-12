@@ -19,7 +19,7 @@ tags: composition, ownership
 
 ### 분리 근거가 되는 책임
 
-부품을 파일로 뗄지 정하는 차례입니다.
+런타임 책임을 직접 소유하는지, 재사용하거나 조립에 공개하는지 차례로 보고 부품을 파일로 뗄지 정합니다.
 
 ```mermaid
 flowchart LR

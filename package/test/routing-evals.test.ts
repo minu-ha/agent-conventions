@@ -3273,7 +3273,7 @@ test("v16 boundary contracts distinguish semantic role changes from contextual a
 	);
 	assert.match(
 		routeFlow,
-		/소유자가 바뀌지 않는 `query\.select`[\s\S]*바인딩(?:, |, )별칭[\s\S]*파생 상태 이펙트[\s\S]*렌더 계산 전환은 대상이 아닙니다/i,
+		/소유자가 바뀌지 않는 `query\.select`[\s\S]*바인딩(?:, |, )별칭[\s\S]*파생 상태 이펙트[\s\S]*렌더 계산으로 바꾸는 일은 대상이 아닙니다/i,
 	);
 
 	const curriedHandler = await readRule("react", "events-curry-extra-handler-arguments");
@@ -3319,7 +3319,7 @@ test("v16 boundary contracts distinguish semantic role changes from contextual a
 		[
 			/새 입력, 출력 계약 역할을 맡음/i,
 			/필드가 그대로여도 기존 선언의 헤더와 필드 주석에 새 역할을 설명합니다/i,
-			/새 역할에도 맞는 기존 형태를 연결하며, 새 타입 선언을 요구하지 않습니다/i,
+			/기존 형태가 새 역할에도 맞으면 그 형태에 새 역할을 연결하고, 새 타입 선언은 요구하지 않습니다/i,
 		],
 		"documentedShape",
 	);
@@ -3335,7 +3335,7 @@ test("v16 boundary contracts distinguish semantic role changes from contextual a
 		unusedParameters,
 		[
 			/기존 콜백, 프레임워크 계약의 매개변수는 쓰지 않아도 생략하지 않고 `_` 접두사로 남깁니다/i,
-			/커링한 핸들러의 마지막 콜백과 매개변수를 하나도 쓰지 않는 구현도 같습니다/i,
+			/커링한 핸들러의 마지막 콜백에도, 매개변수를 하나도 쓰지 않는 구현에도 똑같이 적용합니다/i,
 			/`MouseEventHandler`의 이벤트를 쓰지 않으면 `\(\) =>` 대신 `\(_event\) =>`로 받습니다/i,
 		],
 		"unusedParameters",
@@ -3407,7 +3407,7 @@ test("v16 boundary contracts distinguish semantic role changes from contextual a
 	assert.match(variableFallback, /\| 공통 토큰 목록에 있음 \| 쓰지 않습니다/i);
 	assertMentions(
 		variableFallback,
-		[/`var\(\)`의 대체값 여부는 그 목록과 대조해 정합니다/i, /\| 그 밖의 변수 \| 씁니다/i],
+		[/`var\(\)`에 대체값을 붙일지는 그 목록과 대조해 정합니다/i, /\| 그 밖의 변수 \| 씁니다/i],
 		"variableFallback",
 	);
 
@@ -3521,7 +3521,7 @@ test("v17 TypeScript boundaries exclude React props and prevent self-created dup
 		documentedShape,
 		[
 			/새 입력, 출력 계약 역할을 맡음 \| 필드가 그대로여도 기존 선언의 헤더와 필드 주석에 새 역할을 설명합니다/,
-			/새 역할에도 맞는 기존 형태를 연결하며, 새 타입 선언을 요구하지 않습니다/,
+			/기존 형태가 새 역할에도 맞으면 그 형태에 새 역할을 연결하고, 새 타입 선언은 요구하지 않습니다/,
 		],
 		"documentedShape reuses existing declarations for new roles",
 	);

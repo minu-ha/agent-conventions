@@ -21,7 +21,7 @@ tags: ownership, scope, third-party
 다른 소유자의 클래스는 **내 최상위 클래스 블록 안에서 `&`로 시작하는 선택자**로만 씁니다.
 내 `scope_slug`와 다르면 외부 라이브러리, 다른 화면, `widget` 모두 같은 기준을 적용합니다.
 
-선택자를 판정하는 차례입니다.
+내 `scope_slug` 클래스인지 먼저 보고, 아니면 내 최상위 블록 안에서 `&`로 시작하는지로 선택자를 판정합니다.
 
 ```mermaid
 flowchart LR
@@ -49,7 +49,7 @@ flowchart LR
 ### 기계 검증 범위
 
 `selector-disallowed-list`는 등록된 외부 접두사와 다른 레이어의 최상위 클래스를 검사합니다.
-같은 레이어의 다른 식별자와 미등록 라이브러리 클래스는 파일별 소유자를 대조해야 합니다.
+같은 레이어의 다른 식별자와 미등록 라이브러리 클래스는 이 검사에 걸리지 않아 파일별 소유자를 대조해야 합니다.
 전체 설정은 `tooling-configure-stylelint-to-enforce-these-rules` 규칙에 있습니다.
 
 **Incorrect 1 (최상위 블록 없이 라이브러리 클래스를 바로 씁니다):**

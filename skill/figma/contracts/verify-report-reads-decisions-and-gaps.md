@@ -15,7 +15,8 @@ Figma 기준 작업의 보고는 아래 항목을 이 순서로 담습니다.
 | 질문 | 어긋난 메모와 화면, 조건을 모르는 숨긴 레이어 |
 | 차이 | `verify-measure-rendered-values-before-claiming-parity` 판정 중 `PASS`가 아닌 행. `UNMEASURED`도 여기에 둡니다 |
 
-비어 있는 항목도 지우지 않고 "없음"으로 둡니다. 없다는 것도 확인한 결과입니다.
+비어 있는 항목도 지우지 않고 "없음"으로 둡니다.
+없다는 것도 확인한 결과입니다.
 
 **Required on completion:** 마무리 시 항상 적용
 

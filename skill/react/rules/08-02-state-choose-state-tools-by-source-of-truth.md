@@ -19,7 +19,7 @@ tags: state, react-query, zustand
 
 ### 도구 고르기
 
-값의 소유자를 확인하는 차례입니다.
+링크를 공유해도 같은 화면이 열리는지, 서버가 소유하는지, 묶음 밖에서도 읽는지 차례로 보고 도구를 고릅니다.
 
 ```mermaid
 flowchart LR

@@ -34,7 +34,8 @@ tags: selector, responsive
 
 ### 범위 표기
 
-**조건은 범위 표기**로 씁니다. `(max-width: 1023.98px)` 대신 `(width < 1024px)`로 적습니다.
+**조건은 범위 표기**로 씁니다.
+`(max-width: 1023.98px)` 대신 `(width < 1024px)`로 적습니다.
 `max-width: 1024px`과 `min-width: 1024px`은 경계를 함께 포함하지만 `<`와 `>=`는 같은 경계를 소수 보정 없이 나눕니다.
 표기 검사는 `tooling-configure-stylelint-to-enforce-these-rules` 규칙이 담당합니다.
 

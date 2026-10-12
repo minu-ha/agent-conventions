@@ -29,7 +29,7 @@ tags: values, inline-style
 변수가 없을 때의 대체값은 `values-fall-back-only-outside-core-tokens` 규칙을 따릅니다.
 
 래퍼가 `HTMLAttributes`를 `extends`하면 `style`도 열립니다.
-`Omit`으로 뺄 수 있지만 DOM 속성을 허용하려고 그대로 두므로 사용 여부는 리뷰에서 확인합니다.
+`Omit`으로 뺄 수 있지만 DOM 속성을 허용하려고 그대로 두므로 `style`을 쓰는지는 리뷰에서 확인합니다.
 클래스에서 인라인 선언을 덮으려면 `!important`가 필요합니다.
 
 **Incorrect 1 (인라인으로 꾸밉니다):**

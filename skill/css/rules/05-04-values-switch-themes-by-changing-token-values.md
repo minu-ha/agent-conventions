@@ -15,9 +15,10 @@ tags: values, theme
 
 **Impact: HIGH (테마 분기가 한 파일에만 있어 색을 하나 더할 때 파일 여러 개를 열지 않습니다)**
 
-테마는 **토큰 파일에서 값만** 바꿉니다. 컴포넌트 CSS에는 `prefers-color-scheme`이나 `[data-theme]` 분기를 두지 않습니다.
+테마는 **토큰 파일에서 값만** 바꿉니다.
+컴포넌트 CSS에는 `prefers-color-scheme`이나 `[data-theme]` 분기를 두지 않습니다.
 
-토큰 파일 안에서 테마 값을 덮어쓰는 차례입니다.
+토큰 파일 안에서는 `:root` 기본값을 `prefers-color-scheme` 조건이 덮고, 그 위를 `[data-theme]`가 덮습니다.
 
 ```mermaid
 flowchart LR
@@ -33,7 +34,7 @@ flowchart LR
 | 색과 `box-shadow` | 테마마다 토큰 값을 정합니다. 한 파일에서만 써도 토큰으로 둡니다 |
 | 다크 모드를 지원하지 않기로 함 | `prefers-color-scheme`을 쓰지 않습니다. 일부 화면에만 적용하지 않습니다 |
 
-테마 분기를 흩어 놓으면 색을 추가할 때마다 사용 파일을 모두 수정해야 하고 누락은 테마를 바꿔야 드러납니다.
+테마 분기를 흩어 놓으면 색을 추가할 때마다 사용 파일을 모두 수정해야 하고 빠뜨린 파일은 테마를 바꿔야 드러납니다.
 어두운 배경에서는 검은 그림자가 보이지 않으므로 그림자도 테마별로 조정합니다.
 색과 그림자의 토큰화는 `values-tokenize-repeated-visual-values`의 한 파일 예외보다 우선합니다.
 토큰 이름은 `values-name-tokens-by-purpose` 규칙을 따릅니다.

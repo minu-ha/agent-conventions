@@ -18,7 +18,7 @@ tags: strategy, composition, components
 
 ### 슬롯 고르기
 
-슬롯을 고르는 차례입니다.
+부모가 항목, 순번, 상태 같은 실행 문맥을 자식에게 넘기는지 보고 슬롯 형태를 고릅니다.
 
 ```mermaid
 flowchart LR

@@ -29,7 +29,7 @@ tags: values, config
 
 소유자를 지워도 남으면 루트 `constant`, 함께 사라지면 소유자의 `_constant`에 둡니다.
 배치는 `naming-place-project-constants-in-the-root-constant-folder`가 정합니다.
-같은 파일의 지역 `const`로 옮기는 것은 규칙을 충족하지 못합니다.
+같은 파일의 지역 `const`로 옮기기만 해서는 규칙을 충족하지 못합니다.
 지역 변수에는 `functions-name-a-value-only-for-recompute-or-judgment`의 두 사유 중 하나가 필요합니다.
 조회표를 둘지는 `values-avoid-lookup-tables-for-simple-choices`가 정합니다.
 

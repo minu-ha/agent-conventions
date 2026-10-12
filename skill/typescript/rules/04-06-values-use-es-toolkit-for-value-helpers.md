@@ -33,7 +33,7 @@ tags: values, es-toolkit
 | 빈 값, 타입 검사 | `isNil`, `isNotNil`, `isEmptyObject`, `isPlainObject` |
 | 비동기 지연, 시간 제한, 재시도 | `delay`, `withTimeout`, `retry` |
 
-표에 없어도 문서에 같은 의미의 함수가 있으면 사용합니다.
+표에 없어도 `es-toolkit` 문서에 같은 의미의 함수가 있으면 사용합니다.
 다만 `map`, `filter`, `find`, `flat`, `at`, `Object.keys`처럼 표준 메서드 하나로 끝나면 그대로 둡니다.
 공백 제거는 `value.trim()`, 제거할 문자 지정은 `trim(value, "_")`처럼 구분합니다.
 

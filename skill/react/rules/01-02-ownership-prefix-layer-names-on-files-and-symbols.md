@@ -35,7 +35,7 @@ tags: ownership, naming
 
 ### 부품 이름 짓기
 
-부품과 하위 소유자는 이름이 스스로 무엇인지 말하게 짓습니다.
+부품과 하위 소유자는 이름만 보고 무엇인지 알 수 있게 짓습니다.
 
 | 부품 이름 | 예 |
 | --- | --- |
@@ -91,7 +91,7 @@ component/widget/chatbot/
     └── _wg-header.tsx  # WgHeader, wg_header
 ```
 
-**Correct 3 (이름이 스스로 뜻을 말하고 소유자 이름은 필요할 때만 들어갑니다):**
+**Correct 3 (이름만 보고 뜻을 알 수 있고 소유자 이름은 필요할 때만 들어갑니다):**
 
 ```text
 component/widget/chatbot/
@@ -99,5 +99,5 @@ component/widget/chatbot/
 └── chat-panel/
     ├── wg-chat-panel.tsx          # WgChatPanel, wg_chatPanel
     ├── _wg-chat-panel-header.tsx  # WgChatPanelHeader
-    └── _wg-history-pane.tsx       # WgHistoryPane. history가 뜻을 만들어 소유자 이름이 필요 없다
+    └── _wg-history-pane.tsx       # WgHistoryPane. history가 뜻을 만들어 소유자 이름이 필요 없음
 ```

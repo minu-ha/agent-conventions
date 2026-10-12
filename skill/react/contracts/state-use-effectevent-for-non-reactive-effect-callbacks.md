@@ -18,8 +18,10 @@ DOM 이벤트 매개변수나 커링을 덧붙이지 않고,
 `typing-take-handler-types-from-existing-contracts`의 리액트 핸들러 타입 규칙도 적용하지 않습니다.
 의존성 경고를 없애려고 반응해야 할 값까지 감싸지 않습니다.
 
-린터의 인식 여부도 확인합니다. 리액트 19.2 문서가 요구하는 최신 `eslint-plugin-react-hooks`를 사용하고,
-`biome`도 `useEffectEvent`를 인식하는 최근 버전을 씁니다. 이전 버전은 아래 Correct 예제를 훅 규칙 위반으로 표시합니다.
+린터의 인식 여부도 확인합니다.
+리액트 19.2 문서가 요구하는 최신 `eslint-plugin-react-hooks`를 사용하고,
+`biome`도 `useEffectEvent`를 인식하는 최근 버전을 씁니다.
+이전 버전은 아래 Correct 예제를 훅 규칙 위반으로 표시합니다.
 설정은 `typescript/tooling-configure-biome-to-enforce-these-rules`를 따릅니다.
 
 **Incorrect 1 (최신 콜백을 읽기 위해 `ref`를 직접 동기화합니다):**

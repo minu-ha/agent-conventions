@@ -40,7 +40,7 @@ const toMatchedProducts = (products: Product[], keyword: string) => {
 };
 ```
 
-**Correct 1 (선언 이름이 이미 말하는 주석은 지웁니다):**
+**Correct 1 (선언 이름이 이미 드러내는 내용만 적은 주석은 지웁니다):**
 
 ```ts
 const toMatchedProducts = (products: Product[], keyword: string) => {

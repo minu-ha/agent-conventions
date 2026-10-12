@@ -26,7 +26,7 @@ tags: functions, origin
 | `await`, `yield`, 외부 호출 | 순서나 호출 시점을 바꾸지 않습니다. `localStorage.getItem()`도 해당합니다 |
 | 훅 호출, `useState` 반환 | 정해진 호출 위치와 횟수를 유지합니다 |
 | 여러 항을 합친 판정 | `isEditable`처럼 이름이 판정의 결론을 설명해야 합니다 |
-| 부정이 겹친 판정 | `!row.deletedAt && !row.archivedAt`은 `isVisible`처럼 뜻을 드러냅니다 |
+| 부정이 겹친 판정 | `!row.deletedAt && !row.archivedAt`은 `isVisible`처럼 뜻을 드러내는 이름으로 받습니다 |
 
 단일 비교인 `row.dueDate < today`는 반복해서 써도 그대로 둡니다.
 사용처가 하나 늘었다고 변수 필요성까지 달라지지 않도록 표현식의 성격으로 판단합니다.

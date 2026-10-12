@@ -20,7 +20,7 @@ tags: strategy, composition, variants, components
 공용 컴포넌트는 프롭스보다 구조를 먼저 고릅니다.
 현재 필요한 단계까지만 적용합니다.
 
-필요한 구조를 고르는 차례입니다.
+부품 조립이 필요한지, 부품이 같은 상태를 읽는지, 같은 조합이 반복되는지 차례로 보고 구조를 고릅니다.
 
 ```mermaid
 flowchart LR
@@ -101,7 +101,7 @@ export const WgProfileDialog = (props: WgProfileDialogProps) => {
 
 ```txt
 component/widget/profile-dialog/
-├── wg-profile-dialog.tsx              진입. 부품을 모아 내보냅니다
+├── wg-profile-dialog.tsx              진입. 부품을 모아 내보냄
 ├── _wg-profile-dialog-root.tsx
 ├── _wg-profile-dialog-header.tsx
 ├── _wg-profile-dialog-body.tsx

@@ -92,7 +92,7 @@
 필드 이름, 타입, 선택 여부, 읽기 전용 여부까지 같으면 그 계약을 그대로 참조합니다.
 구조가 같아도 단위나 도메인 역할이 다르면 합치지 않습니다.
 
-기존 계약을 확인하는 차례입니다.
+기존 계약은 뜻과 수명, 단위와 도메인 역할, 필드 조건 순서로 확인합니다.
 
 ```mermaid
 flowchart LR
@@ -492,7 +492,7 @@ const toSearchRequest: ToRequest = (request) => {
 직접 선언한 타입과 형태는 헤더와 필드를 구분해 문서화합니다.
 주석 내용은 `docs-write-korean-comments-about-purpose-and-constraints`의 한국어 기준을 따릅니다.
 
-아래 세 선언은 모두 헤더 주석을 씁니다.
+아래 세 선언에는 모두 헤더 주석을 씁니다.
 
 | 선언 | 필드 주석 |
 | --- | --- |
@@ -508,7 +508,7 @@ const toSearchRequest: ToRequest = (request) => {
 | 외부, 생성된, 읽기 전용, 공용 형태를 그대로 씀 | 선언을 고치거나 문서화용 지역 별칭을 만들지 않습니다 |
 | 이름 없이 구현에서 추론되는 익명 객체 | 대상이 아닙니다. `select`의 익명 반환값도 그대로 둡니다 |
 
-새 역할에도 맞는 기존 형태를 연결하며, 새 타입 선언을 요구하지 않습니다.
+기존 형태가 새 역할에도 맞으면 그 형태에 새 역할을 연결하고, 새 타입 선언은 요구하지 않습니다.
 익명 결과에 이 규칙을 적용하려고 필드 주석이나 새 타입을 만들지 않습니다.
 함수 선언의 헤더 주석은 `docs-require-header-jsdoc-on-key-declarations`가 별도로 판단합니다.
 
@@ -564,9 +564,9 @@ export const product_status = {
 **Impact: MEDIUM (계약에 있는 매개변수를 유지하면서 사용하지 않는 매개변수를 표시합니다)**
 
 기존 콜백, 프레임워크 계약의 매개변수는 쓰지 않아도 생략하지 않고 `_` 접두사로 남깁니다.
-계약을 유지하면서 구현이 일부러 무시한 값을 드러냅니다.
+`_` 접두사는 계약을 유지하면서 구현이 일부러 무시한 값을 드러냅니다.
 
-커링한 핸들러의 마지막 콜백과 매개변수를 하나도 쓰지 않는 구현도 같습니다.
+커링한 핸들러의 마지막 콜백에도, 매개변수를 하나도 쓰지 않는 구현에도 똑같이 적용합니다.
 `MouseEventHandler`의 이벤트를 쓰지 않으면 `() =>` 대신 `(_event) =>`로 받습니다.
 
 **Incorrect 1 (계약의 일부인 콜백 매개변수를 생략합니다):**
@@ -612,7 +612,7 @@ const noopLog: LogSink = (_message, _level) => {};
 컴파일 오류를 없애려고 `as`, `!`, `any`, `@ts-expect-error`로 검사를 우회하지 않습니다.
 저장소, 메시지, URL, 검증하지 않은 응답이 앱 밖의 값입니다.
 
-값의 출처로 처리를 고르는 차례입니다.
+값이 앱 밖에서 들어왔는지 먼저 보고, 아니면 외부 패키지 타입이 실제 동작과 다른지에 따라 처리를 고릅니다.
 
 ```mermaid
 flowchart LR
@@ -821,7 +821,7 @@ type MutableRow = Omit<Row, "children"> & {
 
 상수 위치는 사용처 수가 아니라 소유자로 정합니다.
 
-자리를 고르는 차례입니다.
+소유자를 지워도 값이 남는지 먼저 보고, 남으면 배포 환경마다 달라지는지에 따라 자리를 고릅니다.
 
 ```mermaid
 flowchart LR
@@ -935,7 +935,7 @@ export const pagination_default_page_size = 20;
 | 대상 | 배치, 이름 |
 | --- | --- |
 | 상수 | `_constant/<주제>.ts`에 `<주제>_` 접두사로 선언합니다 |
-| 소유자 문맥 | 폴더가 말하므로 이름에 반복하지 않습니다. `page/product-detail/_constant/legend.ts`에는 `legend_hit_tolerance_px`를 둡니다 |
+| 소유자 문맥 | 폴더 경로가 이미 드러내므로 이름에 반복하지 않습니다. `page/product-detail/_constant/legend.ts`에는 `legend_hit_tolerance_px`를 둡니다 |
 | 파서 묶음, 스키마 등 함수를 담은 계약 | 같은 `_constant`에 계약별 파일로 둡니다 |
 | 파일이 하나뿐인 경우 | `_constant` 폴더를 유지합니다 |
 | 소유자를 지워도 남는 값 | 루트 상수 규칙에 따라 옮깁니다 |
@@ -1191,10 +1191,11 @@ import {UiTabs} from "@/component/ui/tabs/ui-tabs";
 
 ### 경로 표기
 
-심볼은 `@/` 절대경로로 가져옵니다. 편집기 자동 가져오기가 만드는 형식입니다.
+심볼은 `@/` 절대경로로 가져옵니다.
+편집기 자동 가져오기가 만드는 형식입니다.
 심볼 없이 같은 폴더의 파일만 불러올 때는 `./`를 허용하며, `../`는 쓰지 않습니다.
 
-경로 표기를 고르는 차례입니다.
+심볼을 가져오는지 먼저 보고, 아니면 같은 폴더의 파일인지에 따라 경로 표기를 고릅니다.
 
 ```mermaid
 flowchart LR
@@ -1203,7 +1204,7 @@ flowchart LR
 	q2 -- 아니요 --> r1
 ```
 
-이동, 이름 변경은 편집기의 경로 갱신을 사용합니다.
+파일을 옮기거나 이름을 바꿀 때는 편집기의 경로 갱신을 씁니다.
 접근 가능한 소유 경계는 경로 표기가 아니라 가져오는 파일의 위치로 판단합니다.
 가져오기 방향은 프레임워크 규칙을 따릅니다.
 소유자 밖에서 쓴다는 이유로 루트에 올리지 않습니다.
@@ -1261,7 +1262,7 @@ import "./pg-product-table-section.css";
 환경 값은 루트 `config/env.ts`에서만 읽고 `env_` 상수로 내보냅니다.
 다른 파일은 그 이름을 쓰며 `import.meta.env`와 `process.env`를 직접 읽지 않습니다.
 
-값이 바뀌는 때로 자리와 이름을 고르는 차례입니다.
+값이 배포 환경마다 달라지는지 먼저 보고, 달라지면 기능을 켜고 끄는 플래그인지에 따라 자리와 이름을 고릅니다.
 
 ```mermaid
 flowchart LR
@@ -1355,7 +1356,7 @@ const productClient = createClient({baseUrl: env_api_base_url});
 | 이름을 정할 대상 | 기준 |
 | --- | --- |
 | 이미 필요한 계약 | 역할어를 고릅니다. `Params`, `Content`, `Snapshot`을 쓰려고 타입을 만들지 않으며, 맞는 기존 계약이나 추론되는 익명 결과를 유지합니다 |
-| 소유자 안의 타입 | 폴더가 말하는 도메인을 반복하지 않습니다. `orders/_type/`에서는 `SummarySnapshot`입니다 |
+| 소유자 안의 타입 | 폴더 경로가 이미 드러내는 도메인을 반복하지 않습니다. `orders/_type/`에서는 `SummarySnapshot`입니다 |
 | 소유자 밖으로 내보내는 타입 | 문맥이 사라지거나 이름이 충돌할 때만 필요한 도메인 접두를 유지합니다 |
 | 타입과 파일명 | `summary-snapshot.ts`처럼 실제 명사를 씁니다 |
 | 외부, 생성된 계약 | 이름과 `DTO` 같은 접미사를 보존합니다. 내부 계약에는 이를 구별용 접미사로 붙이지 않습니다 |
@@ -1602,7 +1603,7 @@ fetchProductPage({baseUrl: api_base_url, page: urlParams.page, pageSize: paginat
 다음 사유가 있을 때만 보조 함수에 이름을 붙입니다.
 추출한 함수는 바깥 변수, 훅, 컴포넌트 상태 없이도 뜻이 통해야 합니다.
 
-이름을 붙일지 정하는 차례입니다.
+두 자리 이상이 부르는지 먼저 보고, 아니면 삼항 하나로 담기는지에 따라 이름을 붙일지 정합니다.
 
 ```mermaid
 flowchart LR
@@ -1613,7 +1614,7 @@ flowchart LR
 
 | 허용 사유 | 조건 |
 | --- | --- |
-| 실제 재사용 | 변경 후 코드에서 두 자리 이상이 부름. 한 줄 함수도 같음 |
+| 실제 재사용 | 변경 후 코드에서 두 자리 이상이 그 함수를 부름. 한 줄 함수여도 해당함 |
 | 함수 형태가 필수 | 삼항 하나로 표현할 수 없는 판정, `value is T` 타입 가드, 재귀 |
 
 
@@ -1767,7 +1768,7 @@ export const toStatusTone = (status: string): Tone => {
 보조 함수에 이름을 붙일지는 `functions-extract-helpers-only-when-the-boundary-is-real`이 판단합니다.
 이름을 붙였다면 함수마다 파일을 하나 두고, 부르는 대표 함수에 따라 배치합니다.
 
-보조 함수의 자리를 고르는 차례입니다.
+부르는 대표 함수가 둘 이상인지 먼저 보고, 둘 이상이면 다른 소유자도 부르는지에 따라 보조 함수의 자리를 고릅니다.
 
 ```mermaid
 flowchart LR
@@ -1795,7 +1796,7 @@ flowchart LR
 `_` 파일은 같은 폴더에서만 가져옵니다.
 대표와 `_` 파일, `_` 파일끼리의 호출은 대표의 내부이며 재노출 사슬이 아닙니다.
 루트 `util`끼리의 직접 가져오기도 각 공개 진입점의 출처가 드러나므로 허용합니다.
-부르는 대표 함수나 소유자가 늘면 표의 다음 배치를 검토합니다.
+부르는 대표 함수나 소유자가 늘면 표에서 다음 행의 배치를 검토합니다.
 
 **Incorrect 1 (여러 보조를 모은 파일에서 내보낸 함수가 세 단계로 이어집니다):**
 
@@ -1877,7 +1878,7 @@ page/product-detail/_function/
 
 내보낸 계약과 대표 함수를 먼저 보여 주되, 모듈 초기화 시 필요한 선언 순서를 지킵니다.
 
-파일 위에서 아래로 놓는 차례입니다.
+선언은 파일 위에서 아래로 다음 순서로 놓습니다.
 
 ```mermaid
 flowchart TD
@@ -1968,7 +1969,7 @@ const selectedLocaleSupported = isSupportedLocale(selectedLocale);
 루트 `util` 승격은 사용처 수가 아니라 소유자를 지워도 계산이 남는지로 판단합니다.
 사용처가 늘거나 줄어도 이 기준은 바뀌지 않습니다.
 
-승격을 판단하는 차례입니다.
+소유자를 지워도 계산이 남는지 먼저 보고, 남으면 받는 값의 종류로 폴더명을 지을 수 있는지에 따라 승격을 판단합니다.
 
 ```mermaid
 flowchart LR
@@ -2085,7 +2086,7 @@ export const toSignedAmount = (amount: Amount): string => {
 모듈 최상위나 함수 본문 전체에 걸친 `let` 재할당, `push`, 조건부 누적으로 값을 조립하지 않습니다.
 `if`나 `for` 블록 안에서만 쓰는 누적은 대상이 아닙니다.
 
-넓은 스코프에서 조립 방법을 고르는 차례입니다.
+넓은 스코프에서는 목록에 조건부 항목을 넣는지 먼저 보고, 아니면 값 하나가 두 분기로 갈리는지로 조립 방법을 고릅니다.
 
 ```mermaid
 flowchart LR
@@ -2188,7 +2189,7 @@ const visibleTabs = [
 | `await`, `yield`, 외부 호출 | 순서나 호출 시점을 바꾸지 않습니다. `localStorage.getItem()`도 해당합니다 |
 | 훅 호출, `useState` 반환 | 정해진 호출 위치와 횟수를 유지합니다 |
 | 여러 항을 합친 판정 | `isEditable`처럼 이름이 판정의 결론을 설명해야 합니다 |
-| 부정이 겹친 판정 | `!row.deletedAt && !row.archivedAt`은 `isVisible`처럼 뜻을 드러냅니다 |
+| 부정이 겹친 판정 | `!row.deletedAt && !row.archivedAt`은 `isVisible`처럼 뜻을 드러내는 이름으로 받습니다 |
 
 단일 비교인 `row.dueDate < today`는 반복해서 써도 그대로 둡니다.
 사용처가 하나 늘었다고 변수 필요성까지 달라지지 않도록 표현식의 성격으로 판단합니다.
@@ -2356,8 +2357,9 @@ const submitDraft = async (draft: Draft) => {
 | 검사 결과 또는 오류 | `validate` | `validateProductForm` |
 | 도메인 동작 | 실제 업무 동사 | `submitOrder`, `cancelBooking` |
 
-`choose`는 서로 다른 입력 사이에서 `??` 등으로 고를 때 씁니다. 입력이 하나면 해당하지 않습니다.
-소유자 경로가 이미 말하는 도메인도 빼고, 반환 타입 이름보다 호출자가 쓰는 결과 개념을 적습니다.
+`choose`는 서로 다른 입력 사이에서 `??` 등으로 고를 때 씁니다.
+입력이 하나면 해당하지 않습니다.
+소유자 경로가 이미 드러내는 도메인도 빼고, 반환 타입 이름보다 호출자가 쓰는 결과 개념을 적습니다.
 `toComparisonWindows`, `toSummaryRows`처럼 쓰되 요청 계약 자체가 출력이면 `toUserSaveRequest`처럼 짓습니다.
 
 ### 쓰지 않는 동사
@@ -2472,10 +2474,11 @@ export const assertLoggedIn = (session: Session): void => {
 
 **Impact: HIGH (프롭스, 상태, 모듈 상수에서 온 배열을 정렬할 때 원본이 바뀌는 버그를 피합니다)**
 
-정렬은 새 배열을 반환하는 `es-toolkit` 함수로 합니다. 원본을 바꾸는 `.sort()`는 쓰지 않습니다.
+정렬은 새 배열을 반환하는 `es-toolkit` 함수로 합니다.
+원본을 바꾸는 `.sort()`는 쓰지 않습니다.
 프롭스, 상태, 매개변수, 모듈 상수로 받은 배열도 같은 기준을 따릅니다.
 
-정렬 함수를 고르는 차례입니다.
+비교 규칙을 정렬 키로 적을 수 있는지 먼저 보고, 적을 수 있으면 모든 키가 오름차순인지에 따라 정렬 함수를 고릅니다.
 
 ```mermaid
 flowchart LR
@@ -2484,7 +2487,7 @@ flowchart LR
 	q2 -- 아니요 --> r3("orderBy")
 ```
 
-`localeCompare`가 정렬 키로 적을 수 없는 비교 규칙입니다.
+`localeCompare`로 비교하는 규칙이 정렬 키로 적을 수 없는 예입니다.
 같은 키의 항목도 입력 순서와 무관하게 정렬해야 하면 고유 식별자를 마지막 정렬 키로 더합니다.
 새 배열도 원소 객체는 공유하므로 정렬 키를 계산하면서 원소를 수정하지 않습니다.
 입력을 수정하지 않는 정렬 함수는 `readonly` 배열을 매개변수로 받습니다.
@@ -2719,7 +2722,7 @@ const toOverdueLines = (order: Order): OrderLine[] => {
 
 소유자를 지워도 남으면 루트 `constant`, 함께 사라지면 소유자의 `_constant`에 둡니다.
 배치는 `naming-place-project-constants-in-the-root-constant-folder`가 정합니다.
-같은 파일의 지역 `const`로 옮기는 것은 규칙을 충족하지 못합니다.
+같은 파일의 지역 `const`로 옮기기만 해서는 규칙을 충족하지 못합니다.
 지역 변수에는 `functions-name-a-value-only-for-recompute-or-judgment`의 두 사유 중 하나가 필요합니다.
 조회표를 둘지는 `values-avoid-lookup-tables-for-simple-choices`가 정합니다.
 
@@ -2817,7 +2820,7 @@ const toNextPage = (page: number): number => {
 조회표는 여러 키의 대응 관계 자체가 도메인이나 외부 계약일 때만 둡니다.
 선언 바로 위에는 어떤 계약의 대응 관계인지 확인할 수 있는 근거를 적습니다.
 
-조회표를 둘지 정하는 차례입니다.
+자리마다 값이 달라지는지 먼저 보고, 달라지면 대응 관계 자체가 도메인이나 외부 계약인지에 따라 조회표를 둘지 정합니다.
 
 ```mermaid
 flowchart LR
@@ -2895,7 +2898,7 @@ const order_status_by_api_code = {
 | 빈 값, 타입 검사 | `isNil`, `isNotNil`, `isEmptyObject`, `isPlainObject` |
 | 비동기 지연, 시간 제한, 재시도 | `delay`, `withTimeout`, `retry` |
 
-표에 없어도 문서에 같은 의미의 함수가 있으면 사용합니다.
+표에 없어도 `es-toolkit` 문서에 같은 의미의 함수가 있으면 사용합니다.
 다만 `map`, `filter`, `find`, `flat`, `at`, `Object.keys`처럼 표준 메서드 하나로 끝나면 그대로 둡니다.
 공백 제거는 `value.trim()`, 제거할 문자 지정은 `trim(value, "_")`처럼 구분합니다.
 
@@ -2994,7 +2997,7 @@ const trimmedKeyword = keyword.trim();
 날짜는 `dayjs`로 다루고, `moment`는 새로 들이지 않습니다.
 계산 단위, 입력 형식, 표시 타임존을 계약에 맞게 구분합니다.
 
-날짜 문자열이 들어왔을 때 다루는 방법을 고르는 차례입니다.
+날짜 문자열은 서버가 표시 형식까지 확정했는지, 값을 더하거나 빼는지, 유효성을 보는지 차례로 보고 다룰 방법을 고릅니다.
 
 ```mermaid
 flowchart LR
@@ -3173,8 +3176,8 @@ const chartSeries = comparisonSeries.map((series) => ({
 
 ### 기본값 표현
 
-`??`, `||` 오른쪽과 기본값에는 리터럴 대신 이미 선언된 이름을 참조합니다.
-리터럴을 지역 `const`로 옮기거나 이유 주석을 붙이는 것만으로는 규칙을 충족하지 못합니다.
+`??`, `||` 오른쪽과 기본값 자리에서는 리터럴 대신 이미 선언된 이름을 참조합니다.
+리터럴을 지역 `const`로 옮기거나 이유 주석을 붙이기만 해서는 규칙을 충족하지 못합니다.
 
 | 기본값 표현 | 판정 |
 | --- | --- |
@@ -3193,7 +3196,8 @@ const chartSeries = comparisonSeries.map((series) => ({
 | `null`, `undefined`만 없음으로 취급 | `??` |
 | `0`, `false`, 빈 문자열까지 없음으로 취급하는 계약 | `\|\|` |
 
-선언된 이름이어도 기본값의 의미가 맞아야 합니다. `0`, `false`가 유효하면 `??`를 씁니다.
+선언된 이름이어도 기본값의 의미가 맞아야 합니다.
+`0`, `false`가 유효하면 `??`를 씁니다.
 상수는 소유자를 지워도 남으면 `naming-place-project-constants-in-the-root-constant-folder`,
 함께 사라지면 `naming-place-owner-constants-in-the-owner-constant-folder`에 따라 배치합니다.
 채우는 위치는 `absence-resolve-defaults-at-the-boundary`가 정합니다.
@@ -3228,7 +3232,7 @@ const toPageRequest = (size = pagination_default_page_size): PageRequest => { /*
 기본값은 필요한지 먼저 확인하고, 필요하면 값이 들어오는 경계에서 한 번 채웁니다.
 기본값 표현은 `absence-expose-optional-values-instead-of-silent-fallbacks`를 따릅니다.
 
-기본값을 채울 자리를 고르는 차례입니다.
+기본값이 필요한지 먼저 보고, 필요하면 경계에서 채울 수 있는지에 따라 채울 자리를 고릅니다.
 
 ```mermaid
 flowchart LR
@@ -3488,7 +3492,7 @@ const responseSummarySuspense = useSuspenseQuery({
 
 **Impact: MEDIUM**
 
-함수 본문 주석에는 의도와 긴 절차의 단계를 적고 코드 내용을 반복하지 않습니다. 선언 위 문서 주석은 어디에 붙일지, 어떤 형식으로 쓸지, 태그를 붙일지가 따로 정해져 있습니다. 본문은 목적과 제약만 짧은 한국어 명사형으로 적고, 규칙이 허용한 예외에는 확인할 수 있는 이유를 남깁니다.
+함수 본문 주석에는 의도와 긴 절차의 단계를 적고 코드 내용을 반복하지 않습니다. 선언 위 문서 주석은 어디에 붙일지, 어떤 형식으로 쓸지, 태그를 붙일지를 규칙마다 따로 정합니다. 본문은 목적과 제약만 짧은 한국어 명사형으로 적고, 규칙이 허용한 예외에는 확인할 수 있는 이유를 남깁니다.
 
 ### 6.1 Keep Body Comments for Intent and Steps
 
@@ -3524,7 +3528,7 @@ const toMatchedProducts = (products: Product[], keyword: string) => {
 };
 ```
 
-**Correct 1 (선언 이름이 이미 말하는 주석은 지웁니다):**
+**Correct 1 (선언 이름이 이미 드러내는 내용만 적은 주석은 지웁니다):**
 
 ```ts
 const toMatchedProducts = (products: Product[], keyword: string) => {
@@ -3654,7 +3658,8 @@ const responseProductList = useProductList();
 ### 여러 줄
 
 설명이 둘 이상이면 한 줄에 몰지 않고 줄을 나눕니다.
-첫 줄은 요약입니다. 빈 줄 뒤에 이유와 조건을 한 줄씩 적고, 딸린 내용은 목록이나 들여쓰기로 묶습니다.
+첫 줄은 요약입니다.
+빈 줄 뒤에 이유와 조건을 한 줄씩 적고, 딸린 내용은 목록이나 들여쓰기로 묶습니다.
 
 ### 내용과 태그
 
@@ -3810,7 +3815,7 @@ export const fetchProductList = async (): Promise<Product[]> => {
 };
 ```
 
-**Correct 4 (태그를 지우고 헤더 첫 줄이 하는 일을 말합니다):**
+**Correct 4 (태그를 지우고 헤더 첫 줄에 선언이 하는 일을 적습니다):**
 
 ```ts
 /**
@@ -3904,7 +3909,7 @@ export const saveProduct = async (product: Product): Promise<void> => {
 
 ### 주석 자리
 
-이유를 적을 자리를 고르는 차례입니다.
+헤더 문서 주석이 있는 선언인지 먼저 보고, 아니면 JSX 자식인지에 따라 이유를 적을 자리를 고릅니다.
 
 ```mermaid
 flowchart LR
@@ -3993,7 +3998,8 @@ const filteredRows = useMemo(() => {
 기본 매개변수와 삼항의 대체 리터럴은 GritQL 검사 밖이므로 리뷰합니다.
 
 Biome 2.5.7의 `recommended`에는 `useConst`, `useImportType`, `noNonNullAssertion`,
-`noUnusedFunctionParameters`, `noExplicitAny`가 포함됩니다. 담당 컨벤션을 드러내려고 설정에도 명시합니다.
+`noUnusedFunctionParameters`, `noExplicitAny`가 포함됩니다.
+담당 컨벤션을 드러내려고 설정에도 명시합니다.
 
 ### 리뷰가 담당하는 것
 

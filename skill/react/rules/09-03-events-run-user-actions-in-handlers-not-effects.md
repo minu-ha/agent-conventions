@@ -46,7 +46,7 @@ const handleSaveButtonClick: MouseEventHandler<HTMLButtonElement> = (_event) => 
 };
 ```
 
-**Correct 1 (사용자 액션은 핸들러 안에서 바로 수행합니다):**
+**Correct 1 (사용자 액션은 핸들러 안에서 바로 실행합니다):**
 
 ```tsx
 /**

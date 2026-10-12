@@ -23,7 +23,7 @@ tags: typing, wrapper, dom
 
 ### 여는 차례
 
-DOM 속성을 어느 단계로 열지 고르는 차례입니다.
+DOM 계약과 호환되는지, 부딪히는 이름만 빼면 되는지 차례로 보고 여는 단계를 고릅니다.
 
 ```mermaid
 flowchart LR
@@ -54,7 +54,8 @@ DOM 속성은 리액트가 추가한 속성도 받아야 하는 열린 집합이
 나머지를 직접 나열하지 않는 이 방식은 `typescript/types-reuse-existing-contracts-before-new-types`가 허용합니다.
 
 선언되지 않은 `aria-*`, `data-*`는 JSX의 하이픈 이름이라 오류 없이 통과할 수 있지만,
-이미 선언된 속성의 값은 타입 검사를 받습니다. 컴파일 결과뿐 아니라 실제 DOM 전달 코드도 확인합니다.
+이미 선언된 속성의 값은 타입 검사를 받습니다.
+컴파일 결과뿐 아니라 실제 DOM 전달 코드도 확인합니다.
 `HTMLAttributes`를 상속하면 `style`도 열리므로,
 사용 여부는 `css/composition-do-not-style-through-the-style-attribute`를 따릅니다.
 

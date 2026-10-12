@@ -21,7 +21,7 @@ tags: naming, config
 환경 값은 루트 `config/env.ts`에서만 읽고 `env_` 상수로 내보냅니다.
 다른 파일은 그 이름을 쓰며 `import.meta.env`와 `process.env`를 직접 읽지 않습니다.
 
-값이 바뀌는 때로 자리와 이름을 고르는 차례입니다.
+값이 배포 환경마다 달라지는지 먼저 보고, 달라지면 기능을 켜고 끄는 플래그인지에 따라 자리와 이름을 고릅니다.
 
 ```mermaid
 flowchart LR

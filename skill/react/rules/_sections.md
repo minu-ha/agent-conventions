@@ -62,7 +62,7 @@ URL 상태의 바인딩 이름을 통일해 서버 응답과 구분합니다.
 **TitleKo:** 이벤트와 상호작용 흐름
 **Impact:** HIGH
 **Description:** 이벤트 핸들러는 정해진 이름을 쓰고 추가 인자는 커링으로 전달합니다.
-사용자 동작에 따른 처리는 이펙트가 아닌 핸들러에서 실행합니다.
+사용자 액션에 따른 처리는 이펙트가 아닌 핸들러에서 실행합니다.
 
 ## 10. Render Performance (perf)
 **TitleKo:** 렌더 성능
@@ -79,8 +79,8 @@ URL 상태의 바인딩 이름을 통일해 서버 응답과 구분합니다.
 ## 12. Documentation and Comments (docs)
 **TitleKo:** 문서화와 주석
 **Impact:** MEDIUM
-**Description:** 문서 주석의 형식과 태그, 그리고 어느 선언에 붙일지는 동반 스킬인
-`convention-typescript`가 정합니다. 이 섹션에서는 리액트 전용 선언의 문서화와 JSX 자식 위치의 주석 형식을 정합니다.
+**Description:** 문서 주석의 형식과 태그, 붙일 선언은 동반 스킬인 `convention-typescript`가 정합니다.
+이 섹션에서는 리액트 전용 선언의 문서화와 JSX 자식 위치의 주석 형식을 정합니다.
 
 ## 13. Tooling (tooling)
 **TitleKo:** 도구 설정

@@ -38,8 +38,9 @@ tags: functions, naming
 | 검사 결과 또는 오류 | `validate` | `validateProductForm` |
 | 도메인 동작 | 실제 업무 동사 | `submitOrder`, `cancelBooking` |
 
-`choose`는 서로 다른 입력 사이에서 `??` 등으로 고를 때 씁니다. 입력이 하나면 해당하지 않습니다.
-소유자 경로가 이미 말하는 도메인도 빼고, 반환 타입 이름보다 호출자가 쓰는 결과 개념을 적습니다.
+`choose`는 서로 다른 입력 사이에서 `??` 등으로 고를 때 씁니다.
+입력이 하나면 해당하지 않습니다.
+소유자 경로가 이미 드러내는 도메인도 빼고, 반환 타입 이름보다 호출자가 쓰는 결과 개념을 적습니다.
 `toComparisonWindows`, `toSummaryRows`처럼 쓰되 요청 계약 자체가 출력이면 `toUserSaveRequest`처럼 짓습니다.
 
 ### 쓰지 않는 동사

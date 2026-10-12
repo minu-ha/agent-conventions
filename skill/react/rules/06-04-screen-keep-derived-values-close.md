@@ -24,7 +24,8 @@ tags: screen, origin
 | `let` 재할당, 배열 `push`로 조립 | `typescript/functions-avoid-imperative-assembly-in-wide-scopes` |
 | 계산한 값에 이름을 붙일지 결정 | `typescript/functions-name-a-value-only-for-recompute-or-judgment` |
 
-이 규칙은 소유 파일 안에서 계산 위치를 정합니다. 소유자나 이름을 새로 정하는 기준은 위 규칙을 따릅니다.
+이 규칙은 소유 파일 안에서 계산 위치를 정합니다.
+소유자나 이름을 새로 정하는 기준은 위 규칙을 따릅니다.
 
 **Incorrect 1 (쓰는 자리에서 먼 화면 상단에 플래그와 표시값을 쌓습니다):**
 

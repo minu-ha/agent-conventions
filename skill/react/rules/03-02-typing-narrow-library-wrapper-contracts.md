@@ -22,7 +22,7 @@ tags: typing, wrapper, contracts
 
 ### 프롭 종류별 선언
 
-프롭을 어떻게 선언할지 고르는 차례입니다.
+안쪽 컴포넌트가 받는 프롭인지, 라이브러리 스타일 주입 프롭인지 차례로 보고 선언 방법을 고릅니다.
 
 ```mermaid
 flowchart LR
