@@ -78,7 +78,7 @@ const PgProductPanel = (props: PgProductPanelProps) => {
 };
 ```
 
-**Correct 3 (컴포넌트 전체를 표시하지 않으면 이른 반환합니다):**
+**Correct 3 (컴포넌트 전체를 표시하지 않으면 이른 반환으로 끝냅니다):**
 
 ```tsx
 const PgProductPanel = (props: PgProductPanelProps) => {

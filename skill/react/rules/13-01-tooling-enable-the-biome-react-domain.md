@@ -14,7 +14,7 @@ tags: tooling
 **Impact: MEDIUM (자동 검사 범위와 리뷰에서 판단할 범위를 구분합니다)**
 
 `biome` 2.x의 `linter.domains`에서 `react`를 켭니다.
-`package.json`에 `react@>=16`이 있을 때 리액트 검사가 적용됩니다.
+`package.json`에 `react@>=16`이 있을 때 React 검사가 적용됩니다.
 기본 설정은 `typescript/tooling-configure-biome-to-enforce-these-rules`를 따릅니다.
 
 ### 도메인 검사와 추가 설정

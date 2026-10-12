@@ -1,11 +1,11 @@
 # Figma 구현 컨벤션 Rule Index
 
 - Skill: `figma`
-- Routing digest: `sha256:2700a5490735e9240093ad01035af1099e27ac6462b90821bd9de789d50fbfb9`
+- Routing digest: `sha256:5be5aeed6ef2d6c37239586b14b3963a8835294a738736bae8db35143d158756`
 
 ## Direct Companions
 
-- `css` (`conditional`) · Applies when: stylesheet, className, 토큰 값을 추가하거나 수정한다. · [SKILL.md](../css/SKILL.md) · [RULES_INDEX.md](../css/RULES_INDEX.md)
+- `css` (`conditional`) · Applies when: 스타일시트, \`className\`, 토큰 값을 추가하거나 수정한다. · [SKILL.md](../css/SKILL.md) · [RULES_INDEX.md](../css/RULES_INDEX.md)
 - `react` (`conditional`) · Applies when: TSX 화면이나 컴포넌트를 추가하거나 수정한다. · [SKILL.md](../react/SKILL.md) · [RULES_INDEX.md](../react/RULES_INDEX.md)
 
 ## Local Rules
@@ -13,7 +13,7 @@
 - F01-01 | read-start-with-screenshot-and-metadata | 요청에 Figma URL이나 노드 id가 있어 MCP로 디자인을 읽을 때. 같은 Figma 화면을 다시 읽거나 읽을 노드를 늘릴 때.
 - F01-02 | read-choose-the-node-each-tool-reads | Figma URL의 노드가 화면 프레임인지 메모를 감싼 래퍼인지 가려야 할 때. URL에 \`node-id\`가 없거나 \`/branch/\` 경로가 들어 있을 때.
 - F01-03 | read-call-design-context-only-on-small-unmatched-nodes | \`get\_design\_context\`를 부르거나 그 대상 노드를 고를 때. \`get\_design\_context\` 응답이 코드 대신 메타데이터로 오거나 성기다고 알릴 때.
-- F01-04 | read-take-copy-from-the-render-not-layer-names | Figma 메타데이터의 레이어 \`name\`으로 문구, 컬럼명, 컴포넌트 종류를 정할 때. 스크린샷과 레이어 이름이 서로 다른 글자를 보여 줄 때.
+- F01-04 | read-take-copy-from-the-render-not-layer-names | Figma 메타데이터의 레이어 \`name\`으로 문구, 컬럼 이름, 컴포넌트 종류를 정할 때. 스크린샷과 레이어 이름이 서로 다른 글자를 보여 줄 때.
 - F01-05 | read-collect-hidden-layers-and-annotations | Figma 메타데이터에 \`hidden="true"\` 노드가 있을 때. 화면 프레임 밖에 메모, 변경 이력, 상태 설명 프레임이 있을 때.
 - F02-01 | intent-ask-when-ux-notes-and-gui-disagree | Figma 메모, 변경 이력, 와이어프레임이 GUI 화면과 다른 조건, 순서, 문구를 말할 때. 같은 화면이 UX 파일과 GUI 파일에 다르게 그려져 있을 때.
 - F02-02 | intent-fill-undrawn-states-with-project-parts | 서버 데이터 목록, 입력, 비동기 동작이 있는 Figma 화면을 구현할 때. Figma에 로딩, 빈 목록, 오류, 비활성 상태가 그려져 있지 않을 때.

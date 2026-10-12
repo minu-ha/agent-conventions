@@ -21,7 +21,7 @@
 ## 함께 따르는 규칙
 
 - [TypeScript Convention](../typescript/HANDBOOK.md) — 항상 함께 적용합니다.
-- [CSS Convention](../css/HANDBOOK.md) — 다음 조건에서 함께 적용합니다. class contract, stylesheet 또는 styling surface를 변경한다.
+- [CSS Convention](../css/HANDBOOK.md) — 다음 조건에서 함께 적용합니다. 클래스 계약, 스타일시트, 스타일 표면을 변경한다.
 
 ---
 
@@ -146,7 +146,7 @@ flowchart LR
 여러 `ui` 부품을 조립해도 도메인을 모르면 `ui`입니다.
 조립 규모로 `widget`을 고르지 않습니다.
 
-레이어를 정한 뒤 파일명과 심볼에는 `ownership-prefix-layer-names-on-files-and-symbols`를 적용합니다.
+레이어를 정한 뒤 파일 이름과 심볼에는 `ownership-prefix-layer-names-on-files-and-symbols`를 적용합니다.
 
 **Incorrect 1 (라우터 훅을 부르는 화면 전용 로직이 `widget`에 남아 있습니다):**
 
@@ -243,7 +243,7 @@ export const WgChartCard = (props: WgChartCardProps) => {
 
 **Impact: MEDIUM (파일 하나만 봐도 어느 레이어 소유인지 드러납니다)**
 
-세 레이어 모두 파일명과 심볼에 레이어 접두사를 붙입니다.
+세 레이어 모두 파일 이름과 심볼에 레이어 접두사를 붙입니다.
 레이어 판정은 `ownership-layer-component-boundaries`를 따릅니다.
 
 ### 레이어 접두사
@@ -282,7 +282,7 @@ export const ProductTable = (props: ProductTableProps) => {
 };
 ```
 
-**Correct 1 (진입 파일이 아닌 파일에는 `_`를 붙이고 파일명과 심볼에 레이어 접두사를 씁니다):**
+**Correct 1 (진입 파일이 아닌 파일에는 `_`를 붙이고 파일 이름과 심볼에 레이어 접두사를 씁니다):**
 
 ```tsx
 // page/product-detail/_pg-product-table-section.tsx
@@ -300,7 +300,7 @@ export const UiButtonButton = (props: UiButtonButtonProps) => {
 };
 ```
 
-**Correct 2 (폴더에는 접두사를 붙이지 않고 파일명에서 같은 말을 반복하지 않습니다):**
+**Correct 2 (폴더에는 접두사를 붙이지 않고 파일 이름에서 같은 말을 반복하지 않습니다):**
 
 ```tsx
 // component/ui/button/ui-button.tsx
@@ -388,7 +388,7 @@ component/widget/chatbot/
 | --- | --- |
 | 보조 함수 추출 | `typescript/functions-extract-helpers-only-when-the-boundary-is-real` |
 | 보조 함수의 파일 분리 | `typescript/functions-give-each-function-its-own-file` |
-| 파일명과 심볼의 접두사 | `ownership-prefix-layer-names-on-files-and-symbols` |
+| 파일 이름과 심볼의 접두사 | `ownership-prefix-layer-names-on-files-and-symbols` |
 | 루트에만 두는 `util` | `typescript/functions-promote-owner-free-functions-to-root-util` |
 | 루트에만 두는 `config` | `typescript/naming-read-environment-values-through-config-env` |
 
@@ -726,7 +726,7 @@ export const AppRoutes = () => {
 
 **Review with:** `ownership-keep-lifecycle-in-the-owning-component`, `ownership-place-owner-files-in-role-folders`, `typescript/functions-extract-helpers-only-when-the-boundary-is-real`, `typescript/naming-use-direct-imports-and-public-entry-points`
 
-**Impact: HIGH (실제 상태, 생명주기, 컨텍스트가 필요한 경우에만 리액트 훅을 사용합니다)**
+**Impact: HIGH (실제 상태, 생명주기, 컨텍스트가 필요한 경우에만 React 훅을 사용합니다)**
 
 화면 전용 계산, 정규화, 전송 값 조립처럼 순수한 로직은 커스텀 훅으로 감싸지 않습니다.
 
@@ -1197,7 +1197,7 @@ flowchart LR
 | --- | --- |
 | 같은 뮤테이션의 호출 방식 | 호출하는 곳마다 `mutate`와 `mutateAsync`를 섞지 않습니다 |
 | 실패 처리 | 빈 `catch`로 삼키지 않습니다. 표시할 내용은 제품에 맞게 정합니다 |
-| 중복 실행 방지 | 버튼을 `isPending`으로 `disabled` 처리하고, 핸들러 첫 줄에서도 `isPending`이면 이른 반환합니다 |
+| 중복 실행 방지 | 버튼을 `isPending`으로 `disabled` 처리하고, 핸들러 첫 줄에서도 `isPending`이면 이른 반환으로 끝냅니다 |
 | 성공 뒤 캐시 갱신 | `data-invalidate-queries-the-mutation-changed`를 따릅니다 |
 
 **Incorrect 1 (`await`만 쓰고 거부된 Promise를 처리하지 않습니다):**
@@ -1378,31 +1378,31 @@ const mutationProductSave = useProductSave({
 
 **Impact: CRITICAL**
 
-리액트 핸들러 타입과 래퍼가 제공하는 프롭 계약을 선언에 명시합니다. 라이브러리 래퍼는 허용할 프롭 범위를 좁히고 구조에 맞는 방법으로 전달합니다. 일반 TypeScript 타입 규칙은 동반 스킬이 다루고 여기서는 리액트 문맥만 봅니다.
+React 핸들러 타입과 래퍼가 제공하는 프롭 계약을 선언에 명시합니다. 라이브러리 래퍼는 허용할 프롭 범위를 좁히고 구조에 맞는 방법으로 전달합니다. 일반 TypeScript 타입 규칙은 동반 스킬이 다루고 여기서는 React 문맥만 봅니다.
 
 ### 3.1 Take React Handler and Wrapper Prop Types From Existing Contracts
 
 **Rule:** `R03-01` · `typing-take-handler-types-from-existing-contracts`
 
-**Applies when:** 커링 팩토리가 돌려주는 리액트 핸들러의 타입을 정할 때. `Ui*` 래퍼 사용처에서 프롭스 타입을 참조할 때. 제외: `query.select` 같은 훅 옵션의 일회성 문맥 콜백인 경우.
+**Applies when:** 커링 팩토리가 돌려주는 React 핸들러의 타입을 정할 때. `Ui*` 래퍼 사용처에서 프롭스 타입을 참조할 때. 제외: `query.select` 같은 훅 옵션의 일회성 문맥 콜백인 경우.
 
 **Requires selected:** `typescript/types-prefer-function-variable-types-over-parameter-annotations` (함께 적용)
 
 **Impact: MEDIUM (같은 시그니처를 직접 다시 적어 생기는 계약 불일치를 막습니다)**
 
-리액트 핸들러와 래퍼 프롭스의 타입은 기존 계약에서 가져옵니다.
+React 핸들러와 래퍼 프롭스의 타입은 기존 계약에서 가져옵니다.
 타입을 붙이는 기본 위치는 `typescript/types-prefer-function-variable-types-over-parameter-annotations`를 따릅니다.
 
 | 자리 | 타입 출처 |
 | --- | --- |
-| 커링 팩토리가 반환하는 핸들러 | `MouseEventHandler<...>` 같은 리액트 별칭을 팩토리 반환 타입에 적습니다 |
+| 커링 팩토리가 반환하는 핸들러 | `MouseEventHandler<...>` 같은 React 별칭을 팩토리 반환 타입에 적습니다 |
 | `Ui*` 래퍼 사용처 | 내부 라이브러리의 원본 타입 대신 래퍼가 내보낸 `Ui*Props`를 가져옵니다 |
 
-JSX에 직접 쓴 화살표 함수와 달리, 팩토리가 반환하는 함수에는 리액트의 문맥 타입이 붙지 않습니다.
+JSX에 직접 쓴 화살표 함수와 달리, 팩토리가 반환하는 함수에는 React의 문맥 타입이 붙지 않습니다.
 반환 타입을 생략하면 안쪽 매개변수가 암시적 `any`가 되어 `strict`에서 컴파일 오류가 납니다.
 래퍼 타입을 사용하면 래퍼가 좁히거나 추가한 계약도 사용처에 반영됩니다.
 
-`query.select` 같은 훅 옵션의 일회성 문맥 콜백은 리액트 핸들러 구현이 아니므로 대상에서 제외합니다.
+`query.select` 같은 훅 옵션의 일회성 문맥 콜백은 React 핸들러 구현이 아니므로 대상에서 제외합니다.
 
 **Incorrect 1 (팩토리 반환 타입을 적지 않아 이벤트가 암시적 `any`가 됩니다):**
 
@@ -1578,7 +1578,7 @@ flowchart LR
 `HTMLAttributes`만 쓰면 `disabled`, `type`, `colSpan` 같은 전용 속성을 잃습니다.
 `value`, `onChange`처럼 DOM이 정한 이름은 라이브러리 고유 계약이 아닙니다.
 자기 프롭과 전달 방식은 `typing-choose-wrapper-shape-and-forwarding`을 따릅니다.
-DOM 속성은 리액트가 추가한 속성도 받아야 하는 열린 집합이므로, 충돌한 이름만 `Omit`으로 뺍니다.
+DOM 속성은 React가 추가한 속성도 받아야 하는 열린 집합이므로, 충돌한 이름만 `Omit`으로 뺍니다.
 나머지를 직접 나열하지 않는 이 방식은 `typescript/types-reuse-existing-contracts-before-new-types`가 허용합니다.
 
 선언되지 않은 `aria-*`, `data-*`는 JSX의 하이픈 이름이라 오류 없이 통과할 수 있지만,
@@ -1665,7 +1665,7 @@ import type {ChangeEventHandler} from "react";
 /**
  * 라벨과 값을 받는 한 줄 입력 계약
  *
- * 겉은 `div`, 이벤트는 안쪽 `input`이 받아 요소 전용 인터페이스를 그대로 못 씀
+ * 겉은 `div`, 이벤트는 안쪽 `input`이 받아 요소 전용 타입을 그대로 못 씀
  * 입력 이름을 반드시 보이려고 label은 선택적인 ReactNode 대신 필수 문자열
  */
 export interface UiTextFieldProps {
@@ -2180,7 +2180,7 @@ export const UiPanel = {
 여러 파일, 레이어에서 재사용하는 공용 `ui`, `widget`은 모드별 불리언 조합 대신 구조를 드러냅니다.
 `isCompact`, `isEditing`, `showSearch`가 늘어나면 가능한 조합과 JSX, 스타일 분기도 함께 늘어납니다.
 
-| 조건 | 판단 |
+| 조건 | 판정 |
 | --- | --- |
 | 모양이나 모드를 정하는 불리언이 둘 이상임 | 변형 또는 합성 컴포넌트로 구조를 다시 고릅니다 |
 | 같은 불리언을 JSX 분기와 클래스 조건에 함께 사용함 | 변형 또는 합성 컴포넌트로 구조를 다시 고릅니다 |
@@ -2402,7 +2402,7 @@ export const PgProducts = () => {
 
 **Impact: HIGH**
 
-프롭스 계약은 컴포넌트 바로 위에 선언하고 값은 `props.`로 읽어 출처를 남깁니다. 본문은 훅, 핸들러, 이펙트, 반환 순으로 읽힙니다. JSX 안에는 동작을 숨기지 않고, 컴포넌트를 컴포넌트 안에서 정의하지 않습니다. `ref`는 실제 명령형 계약이 있을 때만 열고, `Activity`는 숨긴 상태와 DOM을 보존해야 할 때만 씁니다. 조각과 조건부 렌더링은 형태를 하나로 고정합니다.
+프롭스 계약은 컴포넌트 바로 위에 선언하고 값은 `props.`로 읽어 출처를 남깁니다. 본문은 훅, 핸들러, 이펙트, 반환 순으로 읽힙니다. JSX 안에는 동작을 숨기지 않고, 컴포넌트를 컴포넌트 안에서 정의하지 않습니다. `ref`는 실제 명령형 계약이 있을 때만 열고, `Activity`는 숨긴 상태와 DOM을 보존해야 할 때만 씁니다. `Fragment`와 조건부 렌더링은 형태를 하나로 고정합니다.
 
 ### 5.1 Read Props Through the Props Object Without Destructuring
 
@@ -2452,7 +2452,7 @@ const WgUserCard = ({ label, onSave }: WgUserCardProps) => {
 
 **Rule:** `R05-02` · `composition-do-not-define-components-inside-components`
 
-**Applies when:** 컴포넌트 본문 안에 JSX를 반환하는 로컬 함수, 컴포넌트를 추가하거나 옮길 때. 재렌더 시 재마운트, 포커스 초기화 징후를 다룰 때.
+**Applies when:** 컴포넌트 본문 안에 JSX를 반환하는 로컬 함수, 컴포넌트를 추가하거나 옮길 때. 다시 렌더 시 재마운트, 포커스 초기화 징후를 다룰 때.
 
 **Impact: HIGH (렌더마다 컴포넌트 타입을 다시 만들어 생기는 재마운트와 상태 초기화를 막습니다)**
 
@@ -2616,8 +2616,8 @@ flowchart LR
 
 | 조건 | 처리 |
 | --- | --- |
-| 리액트 19 이상만 지원함 | `forwardRef`로 감싸지 않고 `ref`를 일반 프롭으로 받습니다 |
-| 리액트 18 이하도 지원함 | `forwardRef` 계약을 유지합니다. 지원 버전을 바꾸지 않고 일괄 전환하지 않습니다 |
+| React 19 이상만 지원함 | `forwardRef`로 감싸지 않고 `ref`를 일반 프롭으로 받습니다 |
+| React 18 이하도 지원함 | `forwardRef` 계약을 유지합니다. 지원 버전을 바꾸지 않고 일괄 전환하지 않습니다 |
 | `useImperativeHandle`로 명령 메서드를 공개함 | 계약 이름을 `<Owner>Handle`로 짓습니다 |
 | DOM 요소를 직접 가리킴 | 별도 `Handle` 타입을 만들지 않습니다 |
 | 외부 패키지 타입 제약으로 래퍼가 필요함 | `typescript/docs-justify-convention-exceptions-with-a-reason-comment`에 따라 이유를 남깁니다 |
@@ -2637,7 +2637,7 @@ export const UiStatusBadge = (props: UiStatusBadgeProps) => {
 };
 ```
 
-**Correct 1 (`ref`가 실제로 필요한 공개 API일 때만 리액트 19 방식으로 직접 받습니다):**
+**Correct 1 (`ref`가 실제로 필요한 공개 API일 때만 React 19 방식으로 직접 받습니다):**
 
 ```tsx
 import type {ChangeEventHandler, Ref} from "react";
@@ -2747,11 +2747,11 @@ export const UiSearchInput = (props: UiSearchInputProps) => {
 
 ### 렌더 방식 고르기
 
-리액트 19.2 이상인지, 다시 보일 때 하위 트리 상태를 보존해야 하는지 차례로 보고 렌더 방식을 고릅니다.
+React 19.2 이상인지, 다시 보일 때 하위 트리 상태를 보존해야 하는지 차례로 보고 렌더 방식을 고릅니다.
 
 ```mermaid
 flowchart LR
-	q1{"리액트 19.2<br>이상인가?"} -- 예 --> q2{"다시 보일 때 하위 트리<br>상태를 보존해야 하는가?"} -- 예 --> r2("Activity 로 숨기기")
+	q1{"React 19.2<br>이상인가?"} -- 예 --> q2{"다시 보일 때 하위 트리<br>상태를 보존해야 하는가?"} -- 예 --> r2("Activity 로 숨기기")
 	q1 -- 아니요 --> r1("조건부 렌더링")
 	q2 -- 아니요 --> r1
 ```
@@ -3090,7 +3090,7 @@ const PgProductPanel = (props: PgProductPanelProps) => {
 };
 ```
 
-**Correct 3 (컴포넌트 전체를 표시하지 않으면 이른 반환합니다):**
+**Correct 3 (컴포넌트 전체를 표시하지 않으면 이른 반환으로 끝냅니다):**
 
 ```tsx
 const PgProductPanel = (props: PgProductPanelProps) => {
@@ -3230,7 +3230,7 @@ flowchart LR
 | 비동기 | `Suspense`, 스켈레톤, 로딩, 오류, 빈 상태 |
 | 상태와 프로바이더 | 지역 상태, 이펙트 동기화, 폼 프로바이더, 컨텍스트, 범위를 좁힌 스토어 |
 | 상호작용 | 팝오버, 모달, 선택, 인라인 편집, 드래그, 펼치는 트리 |
-| 라이브러리와 성능 | 외부 라이브러리 생명주기 어댑터, 가상 스크롤, 전환, 지연 값 |
+| 라이브러리와 성능 | 외부 라이브러리 생명주기 어댑터, 가상 스크롤, 트랜지션, 지연 값 |
 
 책임 표는 `screen-extract-local-section-components-for-runtime-boundaries`와 같습니다.
 
@@ -3244,7 +3244,7 @@ flowchart LR
 | 조립 | 사용처가 넣고 빼거나 스타일을 바꾸도록 공개하는 합성 부품 |
 
 컨텍스트를 읽어 분기만 하는 부품은 진입 파일에 남깁니다.
-라우트 진입 파일의 섹션은 `screen-extract-local-section-components-for-runtime-boundaries`가 같은 기준으로 판단합니다.
+라우트 진입 파일의 섹션은 `screen-extract-local-section-components-for-runtime-boundaries`가 같은 기준으로 정합니다.
 뗀 파일의 이름은 `ownership-prefix-layer-names-on-files-and-symbols`를 따릅니다.
 자리는 `ownership-place-owner-files-in-role-folders`를 따릅니다.
 
@@ -3574,7 +3574,7 @@ export const toProductSaveRequest = (formValues: ProductFormValues) => {
 | 비동기 | `Suspense`, 스켈레톤, 로딩, 오류, 빈 상태 |
 | 상태와 프로바이더 | 지역 상태, 이펙트 동기화, 폼 프로바이더, 컨텍스트, 범위를 좁힌 스토어 |
 | 상호작용 | 팝오버, 모달, 선택, 인라인 편집, 드래그, 펼치는 트리 |
-| 라이브러리와 성능 | 외부 라이브러리 생명주기 어댑터, 가상 스크롤, 전환, 지연 값 |
+| 라이브러리와 성능 | 외부 라이브러리 생명주기 어댑터, 가상 스크롤, 트랜지션, 지연 값 |
 
 화면 흐름 제어는 `screen-keep-route-flow-visible`에 따라 라우트 진입에 남깁니다.
 추출한 파일의 배치는 `ownership-place-owner-files-in-role-folders`를 따릅니다.
@@ -3664,7 +3664,7 @@ export const PgProductTableSection = () => {
 	const [selectedRows, setSelectedRows] = useState<ProductRow[]>([]);
 
 	/**
-	 * 고른 행은 이 섹션 안에만 두고 route search로 올리지 않음
+	 * 고른 행은 이 섹션 안에만 두고 search 파라미터로 올리지 않음
 	 */
 	const handleTableRowSelect: UiTableProps["onRowSelect"] = (rows) => {
 		setSelectedRows(rows);
@@ -3692,7 +3692,7 @@ export const PgProductTableSection = () => {
 	const [selectedRows, setSelectedRows] = useState<ProductRow[]>([]);
 
 	/**
-	 * 고른 행은 이 섹션 안에만 두고 route search로 올리지 않음
+	 * 고른 행은 이 섹션 안에만 두고 search 파라미터로 올리지 않음
 	 */
 	const handleTableRowSelect: UiTableProps["onRowSelect"] = (rows) => {
 		setSelectedRows(rows);
@@ -4360,19 +4360,19 @@ useEffect(() => {
 
 | 조건 | 처리 |
 | --- | --- |
-| 리액트 19.2 이상 | 비반응형 콜백에 `ref` 우회 대신 `useEffectEvent`를 씁니다 |
-| 리액트 19.2 미만 | 의존성에 따른 재구독을 먼저 검토하고, 최신 콜백만 바꿔야 할 때 `ref` 동기화를 검토합니다 |
+| React 19.2 이상 | 비반응형 콜백에 `ref` 우회 대신 `useEffectEvent`를 씁니다 |
+| React 19.2 미만 | 의존성에 따른 재구독을 먼저 검토하고, 최신 콜백만 바꿔야 할 때 `ref` 동기화를 검토합니다 |
 | 클릭, 제출 등 사용자 액션 | 이름 붙인 핸들러에 둡니다. 이펙트로 옮기지 않습니다 |
 | Effect Event 호출 | 같은 컴포넌트의 이펙트나 다른 Effect Event 안에서만 호출합니다 |
 | Effect Event 전달 | 다른 컴포넌트, 훅, JSX 이벤트 프롭에 넘기지 않습니다 |
 
 반환 함수는 참조 동일성을 보장하지 않으며 이펙트 의존성에 넣지 않습니다.
 DOM 이벤트 매개변수나 커링을 덧붙이지 않고,
-`typing-take-handler-types-from-existing-contracts`의 리액트 핸들러 타입 규칙도 적용하지 않습니다.
+`typing-take-handler-types-from-existing-contracts`의 React 핸들러 타입 규칙도 적용하지 않습니다.
 의존성 경고를 없애려고 반응해야 할 값까지 감싸지 않습니다.
 
 린터의 인식 여부도 확인합니다.
-리액트 19.2 문서가 요구하는 최신 `eslint-plugin-react-hooks`를 사용하고,
+React 19.2 문서가 요구하는 최신 `eslint-plugin-react-hooks`를 사용하고,
 `biome`도 `useEffectEvent`를 인식하는 최근 버전을 씁니다.
 이전 버전은 아래 Correct 예제를 훅 규칙 위반으로 표시합니다.
 설정은 `typescript/tooling-configure-biome-to-enforce-these-rules`를 따릅니다.
@@ -4440,7 +4440,7 @@ useEffect(() => {
 `query`가 들어간 이름은 서버 요청 바인딩에만 씁니다.
 해당 이름은 `data-name-query-and-mutation-bindings-consistently`를 따릅니다.
 파서 배치는 `typescript/naming-place-owner-constants-in-the-owner-constant-folder`를,
-파일명, 심볼 표기는 `typescript/naming-use-consistent-file-and-symbol-naming`을 따릅니다.
+파일 이름, 심볼 표기는 `typescript/naming-use-consistent-file-and-symbol-naming`을 따릅니다.
 값을 주소에 둘지는 `state-choose-state-tools-by-source-of-truth`로 판단합니다.
 
 **Incorrect 1 (파서 묶음의 역할이 이름에 드러나지 않습니다):**
@@ -4589,7 +4589,7 @@ flowchart LR
 | 작성할 부분 | 기준 |
 | --- | --- |
 | 팩토리 이름 | 커링 없는 핸들러처럼 `handle*`을 씁니다. 호출 인자로 용도를 알 수 있으므로 `With<인자>`는 붙이지 않습니다 |
-| 반환 타입 | `typing-take-handler-types-from-existing-contracts`에 따라 리액트 별칭을 씁니다 |
+| 반환 타입 | `typing-take-handler-types-from-existing-contracts`에 따라 React 별칭을 씁니다 |
 | 함수 형태 | 화살표 두 단계로 적고, 안쪽 함수에 별도 이름을 붙여 반환하지 않습니다 |
 | 반환 전 준비 계산이 있음 | 이때만 바깥 블록 본문을 엽니다. 반환하는 화살표는 이름을 붙이지 않습니다 |
 | 이벤트를 받지 않는 `(id) => void` 프롭 콜백 | 커링하지 않고 이름 붙인 핸들러를 그대로 넘깁니다 |
@@ -4640,7 +4640,7 @@ const handleListItemClick =
 
 **Rule:** `R09-03` · `events-run-user-actions-in-handlers-not-effects`
 
-**Applies when:** 제출, 저장, 삭제, 닫기 같은 한 번뿐인 사용자 액션을 핸들러와 상태+이펙트 사이에서 옮길 때. 이펙트 안에서 뮤테이션이나 화면 이동을 호출하는 코드를 넣을 때.
+**Applies when:** 제출, 저장, 삭제, 닫기 같은 한 번뿐인 사용자 액션을 핸들러와 상태 + 이펙트 사이에서 옮길 때. 이펙트 안에서 뮤테이션이나 화면 이동을 호출하는 코드를 넣을 때.
 
 **Impact: HIGH (사용자 액션이 무관한 이펙트 재실행으로 반복되는 것을 막습니다)**
 
@@ -4732,11 +4732,11 @@ const handleSaveButtonClick: MouseEventHandler<HTMLButtonElement> = (_event) => 
 
 ### 캐시와 컴파일러
 
-리액트는 `useMemo`, `useCallback` 캐시를 버릴 수 있으므로 정확성을 캐시에 의존하지 않습니다.
+React는 `useMemo`, `useCallback` 캐시를 버릴 수 있으므로 정확성을 캐시에 의존하지 않습니다.
 다시 계산되거나 이펙트가 재설치되어도 동작해야 합니다.
 외부 인스턴스의 수명은 소유 이펙트가, 렌더 사이에 보존할 값은 상태나 `ref`가 관리합니다.
 
-리액트 컴파일러가 없어도 같은 기준을 적용합니다.
+React 컴파일러가 없어도 같은 기준을 적용합니다.
 컴파일러가 같은 최적화를 이미 제공하면 수동 메모이제이션을 더하지 않습니다.
 
 **Incorrect 1 (단순 가공을 습관적으로 메모이제이션합니다):**
@@ -4845,7 +4845,7 @@ flowchart LR
 | 트랜지션 진행 표시가 필요함 | 대기 상태를 주지 않는 `startTransition` 대신 `useTransition`의 `isPending`을 씁니다 |
 
 입력값 자체, 폼 오류, 즉시 비활성화 같은 급한 반응은 트랜지션에 넣지 않습니다.
-`await` 뒤에는 리액트가 트랜지션 문맥을 이어 가지 못하므로 상태 갱신을 다시 `startTransition`으로 감쌉니다.
+`await` 뒤에는 React가 트랜지션 문맥을 이어 가지 못하므로 상태 갱신을 다시 `startTransition`으로 감쌉니다.
 
 ### 최적화 조건
 
@@ -5019,7 +5019,7 @@ export const PgProductRows = memo((props: PgProductRowsProps) => {
 
 **Impact: MEDIUM**
 
-문서 주석의 형식과 태그, 붙일 선언은 동반 스킬인 `convention-typescript`가 정합니다. 이 섹션에서는 리액트 전용 선언의 문서화와 JSX 자식 위치의 주석 형식을 정합니다.
+문서 주석의 형식과 태그, 붙일 선언은 동반 스킬인 `convention-typescript`가 정합니다. 이 섹션에서는 React 전용 선언의 문서화와 JSX 자식 위치의 주석 형식을 정합니다.
 
 ### 12.1 Require Doc Comments on React Hooks, Handlers, and Key Declarations
 
@@ -5031,9 +5031,9 @@ export const PgProductRows = memo((props: PgProductRowsProps) => {
 
 **Review with:** `typescript/types-document-custom-types-and-shapes`
 
-**Impact: MEDIUM (공통 문서화 기준에 리액트 전용 선언을 추가해 누락을 막습니다)**
+**Impact: MEDIUM (공통 문서화 기준에 React 전용 선언을 추가해 누락을 막습니다)**
 
-`typescript/docs-require-header-jsdoc-on-key-declarations`의 필수 대상에 아래 리액트 선언을 추가합니다.
+`typescript/docs-require-header-jsdoc-on-key-declarations`의 필수 대상에 아래 React 선언을 추가합니다.
 
 | 추가 대상 | 조건 |
 | --- | --- |
@@ -5187,7 +5187,7 @@ JSX 자식 자리의 주석은 여러 줄 블록으로 씁니다.
 
 **Impact: MEDIUM**
 
-리액트 전용 검사는 `biome` 도메인 설정으로 지정하고, 도구가 판단하지 못하는 항목은 리뷰에서 확인합니다.
+React 전용 검사는 `biome` 도메인 설정으로 지정하고, 도구가 검사하지 못하는 항목은 리뷰에서 확인합니다.
 
 ### 13.1 Enable the Biome React Domain
 
@@ -5198,7 +5198,7 @@ JSX 자식 자리의 주석은 여러 줄 블록으로 씁니다.
 **Impact: MEDIUM (자동 검사 범위와 리뷰에서 판단할 범위를 구분합니다)**
 
 `biome` 2.x의 `linter.domains`에서 `react`를 켭니다.
-`package.json`에 `react@>=16`이 있을 때 리액트 검사가 적용됩니다.
+`package.json`에 `react@>=16`이 있을 때 React 검사가 적용됩니다.
 기본 설정은 `typescript/tooling-configure-biome-to-enforce-these-rules`를 따릅니다.
 
 ### 도메인 검사와 추가 설정

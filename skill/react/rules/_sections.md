@@ -1,6 +1,6 @@
 # 섹션
 
-이 파일은 리액트 컨벤션 규칙의 섹션 순서, 영향도, 설명을 정의합니다.
+이 파일은 React 컨벤션 규칙의 섹션 순서, 영향도, 설명을 정의합니다.
 
 ## 1. Ownership and Boundaries (ownership)
 **TitleKo:** 소유와 경계
@@ -19,9 +19,9 @@
 ## 3. Typing and Contracts (typing)
 **TitleKo:** 타입과 계약
 **Impact:** CRITICAL
-**Description:** 리액트 핸들러 타입과 래퍼가 제공하는 프롭 계약을 선언에 명시합니다.
+**Description:** React 핸들러 타입과 래퍼가 제공하는 프롭 계약을 선언에 명시합니다.
 라이브러리 래퍼는 허용할 프롭 범위를 좁히고 구조에 맞는 방법으로 전달합니다.
-일반 TypeScript 타입 규칙은 동반 스킬이 다루고 여기서는 리액트 문맥만 봅니다.
+일반 TypeScript 타입 규칙은 동반 스킬이 다루고 여기서는 React 문맥만 봅니다.
 
 ## 4. Composition Strategy (strategy)
 **TitleKo:** 조립 전략
@@ -36,7 +36,7 @@
 본문은 훅, 핸들러, 이펙트, 반환 순으로 읽힙니다.
 JSX 안에는 동작을 숨기지 않고, 컴포넌트를 컴포넌트 안에서 정의하지 않습니다.
 `ref`는 실제 명령형 계약이 있을 때만 열고, `Activity`는 숨긴 상태와 DOM을 보존해야 할 때만 씁니다.
-조각과 조건부 렌더링은 형태를 하나로 고정합니다.
+`Fragment`와 조건부 렌더링은 형태를 하나로 고정합니다.
 
 ## 6. Screen File Discipline (screen)
 **TitleKo:** 화면 파일 규율
@@ -80,9 +80,9 @@ URL 상태의 바인딩 이름을 통일해 서버 응답과 구분합니다.
 **TitleKo:** 문서화와 주석
 **Impact:** MEDIUM
 **Description:** 문서 주석의 형식과 태그, 붙일 선언은 동반 스킬인 `convention-typescript`가 정합니다.
-이 섹션에서는 리액트 전용 선언의 문서화와 JSX 자식 위치의 주석 형식을 정합니다.
+이 섹션에서는 React 전용 선언의 문서화와 JSX 자식 위치의 주석 형식을 정합니다.
 
 ## 13. Tooling (tooling)
 **TitleKo:** 도구 설정
 **Impact:** MEDIUM
-**Description:** 리액트 전용 검사는 `biome` 도메인 설정으로 지정하고, 도구가 판단하지 못하는 항목은 리뷰에서 확인합니다.
+**Description:** React 전용 검사는 `biome` 도메인 설정으로 지정하고, 도구가 검사하지 못하는 항목은 리뷰에서 확인합니다.

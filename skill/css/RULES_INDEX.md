@@ -1,11 +1,11 @@
 # CSS 컨벤션 Rule Index
 
 - Skill: `css`
-- Routing digest: `sha256:61200a4053ecfae4f4939715eb873257489de551a5b7d39d12a665b968e250a2`
+- Routing digest: `sha256:ffda660ab297b838e1920b6b54c7157b72500f26842e8bf9eee6fb95bbd68700`
 
 ## Direct Companions
 
-- `typescript` (`conditional`) · Applies when: TS/TSX 클래스 계약, 래퍼 Props 또는 style import를 함께 변경한다. · [SKILL.md](../typescript/SKILL.md) · [RULES_INDEX.md](../typescript/RULES_INDEX.md)
+- `typescript` (`conditional`) · Applies when: TSX 클래스 계약, 래퍼 프롭스, 스타일시트 가져오기를 함께 변경한다. · [SKILL.md](../typescript/SKILL.md) · [RULES_INDEX.md](../typescript/RULES_INDEX.md)
 
 ## Local Rules
 

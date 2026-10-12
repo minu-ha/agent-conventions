@@ -50,7 +50,7 @@ flowchart LR
 `HTMLAttributes`만 쓰면 `disabled`, `type`, `colSpan` 같은 전용 속성을 잃습니다.
 `value`, `onChange`처럼 DOM이 정한 이름은 라이브러리 고유 계약이 아닙니다.
 자기 프롭과 전달 방식은 `typing-choose-wrapper-shape-and-forwarding`을 따릅니다.
-DOM 속성은 리액트가 추가한 속성도 받아야 하는 열린 집합이므로, 충돌한 이름만 `Omit`으로 뺍니다.
+DOM 속성은 React가 추가한 속성도 받아야 하는 열린 집합이므로, 충돌한 이름만 `Omit`으로 뺍니다.
 나머지를 직접 나열하지 않는 이 방식은 `typescript/types-reuse-existing-contracts-before-new-types`가 허용합니다.
 
 선언되지 않은 `aria-*`, `data-*`는 JSX의 하이픈 이름이라 오류 없이 통과할 수 있지만,
@@ -137,7 +137,7 @@ import type {ChangeEventHandler} from "react";
 /**
  * 라벨과 값을 받는 한 줄 입력 계약
  *
- * 겉은 `div`, 이벤트는 안쪽 `input`이 받아 요소 전용 인터페이스를 그대로 못 씀
+ * 겉은 `div`, 이벤트는 안쪽 `input`이 받아 요소 전용 타입을 그대로 못 씀
  * 입력 이름을 반드시 보이려고 label은 선택적인 ReactNode 대신 필수 문자열
  */
 export interface UiTextFieldProps {

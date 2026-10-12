@@ -47,7 +47,7 @@ flowchart LR
 여러 `ui` 부품을 조립해도 도메인을 모르면 `ui`입니다.
 조립 규모로 `widget`을 고르지 않습니다.
 
-레이어를 정한 뒤 파일명과 심볼에는 `ownership-prefix-layer-names-on-files-and-symbols`를 적용합니다.
+레이어를 정한 뒤 파일 이름과 심볼에는 `ownership-prefix-layer-names-on-files-and-symbols`를 적용합니다.
 
 **Incorrect 1 (라우터 훅을 부르는 화면 전용 로직이 `widget`에 남아 있습니다):**
 

@@ -21,19 +21,19 @@ tags: state, effects
 
 | 조건 | 처리 |
 | --- | --- |
-| 리액트 19.2 이상 | 비반응형 콜백에 `ref` 우회 대신 `useEffectEvent`를 씁니다 |
-| 리액트 19.2 미만 | 의존성에 따른 재구독을 먼저 검토하고, 최신 콜백만 바꿔야 할 때 `ref` 동기화를 검토합니다 |
+| React 19.2 이상 | 비반응형 콜백에 `ref` 우회 대신 `useEffectEvent`를 씁니다 |
+| React 19.2 미만 | 의존성에 따른 재구독을 먼저 검토하고, 최신 콜백만 바꿔야 할 때 `ref` 동기화를 검토합니다 |
 | 클릭, 제출 등 사용자 액션 | 이름 붙인 핸들러에 둡니다. 이펙트로 옮기지 않습니다 |
 | Effect Event 호출 | 같은 컴포넌트의 이펙트나 다른 Effect Event 안에서만 호출합니다 |
 | Effect Event 전달 | 다른 컴포넌트, 훅, JSX 이벤트 프롭에 넘기지 않습니다 |
 
 반환 함수는 참조 동일성을 보장하지 않으며 이펙트 의존성에 넣지 않습니다.
 DOM 이벤트 매개변수나 커링을 덧붙이지 않고,
-`typing-take-handler-types-from-existing-contracts`의 리액트 핸들러 타입 규칙도 적용하지 않습니다.
+`typing-take-handler-types-from-existing-contracts`의 React 핸들러 타입 규칙도 적용하지 않습니다.
 의존성 경고를 없애려고 반응해야 할 값까지 감싸지 않습니다.
 
 린터의 인식 여부도 확인합니다.
-리액트 19.2 문서가 요구하는 최신 `eslint-plugin-react-hooks`를 사용하고,
+React 19.2 문서가 요구하는 최신 `eslint-plugin-react-hooks`를 사용하고,
 `biome`도 `useEffectEvent`를 인식하는 최근 버전을 씁니다.
 이전 버전은 아래 Correct 예제를 훅 규칙 위반으로 표시합니다.
 설정은 `typescript/tooling-configure-biome-to-enforce-these-rules`를 따릅니다.

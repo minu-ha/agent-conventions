@@ -21,10 +21,10 @@ metadata:
 
 - read-only 문맥. Figma 링크가 있어도 API, 데이터 매핑, 권한 로직만 바꾸는 경우
 - "동작만" 고치라고 명시한 경우
-- `/make/`, `/board/`, `/slides/` URL. 이 skill의 호출 순서는 `/design/` 파일 기준이다
-- 이동에 그대로 딸려온 마크업과 스타일. diff에 삭제+추가로 보여도 변경으로 다시 세지 않는다
+- `/make/`, `/board/`, `/slides/` URL. 이 skill의 호출 순서는 `/design/` 파일 기준이다.
+- 이동에 그대로 딸려 온 마크업과 스타일. diff에 삭제+추가로 보여도 변경으로 다시 세지 않는다.
 
-적용되지 않는 규칙의 optional pattern을 새로 들여와 스스로 범위를 넓히지 않는다.
+적용되지 않는 규칙의 선택 사항을 새로 들여와 스스로 범위를 넓히지 않는다.
 
 TSX 화면이나 컴포넌트가 바뀌면 `convention-react`를 함께 활성화한다. `convention-react`가 `convention-typescript`를 켠다.
 stylesheet, `className`, 토큰 값이 바뀌면 `convention-css`를 함께 활성화한다.
@@ -38,7 +38,7 @@ Figma를 읽기만 하고 코드를 바꾸지 않으면 어느 companion도 켜�
 
 ## 2. 인덱스 훑기
 
-활성화한 skill마다 그 `SKILL.md`의 load 계약을 따른다.
+활성화한 skill마다 그 `SKILL.md`의 로드 계약을 따른다.
 이 skill과 현재 companion은 모두 progressive이므로 각각의 `RULES_INDEX.md`를 끝까지 훑는다.
 이 skill의 인덱스는 [RULES_INDEX.md](./RULES_INDEX.md)이다.
 각 규칙의 `appliesWhen`을 변경 범위와 대조하고 첫 match에서 멈추지 않는다.
@@ -59,8 +59,8 @@ MCP를 부르기 전에 `read` 섹션 규칙부터 읽는다. 호출 순서와 �
 
 정확한 원문 경로는 contract의 full rule 링크가 가리킨다.
 
-- `requiresSelected` target은 함께 적용한다. 다른 skill의 규칙이면 그 companion도 활성화한다.
-- `reviewWith` target은 변경 범위에 비춰 다시 판단한다. 자동으로 적용하지는 않는다.
+- `requiresSelected` 대상은 함께 적용한다. 다른 skill의 규칙이면 그 companion도 활성화한다.
+- `reviewWith` 대상은 변경 범위에 비춰 다시 판단한다. 자동으로 적용하지는 않는다.
 - `completionGate` 규칙은 마무리 시 항상 적용한다. 인덱스가 그 표시를 달아 준다.
 
 걸린 규칙은 등급과 무관하게 전부 지킨다.

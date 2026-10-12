@@ -42,7 +42,7 @@ Figma 노드는 `get_screenshot`, `get_metadata`, `get_variable_defs` 순서로 
 6. 대응물이 없는 요소만 `get_design_context`로 읽습니다.
    대상은 `read-call-design-context-only-on-small-unmatched-nodes`가 정합니다.
 
-`get_screenshot` 응답은 이미지가 아니라 단기 URL입니다.
+`get_screenshot` 응답은 이미지가 아니라 수명이 짧은 URL입니다.
 바로 내려받아 파일로 읽고, 셸로 URL을 받을 수 없을 때만 `enableBase64Response`를 켭니다.
 스크린샷이 시각 기준입니다.
 레이어 값이 스크린샷과 다르면 스크린샷을 따릅니다.

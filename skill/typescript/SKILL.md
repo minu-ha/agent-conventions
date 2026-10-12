@@ -14,16 +14,16 @@ metadata:
 
 **범위에 드는 것**
 
-- `.ts`/`.tsx`, type, schema, config, API, helper, import/export, fallback, JSDoc의 실제 변경
+- `.ts`, `.tsx`의 타입, 스키마, 설정, API, 보조 함수, 가져오기와 내보내기, 폴백, JSDoc의 실제 변경
 - 추가, 삭제, 이동, 이름 변경, 재선언
-- byte-equivalent named shape가 새 callable의 input/output 역할을 맡으면 변경으로 본다
+- byte-equivalent named shape가 새 callable의 input/output 역할을 맡으면 변경으로 본다.
 
 **범위에 들지 않는 것**
 
 - read-only 문맥
-- 이름, shape, 동작이 그대로인 이동. diff에 삭제+추가로 보여도 변경으로 다시 세지 않는다
+- 이름, 형태, 동작이 그대로인 이동. diff에 삭제+추가로 보여도 변경으로 다시 세지 않는다.
 
-적용되지 않는 규칙의 optional pattern을 새로 들여와 스스로 범위를 넓히지 않는다.
+적용되지 않는 규칙의 선택 사항을 새로 들여와 스스로 범위를 넓히지 않는다.
 
 이 skill은 가장 아래 계층이라 companion을 선언하지 않는다.
 React나 CSS 경계가 함께 바뀌면 이 skill이 그쪽을 켜는 것이 아니라, 그쪽 skill이 이 skill을 companion으로 활성화한다.
@@ -48,8 +48,8 @@ React나 CSS 경계가 함께 바뀌면 이 skill이 그쪽을 켜는 것이 아
 
 정확한 원문 경로는 contract의 full rule 링크가 가리킨다.
 
-- `requiresSelected` target은 함께 적용한다. 다른 skill의 규칙이면 그 companion도 활성화한다.
-- `reviewWith` target은 변경 범위에 비춰 다시 판단한다. 자동으로 적용하지는 않는다.
+- `requiresSelected` 대상은 함께 적용한다. 다른 skill의 규칙이면 그 companion도 활성화한다.
+- `reviewWith` 대상은 변경 범위에 비춰 다시 판단한다. 자동으로 적용하지는 않는다.
 - `completionGate` 규칙은 마무리 시 항상 적용한다. 인덱스가 그 표시를 달아 준다.
 
 걸린 규칙은 등급과 무관하게 전부 지킨다.

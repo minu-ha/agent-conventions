@@ -2,7 +2,7 @@
 title: Keep Page Slugs Traceable to Their Screen
 titleKo: `pg_*` 식별자에 화면 이름을 드러냅니다
 impact: MEDIUM
-impactDescription: 클래스명에서 해당 화면을 추적할 수 있습니다
+impactDescription: 클래스 이름에서 해당 화면을 추적할 수 있습니다
 appliesWhen:
   - `pg_*` 소유자의 클래스 식별자를 새로 만들거나 이름을 바꿀 때
   - 같은 이름 컴포넌트가 여러 화면에 생겨 식별자를 구분해야 할 때
@@ -11,10 +11,10 @@ tags: slug, page-scope, traceability
 
 ## Keep Page Slugs Traceable to Their Screen
 
-**Impact: MEDIUM (클래스명에서 해당 화면을 추적할 수 있습니다)**
+**Impact: MEDIUM (클래스 이름에서 해당 화면을 추적할 수 있습니다)**
 
 `pg_*` 식별자에는 어느 화면인지 추적할 수 있는 이름을 씁니다.
-화면 소유 여부는 활성화된 프레임워크 규약이 판단하고 CSS는 그 이름을 따릅니다.
+화면 소유 여부는 활성화된 프레임워크 규약이 정하고 CSS는 그 이름을 따릅니다.
 
 화면 안의 컴포넌트인지 먼저 보고, 그렇다면 다른 화면의 식별자와 충돌하는지에 따라 식별자를 고릅니다.
 

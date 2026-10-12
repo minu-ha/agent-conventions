@@ -106,7 +106,7 @@ titleKo: 사람이 화면에서 읽을 한국어 제목
 impact: MEDIUM
 impactDescription: 이 규칙을 지키면 무엇이 달라지는지 한 문장
 appliesWhen:
-  - 이 규칙이 걸리는 변경 조건 항목. ~할 때 로 끝맺는다
+  - 이 규칙이 걸리는 변경 조건 항목. `~할 때`로 끝맺는다
   - 제외: 걸리지 않는 조건
 requiresSelected: 함께 반드시 걸리는 rule-id, companion-skill/cross-rule-id
 requiredOnCompletion: true

@@ -151,7 +151,7 @@ export const toProfileSaveRequest = (formValues: ProfileFormValues) => {
 import {toProfileSaveRequest} from "@/page/profile/_function/to-profile-save-request";
 ```
 
-**Correct (삼항 하나에 담기지 않는 판정은 사용처가 하나여도 함수로 추출하고 분기마다 `return`으로 끝냅니다):**
+**Correct (삼항 하나에 담기지 않는 판정은 호출부가 하나여도 함수로 추출하고 분기마다 `return`으로 끝냅니다):**
 
 ```ts
 // page/product-detail/_function/to-status-tone.ts

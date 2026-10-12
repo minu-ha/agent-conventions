@@ -1,8 +1,8 @@
 ---
 title: Require Doc Comments on React Hooks, Handlers, and Key Declarations
-titleKo: 리액트의 주요 경계 선언에 JSDoc 주석을 붙입니다
+titleKo: React의 주요 경계 선언에 JSDoc 주석을 붙입니다
 impact: MEDIUM
-impactDescription: 공통 문서화 기준에 리액트 전용 선언을 추가해 누락을 막습니다
+impactDescription: 공통 문서화 기준에 React 전용 선언을 추가해 누락을 막습니다
 appliesWhen:
   - 쿼리, 뮤테이션이나 읽어도 의도가 안 보이는 핸들러, 이펙트를 추가, 변경할 때
   - 내보낸 보조 함수, 훅, 스토어 선언을 추가, 변경할 때
@@ -13,9 +13,9 @@ tags: docs, handlers, effects
 
 ## Require Doc Comments on React Hooks, Handlers, and Key Declarations
 
-**Impact: MEDIUM (공통 문서화 기준에 리액트 전용 선언을 추가해 누락을 막습니다)**
+**Impact: MEDIUM (공통 문서화 기준에 React 전용 선언을 추가해 누락을 막습니다)**
 
-`typescript/docs-require-header-jsdoc-on-key-declarations`의 필수 대상에 아래 리액트 선언을 추가합니다.
+`typescript/docs-require-header-jsdoc-on-key-declarations`의 필수 대상에 아래 React 선언을 추가합니다.
 
 | 추가 대상 | 조건 |
 | --- | --- |

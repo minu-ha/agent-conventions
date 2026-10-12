@@ -5,7 +5,7 @@ impact: MEDIUM
 impactDescription: 선언 형식만 보고도 필드 계약인지 타입 사이의 관계인지 구분할 수 있습니다
 appliesWhen:
   - `interface`와 `type` 사이에서 선언 형식을 바꿀 때
-  - 객체 계약, union, tuple, 함수 시그니처, mapped, conditional type에 이름을 붙여 선언할 때
+  - 객체 계약, 유니언, 튜플, 함수 시그니처, 매핑, 조건부 타입에 이름을 붙여 선언할 때
   - 제외: 외부, 생성된 계약을 그대로 참조하는 경우
 reviewWith: types-reuse-existing-contracts-before-new-types, types-document-custom-types-and-shapes
 tags: types, interface, type

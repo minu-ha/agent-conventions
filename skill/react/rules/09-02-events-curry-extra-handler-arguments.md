@@ -32,7 +32,7 @@ flowchart LR
 | 작성할 부분 | 기준 |
 | --- | --- |
 | 팩토리 이름 | 커링 없는 핸들러처럼 `handle*`을 씁니다. 호출 인자로 용도를 알 수 있으므로 `With<인자>`는 붙이지 않습니다 |
-| 반환 타입 | `typing-take-handler-types-from-existing-contracts`에 따라 리액트 별칭을 씁니다 |
+| 반환 타입 | `typing-take-handler-types-from-existing-contracts`에 따라 React 별칭을 씁니다 |
 | 함수 형태 | 화살표 두 단계로 적고, 안쪽 함수에 별도 이름을 붙여 반환하지 않습니다 |
 | 반환 전 준비 계산이 있음 | 이때만 바깥 블록 본문을 엽니다. 반환하는 화살표는 이름을 붙이지 않습니다 |
 | 이벤트를 받지 않는 `(id) => void` 프롭 콜백 | 커링하지 않고 이름 붙인 핸들러를 그대로 넘깁니다 |

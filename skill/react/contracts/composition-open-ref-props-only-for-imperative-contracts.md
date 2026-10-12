@@ -16,8 +16,8 @@ flowchart LR
 
 | 조건 | 처리 |
 | --- | --- |
-| 리액트 19 이상만 지원함 | `forwardRef`로 감싸지 않고 `ref`를 일반 프롭으로 받습니다 |
-| 리액트 18 이하도 지원함 | `forwardRef` 계약을 유지합니다. 지원 버전을 바꾸지 않고 일괄 전환하지 않습니다 |
+| React 19 이상만 지원함 | `forwardRef`로 감싸지 않고 `ref`를 일반 프롭으로 받습니다 |
+| React 18 이하도 지원함 | `forwardRef` 계약을 유지합니다. 지원 버전을 바꾸지 않고 일괄 전환하지 않습니다 |
 | `useImperativeHandle`로 명령 메서드를 공개함 | 계약 이름을 `<Owner>Handle`로 짓습니다 |
 | DOM 요소를 직접 가리킴 | 별도 `Handle` 타입을 만들지 않습니다 |
 | 외부 패키지 타입 제약으로 래퍼가 필요함 | `typescript/docs-justify-convention-exceptions-with-a-reason-comment`에 따라 이유를 남깁니다 |
@@ -37,7 +37,7 @@ export const UiStatusBadge = (props: UiStatusBadgeProps) => {
 };
 ```
 
-**Correct 1 (`ref`가 실제로 필요한 공개 API일 때만 리액트 19 방식으로 직접 받습니다):**
+**Correct 1 (`ref`가 실제로 필요한 공개 API일 때만 React 19 방식으로 직접 받습니다):**
 
 ```tsx
 import type {ChangeEventHandler, Ref} from "react";

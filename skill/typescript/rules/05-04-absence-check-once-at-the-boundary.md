@@ -22,13 +22,13 @@ tags: absence, boundaries
 값의 없음 여부는 소유자 안으로 들어오는 경계에서 한 번 검사하고, 결과를 타입으로 전달합니다.
 화면의 응답 매핑, `select`, `combine`, search 스키마나 컴포넌트가 프롭을 받는 자리가 경계입니다.
 
-| 경계가 정한 답 | 전달 타입 | 소비처 |
+| 경계가 정한 답 | 전달 타입 | 사용처 |
 | --- | --- | --- |
 | 기본값이 있음 | `number` | `absence-resolve-defaults-at-the-boundary`에 따라 채운 값을 사용합니다 |
 | 없음을 화면에 표시 | `number \| undefined` | 중간 함수는 그대로 전달하고 렌더링 위치에서 한 번 분기합니다 |
 
 없을 때 다른 화면을 렌더하는 분기는 필요한 표시 상태이므로 유지합니다.
-그 밖의 소비처가 없음 여부를 반복 판정한다면 경계에서 결과를 전달했는지 확인합니다.
+그 밖의 사용처가 없음 여부를 반복 판정한다면 경계에서 결과를 전달했는지 확인합니다.
 판정 결과를 전달하는 방법은 `values-decide-once-and-carry-the-result`가 정합니다.
 
 ### 다시 검사가 필요한 때
@@ -105,10 +105,10 @@ const responseSummarySuspense = useSuspenseQuery({
 });
 ```
 
-**Correct (없음을 읽는 자리는 화면을 그리는 분기 하나입니다):**
+**Correct (없음을 읽는 자리는 화면을 렌더하는 분기 하나입니다):**
 
 ```tsx
-// page/product-detail/_pg-product-detail-summary.tsx: 없음을 읽는 곳은 그리는 분기 하나
+// page/product-detail/_pg-product-detail-summary.tsx: 없음을 읽는 곳은 렌더하는 분기 하나
 {isNotNil(summary.changeRate) && (
 	<UiBadge tone={toSignedTone(summary.changeRate)}>{formatSignedPercent(summary.changeRate)}</UiBadge>
 )}

@@ -65,7 +65,7 @@ tags: ownership
 | --- | --- |
 | 보조 함수 추출 | `typescript/functions-extract-helpers-only-when-the-boundary-is-real` |
 | 보조 함수의 파일 분리 | `typescript/functions-give-each-function-its-own-file` |
-| 파일명과 심볼의 접두사 | `ownership-prefix-layer-names-on-files-and-symbols` |
+| 파일 이름과 심볼의 접두사 | `ownership-prefix-layer-names-on-files-and-symbols` |
 | 루트에만 두는 `util` | `typescript/functions-promote-owner-free-functions-to-root-util` |
 | 루트에만 두는 `config` | `typescript/naming-read-environment-values-through-config-env` |
 

@@ -2,7 +2,7 @@
 title: Do Not Create Screen-local Custom Hooks for Pure Logic
 titleKo: 순수 계산을 감싸는 화면 전용 훅을 만들지 않습니다
 impact: HIGH
-impactDescription: 실제 상태, 생명주기, 컨텍스트가 필요한 경우에만 리액트 훅을 사용합니다
+impactDescription: 실제 상태, 생명주기, 컨텍스트가 필요한 경우에만 React 훅을 사용합니다
 appliesWhen:
   - 화면 전용 계산, 정규화, 전송 값 조립을 커스텀 훅으로 추출하려 할 때
   - 화면 전용 순수 로직을 별도 보조 모듈로 옮기려 할 때
@@ -16,7 +16,7 @@ tags: ownership, hooks, widget
 
 ## Do Not Create Screen-local Custom Hooks for Pure Logic
 
-**Impact: HIGH (실제 상태, 생명주기, 컨텍스트가 필요한 경우에만 리액트 훅을 사용합니다)**
+**Impact: HIGH (실제 상태, 생명주기, 컨텍스트가 필요한 경우에만 React 훅을 사용합니다)**
 
 화면 전용 계산, 정규화, 전송 값 조립처럼 순수한 로직은 커스텀 훅으로 감싸지 않습니다.
 

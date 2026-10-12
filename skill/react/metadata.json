@@ -13,7 +13,7 @@
 		{
 			"skill": "css",
 			"mode": "conditional",
-			"appliesWhen": "class contract, stylesheet 또는 styling surface를 변경한다."
+			"appliesWhen": "클래스 계약, 스타일시트, 스타일 표면을 변경한다."
 		}
 	],
 	"references": [

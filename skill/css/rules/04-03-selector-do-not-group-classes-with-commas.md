@@ -27,7 +27,7 @@ tags: selector, duplication, maintainability
 | 값을 지역 변수로 빼서 공유함 | `values-tokenize-repeated-visual-values` 규칙에 따라 금지합니다 |
 | `@media`나 `@supports` 안에서 같은 클래스를 재선언함 | 이 규칙의 대상이 아닙니다 |
 
-### 기계 검증 범위
+### 기계 검사 범위
 
 | 검사 대상 | 담당 |
 | --- | --- |

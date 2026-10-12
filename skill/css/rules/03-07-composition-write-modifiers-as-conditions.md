@@ -28,7 +28,7 @@ tags: clsx, className, modifiers
 | 라이브러리와 별개인 우리 모습이 필요함 | 우리 어휘로 정의한 프롭을 따로 받습니다 |
 
 어느 자리에서도 템플릿 리터럴로 이름을 조립하지 않습니다.
-수정자를 붙일 수 있는지는 `composition-do-not-build-structural-variants-with-modifiers` 규칙이 판단합니다.
+수정자를 붙일 수 있는지는 `composition-do-not-build-structural-variants-with-modifiers` 규칙이 정합니다.
 이 규칙은 허용한 수정자의 작성 형식을 정합니다.
 
 **Incorrect 1 (클래스 이름을 값으로 조립합니다):**

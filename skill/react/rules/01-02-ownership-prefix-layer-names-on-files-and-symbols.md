@@ -1,6 +1,6 @@
 ---
 title: Prefix Layer Names on Files and Symbols
-titleKo: 파일명과 심볼에 레이어 접두사를 붙입니다
+titleKo: 파일 이름과 심볼에 레이어 접두사를 붙입니다
 impact: MEDIUM
 impactDescription: 파일 하나만 봐도 어느 레이어 소유인지 드러납니다
 appliesWhen:
@@ -15,7 +15,7 @@ tags: ownership, naming
 
 **Impact: MEDIUM (파일 하나만 봐도 어느 레이어 소유인지 드러납니다)**
 
-세 레이어 모두 파일명과 심볼에 레이어 접두사를 붙입니다.
+세 레이어 모두 파일 이름과 심볼에 레이어 접두사를 붙입니다.
 레이어 판정은 `ownership-layer-component-boundaries`를 따릅니다.
 
 ### 레이어 접두사
@@ -54,7 +54,7 @@ export const ProductTable = (props: ProductTableProps) => {
 };
 ```
 
-**Correct 1 (진입 파일이 아닌 파일에는 `_`를 붙이고 파일명과 심볼에 레이어 접두사를 씁니다):**
+**Correct 1 (진입 파일이 아닌 파일에는 `_`를 붙이고 파일 이름과 심볼에 레이어 접두사를 씁니다):**
 
 ```tsx
 // page/product-detail/_pg-product-table-section.tsx
@@ -72,7 +72,7 @@ export const UiButtonButton = (props: UiButtonButtonProps) => {
 };
 ```
 
-**Correct 2 (폴더에는 접두사를 붙이지 않고 파일명에서 같은 말을 반복하지 않습니다):**
+**Correct 2 (폴더에는 접두사를 붙이지 않고 파일 이름에서 같은 말을 반복하지 않습니다):**
 
 ```tsx
 // component/ui/button/ui-button.tsx

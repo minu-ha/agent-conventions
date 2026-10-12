@@ -40,7 +40,7 @@ tags: types, jsdoc
 
 기존 형태가 새 역할에도 맞으면 그 형태에 새 역할을 연결하고, 새 타입 선언은 요구하지 않습니다.
 익명 결과에 이 규칙을 적용하려고 필드 주석이나 새 타입을 만들지 않습니다.
-함수 선언의 헤더 주석은 `docs-require-header-jsdoc-on-key-declarations`가 별도로 판단합니다.
+함수 선언의 헤더 주석은 `docs-require-header-jsdoc-on-key-declarations`가 별도로 정합니다.
 
 **Incorrect 1 (필드 설명을 생략하거나 예전 방식으로 헤더에 몰아 씁니다):**
 

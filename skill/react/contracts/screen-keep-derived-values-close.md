@@ -23,7 +23,7 @@ export const PgProductTableSection = () => {
 	const [selectedRows, setSelectedRows] = useState<ProductRow[]>([]);
 
 	/**
-	 * 고른 행은 이 섹션 안에만 두고 route search로 올리지 않음
+	 * 고른 행은 이 섹션 안에만 두고 search 파라미터로 올리지 않음
 	 */
 	const handleTableRowSelect: UiTableProps["onRowSelect"] = (rows) => {
 		setSelectedRows(rows);
@@ -51,7 +51,7 @@ export const PgProductTableSection = () => {
 	const [selectedRows, setSelectedRows] = useState<ProductRow[]>([]);
 
 	/**
-	 * 고른 행은 이 섹션 안에만 두고 route search로 올리지 않음
+	 * 고른 행은 이 섹션 안에만 두고 search 파라미터로 올리지 않음
 	 */
 	const handleTableRowSelect: UiTableProps["onRowSelect"] = (rows) => {
 		setSelectedRows(rows);

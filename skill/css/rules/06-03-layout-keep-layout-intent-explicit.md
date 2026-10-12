@@ -1,6 +1,6 @@
 ---
 title: Keep Layout Intent Explicit
-titleKo: 레이아웃의 기준과 역할을 클래스명과 선언에 드러냅니다
+titleKo: 레이아웃의 기준과 역할을 클래스 이름과 선언에 드러냅니다
 impact: MEDIUM
 impactDescription: 조상 DOM을 찾아보지 않고 `sticky`, `fixed`의 기준과 각 요소의 배치 역할을 파악합니다
 appliesWhen:
@@ -15,7 +15,7 @@ tags: layout, comments, sticky
 
 **Impact: MEDIUM (조상 DOM을 찾아보지 않고 `sticky`, `fixed`의 기준과 각 요소의 배치 역할을 파악합니다)**
 
-레이아웃의 기준과 역할은 클래스명과 선언에서 드러나야 합니다.
+레이아웃의 기준과 역할은 클래스 이름과 선언에서 드러나야 합니다.
 크기 고정 여부는 `layout-reach-for-intrinsic-sizing-before-breakpoints` 규칙을 따릅니다.
 
 | 선언이나 요소 | 요구 사항 | 이유 |

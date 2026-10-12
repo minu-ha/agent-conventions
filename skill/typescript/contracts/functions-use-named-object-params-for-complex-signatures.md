@@ -1,6 +1,6 @@
 # Use Named Object Params for Complex Signatures
 
-**Impact: MEDIUM (긴 시그니처를 읽을 수 있게 두고 위치를 헷갈리지 않으면서 입력을 늘립니다)**
+**Impact: MEDIUM (긴 시그니처를 읽기 쉽게 유지하고 인자 위치를 헷갈리지 않으면서 입력을 늘립니다)**
 
 ### 객체로 묶는 기준
 
@@ -13,8 +13,8 @@
 그 규범은 `values-read-objects-through-chains` 규칙이 모든 객체에 정합니다.
 여기서는 매개변수를 언제 객체로 묶고 그 타입을 어디에 선언할지만 봅니다.
 
-리액트 컴포넌트의 프롭스는 이 규칙 대상이 아닙니다.
-프롭스를 읽는 방식과 타입 선언 위치는 프레임워크 컨벤션이 담당합니다.
+React 컴포넌트의 프롭스는 이 규칙 대상이 아닙니다.
+프롭스를 읽는 방식과 타입 선언 위치는 프레임워크 규칙이 담당합니다.
 
 뜻이 같은 계약이 이미 있으면 그대로 씁니다.
 그 판정은 `types-reuse-existing-contracts-before-new-types`가 합니다.

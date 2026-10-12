@@ -28,8 +28,8 @@
 `no-duplicate-selectors`는 `css/selector-declare-each-class-in-one-block`과
 `css/selector-do-not-group-classes-with-commas`의 단독 재선언을 담당합니다.
 
-디렉터리별 접두사는 `selector-class-pattern`과 `selector-disallowed-list`의 `overrides`로 나눕니다.
-예제 정규식은 `&`로 시작하는 중첩 선택자와 최상위를 구분하지만 `&`의 소유자까지 검증하지는 않습니다.
+폴더별 접두사는 `selector-class-pattern`과 `selector-disallowed-list`의 `overrides`로 나눕니다.
+예제 정규식은 `&`로 시작하는 중첩 선택자와 최상위를 구분하지만 `&`의 소유자까지 검사하지는 않습니다.
 `selector-max-combinators`와 `selector-max-type`은 넣지 않습니다.
 개수만으로 우리 선택자와 라이브러리 경로를 구분할 수 없습니다.
 
@@ -44,9 +44,9 @@
 | 우리 마크업의 구조 선택자 | `:first-child`, `:nth-child()`는 클래스에도 붙습니다 | 표기만으로 구분하지 못해 리뷰에서 확인합니다 |
 | 역할 이름, 승격 판단, 변형 노출, 포커스 대비 | 기계가 뜻을 판단하지 못합니다 | 리뷰에서 확인합니다 |
 
-`@media` 방향은 `css/layout-write-breakpoints-desktop-first`가 함께 판단합니다.
+`@media` 방향은 `css/layout-write-breakpoints-desktop-first`가 함께 정합니다.
 
-**Correct (공통 규칙에 디렉터리별 접두사 `overrides`를 더합니다):**
+**Correct (공통 규칙에 폴더별 접두사 `overrides`를 더합니다):**
 
 ```js
 /**
@@ -73,7 +73,7 @@ const libraryPrefixes = [/^\.ant-/, /^\.rc-/, /^\.tippy-/, /^\.Mui/];
  * 우리가 마크업을 쓰는 자리에서 금지되는 형태
  */
 const ownMarkupPatterns = [
-	// 상태 pseudo-class를 최상위 선택자로 다시 여는 것
+	// 상태 가상 클래스를 최상위 선택자로 다시 여는 것
 	/^\.[\w-]+:(hover|focus|focus-visible|focus-within|active|enabled|disabled|checked|visited)/,
 	// 중첩 안에서 요소 선택자로 우리 마크업을 잡는 것
 	// 우리가 쓰지 않는 마크업은 stylelint-disable 주석으로 예외 표시
@@ -94,7 +94,7 @@ export default {
 		"keyframes-name-pattern": "^(pg|wg|ui)_[a-z][a-zA-Z0-9]*__[a-z][a-zA-Z0-9]*$",
 		// 쉼표 목록에 든 선택자를 아래에서 단독으로 다시 여는 것까지 검출
 		"no-duplicate-selectors": [true, {disallowInList: true}],
-		// 움직임 줄이기 전역 처리 외에는 금지
+		// 움직임 감소 전역 처리 외에는 금지
 		"declaration-no-important": true,
 		// 지역 변수 선언 금지. var() 소비는 허용
 		"property-disallowed-list": ["/^--/"],
@@ -134,7 +134,7 @@ export default {
 				"selector-class-pattern": null,
 				"keyframes-name-pattern": null,
 				"property-disallowed-list": null,
-				// 움직임 줄이기 전역 처리는 여기서만
+				// 움직임 감소 전역 처리는 여기서만
 				"declaration-no-important": null,
 			},
 		},

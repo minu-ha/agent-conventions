@@ -1,8 +1,8 @@
 ---
 title: Use Scope, Slug, Element, and Modifier Syntax
-titleKo: 클래스명은 `범위_식별자__요소--수정자` 형식으로 씁니다
+titleKo: 클래스 이름은 `범위_식별자__요소--수정자` 형식으로 씁니다
 impact: HIGH
-impactDescription: 클래스명에서 소유자와 역할을 확인할 수 있습니다
+impactDescription: 클래스 이름에서 소유자와 역할을 확인할 수 있습니다
 appliesWhen:
   - 일반 CSS에서 프로젝트가 소유한 클래스를 새로 만들 때
   - 이름, 범위, 식별자, 요소, 수정자의 구분자나 대소문자 표기를 바꿀 때
@@ -11,9 +11,9 @@ tags: naming, class-grammar, ownership
 
 ## Use Scope, Slug, Element, and Modifier Syntax
 
-**Impact: HIGH (클래스명에서 소유자와 역할을 확인할 수 있습니다)**
+**Impact: HIGH (클래스 이름에서 소유자와 역할을 확인할 수 있습니다)**
 
-클래스명은 `<scope>_<slug>__<element>[--<modifier>]` 문법을 씁니다.
+클래스 이름은 `<scope>_<slug>__<element>[--<modifier>]` 문법을 씁니다.
 구분자 `_`, `__`, `--`를 고정하고 각 자리의 역할을 구분합니다.
 다른 규칙에서도 아래 한국어 이름을 씁니다.
 
@@ -28,7 +28,7 @@ tags: naming, class-grammar, ownership
 수정자는 클래스의 `--이름`이고, 변형은 컴포넌트가 받는 `variant` 프롭입니다.
 식별자에는 접두사가 이미 드러낸 낱말을 반복하지 않습니다.
 `UiButton`은 `ui_button`으로 쓰고 `ui_uiButton`으로 쓰지 않습니다.
-기계 검증은 이 문법을 정규식으로 등록한 `selector-class-pattern`이 담당합니다.
+기계 검사는 이 문법을 정규식으로 등록한 `selector-class-pattern`이 담당합니다.
 
 **Incorrect 1 (식별자, 요소, 수정자에 snake_case와 kebab-case가 섞입니다):**
 

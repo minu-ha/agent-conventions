@@ -14,23 +14,23 @@ metadata:
 
 **범위에 드는 것**
 
-- render, screen, 소유자/route-local 배치, handler, state, query, React support code의 실제 변경
-- 추가, 삭제, 이동, 이름 변경, 재선언. 특히 소유자/route-local 이동 자체는 변경이다
+- 렌더, 화면, 소유자와 라우트 전용 배치, 핸들러, 상태, 쿼리, React 보조 코드의 실제 변경
+- 추가, 삭제, 이동, 이름 변경, 재선언. 특히 소유자와 라우트 전용 위치의 이동 자체는 변경이다.
 
 **범위에 들지 않는 것**
 
 - read-only 문맥
-- 소유자 이동에 그대로 딸려온 내부 선언, 본문, import, class/style
-- 위 이동은 diff에 삭제+추가로 보여도 변경으로 다시 세지 않는다
+- 소유자 이동에 그대로 딸려 온 내부 선언, 본문, 가져오기, 클래스와 스타일
+- 위 이동은 diff에 삭제+추가로 보여도 변경으로 다시 세지 않는다.
 
-적용되지 않는 규칙의 optional pattern을 새로 들여와 스스로 범위를 넓히지 않는다.
+적용되지 않는 규칙의 선택 사항을 새로 들여와 스스로 범위를 넓히지 않는다.
 
 `convention-typescript`는 항상 함께 활성화한다.
-class contract, stylesheet, styling surface가 바뀔 때만 `convention-css`를 추가하고, 아니면 켜지 않는다.
+클래스 계약(class contract), 스타일시트, 스타일 표면이 바뀔 때만 `convention-css`를 추가하고, 아니면 켜지 않는다.
 
 ## 2. 인덱스 훑기
 
-활성화한 skill마다 그 `SKILL.md`의 load 계약을 따른다.
+활성화한 skill마다 그 `SKILL.md`의 로드 계약을 따른다.
 이 skill과 현재 companion은 모두 progressive이므로 각각의 `RULES_INDEX.md`를 끝까지 훑는다.
 이 skill의 인덱스는 [RULES_INDEX.md](./RULES_INDEX.md)이다.
 각 규칙의 `appliesWhen`을 변경 범위와 대조하고 첫 match에서 멈추지 않는다.
@@ -49,8 +49,8 @@ class contract, stylesheet, styling surface가 바뀔 때만 `convention-css`를
 
 정확한 원문 경로는 contract의 full rule 링크가 가리킨다.
 
-- `requiresSelected` target은 함께 적용한다. 다른 skill의 규칙이면 그 companion도 활성화한다.
-- `reviewWith` target은 변경 범위에 비춰 다시 판단한다. 자동으로 적용하지는 않는다.
+- `requiresSelected` 대상은 함께 적용한다. 다른 skill의 규칙이면 그 companion도 활성화한다.
+- `reviewWith` 대상은 변경 범위에 비춰 다시 판단한다. 자동으로 적용하지는 않는다.
 - `completionGate` 규칙은 마무리 시 항상 적용한다. 인덱스가 그 표시를 달아 준다.
 
 걸린 규칙은 등급과 무관하게 전부 지킨다.

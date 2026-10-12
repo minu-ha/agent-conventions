@@ -12,7 +12,7 @@
 
 ## 개요
 
-에이전트 협업 팀을 위한 CSS 코딩 컨벤션입니다. plain CSS를 기본으로 한 전역 고유 네이밍, `pg_/wg_/ui_` 소유 범위, 예측 가능한 TSX 클래스 조합, 평평한 선택자, 남의 클래스는 자기 root 아래에서만 겨냥하는 경계, 토큰화된 값, 눈에 보이는 포커스 표시, stylelint 설정을 강조합니다. TSX의 클래스 계약을 함께 바꿀 때는 React와 TypeScript 규칙도 함께 봅니다. `rules/` 아래 rule 파일이 source of truth입니다.
+에이전트 협업 팀을 위한 CSS 코딩 컨벤션입니다. 일반 CSS를 기본으로 한 전역 고유 이름, `pg_`, `wg_`, `ui_` 소유 범위, 예측 가능한 TSX 클래스 조합, 평평한 선택자, 다른 소유자의 클래스는 자기 루트 아래에서만 선택자로 잡는 경계, 토큰으로 모은 값, 눈에 보이는 포커스 표시, stylelint 설정을 다룹니다. TSX의 클래스 계약을 함께 바꿀 때는 React와 TypeScript 규칙도 함께 봅니다. 규칙 본문의 정본은 `rules/*.md`입니다.
 
 이 문서에는 CSS 컨벤션 규칙만 담겨 있습니다. 아래 규칙도 함께 따릅니다.
 
@@ -20,7 +20,7 @@
 
 ## 함께 따르는 규칙
 
-- [TypeScript Convention](../typescript/HANDBOOK.md) — 다음 조건에서 함께 적용합니다. TS/TSX 클래스 계약, 래퍼 Props 또는 style import를 함께 변경한다.
+- [TypeScript Convention](../typescript/HANDBOOK.md) — 다음 조건에서 함께 적용합니다. TSX 클래스 계약, 래퍼 프롭스, 스타일시트 가져오기를 함께 변경한다.
 
 ---
 
@@ -75,7 +75,7 @@
 
 **Impact: MEDIUM**
 
-일반 `*.css`를 사용하고 전역에서 고유한 클래스명을 붙입니다. 클래스 이름은 소유자와 역할을 드러내고, 요소와 수정자는 정해진 문법으로 구분합니다.
+일반 `*.css`를 사용하고 전역에서 고유한 클래스 이름을 붙입니다. 클래스 이름은 소유자와 역할을 드러내고, 요소와 수정자는 정해진 문법으로 구분합니다.
 
 ### 1.1 Default to Plain CSS Unless the Project Explicitly Standardizes on CSS Modules
 
@@ -83,9 +83,9 @@
 
 **Applies when:** 표준이 정해지지 않은 상태에서 스타일시트 방식\(일반 CSS, CSS Modules\)을 고르거나 `.module.css`나 `styles.*`로 옮길 때. 제외: 기존 일반 CSS 클래스 이름만 바꾸는 경우.
 
-**Impact: MEDIUM (클래스명이 전역에서 고유해야 범위_식별자로 소유자를 되짚을 수 있습니다)**
+**Impact: MEDIUM (클래스 이름이 전역에서 고유해야 범위_식별자로 소유자를 되짚을 수 있습니다)**
 
-이 스킬은 일반 `*.css`와 전역에서 고유한 클래스명을 기본으로 합니다.
+이 스킬은 일반 `*.css`와 전역에서 고유한 클래스 이름을 기본으로 합니다.
 클래스 문법, 소유 경계, 선택자 규칙은 모두 이 전제를 따르며 `pg_*`, `wg_*`, `ui_*`로 소유자를 구분합니다.
 
 별도 합의가 없으면 일반 CSS를 씁니다.
@@ -139,9 +139,9 @@ import "./pg-products.css";
 
 **Applies when:** 일반 CSS에서 프로젝트가 소유한 클래스를 새로 만들 때. 이름, 범위, 식별자, 요소, 수정자의 구분자나 대소문자 표기를 바꿀 때.
 
-**Impact: HIGH (클래스명에서 소유자와 역할을 확인할 수 있습니다)**
+**Impact: HIGH (클래스 이름에서 소유자와 역할을 확인할 수 있습니다)**
 
-클래스명은 `<scope>_<slug>__<element>[--<modifier>]` 문법을 씁니다.
+클래스 이름은 `<scope>_<slug>__<element>[--<modifier>]` 문법을 씁니다.
 구분자 `_`, `__`, `--`를 고정하고 각 자리의 역할을 구분합니다.
 다른 규칙에서도 아래 한국어 이름을 씁니다.
 
@@ -156,7 +156,7 @@ import "./pg-products.css";
 수정자는 클래스의 `--이름`이고, 변형은 컴포넌트가 받는 `variant` 프롭입니다.
 식별자에는 접두사가 이미 드러낸 낱말을 반복하지 않습니다.
 `UiButton`은 `ui_button`으로 쓰고 `ui_uiButton`으로 쓰지 않습니다.
-기계 검증은 이 문법을 정규식으로 등록한 `selector-class-pattern`이 담당합니다.
+기계 검사는 이 문법을 정규식으로 등록한 `selector-class-pattern`이 담당합니다.
 
 **Incorrect 1 (식별자, 요소, 수정자에 snake_case와 kebab-case가 섞입니다):**
 
@@ -196,7 +196,7 @@ pg_productDetail__main--routeActive
 `container`, `wrapper`, `box`는 합성어로도 쓰지 않고 `gap12`처럼 숫자에 뜻을 담지 않습니다.
 
 수정자를 붙일 수 있는지는 `composition-do-not-build-structural-variants-with-modifiers` 규칙이 정합니다.
-이 규칙은 붙이기로 한 이름이 역할을 드러내는지 판단합니다.
+이 규칙은 붙이기로 한 이름이 역할을 드러내는지 정합니다.
 
 **Incorrect 1 (역할 대신 구조나 치수로 이름을 짓습니다):**
 
@@ -220,10 +220,10 @@ ui_card__body--dense
 
 **Applies when:** `pg_*` 소유자의 클래스 식별자를 새로 만들거나 이름을 바꿀 때. 같은 이름 컴포넌트가 여러 화면에 생겨 식별자를 구분해야 할 때.
 
-**Impact: MEDIUM (클래스명에서 해당 화면을 추적할 수 있습니다)**
+**Impact: MEDIUM (클래스 이름에서 해당 화면을 추적할 수 있습니다)**
 
 `pg_*` 식별자에는 어느 화면인지 추적할 수 있는 이름을 씁니다.
-화면 소유 여부는 활성화된 프레임워크 규약이 판단하고 CSS는 그 이름을 따릅니다.
+화면 소유 여부는 활성화된 프레임워크 규약이 정하고 CSS는 그 이름을 따릅니다.
 
 화면 안의 컴포넌트인지 먼저 보고, 그렇다면 다른 화면의 식별자와 충돌하는지에 따라 식별자를 고릅니다.
 
@@ -434,14 +434,14 @@ flowchart LR
 | `.pg_products__sidebar .MuiTreeItem-label { }` | 금지. 최상위 블록 안에서 `&`로 시작해야 합니다 |
 | `.pg_products__sidebarToolbar .pg_products__sidebarTitle { }` | 같은 소유자의 클래스끼리라 이 규칙의 대상이 아닙니다 |
 
-이렇게 덮어쓰기를 한 블록에 모으면 라이브러리 버전을 올릴 때 확인할 곳도 한 군데로 정해집니다.
+이렇게 덮어쓰기를 한 블록에 모으면 라이브러리 버전을 올릴 때 확인할 곳도 한곳으로 정해집니다.
 
 다른 소유자의 DOM 경로는 우리가 정하지 않으므로 결합자 개수를 제한하지 않습니다.
 블록 중첩 깊이는 `selector-limit-nesting-block-depth` 규칙을 따릅니다.
 직접 수정할 수 있는 클래스라면 `ownership-change-other-owners-through-their-api`의 세 방법을 먼저 확인하고,
 모두 맞지 않을 때 이 규칙을 적용합니다.
 
-### 기계 검증 범위
+### 기계 검사 범위
 
 `selector-disallowed-list`는 등록된 외부 접두사와 다른 레이어의 최상위 클래스를 검사합니다.
 같은 레이어의 다른 식별자와 미등록 라이브러리 클래스는 이 검사에 걸리지 않아 파일별 소유자를 대조해야 합니다.
@@ -552,7 +552,7 @@ flowchart LR
 선택자로 지정합니다.
 
 `className`을 최상위까지만 전달하는 경계는 `composition-inject-classes-only-at-the-entry-point` 규칙이 정합니다.
-이 규칙은 사용처가 어떤 방법을 고를지 판단합니다.
+이 규칙은 사용처가 어떤 방법을 고를지 정합니다.
 
 **Incorrect 1 (최상위 배치를 `className`으로 바꿀 수 있는데도 다른 소유자의 클래스를 선택합니다):**
 
@@ -726,7 +726,7 @@ flowchart LR
 기본 스타일과 상태는 기본 클래스와 `--수정자`로 나눕니다.
 `listButtonActive`처럼 상태를 기본 이름에 넣으면 기본 스타일만 재사용하거나 상태만 끌 수 없습니다.
 
-수정자로 표현할 수 있는 상태인지는 `composition-do-not-build-structural-variants-with-modifiers` 규칙이 판단합니다.
+수정자로 표현할 수 있는 상태인지는 `composition-do-not-build-structural-variants-with-modifiers` 규칙이 정합니다.
 
 **Incorrect 1 (기본 클래스 이름에 상태를 포함합니다):**
 
@@ -1046,7 +1046,7 @@ export const UiCollapse = (props: UiCollapseProps) => {
 | 라이브러리와 별개인 우리 모습이 필요함 | 우리 어휘로 정의한 프롭을 따로 받습니다 |
 
 어느 자리에서도 템플릿 리터럴로 이름을 조립하지 않습니다.
-수정자를 붙일 수 있는지는 `composition-do-not-build-structural-variants-with-modifiers` 규칙이 판단합니다.
+수정자를 붙일 수 있는지는 `composition-do-not-build-structural-variants-with-modifiers` 규칙이 정합니다.
 이 규칙은 허용한 수정자의 작성 형식을 정합니다.
 
 **Incorrect 1 (클래스 이름을 값으로 조립합니다):**
@@ -1202,7 +1202,7 @@ export const WgUserCard = (props: WgUserCardProps) => {
 
 **Impact: HIGH**
 
-선택 대상은 클래스명으로 명시하고, 각 클래스의 선언은 한 블록에 모읍니다. 브라우저가 제공하는 DOM 상태는 가상 클래스로, 앱이 정의한 상태는 수정자 클래스로 표현합니다.
+선택 대상은 클래스 이름으로 명시하고, 각 클래스의 선언은 한 블록에 모읍니다. 브라우저가 제공하는 DOM 상태는 가상 클래스로, 앱이 정의한 상태는 수정자 클래스로 표현합니다.
 
 ### 4.1 Limit Nesting to One Level and Write the Rest Inline
 
@@ -1228,7 +1228,7 @@ export const WgUserCard = (props: WgUserCardProps) => {
 `&`가 가리키는 요소가 작성 위치를 결정합니다.
 두 겹 이상 중첩하면 `.pg_a .pg_b .pg_c` 같은 전체 경로가 여러 블록에 흩어지고 기계 검사도 각 블록만 봅니다.
 `&` 없이 시작하면 자손 선택자가 별도 겹처럼 읽혀 표기에 따라 검사 결과가 달라집니다.
-기계 검증은 `max-nesting-depth: 1`이며 최상위는 0겹입니다.
+기계 검사는 `max-nesting-depth: 1`이며 최상위는 0겹입니다.
 
 **Incorrect 1 (다른 요소의 가상 요소를 `&`로 다시 엽니다):**
 
@@ -1441,7 +1441,7 @@ h2 {
 | 값을 지역 변수로 빼서 공유함 | `values-tokenize-repeated-visual-values` 규칙에 따라 금지합니다 |
 | `@media`나 `@supports` 안에서 같은 클래스를 재선언함 | 이 규칙의 대상이 아닙니다 |
 
-### 기계 검증 범위
+### 기계 검사 범위
 
 | 검사 대상 | 담당 |
 | --- | --- |
@@ -1535,7 +1535,7 @@ h2 {
 
 기본 블록 아래에 같은 선택자의 덮어쓰기가 있는지 다시 찾지 않도록 최종 선언을 한 곳에 둡니다.
 조건 블록의 위치는 `layout-group-breakpoints-at-the-file-bottom` 규칙을 따릅니다.
-기계 검증은 `no-duplicate-selectors`가 담당합니다.
+기계 검사는 `no-duplicate-selectors`가 담당합니다.
 
 **Incorrect 1 (같은 클래스를 파일 두 곳에서 열어 선언 순서에 의존합니다):**
 
@@ -1732,9 +1732,9 @@ DOM 상태 가상 클래스는 해당 요소의 **조건 없는 기본 클래스
 자손 기본 블록은 조상 규칙보다 **앞에** 둡니다.
 뒤에 두면 낮은 명시도의 규칙이 나중에 나와 `no-descending-specificity`에 걸립니다.
 
-### 기계 검증 범위
+### 기계 검사 범위
 
-| 기계 검증 | 검사 대상 |
+| 기계 검사 | 검사 대상 |
 | --- | --- |
 | `selector-disallowed-list` | 최상위에 다시 선언한 상태 가상 클래스 |
 | `property-disallowed-list` | 지역 변수 선언 |
@@ -2218,7 +2218,7 @@ flowchart LR
 
 /* src/page/products/pg-products.css */
 .pg_products__toolbar {
-	/* 페이지 스크롤 컨테이너 기준 고정. 드롭다운이 이 쌓임 맥락을 벗어나야 하면 포털 대상을 밖에 둠 */
+	/* 화면 스크롤 컨테이너 기준 고정. 드롭다운이 이 쌓임 맥락을 벗어나야 하면 포털 대상을 밖에 둠 */
 	position: sticky;
 	z-index: var(--app-z-index-sticky);
 }
@@ -2407,7 +2407,7 @@ flowchart LR
 
 **Impact: MEDIUM**
 
-클래스명과 선언에 배치 의도를 드러내고, 폭에 따른 변경은 한곳에 모읍니다. 브레이크포인트를 추가하기 전에 고유 크기 지정으로 해결할 수 있는지 확인합니다. 뷰포트 브레이크포인트는 파일 아래 한곳에 모으고 데스크톱 퍼스트로 정한 세 값만 씁니다. 컴포넌트가 받은 폭에 따라 구조를 바꿔야 하면 컨테이너 쿼리를 씁니다.
+클래스 이름과 선언에 배치 의도를 드러내고, 폭에 따른 변경은 한곳에 모읍니다. 브레이크포인트를 추가하기 전에 고유 크기 지정으로 해결할 수 있는지 확인합니다. 뷰포트 브레이크포인트는 파일 아래 한곳에 모으고 데스크톱 퍼스트로 정한 세 값만 씁니다. 컴포넌트가 받은 폭에 따라 구조를 바꿔야 하면 컨테이너 쿼리를 씁니다.
 
 ### 6.1 Group Breakpoints at the Bottom of the File
 
@@ -2631,7 +2631,7 @@ flowchart LR
 
 **Impact: MEDIUM (조상 DOM을 찾아보지 않고 `sticky`, `fixed`의 기준과 각 요소의 배치 역할을 파악합니다)**
 
-레이아웃의 기준과 역할은 클래스명과 선언에서 드러나야 합니다.
+레이아웃의 기준과 역할은 클래스 이름과 선언에서 드러나야 합니다.
 크기 고정 여부는 `layout-reach-for-intrinsic-sizing-before-breakpoints` 규칙을 따릅니다.
 
 | 선언이나 요소 | 요구 사항 | 이유 |
@@ -2751,7 +2751,7 @@ flowchart LR
 
 버튼과 입력은 자기 폭을 정하지 않습니다.
 `padding`, `min-height`, 글자 크기까지만 소유하고 폭은 사용처가 정합니다.
-폭을 고정한 이유가 클래스명과 선언에서 드러나는지는 `layout-keep-layout-intent-explicit` 규칙을 따릅니다.
+폭을 고정한 이유가 클래스 이름과 선언에서 드러나는지는 `layout-keep-layout-intent-explicit` 규칙을 따릅니다.
 
 **Incorrect 1 (열 개수를 브레이크포인트마다 직접 지정합니다):**
 
@@ -3086,8 +3086,8 @@ AAA 기준을 모든 표시의 두께가 반드시 2px이어야 한다는 뜻으
 `no-duplicate-selectors`는 `css/selector-declare-each-class-in-one-block`과
 `css/selector-do-not-group-classes-with-commas`의 단독 재선언을 담당합니다.
 
-디렉터리별 접두사는 `selector-class-pattern`과 `selector-disallowed-list`의 `overrides`로 나눕니다.
-예제 정규식은 `&`로 시작하는 중첩 선택자와 최상위를 구분하지만 `&`의 소유자까지 검증하지는 않습니다.
+폴더별 접두사는 `selector-class-pattern`과 `selector-disallowed-list`의 `overrides`로 나눕니다.
+예제 정규식은 `&`로 시작하는 중첩 선택자와 최상위를 구분하지만 `&`의 소유자까지 검사하지는 않습니다.
 `selector-max-combinators`와 `selector-max-type`은 넣지 않습니다.
 개수만으로 우리 선택자와 라이브러리 경로를 구분할 수 없습니다.
 
@@ -3102,9 +3102,9 @@ AAA 기준을 모든 표시의 두께가 반드시 2px이어야 한다는 뜻으
 | 우리 마크업의 구조 선택자 | `:first-child`, `:nth-child()`는 클래스에도 붙습니다 | 표기만으로 구분하지 못해 리뷰에서 확인합니다 |
 | 역할 이름, 승격 판단, 변형 노출, 포커스 대비 | 기계가 뜻을 판단하지 못합니다 | 리뷰에서 확인합니다 |
 
-`@media` 방향은 `css/layout-write-breakpoints-desktop-first`가 함께 판단합니다.
+`@media` 방향은 `css/layout-write-breakpoints-desktop-first`가 함께 정합니다.
 
-**Correct (공통 규칙에 디렉터리별 접두사 `overrides`를 더합니다):**
+**Correct (공통 규칙에 폴더별 접두사 `overrides`를 더합니다):**
 
 ```js
 /**
@@ -3131,7 +3131,7 @@ const libraryPrefixes = [/^\.ant-/, /^\.rc-/, /^\.tippy-/, /^\.Mui/];
  * 우리가 마크업을 쓰는 자리에서 금지되는 형태
  */
 const ownMarkupPatterns = [
-	// 상태 pseudo-class를 최상위 선택자로 다시 여는 것
+	// 상태 가상 클래스를 최상위 선택자로 다시 여는 것
 	/^\.[\w-]+:(hover|focus|focus-visible|focus-within|active|enabled|disabled|checked|visited)/,
 	// 중첩 안에서 요소 선택자로 우리 마크업을 잡는 것
 	// 우리가 쓰지 않는 마크업은 stylelint-disable 주석으로 예외 표시
@@ -3152,7 +3152,7 @@ export default {
 		"keyframes-name-pattern": "^(pg|wg|ui)_[a-z][a-zA-Z0-9]*__[a-z][a-zA-Z0-9]*$",
 		// 쉼표 목록에 든 선택자를 아래에서 단독으로 다시 여는 것까지 검출
 		"no-duplicate-selectors": [true, {disallowInList: true}],
-		// 움직임 줄이기 전역 처리 외에는 금지
+		// 움직임 감소 전역 처리 외에는 금지
 		"declaration-no-important": true,
 		// 지역 변수 선언 금지. var() 소비는 허용
 		"property-disallowed-list": ["/^--/"],
@@ -3192,7 +3192,7 @@ export default {
 				"selector-class-pattern": null,
 				"keyframes-name-pattern": null,
 				"property-disallowed-list": null,
-				// 움직임 줄이기 전역 처리는 여기서만
+				// 움직임 감소 전역 처리는 여기서만
 				"declaration-no-important": null,
 			},
 		},

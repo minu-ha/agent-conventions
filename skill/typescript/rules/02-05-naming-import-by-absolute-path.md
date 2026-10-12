@@ -49,7 +49,7 @@ flowchart LR
 | `util` | 프로젝트 전반의 함수. 받는 값의 종류별 폴더로 묶습니다 |
 | `type` | 프로젝트 전반의 계약 |
 | `hook` | 여러 소유자가 쓰는 훅 |
-| `store` | 여러 화면의 공유 상태. 파일명은 `use-<name>-store.ts`입니다 |
+| `store` | 여러 화면의 공유 상태. 파일 이름은 `use-<name>-store.ts`입니다 |
 | `service` | 서버 통신 클라이언트 |
 | `asset` | 아이콘 등 정적 자원 |
 

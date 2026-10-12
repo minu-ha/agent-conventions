@@ -1,8 +1,8 @@
 # Default to Plain CSS Unless the Project Explicitly Standardizes on CSS Modules
 
-**Impact: MEDIUM (클래스명이 전역에서 고유해야 범위_식별자로 소유자를 되짚을 수 있습니다)**
+**Impact: MEDIUM (클래스 이름이 전역에서 고유해야 범위_식별자로 소유자를 되짚을 수 있습니다)**
 
-이 스킬은 일반 `*.css`와 전역에서 고유한 클래스명을 기본으로 합니다.
+이 스킬은 일반 `*.css`와 전역에서 고유한 클래스 이름을 기본으로 합니다.
 클래스 문법, 소유 경계, 선택자 규칙은 모두 이 전제를 따르며 `pg_*`, `wg_*`, `ui_*`로 소유자를 구분합니다.
 
 별도 합의가 없으면 일반 CSS를 씁니다.

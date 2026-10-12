@@ -21,8 +21,8 @@ tags: naming, constants
 
 | 자리 | 표기 |
 | --- | --- |
-| 파일명 | `kebab-case` |
-| 폴더명 | `kebab-case` 단수. 프레임워크가 강제하는 이름과 활성화된 프레임워크 규약의 라우트 그룹 표기는 예외입니다 |
+| 파일 이름 | `kebab-case` |
+| 폴더 이름 | `kebab-case` 단수. 프레임워크가 강제하는 이름과 활성화된 프레임워크 규약의 라우트 그룹 표기는 예외입니다 |
 | 타입, `interface`, 컴포넌트 | `PascalCase` |
 | 모듈 스코프 불변 데이터 상수, 값 집합과 그 소유 하위 키 | `snake_case` |
 | 그 외 변수, 함수, 객체 키, 스키마 키, 타입 필드 | `camelCase` |
@@ -38,7 +38,7 @@ tags: naming, constants
 
 함수는 동사, 상수는 주제 접두사와 `snake_case`, 컴포넌트는 레이어 접두사로 종류를 드러냅니다.
 한 단어 상수는 만들지 않습니다.
-함수 파일명은 내보낸 이름(`format-usd.ts` → `formatUsd`), 상수 파일명은 공유하는 주제(`api.ts` → `api_*`)입니다.
+함수 파일 이름은 내보낸 이름(`format-usd.ts` → `formatUsd`), 상수 파일 이름은 공유하는 주제(`api.ts` → `api_*`)입니다.
 
 ### 외부 계약이 정한 이름
 
@@ -57,7 +57,7 @@ interface User_Profile {
 }
 ```
 
-**Correct 1 (파일명은 `kebab-case`, 타입 필드는 `camelCase`로 씁니다):**
+**Correct 1 (파일 이름은 `kebab-case`, 타입 필드는 `camelCase`로 씁니다):**
 
 ```ts
 // user-settings.ts

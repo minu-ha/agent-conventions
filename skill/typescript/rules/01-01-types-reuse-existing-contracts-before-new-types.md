@@ -50,7 +50,7 @@ flowchart LR
 | 맞는 기존 형태가 없는 새 도메인 계약 | 새로 선언하고 `types-document-custom-types-and-shapes`만 적용합니다 |
 | 외부, 생성된, 읽기 전용, 공용 형태를 그대로 사용 | 이 규칙과 `types-derive-subsets-with-indexed-access` 모두 대상이 아닙니다 |
 
-함수 헤더 주석은 `docs-require-header-jsdoc-on-key-declarations`가 판단합니다.
+함수 헤더 주석은 `docs-require-header-jsdoc-on-key-declarations`가 정합니다.
 규칙을 적용하려고 요청에 없는 `*Params`나 `*Input`을 만들지 않습니다.
 
 **Incorrect 1 (기존 계약과 같은 구조를 다시 선언합니다):**

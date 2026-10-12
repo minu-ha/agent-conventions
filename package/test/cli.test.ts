@@ -625,7 +625,7 @@ test("build script regenerates HANDBOOK.md for the react skill", async () => {
 	assert.match(agentsSource, /^- \[TypeScript Convention\]\(\.\.\/typescript\/HANDBOOK\.md\) — 항상 함께 적용합니다\.$/m);
 	assert.match(
 		agentsSource,
-		/^- \[CSS Convention\]\(\.\.\/css\/HANDBOOK\.md\) — 다음 조건에서 함께 적용합니다\. class contract, stylesheet 또는 styling surface를 변경한다\.$/m,
+		/^- \[CSS Convention\]\(\.\.\/css\/HANDBOOK\.md\) — 다음 조건에서 함께 적용합니다\. 클래스 계약, 스타일시트, 스타일 표면을 변경한다\.$/m,
 	);
 	// 핸드북의 companion 목록은 사람이 읽는 경로라 상대 skill의 핸드북을 가리킴
 	assert.match(agentsSource, /\.\.\/typescript\/HANDBOOK\.md/);

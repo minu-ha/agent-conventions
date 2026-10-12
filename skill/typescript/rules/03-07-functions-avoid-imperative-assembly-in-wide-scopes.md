@@ -32,7 +32,7 @@ flowchart LR
 
 추출 여부는 `functions-extract-helpers-only-when-the-boundary-is-real`,
 함수 이름은 `functions-name-functions-by-what-comes-out`을 따릅니다.
-중간값 명명은 `functions-name-a-value-only-for-recompute-or-judgment`가 판단합니다.
+중간값 이름 짓기는 `functions-name-a-value-only-for-recompute-or-judgment`가 정합니다.
 
 **Incorrect 1 (넓은 스코프에서 명령형으로 조립을 쌓습니다):**
 

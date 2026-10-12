@@ -5,7 +5,7 @@ impact: MEDIUM
 impactDescription: 함수 선언과 본문 형식을 통일해 변경 범위를 줄이고 선언 순서를 확인하기 쉽게 합니다
 appliesWhen:
   - 이름을 지어 선언하는 함수를 새로 만들거나 선언 형태나 본문 형태를 바꿀 때
-  - 객체 프로퍼티에 함수를 담거나 그 형태를 바꿀 때
+  - 객체 속성에 함수를 담거나 그 형태를 바꿀 때
   - 제외: 인라인 콜백이나 커링의 바깥 화살표인 경우
   - 제외: 클래스 메서드, 제너레이터, 오버로드 선언인 경우
 reviewWith: functions-use-named-object-params-for-complex-signatures
@@ -66,7 +66,7 @@ export const toTrimmedTitle = (rawTitle: string): string => {
 };
 ```
 
-**Incorrect 2 (객체 프로퍼티의 함수를 메서드 축약형으로 씁니다):**
+**Incorrect 2 (객체 속성의 함수를 메서드 축약형으로 씁니다):**
 
 ```ts
 export const cellFormatterByValueType = {
@@ -76,7 +76,7 @@ export const cellFormatterByValueType = {
 } as const;
 ```
 
-**Correct 2 (객체 프로퍼티의 함수는 화살표, 인라인 콜백은 한 줄로 씁니다):**
+**Correct 2 (객체 속성의 함수는 화살표, 인라인 콜백은 한 줄로 씁니다):**
 
 ```ts
 /**

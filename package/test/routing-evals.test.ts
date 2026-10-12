@@ -285,7 +285,7 @@ const typescriptRuleRouting = {
 	},
 	"types-choose-interface-for-object-contracts-and-type-for-composition": {
 		appliesWhen:
-			"`interface`와 `type` 사이에서 선언 형식을 바꿀 때. 객체 계약, union, tuple, 함수 시그니처, mapped, conditional type에 이름을 붙여 선언할 때. 제외: 외부, 생성된 계약을 그대로 참조하는 경우.",
+			"`interface`와 `type` 사이에서 선언 형식을 바꿀 때. 객체 계약, 유니언, 튜플, 함수 시그니처, 매핑, 조건부 타입에 이름을 붙여 선언할 때. 제외: 외부, 생성된 계약을 그대로 참조하는 경우.",
 		reviewWith: ["types-reuse-existing-contracts-before-new-types", "types-document-custom-types-and-shapes"],
 	},
 	"naming-place-project-constants-in-the-root-constant-folder": {
@@ -326,12 +326,12 @@ const typescriptRuleRouting = {
 	},
 	"functions-declare-functions-as-arrow-consts": {
 		appliesWhen:
-			"이름을 지어 선언하는 함수를 새로 만들거나 선언 형태나 본문 형태를 바꿀 때. 객체 프로퍼티에 함수를 담거나 그 형태를 바꿀 때. 제외: 인라인 콜백이나 커링의 바깥 화살표인 경우. 제외: 클래스 메서드, 제너레이터, 오버로드 선언인 경우.",
+			"이름을 지어 선언하는 함수를 새로 만들거나 선언 형태나 본문 형태를 바꿀 때. 객체 속성에 함수를 담거나 그 형태를 바꿀 때. 제외: 인라인 콜백이나 커링의 바깥 화살표인 경우. 제외: 클래스 메서드, 제너레이터, 오버로드 선언인 경우.",
 		reviewWith: ["functions-use-named-object-params-for-complex-signatures"],
 	},
 	"functions-use-named-object-params-for-complex-signatures": {
 		appliesWhen:
-			"매개변수가 셋을 넘거나 같은 계열 인자를 받는 함수를 추가, 변경할 때. 객체 매개변수의 필드를 읽는 방식을 바꿀 때. 제외: 리액트 함수 컴포넌트가 프롭스를 받는 방식만 바꾸는 경우.",
+			"매개변수가 셋을 넘거나 같은 계열 인자를 받는 함수를 추가, 변경할 때. 객체 매개변수의 필드를 읽는 방식을 바꿀 때. 제외: React 함수 컴포넌트가 프롭스를 받는 방식만 바꾸는 경우.",
 		reviewWith: ["types-reuse-existing-contracts-before-new-types", "values-read-objects-through-chains"],
 	},
 	"functions-extract-helpers-only-when-the-boundary-is-real": {
@@ -350,7 +350,7 @@ const typescriptRuleRouting = {
 	},
 	"functions-order-declarations-top-down": {
 		appliesWhen:
-			"`.ts` 파일에 선언을 추가하거나 선언 자리를 옮길 때. 내보낸 계약 타입이나 모듈 상수를 내보낸 함수보다 아래에 두려 할 때. 제외: 리액트 컴포넌트 본문 안 선언 자리를 바꾸는 경우.",
+			"`.ts` 파일에 선언을 추가하거나 선언 자리를 옮길 때. 내보낸 계약 타입이나 모듈 상수를 내보낸 함수보다 아래에 두려 할 때. 제외: React 컴포넌트 본문 안 선언 자리를 바꾸는 경우.",
 		reviewWith: [],
 	},
 	"functions-promote-owner-free-functions-to-root-util": {
@@ -410,7 +410,7 @@ const typescriptRuleRouting = {
 	},
 	"values-decide-once-and-carry-the-result": {
 		appliesWhen:
-			"같은 입력에 같은 판정, 정규화, 포맷을 두 자리 이상에서 할 때. 포맷하거나 정리한 값을 소비처에서 다시 파싱하거나 정리할 때. 두 함수가 같은 판정 함수를 부르게 되어 공유 보조를 만들려 할 때.",
+			"같은 입력에 같은 판정, 정규화, 포맷을 두 자리 이상에서 할 때. 포맷하거나 정리한 값을 사용처에서 다시 파싱하거나 정리할 때. 두 함수가 같은 판정 함수를 부르게 되어 공유 보조를 만들려 할 때.",
 		reviewWith: ["functions-extract-helpers-only-when-the-boundary-is-real", "absence-resolve-defaults-at-the-boundary"],
 	},
 	"absence-expose-optional-values-instead-of-silent-fallbacks": {
@@ -737,7 +737,7 @@ const reactRuleRouting = {
 	},
 	"typing-take-handler-types-from-existing-contracts": {
 		appliesWhen:
-			"커링 팩토리가 돌려주는 리액트 핸들러의 타입을 정할 때. `Ui*` 래퍼 사용처에서 프롭스 타입을 참조할 때. 제외: `query.select` 같은 훅 옵션의 일회성 문맥 콜백인 경우.",
+			"커링 팩토리가 돌려주는 React 핸들러의 타입을 정할 때. `Ui*` 래퍼 사용처에서 프롭스 타입을 참조할 때. 제외: `query.select` 같은 훅 옵션의 일회성 문맥 콜백인 경우.",
 		reviewWith: [],
 	},
 	"typing-narrow-library-wrapper-contracts": {
@@ -794,7 +794,7 @@ const reactRuleRouting = {
 	},
 	"composition-do-not-define-components-inside-components": {
 		appliesWhen:
-			"컴포넌트 본문 안에 JSX를 반환하는 로컬 함수, 컴포넌트를 추가하거나 옮길 때. 재렌더 시 재마운트, 포커스 초기화 징후를 다룰 때.",
+			"컴포넌트 본문 안에 JSX를 반환하는 로컬 함수, 컴포넌트를 추가하거나 옮길 때. 다시 렌더 시 재마운트, 포커스 초기화 징후를 다룰 때.",
 		reviewWith: [],
 	},
 	"composition-named-handlers-over-inline": {
@@ -928,7 +928,7 @@ const reactRuleRouting = {
 	},
 	"events-run-user-actions-in-handlers-not-effects": {
 		appliesWhen:
-			"제출, 저장, 삭제, 닫기 같은 한 번뿐인 사용자 액션을 핸들러와 상태+이펙트 사이에서 옮길 때. 이펙트 안에서 뮤테이션이나 화면 이동을 호출하는 코드를 넣을 때.",
+			"제출, 저장, 삭제, 닫기 같은 한 번뿐인 사용자 액션을 핸들러와 상태 + 이펙트 사이에서 옮길 때. 이펙트 안에서 뮤테이션이나 화면 이동을 호출하는 코드를 넣을 때.",
 		reviewWith: [],
 	},
 	"perf-avoid-defensive-memoization": {
@@ -2823,7 +2823,7 @@ test("React progressive metadata and all 54 rule routes match Appendix B exactly
 	assert.doesNotMatch(document.metadata.abstract, /SKILL\.md|RULES_INDEX\.md|contracts\/|opt-in/);
 	assert.deepEqual(document.metadata.companions, [
 		{skill: "typescript", mode: "required"},
-		{skill: "css", mode: "conditional", appliesWhen: "class contract, stylesheet 또는 styling surface를 변경한다."},
+		{skill: "css", mode: "conditional", appliesWhen: "클래스 계약, 스타일시트, 스타일 표면을 변경한다."},
 	]);
 	assert.equal(document.rules.length, 54);
 	assert.deepEqual(
@@ -2992,7 +2992,7 @@ test("React generated index and handbook preserve canonical local rules and comp
 	assert.match(handbook, /^- \[TypeScript Convention\]\(\.\.\/typescript\/HANDBOOK\.md\) — 항상 함께 적용합니다\.$/m);
 	assert.match(
 		handbook,
-		/^- \[CSS Convention\]\(\.\.\/css\/HANDBOOK\.md\) — 다음 조건에서 함께 적용합니다\. class contract, stylesheet 또는 styling surface를 변경한다\.$/m,
+		/^- \[CSS Convention\]\(\.\.\/css\/HANDBOOK\.md\) — 다음 조건에서 함께 적용합니다\. 클래스 계약, 스타일시트, 스타일 표면을 변경한다\.$/m,
 	);
 	assert.match(handbook, /\.\.\/typescript\/HANDBOOK\.md/);
 
@@ -3043,7 +3043,7 @@ test("CSS progressive metadata and rule routing match Appendix C exactly", async
 	// abstract는 사람이 읽는 개요. 로딩 경로 설명 금지
 	assert.doesNotMatch(document.metadata.abstract, /SKILL\.md|RULES_INDEX\.md|contracts\/|opt-in/);
 	assert.deepEqual(document.metadata.companions, [
-		{skill: "typescript", mode: "conditional", appliesWhen: "TS/TSX 클래스 계약, 래퍼 Props 또는 style import를 함께 변경한다."},
+		{skill: "typescript", mode: "conditional", appliesWhen: "TSX 클래스 계약, 래퍼 프롭스, 스타일시트 가져오기를 함께 변경한다."},
 	]);
 	assert.equal(document.rules.length, 34);
 	assert.deepEqual(
@@ -3280,7 +3280,7 @@ test("v16 boundary contracts distinguish semantic role changes from contextual a
 	assertMentions(curriedHandler, [/이벤트 객체를 받는 자리/i, /추가 인자/i, /팩토리/i, /감싸는 화살표/i], "curriedHandler");
 	assertMentions(
 		curriedHandler,
-		[/팩토리가 추가 인자를 받고/i, /\| 반환 타입 \|.*typing-take-handler-types-from-existing-contracts.*리액트 별칭/i],
+		[/팩토리가 추가 인자를 받고/i, /\| 반환 타입 \|.*typing-take-handler-types-from-existing-contracts.*React 별칭/i],
 		"curriedHandler",
 	);
 	assert.match(
@@ -3290,7 +3290,7 @@ test("v16 boundary contracts distinguish semantic role changes from contextual a
 
 	const reactHandlerType = await readRule("react", "typing-take-handler-types-from-existing-contracts");
 	assert.match(reactHandlerType, /커링한|커링|고차 함수/i);
-	assertMentions(reactHandlerType, [/JSX에 직접 쓴 화살표/i, /암시적 `any`/i, /리액트 별칭/i], "reactHandlerType");
+	assertMentions(reactHandlerType, [/JSX에 직접 쓴 화살표/i, /암시적 `any`/i, /React 별칭/i], "reactHandlerType");
 	assertMentions(reactHandlerType, [/`query\.select`/i, /일회성 문맥 콜백/i, /`Ui\*Props`/i, /대상에서 제외합니다/i], "reactHandlerType");
 
 	const reactContracts = await Promise.all(
@@ -3502,7 +3502,7 @@ test("v17 TypeScript boundaries exclude React props and prevent self-created dup
 	};
 
 	const namedObjectParams = await readRule("typescript", "functions-use-named-object-params-for-complex-signatures");
-	assertMentions(readAppliesWhen(namedObjectParams), [/리액트 (?:함수 )?컴포넌트/, "프롭스", /(?:N\/A|제외)/], "namedObjectParams");
+	assertMentions(readAppliesWhen(namedObjectParams), [/React (?:함수 )?컴포넌트/, "프롭스", /(?:N\/A|제외)/], "namedObjectParams");
 	assert.match(namedObjectParams, /뜻이 같은 계약이 이미 있으면 그대로 씁니다[\s\S]*`\*Params`[\s\S]*`\*Args`[\s\S]*새로 만들지 않/i);
 
 	const documentedShape = await readRule("typescript", "types-document-custom-types-and-shapes");
@@ -3529,7 +3529,7 @@ test("v17 TypeScript boundaries exclude React props and prevent self-created dup
 		documentedShape,
 		[
 			/외부, 생성된, 읽기 전용, 공용 형태를 그대로 씀 \| 선언을 고치거나 문서화용 지역 별칭을 만들지 않습니다/,
-			/함수 선언의 헤더 주석은 `docs-require-header-jsdoc-on-key-declarations`가 별도로 판단합니다/,
+			/함수 선언의 헤더 주석은 `docs-require-header-jsdoc-on-key-declarations`가 별도로 정합니다/,
 		],
 		"documentedShape preserves external contracts and separate function documentation",
 	);
@@ -3588,7 +3588,7 @@ test("v17 TypeScript boundaries exclude React props and prevent self-created dup
 	);
 	assertMentions(
 		generatedContracts[0],
-		[/리액트 컴포넌트의 프롭스는 이 규칙 대상이 아닙니다/i, /뜻이 같은 계약이 이미 있으면/i],
+		[/React 컴포넌트의 프롭스는 이 규칙 대상이 아닙니다/i, /뜻이 같은 계약이 이미 있으면/i],
 		"generatedContracts",
 	);
 	assertMentions(
@@ -3665,7 +3665,7 @@ test("v17 semantic contracts reject English-only annotations and effective deep 
 	);
 	assertMentions(
 		generatedContracts[0],
-		[/리액트 컴포넌트의 프롭스는 이 규칙 대상이 아닙니다/i, /뜻이 같은 계약이 이미 있으면/i],
+		[/React 컴포넌트의 프롭스는 이 규칙 대상이 아닙니다/i, /뜻이 같은 계약이 이미 있으면/i],
 		"generatedContracts",
 	);
 	assertMentions(
@@ -3899,7 +3899,7 @@ test("CSS generated index is canonical, complete, body-preserving, and within it
 	assert.doesNotMatch(handbook, /metadata\.json\.extends/);
 	assert.match(handbook, /^## 함께 따르는 규칙$/m);
 	assert.match(handbook, /- \[TypeScript Convention\]\(\.\.\/typescript\/HANDBOOK\.md\) — 다음 조건에서 함께 적용합니다\./);
-	assert.match(handbook, /다음 조건에서 함께 적용합니다\. TS\/TSX 클래스 계약, 래퍼 Props 또는 style import를 함께 변경한다\./);
+	assert.match(handbook, /다음 조건에서 함께 적용합니다\. TSX 클래스 계약, 래퍼 프롭스, 스타일시트 가져오기를 함께 변경한다\./);
 	assert.match(handbook, /\.\.\/typescript\/HANDBOOK\.md/);
 	for (const rule of document.rules) {
 		const bodyWithoutHeading = rule.body.replace(/^## .+\n+/, "");

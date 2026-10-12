@@ -1,8 +1,8 @@
 # Require Doc Comments on React Hooks, Handlers, and Key Declarations
 
-**Impact: MEDIUM (공통 문서화 기준에 리액트 전용 선언을 추가해 누락을 막습니다)**
+**Impact: MEDIUM (공통 문서화 기준에 React 전용 선언을 추가해 누락을 막습니다)**
 
-`typescript/docs-require-header-jsdoc-on-key-declarations`의 필수 대상에 아래 리액트 선언을 추가합니다.
+`typescript/docs-require-header-jsdoc-on-key-declarations`의 필수 대상에 아래 React 선언을 추가합니다.
 
 | 추가 대상 | 조건 |
 | --- | --- |

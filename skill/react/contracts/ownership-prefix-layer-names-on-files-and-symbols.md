@@ -2,7 +2,7 @@
 
 **Impact: MEDIUM (파일 하나만 봐도 어느 레이어 소유인지 드러납니다)**
 
-세 레이어 모두 파일명과 심볼에 레이어 접두사를 붙입니다.
+세 레이어 모두 파일 이름과 심볼에 레이어 접두사를 붙입니다.
 레이어 판정은 `ownership-layer-component-boundaries`를 따릅니다.
 
 ### 레이어 접두사
@@ -41,7 +41,7 @@ export const ProductTable = (props: ProductTableProps) => {
 };
 ```
 
-**Correct 1 (진입 파일이 아닌 파일에는 `_`를 붙이고 파일명과 심볼에 레이어 접두사를 씁니다):**
+**Correct 1 (진입 파일이 아닌 파일에는 `_`를 붙이고 파일 이름과 심볼에 레이어 접두사를 씁니다):**
 
 ```tsx
 // page/product-detail/_pg-product-table-section.tsx

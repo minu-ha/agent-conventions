@@ -1,11 +1,11 @@
 # React 컨벤션 Rule Index
 
 - Skill: `react`
-- Routing digest: `sha256:fea678513754d62b6cb9961d2d921db0b1fcf540eec312d34f48d508e68c2e0f`
+- Routing digest: `sha256:10849461e0db74916d428540faf57d8f977819b95a316880e80d1fe35c83d83c`
 
 ## Direct Companions
 
-- `css` (`conditional`) · Applies when: class contract, stylesheet 또는 styling surface를 변경한다. · [SKILL.md](../css/SKILL.md) · [RULES_INDEX.md](../css/RULES_INDEX.md)
+- `css` (`conditional`) · Applies when: 클래스 계약, 스타일시트, 스타일 표면을 변경한다. · [SKILL.md](../css/SKILL.md) · [RULES_INDEX.md](../css/RULES_INDEX.md)
 - `typescript` (`required`) · [SKILL.md](../typescript/SKILL.md) · [RULES_INDEX.md](../typescript/RULES_INDEX.md)
 
 ## Local Rules
@@ -23,7 +23,7 @@
 - R02-04 | data-preserve-origin-chaining | 응답, 뮤테이션, 스토어에서 값을 꺼내 쓰는 코드를 추가, 변경할 때. 원본을 별칭으로 끊고 값 접근 방식을 바꿀 때. | reviewWith: data-shape-query-data-with-select, screen-keep-derived-values-close
 - R02-05 | data-handle-mutation-failure-where-it-is-called | 뮤테이션을 부르는 코드를 추가, 변경할 때. \`mutate\`와 \`mutateAsync\` 사이를 오갈 때. | reviewWith: data-invalidate-queries-the-mutation-changed, events-run-user-actions-in-handlers-not-effects
 - R02-06 | data-invalidate-queries-the-mutation-changed | 뮤테이션 성공 뒤 서버 상태를 다시 맞추는 코드를 추가, 변경할 때. 저장 결과를 캐시에 직접 쓰거나 \`refetch\`로 맞추는 코드를 넣을 때. 제외: 사용자 새로 고침 버튼이나 요청 전 낙관적 갱신만 바꾸는 경우. | reviewWith: data-handle-mutation-failure-where-it-is-called
-- R03-01 | typing-take-handler-types-from-existing-contracts | 커링 팩토리가 돌려주는 리액트 핸들러의 타입을 정할 때. \`Ui\*\` 래퍼 사용처에서 프롭스 타입을 참조할 때. 제외: \`query.select\` 같은 훅 옵션의 일회성 문맥 콜백인 경우.
+- R03-01 | typing-take-handler-types-from-existing-contracts | 커링 팩토리가 돌려주는 React 핸들러의 타입을 정할 때. \`Ui\*\` 래퍼 사용처에서 프롭스 타입을 참조할 때. 제외: \`query.select\` 같은 훅 옵션의 일회성 문맥 콜백인 경우.
 - R03-02 | typing-narrow-library-wrapper-contracts | 라이브러리 컴포넌트를 감싸는 \`Ui\*\` 래퍼의 프롭스 타입을 만들거나 바꿀 때. 래퍼에 프롭을 추가하거나 여는 범위를 넓힐 때. | reviewWith: typescript/docs-justify-convention-exceptions-with-a-reason-comment, typing-choose-wrapper-shape-and-forwarding, typing-open-dom-props-in-three-steps, typing-take-handler-types-from-existing-contracts
 - R03-03 | typing-open-dom-props-in-three-steps | 래퍼 프롭스가 \`HTMLAttributes\`를 \`extends\`하거나 그 상속을 뗄 때. 라이브러리 프롭과 DOM 프롭의 이름이 부딪혀 컴파일이 막힐 때. 제외: DOM 프롭이 아닌 표시 프롭만 더하거나 빼는 경우. | reviewWith: css/composition-do-not-style-through-the-style-attribute, typescript/types-reuse-existing-contracts-before-new-types, typing-narrow-library-wrapper-contracts
 - R03-04 | typing-choose-wrapper-shape-and-forwarding | 래퍼가 받은 프롭을 안쪽 컴포넌트나 요소로 넘기는 코드를 추가, 변경할 때. 래퍼에 자기 프롭을 더하거나 안쪽 요소를 늘릴 때. | reviewWith: typescript/values-avoid-lookup-tables-for-simple-choices
@@ -32,7 +32,7 @@
 - R04-03 | strategy-avoid-boolean-prop-proliferation | \`ui\`나 \`widget\` 컴포넌트에 불리언 모드, 표시 프롭을 추가할 때. 기존 불리언 프롭 조합과 JSX 분기가 늘어날 때. 제외: 라우트 진입 파일 안에서만 쓰는 일회성 분기인 경우. 제외: \`disabled\`, \`checked\` 같은 독립 상태 프롭만 여는 경우. | reviewWith: strategy-expose-only-assembled-compound-parts
 - R04-04 | strategy-prefer-children-over-render-props | 공용 컴포넌트에 헤더, 푸터, 동작 같은 정적 슬롯을 추가, 변경할 때. 렌더 프롭을 추가, 변경하는데 실행 환경 데이터 주입이 꼭 필요한지 불분명할 때. \`ReactNode\` 슬롯이나 렌더 함수 계약에 이름을 붙이거나 바꿀 때.
 - R05-01 | composition-read-props-without-destructuring | 함수 컴포넌트의 시그니처나 본문에서 프롭스를 읽는 코드를 추가, 변경할 때. 컴포넌트 안에서 \`props\`를 구조분해하는 줄을 넣거나 뺄 때. | reviewWith: data-preserve-origin-chaining, screen-keep-derived-values-close, typescript/values-read-objects-through-chains
-- R05-02 | composition-do-not-define-components-inside-components | 컴포넌트 본문 안에 JSX를 반환하는 로컬 함수, 컴포넌트를 추가하거나 옮길 때. 재렌더 시 재마운트, 포커스 초기화 징후를 다룰 때.
+- R05-02 | composition-do-not-define-components-inside-components | 컴포넌트 본문 안에 JSX를 반환하는 로컬 함수, 컴포넌트를 추가하거나 옮길 때. 다시 렌더 시 재마운트, 포커스 초기화 징후를 다룰 때.
 - R05-03 | composition-named-handlers-over-inline | TSX 이벤트 프롭의 인라인 콜백에 분기나 비동기 호출을 추가, 수정할 때. 인라인 콜백에 여러 동작, 부수효과나 읽어도 의도가 안 보이는 상태 전환이 들어갈 때. 제외: 인자 없이 핸들러 참조만 넘기는 경우. | reviewWith: events-curry-extra-handler-arguments, events-run-user-actions-in-handlers-not-effects, typescript/functions-extract-helpers-only-when-the-boundary-is-real
 - R05-04 | composition-open-ref-props-only-for-imperative-contracts | 컴포넌트에 \`ref\` 프롭을 추가하거나 공개할 대상을 바꿀 때. \`useImperativeHandle\`로 노출하는 명령형 계약 타입을 만들거나 이름을 바꿀 때. 제외: DOM 요소를 그대로 가리키는 기존 \`ref\` 계약의 타입만 바꾸는 경우. | reviewWith: typescript/docs-justify-convention-exceptions-with-a-reason-comment, typing-narrow-library-wrapper-contracts
 - R05-05 | composition-use-activity-only-to-preserve-mounted-subtrees | 조건부 렌더링과 \`Activity\` 사이를 오갈 때. \`\<Activity\>\`를 추가, 삭제하거나 \`mode\`를 계산하는 표현식을 바꿀 때. | reviewWith: composition-do-not-define-components-inside-components
@@ -56,7 +56,7 @@
 - R08-06 | state-name-url-state-bindings-as-a-set | 라우트 search 파라미터를 읽거나 쓰는 바인딩을 추가, 변경할 때. search 파라미터 파서 묶음을 만들거나 옮길 때. 제외: 서버 요청 쿼리, 뮤테이션 바인딩만 바꾸는 경우. | reviewWith: state-choose-state-tools-by-source-of-truth
 - R09-01 | events-name-handlers-predictably | 이벤트 핸들러를 새로 만들 때. 핸들러 이름이나 대상, 이벤트 표기를 바꿀 때. | reviewWith: events-curry-extra-handler-arguments, typescript/naming-use-consistent-file-and-symbol-naming
 - R09-02 | events-curry-extra-handler-arguments | DOM 이벤트 프롭에 추가 인자를 넘기는 핸들러를 추가, 변경할 때. 인라인 래퍼로 인자를 넘기던 자리를 바꿀 때. 제외: 이벤트 객체를 받지 않는 프롭 콜백인 경우. | reviewWith: composition-named-handlers-over-inline
-- R09-03 | events-run-user-actions-in-handlers-not-effects | 제출, 저장, 삭제, 닫기 같은 한 번뿐인 사용자 액션을 핸들러와 상태+이펙트 사이에서 옮길 때. 이펙트 안에서 뮤테이션이나 화면 이동을 호출하는 코드를 넣을 때.
+- R09-03 | events-run-user-actions-in-handlers-not-effects | 제출, 저장, 삭제, 닫기 같은 한 번뿐인 사용자 액션을 핸들러와 상태 + 이펙트 사이에서 옮길 때. 이펙트 안에서 뮤테이션이나 화면 이동을 호출하는 코드를 넣을 때.
 - R10-01 | perf-avoid-defensive-memoization | \`useMemo\`, \`useCallback\`을 추가하거나 제거할 때. \`memo\`로 컴포넌트를 감싸거나 벗길 때. 참조 동일성, 실측 병목, 무거운 지연 계산을 이유로 수동 메모이제이션을 검토할 때. | reviewWith: perf-defer-heavy-renders-with-measured-evidence
 - R10-02 | perf-use-lazy-state-initializers-for-expensive-defaults | \`useState\` 초기값에 \`localStorage\` 파싱, 인덱스 생성, 큰 배열 정규화 같은 비용이 큰 계산을 넣을 때. 제외: 숫자, 문자열 같은 단순 값이나 프롭을 그대로 초기값에 넣는 경우. | reviewWith: perf-avoid-defensive-memoization
 - R10-03 | perf-defer-heavy-renders-with-measured-evidence | \`startTransition\`, \`useTransition\`, \`useDeferredValue\`를 추가, 삭제할 때. 목록이나 표가 커져 입력 반응이 늦다는 보고를 받았을 때. | reviewWith: perf-avoid-defensive-memoization

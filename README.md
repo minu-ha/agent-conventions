@@ -143,7 +143,7 @@ skill 이름은 `convention-<skill>`.
 
 companion은 `metadata.json`이 선언하고 자동으로 켜진다.
 프로젝트에는 owner skill만 적으면 된다.
-`react`는 `typescript`를 항상, `css`를 styling surface 변경 시에만 켠다.
+`react`는 `typescript`를 항상, `css`를 스타일 표면 변경 시에만 켠다.
 `figma`는 TSX가 바뀌면 `react`를, 스타일이 바뀌면 `css`를 켠다.
 
 ---

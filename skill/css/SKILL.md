@@ -14,28 +14,28 @@ metadata:
 
 **범위에 드는 것**
 
-- stylesheet, selector, token, CSS variable, `className`, visual 스타일의 실제 변경
+- 스타일시트, 선택자, 토큰, CSS 변수, `className`, 시각 스타일의 실제 변경
 - 추가, 삭제, 이동, 이름 변경, 재선언
 
 **범위에 들지 않는 것**
 
 - read-only 문맥
-- TSX 소유자 이동에 그대로 딸려온 class, style, stylesheet
-- 이름, shape, 동작이 같은 이동. diff에 삭제+추가로 보여도 변경으로 다시 세지 않는다
+- TSX 소유자 이동에 그대로 딸려 온 클래스, 스타일, 스타일시트
+- 이름, 형태, 동작이 같은 이동. diff에 삭제+추가로 보여도 변경으로 다시 세지 않는다.
 
-적용되지 않는 규칙의 optional pattern을 새로 들여와 스스로 범위를 넓히지 않는다.
+적용되지 않는 규칙의 선택 사항을 새로 들여와 스스로 범위를 넓히지 않는다.
 
-TSX component/JSX의 `className`, style이 바뀌면 `convention-typescript`를 함께 활성화하고,
+TSX 컴포넌트의 `className`, `style`이 바뀌면 `convention-typescript`를 함께 활성화하고,
 그쪽에서 걸리는 규칙이 없더라도 활성화는 유지한다.
 같은 변경은 `convention-react`의 범위이기도 하지만 아래 계층인 이 skill이 위 계층을 켜지는 않는다.
 순수 CSS 변경이면 어느 쪽도 켜지 않는다.
-TypeScript type, import, helper, wrapper Props는 `convention-typescript`가,
-React state, handler는 `convention-react`가 담당한다.
+TypeScript 타입, 가져오기, 보조 함수, 래퍼 프롭스는 `convention-typescript`가,
+React 상태, 핸들러는 `convention-react`가 담당한다.
 
 ## 2. 인덱스 훑기
 
 [RULES_INDEX.md](./RULES_INDEX.md)를 끝까지 훑어 각 규칙의 `appliesWhen`을 변경 범위와 대조한다.
-함께 활성화한 companion skill도 그 `SKILL.md`의 load 계약을 따라 인덱스를 끝까지 훑는다.
+함께 활성화한 companion skill도 그 `SKILL.md`의 로드 계약을 따라 인덱스를 끝까지 훑는다.
 첫 match에서 멈추지 않는다.
 애매하면 적용되는 쪽으로 본다.
 
@@ -52,8 +52,8 @@ React state, handler는 `convention-react`가 담당한다.
 
 정확한 원문 경로는 contract의 full rule 링크가 가리킨다.
 
-- `requiresSelected` target은 함께 적용한다. 다른 skill의 규칙이면 그 companion도 활성화한다.
-- `reviewWith` target은 변경 범위에 비춰 다시 판단한다. 자동으로 적용하지는 않는다.
+- `requiresSelected` 대상은 함께 적용한다. 다른 skill의 규칙이면 그 companion도 활성화한다.
+- `reviewWith` 대상은 변경 범위에 비춰 다시 판단한다. 자동으로 적용하지는 않는다.
 - `completionGate` 규칙은 마무리 시 항상 적용한다. 인덱스가 그 표시를 달아 준다.
 
 걸린 규칙은 등급과 무관하게 전부 지킨다.
