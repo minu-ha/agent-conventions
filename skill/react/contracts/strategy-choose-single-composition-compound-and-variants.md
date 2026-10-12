@@ -57,7 +57,7 @@ export const WgProfileDialog = (props: WgProfileDialogProps) => {
 /**
  * 프로필 요약만 보여 주는 고정 구조 대화상자
  *
- * 사용처가 끼워 넣을 자리가 없어 부품으로 쪼개지 않는다.
+ * 사용처가 끼워 넣을 자리가 없어 부품으로 안 쪼갬
  */
 export interface WgProfileDialogProps {
 	/**

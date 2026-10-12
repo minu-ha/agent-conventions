@@ -54,7 +54,7 @@ flowchart LR
 **Incorrect 1 (컨텍스트를 읽어 분기만 하는 래퍼를 파일로 뗍니다):**
 
 ```tsx
-// component/widget/chatbot/_wg-chat-content.tsx: 어느 화면을 그릴지 고르기만 하고 상태를 소유하지 않는다
+// component/widget/chatbot/_wg-chat-content.tsx: 어느 화면을 그릴지 고르기만 하고 상태는 소유 안 함
 export const WgChatContent = () => {
 	const chat = useChatContext();
 
@@ -72,7 +72,7 @@ export const WgChatContent = () => {
 ```tsx
 // component/widget/chatbot/wg-chatbot.tsx
 /**
- * 챗봇 위젯 진입. 대화 목록과 입력 폼을 조립한다
+ * 챗봇 위젯 진입. 대화 목록과 입력 폼 조립
  */
 export const WgChatbot = () => {
 	const chat = useChatContext();
@@ -80,12 +80,12 @@ export const WgChatbot = () => {
 	return (
 		<section className={clsx("wg_chatbot__root")}>
 			{/**
-			 * 대화 목록. 비어 있으면 안내 문구를 그린다
+			 * 대화 목록. 비어 있으면 안내 문구 표시
 			 */}
 			{chat.isEmpty && <p className={clsx("wg_chatbot__empty")}>{chat.emptyMessage}</p>}
 			{!chat.isEmpty && <WgChatMessages messages={chat.messages} />}
 			{/**
-			 * 입력 폼. 전송 중 상태와 폼 프로바이더를 소유해 _wg-chat-composer.tsx 로 뗐다
+			 * 입력 폼. 전송 중 상태와 폼 프로바이더를 소유해 _wg-chat-composer.tsx로 분리
 			 */}
 			<WgChatComposer onSubmit={chat.send} />
 		</section>

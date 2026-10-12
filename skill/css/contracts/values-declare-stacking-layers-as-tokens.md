@@ -71,7 +71,7 @@
 
 /* src/page/products/pg-products.css */
 .pg_products__toolbar {
-	/* 페이지 스크롤 컨테이너에 붙는다. 드롭다운이 이 쌓임 맥락을 벗어나야 하면 포털 대상을 밖에 둔다 */
+	/* 페이지 스크롤 컨테이너 기준 고정. 드롭다운이 이 쌓임 맥락을 벗어나야 하면 포털 대상을 밖에 둠 */
 	position: sticky;
 	z-index: var(--app-z-index-sticky);
 }

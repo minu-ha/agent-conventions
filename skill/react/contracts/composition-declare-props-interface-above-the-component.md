@@ -25,7 +25,7 @@
 **Incorrect 1 (파일 위쪽에 타입을 모으고 내보내지 않습니다):**
 
 ```tsx
-// component/ui/badge/ui-badge.tsx: 칩까지 한 파일에 두고 타입을 위쪽에 모았다
+// component/ui/badge/ui-badge.tsx: 칩까지 한 파일에 두고 타입은 위쪽에 모음
 interface UiBadgeProps {
 	label: string;
 }

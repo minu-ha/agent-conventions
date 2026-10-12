@@ -37,7 +37,7 @@ import {UiPanelHeaderInner} from "@/component/ui/panel/_ui-panel-header-inner";
 import {UiPanelRoot} from "@/component/ui/panel/_ui-panel-root";
 import {UiPanelSpacer} from "@/component/ui/panel/_ui-panel-spacer";
 
-// 사용처가 끼워 넣을 자리가 없는 래퍼와 여백 보정용 DOM까지 이름이 붙어 나갔다
+// 사용처가 끼워 넣을 자리가 없는 래퍼와 여백 보정용 DOM까지 이름이 붙어 노출
 export const UiPanel = {
 	Root: UiPanelRoot,
 	Header: UiPanelHeader,
@@ -55,7 +55,7 @@ import {UiPanelBody} from "@/component/ui/panel/_ui-panel-body";
 import {UiPanelHeader} from "@/component/ui/panel/_ui-panel-header";
 import {UiPanelRoot} from "@/component/ui/panel/_ui-panel-root";
 
-// 단순 클래스 래퍼는 헤더 부품만 쓰고 여백 보정용 DOM은 만들지 않는다
+// 단순 클래스 래퍼는 헤더 부품만 쓰고 여백 보정용 DOM은 안 만듦
 export const UiPanel = {
 	Root: UiPanelRoot,
 	Header: UiPanelHeader,

@@ -56,7 +56,7 @@ export interface UiIconButtonProps extends ButtonHTMLAttributes<HTMLButtonElemen
 	icon: ReactNode;
 }
 
-// 안쪽 컴포넌트가 걸러 주지 않으면 icon이 DOM까지 내려간다. 컴파일은 통과한다
+// 안쪽 컴포넌트가 거르지 않으면 icon이 DOM까지 내려감. 컴파일은 통과
 export const UiIconButton = (props: UiIconButtonProps) => {
 	return (
 		<Button {...props}>
@@ -73,8 +73,8 @@ export const UiIconButton = (props: UiIconButtonProps) => {
 /**
  * 아이콘만 있는 버튼
  *
- * `icon`과 `label`은 안쪽 컴포넌트가 모르는 자기 프롭이라 타입을 직접 적는다.
- * `disabled`는 라이브러리에 이미 있어 인덱스 접근으로 가져온다.
+ * `icon`과 `label`은 안쪽 컴포넌트가 모르는 자기 프롭이라 타입을 직접 선언
+ * `disabled`는 라이브러리에 이미 있어 인덱스 접근으로 가져옴
  */
 export interface UiIconButtonProps {
 	/**
@@ -86,7 +86,7 @@ export interface UiIconButtonProps {
 	 */
 	icon: ReactNode;
 	/**
-	 * 스크린 리더가 읽을 이름. `aria-label`로 내려간다
+	 * 스크린 리더가 읽을 이름. `aria-label`로 전달
 	 */
 	label: string;
 	/**
@@ -165,7 +165,7 @@ export const UiField = (props: UiFieldProps) => {
 /**
  * 표 줄
  *
- * 감싸는 컴포넌트의 프롭이 DOM 계약과 호환되어 `HTMLAttributes`를 그대로 받을 수 있다.
+ * 감싸는 컴포넌트의 프롭이 DOM 계약과 호환돼 `HTMLAttributes`를 그대로 받음
  */
 export interface UiTableRowProps extends HTMLAttributes<HTMLTableRowElement> {
 	/**

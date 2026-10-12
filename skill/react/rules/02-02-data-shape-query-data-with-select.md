@@ -50,7 +50,7 @@ const responseProductListSuspense = useProductListSuspense();
 
 ```tsx
 /**
- * 표가 그대로 쓰는 필드 이름으로 목록을 바꿔서 화면이 응답 구조를 모르게 한다
+ * 표가 그대로 쓰는 필드 이름으로 목록 변환. 화면은 응답 구조를 모름
  */
 const responseProductListSuspense = useProductListSuspense(
 	{},

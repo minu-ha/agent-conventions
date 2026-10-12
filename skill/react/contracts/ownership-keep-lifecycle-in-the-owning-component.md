@@ -18,13 +18,13 @@
 
 ```tsx
 // component/widget/chart-card/wg-chart-card.tsx
-// 생성, resize, 정리가 _hook/use-chart-instance.ts로 빠져 이 파일에서는 실행 흐름이 보이지 않는다
+// 생성, resize, 정리가 _hook/use-chart-instance.ts로 빠져 이 파일에서는 실행 흐름이 안 보임
 export const WgChartCard = (props: WgChartCardProps) => {
 	const containerRef = useRef<HTMLDivElement>(null);
 	const chart = useChartInstance(containerRef);
 
 	/**
-	 * option이 바뀌면 기존 instance에 다시 반영
+	 * option이 바뀌면 기존 인스턴스에 다시 반영
 	 */
 	useEffect(() => {
 		chart?.setOption(props.option);
@@ -43,14 +43,14 @@ export const WgChartCard = (props: WgChartCardProps) => {
 	const chartRef = useRef<ChartInstance | null>(null);
 
 	/**
-	 * container mount 시 chart instance를 만들고 resize, dispose까지 소유
+	 * 컨테이너 마운트 시 차트 인스턴스를 만들고 resize, dispose까지 소유
 	 */
 	useEffect(() => {
 		if (!containerRef.current) {
 			return;
 		}
 
-		// 외부 차트 라이브러리 인스턴스. 만든 컴포넌트가 resize 와 dispose 까지 책임진다
+		// 외부 차트 라이브러리 인스턴스. 만든 컴포넌트가 resize와 dispose까지 책임
 		const instance = mountChart(containerRef.current);
 		const handleResize = () => {
 			instance.resize();
@@ -67,7 +67,7 @@ export const WgChartCard = (props: WgChartCardProps) => {
 	}, []);
 
 	/**
-	 * option이 바뀌면 기존 instance에 다시 반영
+	 * option이 바뀌면 기존 인스턴스에 다시 반영
 	 */
 	useEffect(() => {
 		chartRef.current?.setOption(props.option);

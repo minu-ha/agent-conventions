@@ -35,7 +35,7 @@ flowchart TD
 
 ```tsx
 export const PgOrderToolbar = () => {
-	// selectedIds는 아직 초기화 전이라 의존성 배열을 평가하는 이 줄에서 깨진다
+	// selectedIds가 아직 초기화 전이라 의존성 배열을 평가하는 이 줄에서 오류
 	useEffect(() => {
 		document.title = `주문 ${selectedIds.length}건 선택`;
 	}, [selectedIds]);
@@ -70,7 +70,7 @@ export const PgOrderToolbar = () => {
 	const [isPanelOpen, setIsPanelOpen] = useState(false);
 
 	/**
-	 * 비우기는 선택만 지우고 패널은 그대로 둔다
+	 * 비우기는 선택만 지우고 패널은 유지
 	 */
 	const handleClearButtonClick: MouseEventHandler<HTMLButtonElement> = () => {
 		setSelectedIds([]);

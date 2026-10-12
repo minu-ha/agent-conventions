@@ -121,7 +121,7 @@ flowchart LR
 **Correct 2 (버튼은 폭을 정하지 않고 모양만 소유합니다):**
 
 ```css
-/* ui-button.css — 폭 얘기가 없다 */
+/* ui-button.css: 폭 지정 없음 */
 .ui_button__root {
 	display: inline-flex;
 	align-items: center;
@@ -134,7 +134,7 @@ flowchart LR
 **Correct (폭은 사용처가 자기 배치 안에서 정합니다):**
 
 ```css
-/* ui-form-footer.css — 한 번 쓰고 여러 화면에서 그대로 쓴다 */
+/* ui-form-footer.css: 한 번 쓰고 여러 화면에서 그대로 사용 */
 .ui_formFooter__root {
 	display: flex;
 	flex-wrap: wrap;

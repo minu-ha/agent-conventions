@@ -900,7 +900,7 @@ flowchart LR
 
 ```tsx
 {/**
- * LegacyDatePicker는 className을 받지 않아 배치용 래퍼가 필요하다
+ * LegacyDatePicker가 className을 받지 않아 배치용 래퍼 필요
  */}
 <div className={clsx("pg_orders__dateField")}>
 	<LegacyDatePicker value={value} onChange={handleChange} />
@@ -1382,7 +1382,7 @@ flowchart LR
 ```
 
 ```css
-/* 블록 밖에 홀로 둔 요소 선택자. 이 스타일시트를 읽은 문서의 모든 h2에 걸린다 */
+/* 블록 밖에 홀로 둔 요소 선택자. 이 스타일시트를 읽은 문서의 모든 h2에 적용 */
 h2 {
 	margin: 24px 0 12px;
 }
@@ -1776,7 +1776,7 @@ DOM 상태 가상 클래스는 해당 요소의 **조건 없는 기본 클래스
 .wg_siteHeader__brandMark {
 	transform: rotate(0deg);
 
-	/* 링크 전체에 hover 하면 로고가 기울어야 하는데 로고 자기 위에서만 걸린다 */
+	/* 링크 전체에 hover하면 로고가 기울어야 하는데 로고 위에서만 적용 */
 	&:hover {
 		transform: rotate(-2deg);
 	}
@@ -1972,7 +1972,7 @@ flowchart LR
 **Correct 1 (공통 토큰 목록에 있는 변수는 대체값 없이 씁니다):**
 
 ```css
-/* src/style/token.css — 공통 토큰 목록의 단일 출처 */
+/* src/style/token.css: 공통 토큰 목록의 단일 출처 */
 :root {
 	--app-space-inline: 12px;
 	--app-color-text-primary: #212529;
@@ -2211,7 +2211,7 @@ flowchart LR
 
 /* src/page/products/pg-products.css */
 .pg_products__toolbar {
-	/* 페이지 스크롤 컨테이너에 붙는다. 드롭다운이 이 쌓임 맥락을 벗어나야 하면 포털 대상을 밖에 둔다 */
+	/* 페이지 스크롤 컨테이너 기준 고정. 드롭다운이 이 쌓임 맥락을 벗어나야 하면 포털 대상을 밖에 둠 */
 	position: sticky;
 	z-index: var(--app-z-index-sticky);
 }
@@ -2315,7 +2315,7 @@ flowchart LR
 	}
 }
 
-/* [data-theme] 는 뒤에 오고 명시도도 높아 위 @media 블록을 이긴다 */
+/* [data-theme]는 뒤에 오고 명시도도 높아 위 @media 블록보다 우선 */
 :root[data-theme="light"] {
 	color-scheme: light;
 
@@ -2648,7 +2648,7 @@ flowchart LR
 
 ```css
 .pg_productDetail__toolbar {
-	/* .pg_productDetail__content가 스크롤 컨테이너다 */
+	/* 스크롤 컨테이너는 .pg_productDetail__content */
 	position: sticky;
 	top: 0;
 	z-index: var(--app-z-index-sticky);
@@ -2687,7 +2687,7 @@ flowchart LR
 
 ```css
 .pg_productDetail__chart {
-	/* 로딩 중과 실제 차트에 같은 최소 높이를 확보한다 */
+	/* 로딩 중과 실제 차트에 같은 최소 높이 확보 */
 	min-height: 320px;
 }
 ```
@@ -2808,7 +2808,7 @@ flowchart LR
 **Correct 2 (버튼은 폭을 정하지 않고 모양만 소유합니다):**
 
 ```css
-/* ui-button.css — 폭 얘기가 없다 */
+/* ui-button.css: 폭 지정 없음 */
 .ui_button__root {
 	display: inline-flex;
 	align-items: center;
@@ -2821,7 +2821,7 @@ flowchart LR
 **Correct (폭은 사용처가 자기 배치 안에서 정합니다):**
 
 ```css
-/* ui-form-footer.css — 한 번 쓰고 여러 화면에서 그대로 쓴다 */
+/* ui-form-footer.css: 한 번 쓰고 여러 화면에서 그대로 사용 */
 .ui_formFooter__root {
 	display: flex;
 	flex-wrap: wrap;
@@ -3099,16 +3099,16 @@ AAA 기준을 모든 표시의 두께가 반드시 2px이어야 한다는 뜻으
 
 ```js
 /**
- * 우리 클래스만 문법을 강제한다.
- * 우리 접두사로 시작하지 않는 클래스는 남의 것이라 검사 대상이 아니다.
+ * 우리 클래스에만 문법 강제
+ * 우리 접두사로 시작하지 않는 클래스는 남의 것이라 검사 제외
  */
 const ownClassPattern = (scope) =>
 	[
 		"^(?:",
-		// 우리 접두사로 시작하지 않는 클래스는 통과시킨다
+		// 우리 접두사로 시작하지 않는 클래스는 통과
 		`(?!${scope}_).*`,
 		"|",
-		// pg_scopeSlug__element 또는 pg_scopeSlug__element--modifier만 통과시킨다
+		// pg_scopeSlug__element 또는 pg_scopeSlug__element--modifier만 통과
 		`${scope}_[a-z][a-zA-Z0-9]*__[a-z][a-zA-Z0-9]*(?:--[a-z][a-zA-Z0-9]*)?`,
 		")$",
 	].join("");
@@ -3122,10 +3122,10 @@ const libraryPrefixes = [/^\.ant-/, /^\.rc-/, /^\.tippy-/, /^\.Mui/];
  * 우리가 마크업을 쓰는 자리에서 금지되는 형태
  */
 const ownMarkupPatterns = [
-	// 상태 pseudo-class를 top-level 선택자로 다시 여는 것
+	// 상태 pseudo-class를 최상위 선택자로 다시 여는 것
 	/^\.[\w-]+:(hover|focus|focus-visible|focus-within|active|enabled|disabled|checked|visited)/,
-	// 중첩 안에서 element 선택자로 우리 마크업을 잡는 것.
-	// 우리가 쓰지 않는 마크업은 stylelint-disable 주석으로 예외를 표시한다
+	// 중첩 안에서 요소 선택자로 우리 마크업을 잡는 것
+	// 우리가 쓰지 않는 마크업은 stylelint-disable 주석으로 예외 표시
 	/^&\s*[>+~]?\s*[a-z]/,
 ];
 
@@ -3137,21 +3137,21 @@ const disallowed = (foreignScopes) => [
 export default {
 	extends: ["stylelint-config-standard"],
 	rules: {
-		// 최상위 @media 안의 클래스가 깊이 0 이 되게 한다. 브레이크포인트 안에서 상태를 한 겹 더 쓸 수 있다
+		// 최상위 @media 안의 클래스는 깊이 0. 브레이크포인트 안에서 상태를 한 겹 더 쓸 수 있음
 		"max-nesting-depth": [1, {ignoreAtRules: ["media", "supports", "container"]}],
-		// @keyframes 이름은 전역이라 소유자를 붙인다. 하이픈은 클래스 --수정자 표기와 섞이니 쓰지 않는다
+		// @keyframes 이름은 전역이라 소유자 접두사 필수. 하이픈은 클래스 --수정자 표기와 섞여 금지
 		"keyframes-name-pattern": "^(pg|wg|ui)_[a-z][a-zA-Z0-9]*__[a-z][a-zA-Z0-9]*$",
-		// 쉼표 목록에 든 선택자를 아래에서 단독으로 다시 여는 것까지 잡는다
+		// 쉼표 목록에 든 선택자를 아래에서 단독으로 다시 여는 것까지 검출
 		"no-duplicate-selectors": [true, {disallowInList: true}],
-		// 움직임 줄이기 전역 처리 외에는 쓰지 않는다
+		// 움직임 줄이기 전역 처리 외에는 금지
 		"declaration-no-important": true,
-		// 지역 변수 선언을 막는다. var() 소비는 걸리지 않는다
+		// 지역 변수 선언 금지. var() 소비는 허용
 		"property-disallowed-list": ["/^--/"],
-		// 우리 마크업의 상태는 수정자로 표현한다.
-		// 라이브러리가 상태를 data-* 로 내는 경우가 있어 우리 접두사만 막는다
+		// 우리 마크업의 상태는 수정자로 표현
+		// 라이브러리가 상태를 data-*로 내는 경우가 있어 우리 접두사만 금지
 		"selector-attribute-name-disallowed-list": [/^aria-/, /^data-(pg|wg|ui)-/],
 		"selector-max-id": 0,
-		// 부정 조건은 기본 블록으로 뒤집는다. 남의 마크업만 stylelint-disable 로 연다
+		// 부정 조건은 기본 블록으로 뒤집음. 남의 마크업만 stylelint-disable로 허용
 		"selector-pseudo-class-disallowed-list": ["not"],
 	},
 	overrides: [
@@ -3177,23 +3177,23 @@ export default {
 			},
 		},
 		{
-			// 전역 스타일시트는 우리 클래스 문법 대상이 아니다
+			// 전역 스타일시트는 우리 클래스 문법 대상 아님
 			files: ["src/style/**/*.css", "src/*.css"],
 			rules: {
 				"selector-class-pattern": null,
 				"keyframes-name-pattern": null,
 				"property-disallowed-list": null,
-				// 움직임 줄이기 전역 처리는 여기서만 한다
+				// 움직임 줄이기 전역 처리는 여기서만
 				"declaration-no-important": null,
 			},
 		},
 		{
-			// 전역 토큰 파일만 이름을 강제한다
+			// 전역 토큰 파일에만 이름 강제
 			files: ["src/style/token.css"],
 			rules: {
 				"selector-class-pattern": null,
 				"property-disallowed-list": null,
-				// var() 사용까지 검사하므로 외부 변수를 소비하는 파일에는 쓰지 않는다
+				// var() 사용까지 검사하므로 외부 변수를 소비하는 파일에는 쓰지 않음
 				"custom-property-pattern": "^app-[a-z0-9-]+$",
 			},
 		},

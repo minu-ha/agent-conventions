@@ -21,7 +21,7 @@ tags: events, handlers, effects
 
 ```tsx
 /**
- * 생성에 성공하면 목록으로 돌아간다
+ * 생성 성공 시 목록으로 이동
  */
 const mutationProductCreate = useProductCreate({
 	mutation: {
@@ -50,7 +50,7 @@ const handleSaveButtonClick: MouseEventHandler<HTMLButtonElement> = (_event) => 
 
 ```tsx
 /**
- * 생성에 성공하면 목록으로 돌아간다
+ * 생성 성공 시 목록으로 이동
  */
 const mutationProductCreate = useProductCreate({
 	mutation: {
@@ -61,7 +61,7 @@ const mutationProductCreate = useProductCreate({
 });
 
 /**
- * 버튼을 누른 그 자리에서 생성을 부른다. 상태로 올려 이펙트가 대신 부르게 하지 않는다
+ * 버튼을 누른 그 자리에서 생성 호출. 상태로 올려 이펙트가 대신 부르게 하지 않음
  */
 const handleSaveButtonClick: MouseEventHandler<HTMLButtonElement> = (_event) => {
 	mutationProductCreate.mutate({data: toProductCreateRequest(formValues)});

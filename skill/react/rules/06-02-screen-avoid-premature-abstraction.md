@@ -65,7 +65,7 @@ export const PgProductTable = (props: PgProductTableProps) => {
 ```tsx
 export const PgProductTable = (props: PgProductTableProps) => {
 	/**
-	 * 링크에 필요한 두 필드만 남겨 표가 응답 구조를 모르게 한다
+	 * 링크에 필요한 두 필드만 남김. 표는 응답 구조를 모름
 	 */
 	const responseProductListSuspense = useProductListSuspense(
 		{},
@@ -84,7 +84,7 @@ export const PgProductTable = (props: PgProductTableProps) => {
 
 ```tsx
 // page/products/pg-products.tsx
-// useProductFilterForm 은 두 useState 를 돌려주기만 하고 이 화면 하나만 부른다
+// useProductFilterForm은 두 useState를 돌려주기만 하고 이 화면 하나만 호출
 import {useProductFilterForm} from "@/page/products/_hook/use-product-filter-form";
 
 export const PgProducts = () => {
@@ -110,15 +110,15 @@ export const PgProducts = () => {
 
 ```ts
 /**
- * 등록 화면과 수정 화면이 저장 실패를 같은 문구로 보여 줘야 해서 한 곳에 묶는다.
- * 두 화면이 모두 이 훅을 부르므로 한쪽만 고치면 표시가 갈린다
+ * 등록 화면과 수정 화면이 저장 실패를 같은 문구로 보여야 해서 한 곳에 묶음
+ * 두 화면 모두 이 훅을 부르므로 한쪽만 고치면 표시가 갈림
  */
 export const useProductEditor = () => {
 	const form = useForm<ProductEditorFormValues>();
 	const [submitErrorMessage, setSubmitErrorMessage] = useState<string | null>(null);
 
 	/**
-	 * 저장 실패 문구를 이 훅이 함께 들고 있어야 해서 여기서 받는다
+	 * 저장 실패 문구를 이 훅이 함께 들고 있어야 해서 여기서 받음
 	 */
 	const mutationProductSave = useProductSave({
 		mutation: {
@@ -136,14 +136,14 @@ export const useProductEditor = () => {
 
 ```ts
 /**
- * 화면이 보낼 값 조립을 한 함수 안에서 끝낸다. 단계마다 보조 함수를 만들지 않는다
+ * 화면이 보낼 값 조립을 한 함수 안에서 마무리. 단계마다 보조 함수를 만들지 않음
  */
 export const toProductSaveRequest = (formValues: ProductFormValues) => {
-	// 1. 사용자가 넣은 앞뒤 공백을 서버로 보내기 전에 정리한다
+	// 1. 사용자가 넣은 앞뒤 공백을 서버로 보내기 전에 정리
 	const title = formValues.title.trim();
 	const description = formValues.description.trim();
 
-	// 2. API가 받는 payload 형태로 조립한다
+	// 2. API가 받는 페이로드 형태로 조립
 	return {categoryId: formValues.categoryId, description, title};
 };
 ```

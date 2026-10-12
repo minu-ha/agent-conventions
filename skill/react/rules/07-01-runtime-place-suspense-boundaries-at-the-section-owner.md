@@ -42,14 +42,14 @@ flowchart LR
 **Incorrect 1 (진입에 경계가 없어 화면 전체가 함께 멈춥니다):**
 
 ```tsx
-// page/products/pg-products.tsx: PgProductTreeSection이 Suspense 쿼리를 부르는데 감싸는 경계가 없다
+// page/products/pg-products.tsx: PgProductTreeSection이 Suspense 쿼리를 부르는데 감싸는 경계 없음
 return <PgProductTreeSection />;
 ```
 
 **Correct 1 (섹션 소유자가 경계와 대체 화면을 가집니다):**
 
 ```tsx
-// page/products/pg-products.tsx: 쿼리를 부르는 섹션을 경계로 감싼다
+// page/products/pg-products.tsx: 쿼리를 부르는 섹션을 경계로 감쌈
 return (
 	<Suspense fallback={<PgProductTreeSkeleton />}>
 		<PgProductTreeSection />
@@ -60,7 +60,7 @@ return (
 **Incorrect 2 (한 화면에 경계를 여러 겹 쌓습니다):**
 
 ```tsx
-// page/products/_pg-product-tree-section.tsx: 진입 파일이 이미 경계를 갖는데 같은 쿼리를 다시 감싼다
+// page/products/_pg-product-tree-section.tsx: 진입 파일에 이미 경계가 있는데 같은 쿼리를 다시 감쌈
 export const PgProductTreeSection = () => {
 	return (
 		<Suspense fallback={<PgProductTreeSkeleton />}>
@@ -73,7 +73,7 @@ export const PgProductTreeSection = () => {
 **Correct 2 (라우트 진입이 직접 쿼리를 부르면 진입을 감싸는 레이아웃이 경계를 가집니다):**
 
 ```tsx
-// page/products/pg-products.tsx: 섹션이 따로 없어 진입이 쿼리를 부른다. 경계는 이 진입을 그리는 셸이 갖는다
+// page/products/pg-products.tsx: 섹션이 따로 없어 진입이 쿼리 호출. 경계는 이 진입을 그리는 셸 몫
 export const PgProducts = () => {
 	const responseProductListSuspense = useProductListSuspense();
 
@@ -87,7 +87,7 @@ export const PgProducts = () => {
 // page/products/_pg-product-tree-section.tsx
 export const PgProductTreeSection = () => {
 	/**
-	 * 사이드바 분류 트리를 읽는다. 이 쿼리가 멈추는 동안은 진입 파일의 경계가 받는다
+	 * 사이드바 분류 트리 조회. 이 쿼리가 멈추는 동안은 진입 파일의 경계가 처리
 	 */
 	const responseProductTreeSuspense = useProductTreeSuspense();
 

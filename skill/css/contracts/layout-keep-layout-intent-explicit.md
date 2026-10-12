@@ -28,7 +28,7 @@
 
 ```css
 .pg_productDetail__toolbar {
-	/* .pg_productDetail__content가 스크롤 컨테이너다 */
+	/* 스크롤 컨테이너는 .pg_productDetail__content */
 	position: sticky;
 	top: 0;
 	z-index: var(--app-z-index-sticky);

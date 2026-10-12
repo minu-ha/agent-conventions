@@ -60,8 +60,8 @@ import type {ChangeEventHandler, Ref} from "react";
 /**
  * 검색 입력 계약
  *
- * 결과 목록에서 검색어로 포커스를 되돌려야 해 `ref`를 연다.
- * 보이는 라벨을 둘 자리가 없어 이름은 `aria-label`로만 준다.
+ * 결과 목록에서 검색어로 포커스를 되돌려야 해 `ref` 공개
+ * 보이는 라벨을 둘 자리가 없어 이름은 `aria-label`로만 제공
  */
 export interface UiSearchInputProps {
 	/**
@@ -100,7 +100,7 @@ export const UiSearchInput = (props: UiSearchInputProps) => {
 /**
  * 상태 배지 계약
  *
- * 밖에서 다룰 일이 없어 `ref`를 열지 않는다.
+ * 밖에서 다룰 일이 없어 `ref` 비공개
  */
 export interface UiStatusBadgeProps {
 	/**
@@ -118,18 +118,18 @@ export const UiStatusBadge = (props: UiStatusBadgeProps) => {
 
 ```tsx
 /**
- * 검색 입력이 밖에 여는 명령. 결과 목록이 포커스와 선택을 되돌릴 때 부른다
+ * 검색 입력이 밖에 여는 명령. 결과 목록이 포커스와 선택을 되돌릴 때 호출
  */
 export interface UiSearchInputHandle {
 	/**
-	 * 입력에 포커스를 두고 글자를 전부 선택한다
+	 * 입력에 포커스를 두고 글자 전부 선택
 	 */
 	focusAndSelect: () => void;
 }
 
 export interface UiSearchInputProps {
 	/**
-	 * 명령 계약. 사용처가 포커스를 되돌릴 때만 넘긴다
+	 * 명령 계약. 사용처가 포커스를 되돌릴 때만 전달
 	 */
 	ref?: Ref<UiSearchInputHandle>;
 }

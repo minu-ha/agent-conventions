@@ -71,7 +71,7 @@ return (
 **Correct (외부 SDK가 잘못 초기화되므로 이유 주석을 남기고 로딩 동안 가립니다):**
 
 ```tsx
-// 결제 위젯은 마운트할 때 금액을 한 번만 읽는다. 다시 불러오는 중에 그리면 옛 금액으로 초기화된다
+// 결제 위젯은 마운트할 때 금액을 한 번만 읽음. 다시 불러오는 중에 그리면 옛 금액으로 초기화
 if (responseOrderAmountSuspense.isFetching) {
 	return <PgOrderAmountLoadingScreen />;
 }

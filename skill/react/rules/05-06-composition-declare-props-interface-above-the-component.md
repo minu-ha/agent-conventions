@@ -38,7 +38,7 @@ tags: composition, props
 **Incorrect 1 (파일 위쪽에 타입을 모으고 내보내지 않습니다):**
 
 ```tsx
-// component/ui/badge/ui-badge.tsx: 칩까지 한 파일에 두고 타입을 위쪽에 모았다
+// component/ui/badge/ui-badge.tsx: 칩까지 한 파일에 두고 타입은 위쪽에 모음
 interface UiBadgeProps {
 	label: string;
 }
@@ -96,7 +96,7 @@ export const UiPanelHeader = (props: UiPanelHeaderProps) => {
 /**
  * 패널 헤더 부품
  *
- * 제목과 우측 동작 영역을 사용처가 직접 조립한다.
+ * 제목과 우측 동작 영역은 사용처가 직접 조립
  */
 export interface UiPanelHeaderProps {
 	/**

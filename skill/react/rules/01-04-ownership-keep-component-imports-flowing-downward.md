@@ -130,7 +130,7 @@ import {UiLineChart} from "@/component/ui/line-chart/ui-line-chart";
 
 ```ts
 // type/chart-series.ts
-// component/ui/line-chart/_type 에 있던 것을 page 에서도 쓴다고 루트로 옮겼다
+// component/ui/line-chart/_type에 있던 것을 page에서도 쓴다고 루트로 옮김
 export interface ChartSeries {
 	/**
 	 * 선 하나가 그리는 좌표

@@ -97,7 +97,7 @@ flowchart LR
 	}
 }
 
-/* [data-theme] 는 뒤에 오고 명시도도 높아 위 @media 블록을 이긴다 */
+/* [data-theme]는 뒤에 오고 명시도도 높아 위 @media 블록보다 우선 */
 :root[data-theme="light"] {
 	color-scheme: light;
 

@@ -30,7 +30,7 @@ tags: screen, routes
 **Incorrect 1 (감싸기만 하는 래퍼를 섹션으로 추출합니다):**
 
 ```tsx
-// page/products/_pg-product-sidebar-panel.tsx: 감싸기만 하고 자기 책임이 없다
+// page/products/_pg-product-sidebar-panel.tsx: 감싸기만 하고 자기 책임 없음
 export const PgProductSidebarPanel = (props: PgProductSidebarPanelProps) => {
 	return <section className={clsx("pg_products__sidebar")}>{props.children}</section>;
 };
@@ -45,7 +45,7 @@ export const PgProductTreeSection = () => {
 	const [expandedItems, setExpandedItems] = useState<string[]>([]);
 
 	/**
-	 * 사이드바가 그릴 분류 노드만 남긴다. 트리 펼침 상태는 이 섹션이 따로 들고 있다
+	 * 사이드바가 그릴 분류 노드만 남김. 트리 펼침 상태는 이 섹션이 따로 보유
 	 */
 	const responseProductTreeSuspense = useProductTreeSuspense(
 		{},
@@ -53,7 +53,7 @@ export const PgProductTreeSection = () => {
 	);
 
 	/**
-	 * 고른 분류를 URL에 적어 두어 새로 고침해도 같은 화면이 열리게 한다
+	 * 고른 분류를 URL에 기록. 새로 고침해도 같은 화면
 	 */
 	const handleTreeSelectedItemsChange: UiTreeProps["onSelectedItemsChange"] = (itemId) => {
 		if (itemId === null) {

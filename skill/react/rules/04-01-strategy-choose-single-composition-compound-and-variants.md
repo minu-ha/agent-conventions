@@ -72,7 +72,7 @@ export const WgProfileDialog = (props: WgProfileDialogProps) => {
 /**
  * 프로필 요약만 보여 주는 고정 구조 대화상자
  *
- * 사용처가 끼워 넣을 자리가 없어 부품으로 쪼개지 않는다.
+ * 사용처가 끼워 넣을 자리가 없어 부품으로 안 쪼갬
  */
 export interface WgProfileDialogProps {
 	/**
@@ -114,7 +114,7 @@ component/widget/profile-dialog/
 /**
  * 대화상자 부품 셋이 나눠 쓰는 계약
  *
- * 세 부품 모두 받는 것이 `children` 하나뿐이라 형태를 하나로 둔다.
+ * 세 부품 모두 받는 것이 `children` 하나뿐이라 형태 하나로 통일
  */
 export interface WgProfileDialogPartProps {
 	/**
@@ -131,7 +131,7 @@ import {clsx} from "clsx";
 import type {WgProfileDialogPartProps} from "@/component/widget/profile-dialog/_type/profile-dialog-part";
 
 /**
- * 대화상자 틀. 나머지 부품은 이 안에서만 그린다
+ * 대화상자 틀. 나머지 부품은 이 안에서만 그림
  */
 export const WgProfileDialogRoot = (props: WgProfileDialogPartProps) => {
 	return <section className={clsx("wg_profileDialog__root")}>{props.children}</section>;
@@ -175,19 +175,19 @@ export const WgProfileDialogContext = createContext<WgProfileDialogContextValue 
 ```tsx
 // component/widget/profile-dialog/_wg-profile-dialog-root.tsx
 /**
- * 대화상자 틀. 접힘 상태를 소유해 부품에 컨텍스트로 내린다
+ * 대화상자 틀. 접힘 상태를 소유하고 부품에 컨텍스트로 전달
  */
 export const WgProfileDialogRoot = (props: WgProfileDialogPartProps) => {
 	const [isBodyOpen, setIsBodyOpen] = useState(true);
 
 	/**
-	 * 헤더가 부를 접기 토글. 이전 값에 기대므로 함수형으로 갱신한다
+	 * 헤더가 부를 접기 토글. 이전 값에 기대므로 함수형으로 갱신
 	 */
 	const toggleBody = () => {
 		setIsBodyOpen((previous) => !previous);
 	};
 
-	// Header 는 useContext(WgProfileDialogContext) 로 읽어 toggleBody 를 부른다. 공개 이름은 2단계와 같다
+	// Header는 useContext(WgProfileDialogContext)로 읽어 toggleBody 호출. 공개 이름은 2단계와 같음
 	return (
 		<WgProfileDialogContext value={{isBodyOpen, toggleBody}}>
 			<section className={clsx("wg_profileDialog__root")}>{props.children}</section>
@@ -202,7 +202,7 @@ export const WgProfileDialogRoot = (props: WgProfileDialogPartProps) => {
 /**
  * 읽기 전용 프로필 대화상자
  *
- * 세 화면이 같은 조합을 쓰고 있어 조립을 한 이름 뒤로 고정한다.
+ * 세 화면이 같은 조합을 쓰므로 조립을 한 이름 뒤로 고정
  */
 export interface WgReadOnlyProfileDialogProps {
 	/**

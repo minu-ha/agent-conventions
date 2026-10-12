@@ -33,7 +33,7 @@ const handleRowSelectToggle = (rowId: string) => (event) => {
 import type {MouseEventHandler} from "react";
 
 /**
- * 행 id를 커링으로 고정해 목록 JSX에 인라인 래퍼를 두지 않게 한다
+ * 행 id를 커링으로 고정. 목록 JSX에 인라인 래퍼를 두지 않음
  */
 const handleRowSelectToggle =
 	(rowId: string): MouseEventHandler<HTMLButtonElement> =>

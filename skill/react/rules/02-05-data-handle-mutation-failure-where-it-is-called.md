@@ -60,7 +60,7 @@ const handleSaveButtonClick: MouseEventHandler<HTMLButtonElement> = async (_even
 
 ```tsx
 /**
- * 저장에 성공하면 목록 화면으로 돌아간다. 실패 문구는 폼 위에 남긴다
+ * 저장 성공 시 목록 화면으로 이동. 실패 문구는 폼 위에 표시
  */
 const mutationProductSave = useProductSave({
 	mutation: {
@@ -86,7 +86,7 @@ const handleSaveButtonClick: MouseEventHandler<HTMLButtonElement> = (_event) => 
 
 ```tsx
 /**
- * 버튼 disabled와 별개로 겹쳐 들어온 저장을 한 번 더 막는다
+ * 버튼 disabled와 별개로 겹쳐 들어온 저장을 한 번 더 차단
  */
 const handleSaveButtonClick: MouseEventHandler<HTMLButtonElement> = (_event) => {
 	if (mutationProductSave.isPending) {
@@ -105,7 +105,7 @@ const handleSaveButtonClick: MouseEventHandler<HTMLButtonElement> = (_event) => 
 
 ```tsx
 /**
- * 첨부를 먼저 올린 뒤 그 식별자로 product를 저장한다
+ * 첨부를 먼저 올린 뒤 그 식별자로 상품 저장
  */
 const handleSaveButtonClick: MouseEventHandler<HTMLButtonElement> = async (_event) => {
 	if (mutationAttachmentUpload.isPending || mutationProductSave.isPending) {

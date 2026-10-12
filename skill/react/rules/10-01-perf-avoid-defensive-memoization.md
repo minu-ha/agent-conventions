@@ -56,7 +56,7 @@ const columns = toTableColumns(props.columns);
 **Correct (측정한 계산 비용을 근거로 메모이제이션합니다):**
 
 ```ts
-// 열 2,000개의 표시 계약 변환이 입력마다 45ms로 측정됐다. 같은 columns의 반복 계산을 건너뛴다.
+// 열 2,000개의 표시 계약 변환이 입력마다 45ms 측정. 같은 columns의 반복 계산 생략
 const columns = useMemo(() => {
 	return toTableColumns(props.columns);
 }, [props.columns]);
@@ -66,7 +66,7 @@ const columns = useMemo(() => {
 
 ```ts
 /**
- * 입력된 product 목록이 바뀔 때만 변경 알림을 다시 구독한다
+ * 입력된 상품 목록이 바뀔 때만 변경 알림 재구독
  */
 useEffect(() => {
 	return subscribeToProductChanges(props.products.map((product) => product.id));

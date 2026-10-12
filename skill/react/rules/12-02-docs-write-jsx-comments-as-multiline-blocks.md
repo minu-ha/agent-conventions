@@ -19,7 +19,7 @@ tags: docs, jsx, comments
 
 JSX 자식 자리의 주석은 여러 줄 블록으로 씁니다.
 `{/**`, ` * 내용`, ` */}`을 각각 다른 줄에 두어 접었다 펼칠 때 주석과 블록이 한 덩이로 움직이게 합니다.
-여러 줄로 펼쳐진 형제 블록이 둘 이상이면 블록마다 그 앞에 한 문장으로 적습니다.
+여러 줄로 펼쳐진 형제 블록이 둘 이상이면 블록마다 그 앞에 짧은 명사형 한 줄로 적습니다.
 한 줄 요소와 블록 하나뿐인 반환에는 달지 않습니다.
 
 | 주석 내용 | 기준 |
@@ -54,7 +54,7 @@ JSX 자식 자리의 주석은 여러 줄 블록으로 씁니다.
 **Incorrect 2 (예외 이유를 한 줄로 접습니다):**
 
 ```tsx
-{/* LegacyDatePicker는 className을 받지 않아 배치용 래퍼가 필요하다 */}
+{/* LegacyDatePicker가 className을 받지 않아 배치용 래퍼 필요 */}
 <div className={clsx("pg_products__datePicker")}>
 	<LegacyDatePicker value={value} onChange={handleChange} />
 </div>;
@@ -64,7 +64,7 @@ JSX 자식 자리의 주석은 여러 줄 블록으로 씁니다.
 
 ```tsx
 {/**
- * LegacyDatePicker는 className을 받지 않아 배치용 래퍼가 필요하다
+ * LegacyDatePicker가 className을 받지 않아 배치용 래퍼 필요
  */}
 <div className={clsx("pg_products__datePicker")}>
 	<LegacyDatePicker value={value} onChange={handleChange} />
@@ -76,7 +76,7 @@ JSX 자식 자리의 주석은 여러 줄 블록으로 씁니다.
 ```tsx
 <section className={clsx("wg_orderTable__root")}>
 	{/**
-	 * 헤더 행. 정렬 기준과 단위를 보여 준다
+	 * 헤더 행. 정렬 기준과 단위 표시
 	 */}
 	<WgOrderTableHeader sort={sort} />
 	{rows.map((row) => (
@@ -93,17 +93,17 @@ JSX 자식 자리의 주석은 여러 줄 블록으로 씁니다.
 ```tsx
 <section className={clsx("wg_orderTable__root")}>
 	{/**
-	 * 헤더 행. 정렬 기준과 단위를 보여 준다
+	 * 헤더 행. 정렬 기준과 단위 표시
 	 */}
 	<WgOrderTableHeader sort={sort} />
 	{/**
-	 * 주문 행. 상세 버튼과 accordion 을 가진 기본 행
+	 * 주문 행. 상세 버튼과 아코디언이 있는 기본 행
 	 */}
 	{rows.map((row) => (
 		<WgOrderTableRow key={row.id} row={row} />
 	))}
 	{/**
-	 * 펼친 자식 주문 행. 상세 버튼과 accordion 없이 같은 칸 구성을 반복한다
+	 * 펼친 자식 주문 행. 상세 버튼과 아코디언 없이 같은 칸 구성 반복
 	 */}
 	{expandedRows.map((row) => (
 		<WgOrderTableChildRow key={row.id} row={row} />

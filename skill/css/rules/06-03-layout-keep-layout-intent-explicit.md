@@ -41,7 +41,7 @@ tags: layout, comments, sticky
 
 ```css
 .pg_productDetail__toolbar {
-	/* .pg_productDetail__content가 스크롤 컨테이너다 */
+	/* 스크롤 컨테이너는 .pg_productDetail__content */
 	position: sticky;
 	top: 0;
 	z-index: var(--app-z-index-sticky);
@@ -80,7 +80,7 @@ tags: layout, comments, sticky
 
 ```css
 .pg_productDetail__chart {
-	/* 로딩 중과 실제 차트에 같은 최소 높이를 확보한다 */
+	/* 로딩 중과 실제 차트에 같은 최소 높이 확보 */
 	min-height: 320px;
 }
 ```

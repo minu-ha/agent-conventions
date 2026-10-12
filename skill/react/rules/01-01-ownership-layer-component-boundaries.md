@@ -88,7 +88,7 @@ export const PgDeleteProductButton = () => {
 
 ```tsx
 // page/product-detail/_pg-product-status-badge.tsx
-// 프롭스가 도메인 타입 하나만 받고 훅도 부르지 않는다. 이 화면에서만 쓴다는 이유로 남아 있다.
+// 프롭스가 도메인 타입 하나만 받고 훅도 안 부름. 이 화면에서만 쓴다는 이유로 남아 있음
 export const PgProductStatusBadge = (props: PgProductStatusBadgeProps) => {
 	return <svg className={clsx("pg_productStatusBadge__root")}>{props.children}</svg>;
 };
@@ -107,7 +107,7 @@ export const WgProductStatusBadge = (props: WgProductStatusBadgeProps) => {
 
 ```tsx
 // component/widget/chart-card/wg-chart-card.tsx
-// 프롭스가 좌표 배열만 받고 도메인 타입을 모른다. widget 폴더에 있다는 이유로 남아 있다.
+// 프롭스가 좌표 배열만 받고 도메인 타입을 모름. widget 폴더에 있다는 이유로 남아 있음
 export const WgChartCard = (props: WgChartCardProps) => {
 	return <svg className={clsx("wg_chartCard__root")}>{props.children}</svg>;
 };

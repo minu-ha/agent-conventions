@@ -63,7 +63,7 @@ flowchart LR
 **Correct 1 (공통 토큰 목록에 있는 변수는 대체값 없이 씁니다):**
 
 ```css
-/* src/style/token.css — 공통 토큰 목록의 단일 출처 */
+/* src/style/token.css: 공통 토큰 목록의 단일 출처 */
 :root {
 	--app-space-inline: 12px;
 	--app-color-text-primary: #212529;

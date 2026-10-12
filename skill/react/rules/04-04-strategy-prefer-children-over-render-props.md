@@ -64,7 +64,7 @@ import {clsx} from "clsx";
 import type {UiPanelPartProps} from "@/component/ui/panel/_type/panel-part";
 
 /**
- * 패널 틀. 나머지 부품은 이 안에서만 그린다
+ * 패널 틀. 나머지 부품은 이 안에서만 그림
  */
 export const UiPanelRoot = (props: UiPanelPartProps) => {
 	return <section className={clsx("ui_panel__root")}>{props.children}</section>;
@@ -78,7 +78,7 @@ export const UiPanelRoot = (props: UiPanelPartProps) => {
 /**
  * 패널 부품 셋이 나눠 쓰는 계약
  *
- * 세 부품 모두 받는 것이 `children` 하나뿐이라 형태를 하나로 둔다.
+ * 세 부품 모두 받는 것이 `children` 하나뿐이라 형태 하나로 통일
  */
 export interface UiPanelPartProps {
 	/**
@@ -94,7 +94,7 @@ import {UiPanelFooter} from "@/component/ui/panel/_ui-panel-footer";
 import {UiPanelHeader} from "@/component/ui/panel/_ui-panel-header";
 import {UiPanelRoot} from "@/component/ui/panel/_ui-panel-root";
 
-// Header 와 Footer 도 Root 와 같은 형태로 children 만 받는다
+// Header와 Footer도 Root와 같은 형태로 children만 받음
 export const UiPanel = {
 	Root: UiPanelRoot,
 	Header: UiPanelHeader,

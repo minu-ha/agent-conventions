@@ -22,13 +22,13 @@ export const PgProductTableSection = () => {
 	const [selectedRows, setSelectedRows] = useState<ProductRow[]>([]);
 
 	/**
-	 * 고른 행은 이 섹션 안에만 두고 route search로 올리지 않는다
+	 * 고른 행은 이 섹션 안에만 두고 route search로 올리지 않음
 	 */
 	const handleTableRowSelect: UiTableProps["onRowSelect"] = (rows) => {
 		setSelectedRows(rows);
 	};
 
-	// 아래 둘은 이름만 남기고 무엇에서 나온 값인지를 지운다
+	// 아래 둘은 이름만 남기고 무엇에서 나온 값인지 지움
 	const hasSelectedRows = selectedRows.length > 0;
 	const bulkActionLabel = `${selectedRows.length}건 삭제`;
 
@@ -50,7 +50,7 @@ export const PgProductTableSection = () => {
 	const [selectedRows, setSelectedRows] = useState<ProductRow[]>([]);
 
 	/**
-	 * 고른 행은 이 섹션 안에만 두고 route search로 올리지 않는다
+	 * 고른 행은 이 섹션 안에만 두고 route search로 올리지 않음
 	 */
 	const handleTableRowSelect: UiTableProps["onRowSelect"] = (rows) => {
 		setSelectedRows(rows);

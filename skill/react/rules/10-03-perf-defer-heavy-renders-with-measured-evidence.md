@@ -74,7 +74,7 @@ const handleTagClick = (nextTagId: string) => {
 };
 
 const handleStatusFilterChange = (nextStatus: ProductStatusFilter) => {
-	// 행 12,000개에서 필터 전환에 320ms가 걸려 클릭이 밀렸다.
+	// 행 12,000개에서 필터 전환에 320ms, 클릭이 밀림
 	startTransition(() => {
 		setStatusFilter(nextStatus);
 	});
@@ -94,7 +94,7 @@ const filteredRows = rows.filter((row) => fuzzyMatchRow(row, keyword));
 const [keyword, setKeyword] = useState("");
 const deferredKeyword = useDeferredValue(keyword);
 
-// 행 12,000개에서 매 렌더 필터링이 180ms로 측정됐다. 늦춘 검색어에만 다시 계산한다.
+// 행 12,000개에서 매 렌더 필터링 180ms 측정. 지연한 검색어에만 재계산
 const filteredRows = useMemo(() => {
 	return rows.filter((row) => fuzzyMatchRow(row, deferredKeyword));
 }, [deferredKeyword, rows]);
@@ -108,7 +108,7 @@ return <PgProductRows rows={filteredRows} />;
 const [isPending, startTransition] = useTransition();
 
 const handleStatusFilterChange = (nextStatus: ProductStatusFilter) => {
-	// 행 12,000개에서 필터 전환에 320ms가 걸려 클릭이 밀렸다.
+	// 행 12,000개에서 필터 전환에 320ms, 클릭이 밀림
 	startTransition(() => {
 		setStatusFilter(nextStatus);
 	});
@@ -124,7 +124,7 @@ const handleStatusFilterChange = (nextStatus: ProductStatusFilter) => {
 	startTransition(async () => {
 		const nextRows = await fetchFilteredRows(nextStatus);
 
-		// await 뒤에는 트랜지션 범위가 끊겨 다시 감싸야 급하지 않은 갱신으로 남는다
+		// await 뒤에는 트랜지션 범위가 끊김. 다시 감싸야 급하지 않은 갱신으로 남음
 		startTransition(() => {
 			setRows(nextRows);
 		});
@@ -135,7 +135,7 @@ const handleStatusFilterChange = (nextStatus: ProductStatusFilter) => {
 **Correct (지연 값을 받는 무거운 하위 트리는 `memo`로 감쌉니다):**
 
 ```tsx
-// 행 12,000개 표. 부모가 입력값으로 다시 렌더할 때 이 트리까지 따라 그리지 않도록 memo 로 감싼다
+// 행 12,000개 표. 부모가 입력값으로 다시 렌더할 때 이 트리까지 따라 그리지 않도록 memo로 감쌈
 export const PgProductRows = memo((props: PgProductRowsProps) => {
 	return <UiTable rows={props.rows} />;
 });

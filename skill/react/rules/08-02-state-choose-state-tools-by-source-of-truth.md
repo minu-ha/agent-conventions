@@ -92,7 +92,7 @@ const [urlParams, setUrlParams] = useQueryStates(productUrlParsers);
 **Incorrect 3 (묶음 밖의 화면이 읽는 값을 `Context`로 앱 루트까지 올려 전역 스토어처럼 씁니다):**
 
 ```ts
-// 테마는 레이아웃과 모든 화면이 읽는데 Context 를 루트에 두고 화면마다 Provider 를 찾아 올라간다
+// 테마는 레이아웃과 모든 화면이 읽는데 Context를 루트에 두고 화면마다 Provider를 찾아 올라감
 const ThemeContext = createContext<Theme>("light");
 ```
 

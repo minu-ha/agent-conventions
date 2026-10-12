@@ -61,7 +61,7 @@ DOM 속성은 리액트가 추가한 속성도 받아야 하는 열린 집합이
 **Incorrect 1 (프롭 타입 하나의 충돌 때문에 DOM 속성 전체를 제외합니다):**
 
 ```tsx
-// id, role, tabIndex, aria-*, 이벤트를 전부 잃고 다섯 개만 남았다
+// id, role, tabIndex, aria-*, 이벤트를 전부 잃고 다섯 개만 남음
 export interface UiButtonProps {
 	className?: string;
 	children?: ReactNode;
@@ -82,7 +82,7 @@ import type {ButtonHTMLAttributes} from "react";
 /**
  * 라이브러리 버튼의 강조 단계를 여는 계약
  *
- * color의 문자열 리터럴들은 DOM의 string에 할당할 수 있어 Omit이 필요 없다.
+ * color의 문자열 리터럴은 DOM의 string에 할당 가능해 Omit 불필요
  */
 export interface UiButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 	/**
@@ -107,7 +107,7 @@ import type {TdHTMLAttributes} from "react";
 /**
  * 라이브러리 셀의 정렬과 여백을 여는 계약
  *
- * align의 inherit은 DOM td 타입에 없어 그 이름만 빼고 다시 연다.
+ * align의 inherit은 DOM td 타입에 없어 그 이름만 빼고 다시 선언
  */
 export interface UiTableCellProps extends Omit<TdHTMLAttributes<HTMLTableCellElement>, "align"> {
 	/**
@@ -136,8 +136,8 @@ import type {ChangeEventHandler} from "react";
 /**
  * 라벨과 값을 받는 한 줄 입력 계약
  *
- * 겉은 `div`인데 이벤트는 안쪽 `input`이 받아 요소 전용 인터페이스를 그대로 못 쓴다.
- * 입력 이름을 반드시 보여 주려고 label은 선택적인 ReactNode 대신 필수 문자열로 좁힌다.
+ * 겉은 `div`, 이벤트는 안쪽 `input`이 받아 요소 전용 인터페이스를 그대로 못 씀
+ * 입력 이름을 반드시 보이려고 label은 선택적인 ReactNode 대신 필수 문자열
  */
 export interface UiTextFieldProps {
 	/**

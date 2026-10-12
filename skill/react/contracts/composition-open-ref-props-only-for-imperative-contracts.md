@@ -45,8 +45,8 @@ import type {ChangeEventHandler, Ref} from "react";
 /**
  * 검색 입력 계약
  *
- * 결과 목록에서 검색어로 포커스를 되돌려야 해 `ref`를 연다.
- * 보이는 라벨을 둘 자리가 없어 이름은 `aria-label`로만 준다.
+ * 결과 목록에서 검색어로 포커스를 되돌려야 해 `ref` 공개
+ * 보이는 라벨을 둘 자리가 없어 이름은 `aria-label`로만 제공
  */
 export interface UiSearchInputProps {
 	/**
