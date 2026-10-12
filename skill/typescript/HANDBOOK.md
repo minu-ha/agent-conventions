@@ -126,7 +126,7 @@ flowchart LR
 
 ```ts
 // 이미 있는 계약: UserRecord { id: string; name: string; email: string }
-// 필드 이름, 타입, 선택 여부가 그대로인데 새로 선언했다
+// 필드 이름, 타입, 선택 여부가 그대로인데 새로 선언
 interface InviteRecipient {
 	id: string;
 	name: string;
@@ -141,7 +141,7 @@ export const sendInvites = (recipients: InviteRecipient[]): Promise<void> => { /
 ```ts
 // 이미 있는 계약: UserRecord { id: string; name: string; email: string }
 /**
- * 초대 대상은 사용자 레코드 그대로다. 필드가 같아 따로 선언하지 않는다
+ * 초대 대상은 사용자 레코드 그대로. 필드가 같아 따로 선언 안 함
  */
 export const sendInvites = (recipients: UserRecord[]): Promise<void> => { /* … */ };
 ```
@@ -152,7 +152,7 @@ export const sendInvites = (recipients: UserRecord[]): Promise<void> => { /* …
 // 이미 있는 계약: UserRecord { id: string; name: string; email: string }
 export const sendInvite = (draft: UserRecord): Promise<void> => { /* … */ };
 
-// 폼은 이름을 비울 수 있고 id 가 아직 없어 빈 문자열을 채워야 타입이 맞는다
+// 폼은 이름을 비울 수 있고 id가 아직 없음. 빈 문자열을 채워야 타입이 맞음
 sendInvite({ id: "", name: "", email });
 ```
 
@@ -161,7 +161,7 @@ sendInvite({ id: "", name: "", email });
 ```ts
 // 이미 있는 계약: UserRecord { id: string; name: string; email: string }
 /**
- * 초대 폼 입력. 이름을 비울 수 있고 id 가 아직 없어 UserRecord 와 필드 조건이 다르다
+ * 초대 폼 입력. 이름을 비울 수 있고 id가 아직 없어 UserRecord와 필드 조건이 다름
  */
 interface InviteDraft {
 	/**
@@ -169,13 +169,13 @@ interface InviteDraft {
 	 */
 	email: UserRecord["email"];
 	/**
-	 * 표시 이름. 비우면 이메일을 그대로 보여 준다
+	 * 표시 이름. 비우면 이메일 표시
 	 */
 	name?: UserRecord["name"];
 }
 
 /**
- * 초대 한 건을 보낸다
+ * 초대 한 건 발송
  */
 export const sendInvite = (draft: InviteDraft): Promise<void> => { /* … */ };
 ```
@@ -252,7 +252,7 @@ interface UserPreview {
 	 */
 	readonly id: UserRecord["id"];
 	/**
-	 * 목록에 표시할 이름. 원본에서 선택 필드라 여기서도 선택으로 둔다
+	 * 목록에 표시할 이름. 원본이 선택 필드라 여기서도 선택
 	 */
 	name?: UserRecord["name"];
 }
@@ -261,13 +261,13 @@ interface UserPreview {
 **Incorrect 2 (인덱스 접근으로 옮기면서 선택 여부와 읽기 전용 속성을 누락합니다):**
 
 ```ts
-// 원본: ProductRecord.id 는 readonly, UserRecord.name 은 선택 필드다
+// 원본: ProductRecord.id는 readonly, UserRecord.name은 선택 필드
 /**
- * product 목록 한 행의 표시 계약
+ * 상품 목록 한 행의 표시 계약
  */
 interface ProductListRow {
 	/**
-	 * product 식별자
+	 * 상품 식별자
 	 */
 	id: ProductRecord["id"];
 	/**
@@ -281,15 +281,15 @@ interface ProductListRow {
 
 ```ts
 /**
- * product 목록 한 행의 표시 계약
+ * 상품 목록 한 행의 표시 계약
  */
 interface ProductListRow {
 	/**
-	 * product 식별자
+	 * 상품 식별자
 	 */
 	readonly id: ProductRecord["id"];
 	/**
-	 * 마지막 수정자 이름. 원본에서 선택 필드라 여기서도 선택으로 둔다
+	 * 마지막 수정자 이름. 원본이 선택 필드라 여기서도 선택
 	 */
 	ownerName?: UserRecord["name"];
 }
@@ -317,7 +317,7 @@ interface ExportRequestBody {
 
 ```ts
 /**
- * 내보내기 요청 전송 형태. 생성된 계약이 필드를 더하면 그대로 따라가고 서버가 채우는 시각만 뺀다
+ * 내보내기 요청 전송 형태. 생성된 계약의 새 필드는 그대로 따라가고 서버가 채우는 시각만 제외
  */
 type ExportRequestBody = Omit<GeneratedExportRequest, "requestedAt">;
 ```
@@ -325,7 +325,7 @@ type ExportRequestBody = Omit<GeneratedExportRequest, "requestedAt">;
 **Incorrect 4 (좁힌 값을 원시 타입으로 다시 적어 원본과의 연결이 사라집니다):**
 
 ```ts
-// 원본: TableCellProps.align 은 선택 필드고 padding 은 normal, checkbox, none 이다
+// 원본: TableCellProps.align은 선택 필드, padding은 normal, checkbox, none
 /**
  * 주문 내보내기 표 칸 표시 계약
  */
@@ -335,7 +335,7 @@ interface OrderExportCell {
 	 */
 	align: "inherit" | "left" | "center" | "right" | "justify";
 	/**
-	 * 칸 여백. checkbox 칸은 두지 않는다
+	 * 칸 여백. checkbox 칸 없음
 	 */
 	padding?: "normal" | "none";
 }
@@ -345,15 +345,15 @@ interface OrderExportCell {
 
 ```ts
 /**
- * 주문 내보내기 표 칸 표시 계약. align, padding 은 TableCell 로 그대로 넘긴다
+ * 주문 내보내기 표 칸 표시 계약. align, padding은 TableCell로 그대로 전달
  */
 interface OrderExportCell {
 	/**
-	 * 칸 정렬. TableCell 은 비울 수 있지만 이 표는 칸마다 정한다
+	 * 칸 정렬. TableCell은 비울 수 있지만 이 표는 칸마다 지정
 	 */
 	align: NonNullable<TableCellProps["align"]>;
 	/**
-	 * 칸 여백. checkbox 칸은 두지 않아 normal, none 만 받는다
+	 * 칸 여백. checkbox 칸이 없어 normal, none만 허용
 	 */
 	padding?: Extract<TableCellProps["padding"], "normal" | "none">;
 }
@@ -403,7 +403,7 @@ interface UserFormatters {
 }
 
 /**
- * 상태 객체를 화면 문자열로 바꾼다
+ * 상태 객체를 화면 문자열로 변환
  */
 const toStateLabel = (state: Record<string, unknown>): string => {
 	return JSON.stringify(state);
@@ -429,7 +429,7 @@ interface UserFormatters {
 }
 
 /**
- * 상태 객체를 화면 문자열로 바꾼다
+ * 상태 객체를 화면 문자열로 변환
  */
 const toStateLabel: UserFormatters["toStateLabel"] = (state) => {
 	return JSON.stringify(state);
@@ -440,14 +440,14 @@ const toStateLabel: UserFormatters["toStateLabel"] = (state) => {
 
 ```ts
 /**
- * 앞뒤 공백을 걷어낸 request 문자열
+ * 앞뒤 공백을 걷어낸 요청 문자열
  */
 const toRequest = (request: string): string => {
 	return request.trim();
 };
 
 /**
- * 검색어로 쓸 수 있게 공백을 한 칸으로 줄인 request 문자열
+ * 검색어용으로 공백을 한 칸으로 줄인 요청 문자열
  */
 const toSearchRequest = (request: string): string => {
 	return request.replaceAll(/\s+/g, " ").trim();
@@ -458,19 +458,19 @@ const toSearchRequest = (request: string): string => {
 
 ```ts
 /**
- * request 변환 계약
+ * 요청 문자열 변환 계약
  */
 type ToRequest = (request: string) => string;
 
 /**
- * 앞뒤 공백을 걷어낸 request 문자열
+ * 앞뒤 공백을 걷어낸 요청 문자열
  */
 const toRequest: ToRequest = (request) => {
 	return request.trim();
 };
 
 /**
- * 검색어로 쓸 수 있게 공백을 한 칸으로 줄인 request 문자열
+ * 검색어용으로 공백을 한 칸으로 줄인 요청 문자열
  */
 const toSearchRequest: ToRequest = (request) => {
 	return request.replaceAll(/\s+/g, " ").trim();
@@ -547,7 +547,7 @@ export interface PublishResult {
 
 ```ts
 /**
- * product 상태 코드. 서버 enum 과 같은 값이다
+ * 상품 상태 코드. 서버 enum과 같은 값
  */
 export const product_status = {
 	draft: "draft",
@@ -573,12 +573,12 @@ export const product_status = {
 
 ```ts
 /**
- * 로그 sink 콜백 계약
+ * 로그 싱크 콜백 계약
  */
 type LogSink = (message: string, level: "info" | "error") => void;
 
 const noopLog: LogSink = () => {
-	// 아무 일도 하지 않는 sink
+	// 아무 일도 하지 않는 싱크
 };
 ```
 
@@ -586,12 +586,12 @@ const noopLog: LogSink = () => {
 
 ```ts
 /**
- * 로그 sink 콜백 계약
+ * 로그 싱크 콜백 계약
  */
 type LogSink = (message: string, level: "info" | "error") => void;
 
 /**
- * 아무것도 남기지 않는 로그 sink. 테스트에서 출력을 끌 때 쓴다
+ * 아무것도 남기지 않는 로그 싱크. 테스트의 출력 끄기용
  */
 const noopLog: LogSink = (_message, _level) => {};
 ```
@@ -653,7 +653,7 @@ const storedFilter = JSON.parse(localStorage.getItem("product-filter") as string
 const storedValue = localStorage.getItem("product-filter");
 const parsedFilter: unknown = storedValue === null ? undefined : JSON.parse(storedValue);
 
-// 처음 방문이면 저장된 필터가 없고 형태가 다르면 쓰지 않는다. 없다는 사실을 그대로 둔다
+// 첫 방문이면 저장된 필터 없음, 형태가 다르면 버림. 없음은 그대로 유지
 const storedFilter = isProductFilter(parsedFilter) ? parsedFilter : undefined;
 ```
 
@@ -711,7 +711,7 @@ enum ProductStatus {
 
 ```ts
 /**
- * product 심사 상태 값 집합
+ * 상품 심사 상태 값 집합
  */
 const product_status = {
 	pending: "pending",
@@ -720,7 +720,7 @@ const product_status = {
 } as const;
 
 /**
- * product 심사 상태 타입. product_status에 값을 더하면 따라 넓어진다
+ * 상품 심사 상태 타입. product_status에 값을 더하면 함께 넓어짐
  */
 type ProductStatus = (typeof product_status)[keyof typeof product_status];
 ```
@@ -867,7 +867,7 @@ const productQuery = useProductQuery({client: productClient, pageSize: default_p
 
 ```ts
 // page/orders/pg-orders.tsx
-// 다른 화면이 같은 값을 다시 선언한다
+// 다른 화면이 같은 값을 다시 선언
 const default_page_size = 20;
 
 const orderQuery = useOrderQuery({pageSize: default_page_size});
@@ -906,7 +906,7 @@ export const config = {
 ```ts
 // constant/api.ts
 /**
- * 요청 하나를 기다리는 최대 시간. 게이트웨이가 30초에 끊어 그보다 먼저 실패를 알린다
+ * 요청 하나의 최대 대기 시간. 게이트웨이가 30초에 끊으므로 그 전에 실패 표시
  */
 export const api_request_timeout_ms = 20_000;
 
@@ -947,7 +947,7 @@ export const pagination_default_page_size = 20;
 
 ```ts
 // constant/chart.ts
-// product 상세 화면만 쓰는 값이 루트에 있다
+// 상품 상세 화면만 쓰는 값이 루트에 있음
 export const chart_axis_tick_count = 6;
 ```
 
@@ -956,7 +956,7 @@ export const chart_axis_tick_count = 6;
 ```ts
 // page/product-detail/_constant/chart.ts
 /**
- * product 상세 차트의 축 눈금 수. 표시 폭이 좁아 여섯을 넘기면 라벨이 겹친다
+ * 상품 상세 차트의 축 눈금 수. 표시 폭이 좁아 여섯을 넘으면 라벨 겹침
  */
 export const chart_axis_tick_count = 6;
 ```
@@ -1026,7 +1026,7 @@ API 응답, 요청, 생성 DTO, 라이브러리 인자, DOM 속성, 환경 변�
 
 ```ts
 // userSettings.ts
-// 우리가 선언한 타입은 PascalCase, 그 필드는 camelCase다
+// 우리가 선언한 타입은 PascalCase, 그 필드는 camelCase
 interface User_Profile {
 	avatar_url: string;
 }
@@ -1065,14 +1065,14 @@ const productStatus = {
 
 ```ts
 /**
- * 요청 재시도 정책. 하위 키도 상수 키다
+ * 요청 재시도 정책. 하위 키도 상수 키
  */
 const retry_policy = {
 	max_attempts: 3,
 } as const;
 
 /**
- * product 게시 상태 값 집합
+ * 상품 게시 상태 값 집합
  */
 const product_status = {
 	draft: "draft",
@@ -1084,9 +1084,9 @@ const product_status = {
 **Incorrect 3 (밖으로 나가는 키를 우리 표기로 바꿉니다):**
 
 ```ts
-// 서버 계약은 {product_id, display_name} 인데 우리 표기로 바꿔 보낸다
+// 서버 계약은 {product_id, display_name}인데 우리 표기로 바꿔 전송
 /**
- * product 저장 요청 조립
+ * 상품 저장 요청 조립
  */
 const toProductSaveBody = (values: ProductFormValues) => {
 	return {
@@ -1100,7 +1100,7 @@ const toProductSaveBody = (values: ProductFormValues) => {
 
 ```ts
 /**
- * product 저장 요청 조립. 서버 계약이 snake_case라 그 표기를 그대로 넘긴다
+ * 상품 저장 요청 조립. 서버 계약이 snake_case라 그 표기 그대로 전달
  */
 const toProductSaveBody = (values: ProductFormValues) => {
 	return {
@@ -1161,7 +1161,7 @@ export default UiTabs;
 
 ```tsx
 // page/settings/pg-settings.tsx
-// 사용처가 이름을 지어서 같은 컴포넌트가 파일마다 다른 이름으로 불린다
+// 사용처마다 이름을 지어 같은 컴포넌트가 파일마다 다른 이름
 import Tabs from "@/component/ui/tabs/ui-tabs";
 ```
 
@@ -1291,7 +1291,7 @@ const baseUrl = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:3000";
 
 ```ts
 // service/order-export-client.ts
-// 다른 파일이 같은 키를 다시 읽고 같은 리터럴로 덮는다
+// 다른 파일이 같은 키를 다시 읽고 같은 리터럴로 덮음
 const orderExportBaseUrl = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:3000";
 ```
 
@@ -1304,7 +1304,7 @@ if (!import.meta.env.VITE_API_BASE_URL) {
 }
 
 /**
- * API 서버 주소. 배포 환경마다 다르다
+ * API 서버 주소. 배포 환경마다 다름
  */
 export const env_api_base_url = import.meta.env.VITE_API_BASE_URL;
 ```
@@ -1386,7 +1386,7 @@ const orderVM: OrderViewModel = response.data;
 **Correct 1 (한 조회 시점에 고정된 값이라는 역할을 이름에 표시합니다):**
 
 ```ts
-// page/orders/_type/summary-snapshot.ts: 폴더가 이미 orders 를 말한다
+// page/orders/_type/summary-snapshot.ts: 폴더 이름이 이미 orders
 /**
  * 한 조회 시점의 주문 요약 목록과 조건
  */
@@ -1452,7 +1452,7 @@ const summarySnapshot: SummarySnapshot = response.data;
 
 ```ts
 /**
- * 검색어 비교에서 공백 차이를 무시하도록 제목의 공백을 정리한다
+ * 제목 공백 정리. 검색어 비교에서 공백 차이 무시
  */
 export function toTrimmedTitle(rawTitle: string): string {
 	return rawTitle.trim().replace(/\s+/g, " ");
@@ -1463,7 +1463,7 @@ export function toTrimmedTitle(rawTitle: string): string {
 
 ```ts
 /**
- * 검색어 비교에서 공백 차이를 무시하도록 제목의 공백을 정리한다
+ * 제목 공백 정리. 검색어 비교에서 공백 차이 무시
  */
 export const toTrimmedTitle = (rawTitle: string): string => {
 	return rawTitle.trim().replace(/\s+/g, " ");
@@ -1484,7 +1484,7 @@ export const cellFormatterByValueType = {
 
 ```ts
 /**
- * 값 종류별 표 셀 표시 함수. 문자열은 앞뒤 공백을 지워 보여 준다
+ * 값 종류별 표 셀 표시 함수. 문자열은 앞뒤 공백 제거 후 표시
  */
 export const cellFormatterByValueType = {
 	text: (value: string): string => {
@@ -1493,7 +1493,7 @@ export const cellFormatterByValueType = {
 } as const;
 
 /**
- * product 식별자 목록
+ * 상품 식별자 목록
  */
 export const toProductIds = (products: Product[]): string[] => {
 	return products.map((product) => product.id);
@@ -1558,7 +1558,7 @@ fetchProductPage(api_base_url, urlParams.page, pagination_default_page_size, und
 
 ```ts
 /**
- * product 목록 한 페이지 요청 조건
+ * 상품 목록 한 페이지 요청 조건
  */
 interface ProductPageRequest {
 	/**
@@ -1574,7 +1574,7 @@ interface ProductPageRequest {
 	 */
 	pageSize: number;
 	/**
-	 * 검색어. 비우면 전체 목록이다
+	 * 검색어. 비우면 전체 목록
 	 */
 	keyword?: string;
 }
@@ -1644,7 +1644,7 @@ page/orders/_function/to-order-summary.ts
 ```ts
 // page/orders/_function/to-order-summary.ts
 /**
- * 주문 요약 영역의 표시 데이터. 재고 수량이 넘어올 때만 재고 카드가 온다
+ * 주문 요약 영역의 표시 데이터. 재고 카드는 재고 수량이 있을 때만
  */
 export const toOrderSummary = (params: ToOrderSummaryParams): OrderSummaryContent => {
 	return {
@@ -1666,7 +1666,7 @@ page/orders/_function/to-order-summary/
 ```ts
 // page/orders/_function/to-order-summary/to-order-summary.ts
 /**
- * 주문 요약 영역의 표시 데이터. 재고 수량이 넘어올 때만 재고 카드가 온다
+ * 주문 요약 영역의 표시 데이터. 재고 카드는 재고 수량이 있을 때만
  */
 export const toOrderSummary = (params: ToOrderSummaryParams): OrderSummaryContent => {
 	// 1. 고른 기간 기준으로 갱신되는 비교 수치 행
@@ -1675,7 +1675,7 @@ export const toOrderSummary = (params: ToOrderSummaryParams): OrderSummaryConten
 		{id: "orderCount", label: "주문 건수", value: params.orderSummary.orderCount},
 	];
 
-	// 2. 상품 상태 그룹. 설명이 비면 그룹 제목만 남긴다
+	// 2. 상품 상태 그룹. 설명이 비면 그룹 제목만
 	const statusGroups = [
 		{
 			id: "product-status",
@@ -1686,7 +1686,7 @@ export const toOrderSummary = (params: ToOrderSummaryParams): OrderSummaryConten
 		},
 	];
 
-	// 3. 재고 카드. 재고 수량이 넘어올 때만 온다
+	// 3. 재고 카드. 재고 수량이 있을 때만
 	return {metrics, statusGroups, stockCount: params.stockCount};
 };
 ```
@@ -1695,7 +1695,7 @@ export const toOrderSummary = (params: ToOrderSummaryParams): OrderSummaryConten
 
 ```tsx
 // page/profile/pg-profile.tsx
-// (previous + 1) % pageCount 한 줄을 page/profile/_function/get-next-page.ts 로 옮겼다
+// (previous + 1) % pageCount 한 줄을 page/profile/_function/get-next-page.ts로 옮김
 import {getNextPage} from "@/page/profile/_function/get-next-page";
 
 const handleNextClick = () => {
@@ -1717,7 +1717,7 @@ const handleNextClick = () => {
 ```ts
 // page/profile/_function/to-profile-save-request.ts
 /**
- * profile 저장 payload 조립. 서버가 앞뒤 공백이 붙은 displayName을 거부한다
+ * 프로필 저장 페이로드 조립. 서버가 앞뒤 공백이 붙은 displayName 거부
  */
 export const toProfileSaveRequest = (formValues: ProfileFormValues) => {
 	return {
@@ -1727,7 +1727,7 @@ export const toProfileSaveRequest = (formValues: ProfileFormValues) => {
 ```
 
 ```tsx
-// page/profile/_pg-profile-form.tsx와 page/profile/_pg-profile-drawer.tsx가 함께 부른다
+// page/profile/_pg-profile-form.tsx와 page/profile/_pg-profile-drawer.tsx가 함께 호출
 import {toProfileSaveRequest} from "@/page/profile/_function/to-profile-save-request";
 ```
 
@@ -1736,7 +1736,7 @@ import {toProfileSaveRequest} from "@/page/profile/_function/to-profile-save-req
 ```ts
 // page/product-detail/_function/to-status-tone.ts
 /**
- * 상태 문자열의 강조 tone. API가 상태를 자유 문자열로 주어 값 포함으로 판정한다
+ * 상태 문자열의 강조 톤. API가 상태를 자유 문자열로 주므로 값 포함 여부로 판정
  */
 export const toStatusTone = (status: string): Tone => {
 	const normalizedStatus = status.trim().toLowerCase();
@@ -1819,7 +1819,7 @@ export const toProductSaveRequest = (values: ProductFormValues) => {
 ```ts
 // page/product-detail/_function/to-product-save-request.ts
 /**
- * product 저장 요청 조립. 서버가 앞뒤 공백이 붙은 title을 거부한다
+ * 상품 저장 요청 조립. 서버가 앞뒤 공백이 붙은 title 거부
  */
 export const toProductSaveRequest = (values: ProductFormValues) => {
 	return {body: {title: values.title.trim()}};
@@ -1922,7 +1922,7 @@ export interface ToSummaryRowsParams {
 }
 
 /**
- * 요약 표가 그리는 행 목록. 이름이 비면 코드로 표시한다
+ * 요약 표가 그리는 행 목록. 이름이 비면 코드로 표시
  */
 export const toSummaryRows = (params: ToSummaryRowsParams): SummaryRow[] => {
 	return params.response.items.map((item) => ({id: item.id, label: item.name.trim() || item.code}));
@@ -1935,7 +1935,7 @@ export const toSummaryRows = (params: ToSummaryRowsParams): SummaryRow[] => {
 const selectedLocaleSupported = isSupportedLocale(selectedLocale);
 
 /**
- * 짧고 고정된 지원 로케일 목록을 기준으로 판정한다
+ * 짧고 고정된 지원 로케일 목록 기준 판정
  */
 export const isSupportedLocale = (locale: string): boolean => {
 	return locale_supported_values.includes(locale);
@@ -1946,7 +1946,7 @@ export const isSupportedLocale = (locale: string): boolean => {
 
 ```ts
 /**
- * 짧고 고정된 지원 로케일 목록을 기준으로 판정한다
+ * 짧고 고정된 지원 로케일 목록 기준 판정
  */
 export const isSupportedLocale = (locale: string): boolean => {
 	return locale_supported_values.includes(locale);
@@ -2005,9 +2005,9 @@ flowchart LR
 
 ```ts
 // util/profile/to-profile-save-request.ts
-// profile은 값의 종류가 아니라 화면 이름이다. 화면이 없어지면 이 요청도 없다
+// profile은 값의 종류가 아니라 화면 이름. 화면이 없어지면 이 요청도 없음
 /**
- * 서버가 앞뒤 공백이 붙은 displayName을 거부한다
+ * 서버가 앞뒤 공백이 붙은 displayName 거부
  */
 export const toProfileSaveRequest = (values: ProfileFormValues) => {
 	return {body: {displayName: values.displayName.trim()}};
@@ -2019,7 +2019,7 @@ export const toProfileSaveRequest = (values: ProfileFormValues) => {
 ```ts
 // page/profile/_function/to-profile-save-request.ts
 /**
- * 서버가 앞뒤 공백이 붙은 displayName을 거부한다
+ * 서버가 앞뒤 공백이 붙은 displayName 거부
  */
 export const toProfileSaveRequest = (values: ProfileFormValues) => {
 	return {body: {displayName: values.displayName.trim()}};
@@ -2030,9 +2030,9 @@ export const toProfileSaveRequest = (values: ProfileFormValues) => {
 
 ```ts
 // page/orders/_function/to-display-date.ts
-// 날짜 표시는 orders 화면을 지워도 남는다. 지금 이 화면만 쓴다는 이유로 여기 있다
+// 날짜 표시는 orders 화면을 지워도 남음. 지금 이 화면만 쓴다는 이유로 여기 있음
 /**
- * 형식을 고정한다. 사용자 로케일을 따라가면 목록 정렬 기준과 어긋난다
+ * 표시 형식 고정. 사용자 로케일을 따르면 목록 정렬 기준과 어긋남
  */
 export const toDisplayDate = (value: string): string => {
 	return dayjs(value).format(date_format);
@@ -2044,7 +2044,7 @@ export const toDisplayDate = (value: string): string => {
 ```ts
 // util/date/to-display-date.ts
 /**
- * 형식을 고정한다. 사용자 로케일을 따라가면 목록 정렬 기준과 어긋난다
+ * 표시 형식 고정. 사용자 로케일을 따르면 목록 정렬 기준과 어긋남
  */
 export const toDisplayDate = (value: string): string => {
 	return dayjs(value).format(date_format);
@@ -2065,7 +2065,7 @@ util/
 ```ts
 // util/money/to-signed-amount.ts
 /**
- * 금액 표시는 화면마다 다르지 않다. 소수 두 자리와 부호를 고정한다
+ * 화면 공통 금액 표시. 소수 두 자리와 부호 고정
  */
 export const toSignedAmount = (amount: Amount): string => {
 	return `${amount.value < 0 ? "-" : "+"}$${Math.abs(amount.value).toFixed(2)}`;
@@ -2129,7 +2129,7 @@ const statusLabel = order.isCancelled ? "취소" : order.isDueSoon ? "임박" : 
 ```ts
 // page/orders/_function/to-order-row/_to-status-label.ts
 /**
- * 주문 행의 상태 라벨. 취소가 임박보다 우선한다
+ * 주문 행의 상태 라벨. 취소가 임박보다 우선
  */
 export const toStatusLabel = (order: OrderRow): StatusLabel => {
 	if (order.isCancelled) {
@@ -2288,7 +2288,7 @@ const toVisibleRows = (rows: Row[], keyword: string): Row[] => {
 
 ```ts
 const toVisibleRows = (rows: Row[], keyword: string): Row[] => {
-	// 콜백 안으로 옮기면 행마다 다시 계산한다
+	// 콜백 안으로 옮기면 행마다 다시 계산
 	const lowerKeyword = keyword.trim().toLowerCase();
 
 	return rows.filter((row) => row.title.toLowerCase().includes(lowerKeyword));
@@ -2299,7 +2299,7 @@ const toVisibleRows = (rows: Row[], keyword: string): Row[] => {
 
 ```ts
 /**
- * 초안을 저장한 뒤 목록 캐시를 비운다
+ * 초안 저장 후 목록 캐시 비움
  */
 const submitDraft = async (draft: Draft) => {
 	await queryClient.invalidateQueries({queryKey: ["records"]});
@@ -2312,7 +2312,7 @@ const submitDraft = async (draft: Draft) => {
 
 ```ts
 /**
- * 초안을 저장한 뒤 목록 캐시를 비운다
+ * 초안 저장 후 목록 캐시 비움
  */
 const submitDraft = async (draft: Draft) => {
 	const savedRecord = await saveRecord(draft);
@@ -2405,7 +2405,7 @@ export const resolveStatusTone = (status: string) => { /* … */ };
 ```ts
 // page/product-detail/_function/to-user-save-request.ts
 /**
- * 사용자 저장 요청 조립. 서버가 빈 문자열을 거부해 비운 칸은 넣지 않는다
+ * 사용자 저장 요청 조립. 서버가 빈 문자열을 거부하므로 비운 칸은 제외
  */
 export const toUserSaveRequest = (formValues: UserFormValues) => { /* … */ };
 ```
@@ -2413,7 +2413,7 @@ export const toUserSaveRequest = (formValues: UserFormValues) => { /* … */ };
 ```ts
 // page/product-detail/_function/to-user-rows.ts
 /**
- * 응답 한 건을 표 행으로 바꾼다
+ * 응답 한 건을 표 행으로 변환
  */
 export const toUserRows = (response: UserResponse) => { /* … */ };
 ```
@@ -2429,7 +2429,7 @@ export const toActiveUsers = (rows: UserRow[]) => { /* … */ };
 ```ts
 // page/product-detail/_function/to-status-tone.ts
 /**
- * 상태 문자열을 강조 tone으로 분류한다
+ * 상태 문자열을 강조 톤으로 분류
  */
 export const toStatusTone = (status: string) => { /* … */ };
 ```
@@ -2439,7 +2439,7 @@ export const toStatusTone = (status: string) => { /* … */ };
 ```ts
 // util/user/is-admin-user.ts
 /**
- * 관리자 권한 판정. 역할 목록이 비어 있으면 조회 전 상태로 보고 false를 돌려준다
+ * 관리자 권한 판정. 역할 목록이 비면 조회 전 상태로 보고 false
  */
 export const isAdminUser = (user: User) => { /* … */ };
 ```
@@ -2447,7 +2447,7 @@ export const isAdminUser = (user: User) => { /* … */ };
 ```ts
 // util/session/assert-logged-in.ts
 /**
- * 로그인 상태가 아니면 예외를 던진다. 화면 이동은 호출한 쪽이 정한다
+ * 로그인 상태가 아니면 예외. 화면 이동은 호출부가 결정
  */
 export const assertLoggedIn = (session: Session): void => {
 	if (!session.userId) {
@@ -2580,7 +2580,7 @@ const disabledProducts = archivedProducts.filter((product) => allowedProductIdSe
 **Correct (반복 키 조회는 `Map`으로 처리합니다):**
 
 ```ts
-// users는 서버 계약상 id가 고유하다
+// users는 서버 계약상 id가 고유
 const userById = new Map(users.map((user) => [user.id, user]));
 
 const owner = userById.get(ownerId);
@@ -2689,7 +2689,7 @@ const toOrderTotal = (lines: OrderLine[]): OrderTotal => {
 
 ```ts
 const toOverdueLines = (order: Order): OrderLine[] => {
-	// 콜백 안으로 옮기면 줄마다 다시 만든다
+	// 콜백 안으로 옮기면 줄마다 다시 생성
 	const overdueIds = new Set(order.overdueLineIds);
 
 	return order.lines.filter((line) => overdueIds.has(line.id));
@@ -2746,13 +2746,13 @@ const toPreviewRows = (rows: Row[]): Row[] => {
 ```ts
 // constant/retry.ts
 /**
- * 이 횟수를 넘으면 사용자에게 실패를 보여 준다
+ * 이 횟수를 넘으면 사용자에게 실패 표시
  */
 export const retry_max_attempts = 42;
 
 // constant/preview.ts
 /**
- * 미리보기에 그릴 행 수. 서버가 한 번에 주는 최대치와 맞춘다
+ * 미리보기에 그릴 행 수. 서버가 한 번에 주는 최대치와 같음
  */
 export const preview_row_count = 37;
 
@@ -2858,7 +2858,7 @@ const order_status_by_api_code = {
 
 ```ts
 /**
- * GET /orders의 P, C, D 코드를 화면의 주문 상태 어휘로 바꾸는 API 경계 계약이다
+ * GET /orders의 P, C, D 코드를 화면의 주문 상태 어휘로 바꾸는 API 경계 계약
  */
 const order_status_by_api_code = {
 	P: "pending",
@@ -3029,7 +3029,7 @@ flowchart LR
 **Incorrect 1 (정해진 경과 시간을 밀리초로 더하고 자릿수를 손으로 채웁니다):**
 
 ```ts
-// 만료 계약은 발급 시점으로부터 정확히 token_expiry_hours시간 뒤다
+// 만료 계약은 발급 시점부터 정확히 token_expiry_hours시간 뒤
 const expiresAt = new Date(issuedAt.getTime() + token_expiry_hours * 60 * 60 * 1000);
 const expiresLabel = `${expiresAt.getFullYear()}.${toPaddedDatePart(expiresAt.getMonth() + 1)}`;
 ```
@@ -3041,7 +3041,7 @@ import dayjs from "dayjs";
 
 import {date_expiry_month_format} from "@/constant/date";
 
-// date_expiry_month_format은 원래 표시와 같은 YYYY.MM 형식이다
+// date_expiry_month_format은 원래 표시와 같은 YYYY.MM 형식
 const expiresAt = dayjs(issuedAt).add(token_expiry_hours, "hour");
 const expiresLabel = expiresAt.format(date_expiry_month_format);
 ```
@@ -3060,7 +3060,7 @@ import dayjs from "dayjs";
 import {date_input_format} from "@/constant/date";
 
 /**
- * 형식은 맞지만 존재하지 않는 2026-02-30 같은 날짜를 거른다
+ * 형식은 맞지만 없는 날짜(2026-02-30 등) 제외
  */
 export const parseEntryDateText = (dateText: string): string | undefined => {
 	return dayjs(dateText).format(date_input_format) === dateText ? dateText : undefined;
@@ -3070,7 +3070,7 @@ export const parseEntryDateText = (dateText: string): string | undefined => {
 **Correct (서버가 표시 형식까지 확정한 문자열은 필요한 부분만 자릅니다):**
 
 ```ts
-// 서버가 이미 표시 타임존으로 준 고정 형식이다. 시각 변환 없이 분까지만 보여 준다
+// 서버가 이미 표시 타임존으로 준 고정 형식. 시각 변환 없이 분까지만 표시
 const compactDateTime = responseDateTime.slice(0, 16).replace("T", " ");
 ```
 
@@ -3102,19 +3102,19 @@ const compactDateTime = responseDateTime.slice(0, 16).replace("T", " ");
 **Incorrect 1 (경계에서 포맷한 값을 소비처가 다시 파싱해 포맷합니다):**
 
 ```ts
-// page/product-detail/pg-product-detail.tsx: ProductSummary 를 만들며 이미 포맷한다
+// page/product-detail/pg-product-detail.tsx: ProductSummary를 만들며 이미 포맷
 const productSummary = {averageRate: formatPercent(responseProductSummarySuspense.data.changeRate)};
 ```
 
 ```ts
-// page/product-detail/_function/to-summary-rows.ts: 문자열을 다시 숫자로 읽어 다시 포맷한다
+// page/product-detail/_function/to-summary-rows.ts: 문자열을 다시 숫자로 읽어 재포맷
 const rows = [{id: "changeRate", value: formatPercent(productSummary.averageRate)}];
 ```
 
 **Correct 1 (경계에서 한 번 포맷하고 소비처는 전달된 값을 그대로 씁니다):**
 
 ```ts
-// page/product-detail/pg-product-detail.tsx: ProductSummary 를 만드는 경계에서 한 번 포맷한다
+// page/product-detail/pg-product-detail.tsx: ProductSummary를 만드는 경계에서 한 번만 포맷
 const productSummary = {averageRate: formatPercent(responseProductSummarySuspense.data.changeRate)};
 ```
 
@@ -3132,7 +3132,7 @@ const legendSeries = seriesItems.map((series, seriesIndex) => ({
 	colorToken: toSeriesColorToken(series.role, seriesIndex),
 }));
 
-// 차트 둘. 범례 팔레트를 읽고도 같은 판정을 다시 한다
+// 차트 둘. 범례 팔레트를 읽고도 같은 판정 반복
 const chartSeries = seriesItems.map((series, index) => ({
 	id: series.id,
 	colorToken: colorTokenById.get(series.id) ?? toSeriesColorToken(series.role, index),
@@ -3142,13 +3142,13 @@ const chartSeries = seriesItems.map((series, index) => ({
 **Correct 2 (경계에서 한 번 정해 항목에 담고 차트는 읽기만 합니다):**
 
 ```ts
-// 범례를 만드는 자리에서 색을 정해 항목에 싣는다
+// 범례를 만드는 자리에서 색을 정해 항목에 저장
 const comparisonSeries = seriesItems.map((series, seriesIndex) => ({
 	...series,
 	colorToken: toSeriesColorToken(series.role, seriesIndex),
 }));
 
-// 차트 둘은 같은 항목의 색을 그대로 읽는다
+// 차트 둘은 같은 항목의 색을 그대로 읽음
 const chartSeries = comparisonSeries.map((series) => ({
 	id: series.id,
 	colorToken: series.colorToken,
@@ -3274,7 +3274,7 @@ setVisibleRowCount(query.pageSize ?? pagination_default_page_size);
 
 ```ts
 /**
- * product 목록 search 파라미터. pageSize는 여기서 채워져 화면에서는 선택 값이 아니다
+ * 상품 목록 search 파라미터. pageSize를 여기서 채우므로 화면에서는 선택 값 아님
  */
 const productUrlParsers = {
 	pageSize: parseAsInteger.withDefault(pagination_default_page_size),
@@ -3360,7 +3360,7 @@ const toRowLabel = (row: ProductRow): string => {
 **Incorrect 2 (생략과 `undefined`를 구분하지 않는 내부 계약에서 키를 조건부로 생략합니다):**
 
 ```ts
-// 이 내부 표시 계약은 stockCount의 undefined 대입을 허용하고 키 존재 여부를 읽지 않는다
+// 이 내부 표시 계약은 stockCount의 undefined 대입을 허용하고 키 존재 여부를 읽지 않음
 return {
 	metrics,
 	...(stockCount === undefined ? {} : {stockCount}),
@@ -3370,7 +3370,7 @@ return {
 **Correct 2 (생략과 같은 뜻이고 타입도 허용하면 `undefined`를 그대로 넣습니다):**
 
 ```ts
-// 이 내부 표시 계약은 stockCount의 undefined 대입을 허용하고 키 존재 여부를 읽지 않는다
+// 이 내부 표시 계약은 stockCount의 undefined 대입을 허용하고 키 존재 여부를 읽지 않음
 return {
 	metrics,
 	stockCount,
@@ -3441,7 +3441,7 @@ export const formatSignedPercent = (value: number | null | undefined) => {
 ```ts
 // page/product-detail/_function/to-badge/_to-signed-tone.ts
 /**
- * 부호 있는 변화율의 강조 tone. 0은 어느 쪽도 아니라 중립이다
+ * 부호 있는 변화율의 강조 톤. 0은 중립
  */
 export const toSignedTone = (value: number): Tone => {
 	if (value === 0) {
@@ -3464,7 +3464,7 @@ export const formatSignedPercent = (value: number) => {
 **Correct (경계인 `select`에서 없음과 유한 수를 한 번 검사해 타입을 좁힙니다):**
 
 ```tsx
-// page/product-detail/pg-product-detail.tsx: 서버는 계산 전이면 null을 준다. 여기서 한 번 좁힌다
+// page/product-detail/pg-product-detail.tsx: 서버는 계산 전이면 null. 여기서 한 번 좁힘
 const responseSummarySuspense = useSuspenseQuery({
 	...productDetailSummaryQueryOptions(productId),
 	select: (response) => ({
@@ -3478,7 +3478,7 @@ const responseSummarySuspense = useSuspenseQuery({
 **Correct (없음을 읽는 자리는 화면을 그리는 분기 하나입니다):**
 
 ```tsx
-// page/product-detail/_pg-product-detail-summary.tsx: 없음을 읽는 곳은 그리는 분기 하나다
+// page/product-detail/_pg-product-detail-summary.tsx: 없음을 읽는 곳은 그리는 분기 하나
 {isNotNil(summary.changeRate) && (
 	<UiBadge tone={toSignedTone(summary.changeRate)}>{formatSignedPercent(summary.changeRate)}</UiBadge>
 )}
@@ -3488,7 +3488,7 @@ const responseSummarySuspense = useSuspenseQuery({
 
 **Impact: MEDIUM**
 
-함수 본문 주석에는 의도와 긴 절차의 단계를 적고 코드 내용을 반복하지 않습니다. 선언 위 문서 주석은 어디에 붙일지, 어떤 형식으로 쓸지, 태그를 붙일지가 따로 정해져 있습니다. 본문은 한국어로 목적과 제약을 적고, 규칙이 허용한 예외에는 확인할 수 있는 이유를 남깁니다.
+함수 본문 주석에는 의도와 긴 절차의 단계를 적고 코드 내용을 반복하지 않습니다. 선언 위 문서 주석은 어디에 붙일지, 어떤 형식으로 쓸지, 태그를 붙일지가 따로 정해져 있습니다. 본문은 목적과 제약만 짧은 한국어 명사형으로 적고, 규칙이 허용한 예외에는 확인할 수 있는 이유를 남깁니다.
 
 ### 6.1 Keep Body Comments for Intent and Steps
 
@@ -3517,7 +3517,7 @@ const responseSummarySuspense = useSuspenseQuery({
 
 ```ts
 const toMatchedProducts = (products: Product[], keyword: string) => {
-	// keyword를 소문자로 바꾼다.
+	// keyword를 소문자로 변환
 	const lowerKeyword = keyword.trim().toLowerCase();
 
 	return products.filter((product) => product.title.toLowerCase().includes(lowerKeyword));
@@ -3555,18 +3555,18 @@ const submitProductDraft = async (draft: ProductDraft) => {
 
 ```ts
 const submitProductDraft = async (draft: ProductDraft) => {
-	// SDK가 빈 문자열을 허용하지 않아 trim 이후 값이 없으면 호출하지 않는다.
+	// SDK가 빈 문자열을 거부. trim 후 값이 없으면 호출 안 함
 	if (!draft.title.trim()) {
 		return;
 	}
 
-	// 1. 첨부를 먼저 올려야 본문 저장에서 참조 ID를 쓸 수 있다.
+	// 1. 첨부 먼저 업로드. 본문 저장에 참조 ID 필요
 	const uploadedAttachments = await uploadAttachments(draft.attachments);
 
 	// 2. 본문 저장
 	const savedProduct = await saveProduct({title: draft.title, attachments: uploadedAttachments});
 
-	// 3. 목록 캐시 무효화는 저장이 끝난 뒤에만 한다. 순서가 바뀌면 옛 목록이 다시 채워진다.
+	// 3. 목록 캐시 무효화는 저장 완료 후. 순서가 바뀌면 옛 목록이 다시 채워짐
 	await queryClient.invalidateQueries({queryKey: ["products"]});
 
 	return savedProduct;
@@ -3609,14 +3609,14 @@ export const toSortedUserIds = (userIds: string[]): string[] => {
 
 ```ts
 /**
- * 선택 목록의 중복 ID를 제거하고 오름차순으로 고정해 요청 순서를 일정하게 유지한다
+ * 요청 순서 고정. 선택 목록의 중복 ID 제거 후 오름차순 정렬
  */
 export const toSortedUserIds = (userIds: string[]): string[] => {
 	return sortBy(uniq(userIds), [(userId) => userId]);
 };
 
 /**
- * product 목록 조회. 로딩과 오류는 이 응답 객체로만 판단한다
+ * 상품 목록 조회. 로딩과 오류는 이 응답 객체로만 판단
  */
 const responseProductList = useProductList();
 ```
@@ -3627,22 +3627,47 @@ const responseProductList = useProductList();
 
 **Applies when:** TypeScript, TSX의 문서 주석이나 인라인 주석 문구를 추가, 수정, 번역하거나 검토할 때. 문서 주석에 태그를 붙이거나 뺄 때.
 
-**Impact: HIGH (코드 동작을 옮겨 적지 않고 의도와 제약에 주석을 모읍니다)**
+**Impact: HIGH (몇 해 뒤에 코드를 여는 사람도 주석을 한눈에 읽고 고칠 수 있습니다)**
 
-주석은 한국어로 목적, 제약, 부수효과를 설명합니다.
-이름과 시그니처에 없는 정보가 없으면 지우고, 필요한 배경에 따라 한 문장이나 여러 문장으로 씁니다.
+주석에는 이름과 시그니처에 없는 목적, 제약, 부수효과만 짧은 한국어 명사형으로 적습니다.
+긴 문장과 경위는 읽는 데 오래 걸리고, 코드가 바뀌면 틀린 설명으로 남습니다.
+적을 정보가 없으면 주석을 지웁니다.
+
+### 문장
+
+| 항목 | 기준 |
+| --- | --- |
+| 끝맺음 | `~한다`, `~이다` 대신 명사나 명사형(`고정`, `불가`, `필요`, `덮어씀`)으로 끝냅니다. 줄 끝에는 마침표를 찍지 않습니다 |
+| 한 줄 | 사실 하나만 적습니다. 결론이 먼저이고 이유는 마침표 뒤나 다음 줄에 둡니다 |
+| 군더더기 | 접속사, 꾸밈말, 경위를 뺍니다. 예전 동작과 바뀐 과정은 커밋 메시지에 둡니다 |
+| 나열 | 쉼표로 잇습니다. 가운뎃점(`·`)과 대시(`—`)는 쓰지 않습니다 |
+| 조사 | 영어 낱말과 식별자 뒤에도 붙여 씁니다(`MUI가`, `className을`) |
+
+### 낱말
+
+| 낱말 | 주석 표기 |
+| --- | --- |
+| 우리말로 통하는 일반 낱말 | 우리말. request는 요청, product는 상품 |
+| 우리말이 없거나 어색한 기술 용어 | 한글 외래어. provider는 프로바이더, wrapper는 래퍼 |
+| 코드 이름, 제품 이름, 약어 | 원문 그대로. `QueryClientProvider`, MUI, API |
+
+### 여러 줄
+
+설명이 둘 이상이면 한 줄에 몰지 않고 줄을 나눕니다.
+첫 줄은 요약입니다. 빈 줄 뒤에 이유와 조건을 한 줄씩 적고, 딸린 내용은 목록이나 들여쓰기로 묶습니다.
+
+### 내용과 태그
 
 | 내용, 태그 | 판단 |
 | --- | --- |
 | 선언 이름만 번역하거나 코드를 한 줄씩 옮긴 설명 | 쓰지 않습니다 |
+| 본문 전체가 영어인 주석 | 쓰지 않습니다. 헤더가 영어뿐이면 필드 주석이 한국어여도 요구를 충족하지 못합니다 |
 | 설명 없이 `@param`, `@returns`만 나열 | 쓰지 않습니다 |
 | `@api`, `@helper`, `@field` | 이름과 문법이 드러내는 역할을 태그로 반복하지 않습니다 |
 | `@schema` 같은 비표준 태그 | 새로 만들지 않습니다 |
 | `@summary` | 헤더 첫 줄과 겹치므로 쓰지 않습니다 |
 | `@deprecated`, `@example`, `@param`, `@returns` 등 TSDoc 태그 | 필요할 때만 씁니다 |
-| 영어 기술 용어, 식별자 | 섞어 써도 됩니다. 본문 전체가 영어인 주석은 허용하지 않습니다 |
 
-글자 수 제한은 두지 않습니다. 헤더가 영어뿐이면 필드 주석이 한국어여도 요구를 충족하지 못합니다.
 선언 위 문서 주석은 `docs-write-doc-comments-as-multiline-blocks`,
 본문 설명은 `docs-keep-body-comments-for-intent-and-steps`에 따라 `//`로 씁니다.
 
@@ -3678,12 +3703,12 @@ export interface PgProductTreeSectionProps {
 }
 ```
 
-**Correct 1 (이름에 없는 정보를 더합니다):**
+**Correct 1 (이름에 없는 정보를 명사형으로 더합니다):**
 
 ```ts
 // util/array/to-sorted-product-refs.ts
 /**
- * 같은 참조 객체의 중복을 제거하고 식별자순으로 정렬해 검토 목록의 순서를 고정한다.
+ * 검토 목록 순서 고정. 중복 참조 제거 후 식별자순 정렬
  */
 export const toSortedProductRefs = (refs: ProductRef[]): ProductRef[] => {
 	return sortBy(uniq(refs), [(ref) => ref.id]);
@@ -3693,10 +3718,10 @@ export const toSortedProductRefs = (refs: ProductRef[]): ProductRef[] => {
 ```ts
 // util/array/to-products-newest-first.ts
 /**
- * 저장 응답의 정렬 순서를 그대로 믿지 않고 다시 정렬한다.
+ * 저장 응답 순서 대신 최신순으로 다시 정렬
  *
- * 서버가 같은 updatedAt 인 항목의 순서를 보장하지 않아
- * 목록이 새로고침할 때마다 흔들리는 문제가 있었다.
+ * 서버가 같은 updatedAt 항목의 순서를 보장하지 않음
+ * 응답 순서 그대로면 새로고침마다 목록이 흔들림
  */
 export const toProductsNewestFirst = (products: Product[]): Product[] => {
 	return orderBy(products, ["updatedAt", "id"], ["desc", "asc"]);
@@ -3706,7 +3731,7 @@ export const toProductsNewestFirst = (products: Product[]): Product[] => {
 ```ts
 // page/products/_pg-product-tree-section.tsx
 /**
- * route-local product 트리 입력 계약
+ * 상품 트리 입력 계약
  */
 export interface PgProductTreeSectionProps {
 	/**
@@ -3716,22 +3741,80 @@ export interface PgProductTreeSectionProps {
 }
 ```
 
-**Incorrect 2 (역할 태그로 선언의 성격을 다시 적습니다):**
+**Incorrect 2 (긴 동사형 문장에 경위, 가운뎃점, 대시, 영어 낱말을 섞습니다):**
+
+```ts
+// app/query-client.ts
+/**
+ * Host 앱·단독 실행·테스트 gallery 가 모두 같은 query client 를 쓰도록 여기 한 곳에서 만들어 둔다 — 예전에는 화면마다 따로 만들어서 retry 횟수가 서로 달랐다.
+ */
+export const queryClient = new QueryClient({defaultOptions: {queries: {retry: query_retry_count}}});
+```
+
+**Correct 2 (결론을 명사형으로 먼저 쓰고 이유는 다음 줄에 짧게 둡니다):**
+
+```ts
+// app/query-client.ts
+/**
+ * 호스트 앱, 단독 실행, 테스트가 함께 쓰는 쿼리 클라이언트
+ *
+ * 재시도 횟수는 이 한 곳에서만 설정
+ */
+export const queryClient = new QueryClient({defaultOptions: {queries: {retry: query_retry_count}}});
+```
+
+**Incorrect 3 (제약 셋을 한 문장에 몰아 씁니다):**
+
+```ts
+// service/product/to-product-save-request.ts
+/**
+ * 상품 저장 요청. 서버가 빈 문자열과 앞뒤 공백을 거부하고, 가격은 원 단위 정수만 받으며, 태그는 한도를 넘기면 저장 자체가 실패하기 때문에 여기서 미리 정리해서 보낸다.
+ */
+export const toProductSaveRequest = (draft: ProductDraft): ProductSaveRequest => {
+	return {
+		title: draft.title.trim(),
+		price: Math.round(draft.price),
+		tags: draft.tags.slice(0, product_tag_limit),
+	};
+};
+```
+
+**Correct 3 (요약 한 줄 뒤에 제약을 한 줄씩 목록으로 나눕니다):**
+
+```ts
+// service/product/to-product-save-request.ts
+/**
+ * 상품 저장 요청. 서버 검증에 맞춰 미리 정리
+ *
+ * - title: 앞뒤 공백 거부
+ * - price: 원 단위 정수만 허용
+ * - tags: 한도를 넘기면 저장 실패
+ */
+export const toProductSaveRequest = (draft: ProductDraft): ProductSaveRequest => {
+	return {
+		title: draft.title.trim(),
+		price: Math.round(draft.price),
+		tags: draft.tags.slice(0, product_tag_limit),
+	};
+};
+```
+
+**Incorrect 4 (역할 태그로 선언의 성격을 다시 적습니다):**
 
 ```ts
 /**
- * @api product 목록. 조회 실패는 호출부가 처리한다
+ * @api 상품 목록. 조회 실패는 호출부에서 처리
  */
 export const fetchProductList = async (): Promise<Product[]> => {
 	return await client.get("/products");
 };
 ```
 
-**Correct 2 (태그를 지우고 헤더 첫 줄이 하는 일을 말합니다):**
+**Correct 4 (태그를 지우고 헤더 첫 줄이 하는 일을 말합니다):**
 
 ```ts
 /**
- * product 목록. 조회 실패는 호출부가 처리한다
+ * 상품 목록. 조회 실패는 호출부에서 처리
  */
 export const fetchProductList = async (): Promise<Product[]> => {
 	return await client.get("/products");
@@ -3761,7 +3844,7 @@ export const fetchProductList = async (): Promise<Product[]> => {
 
 ```ts
 // service/product/fetch-product-list.ts
-/** product 목록. 조회 실패는 호출부가 처리한다 */
+/** 상품 목록. 조회 실패는 호출부에서 처리 */
 export const fetchProductList = async (): Promise<Product[]> => {
 	return await client.get("/products");
 };
@@ -3769,7 +3852,7 @@ export const fetchProductList = async (): Promise<Product[]> => {
 
 ```ts
 // service/product/save-product.ts
-// product 저장 요청. 응답 본문이 없어 성공은 상태 코드로만 확인한다
+// 상품 저장 요청. 응답 본문이 없어 성공은 상태 코드로만 확인
 export const saveProduct = async (product: Product): Promise<void> => {
 	await client.post("/products", product);
 };
@@ -3780,7 +3863,7 @@ export const saveProduct = async (product: Product): Promise<void> => {
 ```ts
 // service/product/fetch-product-list.ts
 /**
- * product 목록. 조회 실패는 호출부가 처리한다
+ * 상품 목록. 조회 실패는 호출부에서 처리
  */
 export const fetchProductList = async (): Promise<Product[]> => {
 	return await client.get("/products");
@@ -3790,7 +3873,7 @@ export const fetchProductList = async (): Promise<Product[]> => {
 ```ts
 // service/product/save-product.ts
 /**
- * product 저장 요청. 응답 본문이 없어 성공은 상태 코드로만 확인한다
+ * 상품 저장 요청. 응답 본문이 없어 성공은 상태 코드로만 확인
  */
 export const saveProduct = async (product: Product): Promise<void> => {
 	await client.post("/products", product);
@@ -3844,7 +3927,7 @@ const columns = useMemo(() => {
 **Correct 1 (외부 패키지의 제약을 가리킵니다):**
 
 ```ts
-// MUI Data Grid는 columns 참조가 바뀌면 열 너비나 순서를 잃을 수 있어 참조를 유지한다.
+// columns 참조 유지. MUI Data Grid는 참조가 바뀌면 열 너비, 순서를 잃을 수 있음
 const columns = useMemo(() => {
 	return toTableColumns(responseTableColumnsSuspense.data.columns);
 }, [responseTableColumnsSuspense.data.columns]);
@@ -3862,7 +3945,7 @@ const filteredRows = useMemo(() => {
 **Correct 2 (측정 결과를 가리킵니다):**
 
 ```ts
-// 행 5,000개에서 매 렌더 필터링이 120ms로 측정됐다. 지연한 검색어에만 다시 계산한다.
+// 행 5,000개에서 매 렌더 필터링 120ms 측정. 지연한 검색어에만 재계산
 const filteredRows = useMemo(() => {
 	return rows.filter((row) => matchRow(row, deferredKeyword));
 }, [deferredKeyword, rows]);

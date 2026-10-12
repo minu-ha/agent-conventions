@@ -75,7 +75,7 @@ const orderVM: OrderViewModel = response.data;
 **Correct 1 (한 조회 시점에 고정된 값이라는 역할을 이름에 표시합니다):**
 
 ```ts
-// page/orders/_type/summary-snapshot.ts: 폴더가 이미 orders 를 말한다
+// page/orders/_type/summary-snapshot.ts: 폴더 이름이 이미 orders
 /**
  * 한 조회 시점의 주문 요약 목록과 조건
  */

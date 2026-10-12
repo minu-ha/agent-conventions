@@ -49,7 +49,7 @@ interface UserFormatters {
 }
 
 /**
- * 상태 객체를 화면 문자열로 바꾼다
+ * 상태 객체를 화면 문자열로 변환
  */
 const toStateLabel = (state: Record<string, unknown>): string => {
 	return JSON.stringify(state);
@@ -75,7 +75,7 @@ interface UserFormatters {
 }
 
 /**
- * 상태 객체를 화면 문자열로 바꾼다
+ * 상태 객체를 화면 문자열로 변환
  */
 const toStateLabel: UserFormatters["toStateLabel"] = (state) => {
 	return JSON.stringify(state);
@@ -86,14 +86,14 @@ const toStateLabel: UserFormatters["toStateLabel"] = (state) => {
 
 ```ts
 /**
- * 앞뒤 공백을 걷어낸 request 문자열
+ * 앞뒤 공백을 걷어낸 요청 문자열
  */
 const toRequest = (request: string): string => {
 	return request.trim();
 };
 
 /**
- * 검색어로 쓸 수 있게 공백을 한 칸으로 줄인 request 문자열
+ * 검색어용으로 공백을 한 칸으로 줄인 요청 문자열
  */
 const toSearchRequest = (request: string): string => {
 	return request.replaceAll(/\s+/g, " ").trim();
@@ -104,19 +104,19 @@ const toSearchRequest = (request: string): string => {
 
 ```ts
 /**
- * request 변환 계약
+ * 요청 문자열 변환 계약
  */
 type ToRequest = (request: string) => string;
 
 /**
- * 앞뒤 공백을 걷어낸 request 문자열
+ * 앞뒤 공백을 걷어낸 요청 문자열
  */
 const toRequest: ToRequest = (request) => {
 	return request.trim();
 };
 
 /**
- * 검색어로 쓸 수 있게 공백을 한 칸으로 줄인 request 문자열
+ * 검색어용으로 공백을 한 칸으로 줄인 요청 문자열
  */
 const toSearchRequest: ToRequest = (request) => {
 	return request.replaceAll(/\s+/g, " ").trim();

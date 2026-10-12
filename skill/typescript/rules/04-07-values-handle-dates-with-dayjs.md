@@ -55,7 +55,7 @@ flowchart LR
 **Incorrect 1 (정해진 경과 시간을 밀리초로 더하고 자릿수를 손으로 채웁니다):**
 
 ```ts
-// 만료 계약은 발급 시점으로부터 정확히 token_expiry_hours시간 뒤다
+// 만료 계약은 발급 시점부터 정확히 token_expiry_hours시간 뒤
 const expiresAt = new Date(issuedAt.getTime() + token_expiry_hours * 60 * 60 * 1000);
 const expiresLabel = `${expiresAt.getFullYear()}.${toPaddedDatePart(expiresAt.getMonth() + 1)}`;
 ```
@@ -67,7 +67,7 @@ import dayjs from "dayjs";
 
 import {date_expiry_month_format} from "@/constant/date";
 
-// date_expiry_month_format은 원래 표시와 같은 YYYY.MM 형식이다
+// date_expiry_month_format은 원래 표시와 같은 YYYY.MM 형식
 const expiresAt = dayjs(issuedAt).add(token_expiry_hours, "hour");
 const expiresLabel = expiresAt.format(date_expiry_month_format);
 ```
@@ -86,7 +86,7 @@ import dayjs from "dayjs";
 import {date_input_format} from "@/constant/date";
 
 /**
- * 형식은 맞지만 존재하지 않는 2026-02-30 같은 날짜를 거른다
+ * 형식은 맞지만 없는 날짜(2026-02-30 등) 제외
  */
 export const parseEntryDateText = (dateText: string): string | undefined => {
 	return dayjs(dateText).format(date_input_format) === dateText ? dateText : undefined;
@@ -96,6 +96,6 @@ export const parseEntryDateText = (dateText: string): string | undefined => {
 **Correct (서버가 표시 형식까지 확정한 문자열은 필요한 부분만 자릅니다):**
 
 ```ts
-// 서버가 이미 표시 타임존으로 준 고정 형식이다. 시각 변환 없이 분까지만 보여 준다
+// 서버가 이미 표시 타임존으로 준 고정 형식. 시각 변환 없이 분까지만 표시
 const compactDateTime = responseDateTime.slice(0, 16).replace("T", " ");
 ```

@@ -51,7 +51,7 @@ const baseUrl = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:3000";
 
 ```ts
 // service/order-export-client.ts
-// 다른 파일이 같은 키를 다시 읽고 같은 리터럴로 덮는다
+// 다른 파일이 같은 키를 다시 읽고 같은 리터럴로 덮음
 const orderExportBaseUrl = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:3000";
 ```
 
@@ -64,7 +64,7 @@ if (!import.meta.env.VITE_API_BASE_URL) {
 }
 
 /**
- * API 서버 주소. 배포 환경마다 다르다
+ * API 서버 주소. 배포 환경마다 다름
  */
 export const env_api_base_url = import.meta.env.VITE_API_BASE_URL;
 ```

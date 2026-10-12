@@ -52,7 +52,7 @@ const columns = useMemo(() => {
 **Correct 1 (외부 패키지의 제약을 가리킵니다):**
 
 ```ts
-// MUI Data Grid는 columns 참조가 바뀌면 열 너비나 순서를 잃을 수 있어 참조를 유지한다.
+// columns 참조 유지. MUI Data Grid는 참조가 바뀌면 열 너비, 순서를 잃을 수 있음
 const columns = useMemo(() => {
 	return toTableColumns(responseTableColumnsSuspense.data.columns);
 }, [responseTableColumnsSuspense.data.columns]);
@@ -70,7 +70,7 @@ const filteredRows = useMemo(() => {
 **Correct 2 (측정 결과를 가리킵니다):**
 
 ```ts
-// 행 5,000개에서 매 렌더 필터링이 120ms로 측정됐다. 지연한 검색어에만 다시 계산한다.
+// 행 5,000개에서 매 렌더 필터링 120ms 측정. 지연한 검색어에만 재계산
 const filteredRows = useMemo(() => {
 	return rows.filter((row) => matchRow(row, deferredKeyword));
 }, [deferredKeyword, rows]);

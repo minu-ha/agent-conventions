@@ -36,7 +36,7 @@ interface UserFormatters {
 }
 
 /**
- * 상태 객체를 화면 문자열로 바꾼다
+ * 상태 객체를 화면 문자열로 변환
  */
 const toStateLabel = (state: Record<string, unknown>): string => {
 	return JSON.stringify(state);
@@ -62,7 +62,7 @@ interface UserFormatters {
 }
 
 /**
- * 상태 객체를 화면 문자열로 바꾼다
+ * 상태 객체를 화면 문자열로 변환
  */
 const toStateLabel: UserFormatters["toStateLabel"] = (state) => {
 	return JSON.stringify(state);

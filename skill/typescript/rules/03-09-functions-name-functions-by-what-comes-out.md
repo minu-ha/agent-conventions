@@ -87,7 +87,7 @@ export const resolveStatusTone = (status: string) => { /* … */ };
 ```ts
 // page/product-detail/_function/to-user-save-request.ts
 /**
- * 사용자 저장 요청 조립. 서버가 빈 문자열을 거부해 비운 칸은 넣지 않는다
+ * 사용자 저장 요청 조립. 서버가 빈 문자열을 거부하므로 비운 칸은 제외
  */
 export const toUserSaveRequest = (formValues: UserFormValues) => { /* … */ };
 ```
@@ -95,7 +95,7 @@ export const toUserSaveRequest = (formValues: UserFormValues) => { /* … */ };
 ```ts
 // page/product-detail/_function/to-user-rows.ts
 /**
- * 응답 한 건을 표 행으로 바꾼다
+ * 응답 한 건을 표 행으로 변환
  */
 export const toUserRows = (response: UserResponse) => { /* … */ };
 ```
@@ -111,7 +111,7 @@ export const toActiveUsers = (rows: UserRow[]) => { /* … */ };
 ```ts
 // page/product-detail/_function/to-status-tone.ts
 /**
- * 상태 문자열을 강조 tone으로 분류한다
+ * 상태 문자열을 강조 톤으로 분류
  */
 export const toStatusTone = (status: string) => { /* … */ };
 ```
@@ -121,7 +121,7 @@ export const toStatusTone = (status: string) => { /* … */ };
 ```ts
 // util/user/is-admin-user.ts
 /**
- * 관리자 권한 판정. 역할 목록이 비어 있으면 조회 전 상태로 보고 false를 돌려준다
+ * 관리자 권한 판정. 역할 목록이 비면 조회 전 상태로 보고 false
  */
 export const isAdminUser = (user: User) => { /* … */ };
 ```
@@ -129,7 +129,7 @@ export const isAdminUser = (user: User) => { /* … */ };
 ```ts
 // util/session/assert-logged-in.ts
 /**
- * 로그인 상태가 아니면 예외를 던진다. 화면 이동은 호출한 쪽이 정한다
+ * 로그인 상태가 아니면 예외. 화면 이동은 호출부가 결정
  */
 export const assertLoggedIn = (session: Session): void => {
 	if (!session.userId) {

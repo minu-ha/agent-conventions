@@ -47,7 +47,7 @@ fetchProductPage(api_base_url, urlParams.page, pagination_default_page_size, und
 
 ```ts
 /**
- * product 목록 한 페이지 요청 조건
+ * 상품 목록 한 페이지 요청 조건
  */
 interface ProductPageRequest {
 	/**
@@ -63,7 +63,7 @@ interface ProductPageRequest {
 	 */
 	pageSize: number;
 	/**
-	 * 검색어. 비우면 전체 목록이다
+	 * 검색어. 비우면 전체 목록
 	 */
 	keyword?: string;
 }

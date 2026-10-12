@@ -33,7 +33,7 @@ tags: naming, constant
 
 ```ts
 // constant/chart.ts
-// product 상세 화면만 쓰는 값이 루트에 있다
+// 상품 상세 화면만 쓰는 값이 루트에 있음
 export const chart_axis_tick_count = 6;
 ```
 
@@ -42,7 +42,7 @@ export const chart_axis_tick_count = 6;
 ```ts
 // page/product-detail/_constant/chart.ts
 /**
- * product 상세 차트의 축 눈금 수. 표시 폭이 좁아 여섯을 넘기면 라벨이 겹친다
+ * 상품 상세 차트의 축 눈금 수. 표시 폭이 좁아 여섯을 넘으면 라벨 겹침
  */
 export const chart_axis_tick_count = 6;
 ```

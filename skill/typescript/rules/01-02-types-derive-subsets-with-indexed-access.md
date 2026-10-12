@@ -77,7 +77,7 @@ interface UserPreview {
 	 */
 	readonly id: UserRecord["id"];
 	/**
-	 * 목록에 표시할 이름. 원본에서 선택 필드라 여기서도 선택으로 둔다
+	 * 목록에 표시할 이름. 원본이 선택 필드라 여기서도 선택
 	 */
 	name?: UserRecord["name"];
 }
@@ -86,13 +86,13 @@ interface UserPreview {
 **Incorrect 2 (인덱스 접근으로 옮기면서 선택 여부와 읽기 전용 속성을 누락합니다):**
 
 ```ts
-// 원본: ProductRecord.id 는 readonly, UserRecord.name 은 선택 필드다
+// 원본: ProductRecord.id는 readonly, UserRecord.name은 선택 필드
 /**
- * product 목록 한 행의 표시 계약
+ * 상품 목록 한 행의 표시 계약
  */
 interface ProductListRow {
 	/**
-	 * product 식별자
+	 * 상품 식별자
 	 */
 	id: ProductRecord["id"];
 	/**
@@ -106,15 +106,15 @@ interface ProductListRow {
 
 ```ts
 /**
- * product 목록 한 행의 표시 계약
+ * 상품 목록 한 행의 표시 계약
  */
 interface ProductListRow {
 	/**
-	 * product 식별자
+	 * 상품 식별자
 	 */
 	readonly id: ProductRecord["id"];
 	/**
-	 * 마지막 수정자 이름. 원본에서 선택 필드라 여기서도 선택으로 둔다
+	 * 마지막 수정자 이름. 원본이 선택 필드라 여기서도 선택
 	 */
 	ownerName?: UserRecord["name"];
 }
@@ -142,7 +142,7 @@ interface ExportRequestBody {
 
 ```ts
 /**
- * 내보내기 요청 전송 형태. 생성된 계약이 필드를 더하면 그대로 따라가고 서버가 채우는 시각만 뺀다
+ * 내보내기 요청 전송 형태. 생성된 계약의 새 필드는 그대로 따라가고 서버가 채우는 시각만 제외
  */
 type ExportRequestBody = Omit<GeneratedExportRequest, "requestedAt">;
 ```
@@ -150,7 +150,7 @@ type ExportRequestBody = Omit<GeneratedExportRequest, "requestedAt">;
 **Incorrect 4 (좁힌 값을 원시 타입으로 다시 적어 원본과의 연결이 사라집니다):**
 
 ```ts
-// 원본: TableCellProps.align 은 선택 필드고 padding 은 normal, checkbox, none 이다
+// 원본: TableCellProps.align은 선택 필드, padding은 normal, checkbox, none
 /**
  * 주문 내보내기 표 칸 표시 계약
  */
@@ -160,7 +160,7 @@ interface OrderExportCell {
 	 */
 	align: "inherit" | "left" | "center" | "right" | "justify";
 	/**
-	 * 칸 여백. checkbox 칸은 두지 않는다
+	 * 칸 여백. checkbox 칸 없음
 	 */
 	padding?: "normal" | "none";
 }
@@ -170,15 +170,15 @@ interface OrderExportCell {
 
 ```ts
 /**
- * 주문 내보내기 표 칸 표시 계약. align, padding 은 TableCell 로 그대로 넘긴다
+ * 주문 내보내기 표 칸 표시 계약. align, padding은 TableCell로 그대로 전달
  */
 interface OrderExportCell {
 	/**
-	 * 칸 정렬. TableCell 은 비울 수 있지만 이 표는 칸마다 정한다
+	 * 칸 정렬. TableCell은 비울 수 있지만 이 표는 칸마다 지정
 	 */
 	align: NonNullable<TableCellProps["align"]>;
 	/**
-	 * 칸 여백. checkbox 칸은 두지 않아 normal, none 만 받는다
+	 * 칸 여백. checkbox 칸이 없어 normal, none만 허용
 	 */
 	padding?: Extract<TableCellProps["padding"], "normal" | "none">;
 }

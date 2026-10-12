@@ -77,7 +77,7 @@ export interface PublishResult {
 
 ```ts
 /**
- * product 상태 코드. 서버 enum 과 같은 값이다
+ * 상품 상태 코드. 서버 enum과 같은 값
  */
 export const product_status = {
 	draft: "draft",

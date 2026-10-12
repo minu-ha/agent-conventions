@@ -126,7 +126,7 @@ const toVisibleRows = (rows: Row[], keyword: string): Row[] => {
 
 ```ts
 const toVisibleRows = (rows: Row[], keyword: string): Row[] => {
-	// 콜백 안으로 옮기면 행마다 다시 계산한다
+	// 콜백 안으로 옮기면 행마다 다시 계산
 	const lowerKeyword = keyword.trim().toLowerCase();
 
 	return rows.filter((row) => row.title.toLowerCase().includes(lowerKeyword));
@@ -137,7 +137,7 @@ const toVisibleRows = (rows: Row[], keyword: string): Row[] => {
 
 ```ts
 /**
- * 초안을 저장한 뒤 목록 캐시를 비운다
+ * 초안 저장 후 목록 캐시 비움
  */
 const submitDraft = async (draft: Draft) => {
 	await queryClient.invalidateQueries({queryKey: ["records"]});
@@ -150,7 +150,7 @@ const submitDraft = async (draft: Draft) => {
 
 ```ts
 /**
- * 초안을 저장한 뒤 목록 캐시를 비운다
+ * 초안 저장 후 목록 캐시 비움
  */
 const submitDraft = async (draft: Draft) => {
 	const savedRecord = await saveRecord(draft);

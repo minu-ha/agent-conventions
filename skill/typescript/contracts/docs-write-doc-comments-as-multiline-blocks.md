@@ -15,7 +15,7 @@
 
 ```ts
 // service/product/fetch-product-list.ts
-/** product 목록. 조회 실패는 호출부가 처리한다 */
+/** 상품 목록. 조회 실패는 호출부에서 처리 */
 export const fetchProductList = async (): Promise<Product[]> => {
 	return await client.get("/products");
 };
@@ -23,7 +23,7 @@ export const fetchProductList = async (): Promise<Product[]> => {
 
 ```ts
 // service/product/save-product.ts
-// product 저장 요청. 응답 본문이 없어 성공은 상태 코드로만 확인한다
+// 상품 저장 요청. 응답 본문이 없어 성공은 상태 코드로만 확인
 export const saveProduct = async (product: Product): Promise<void> => {
 	await client.post("/products", product);
 };
@@ -34,7 +34,7 @@ export const saveProduct = async (product: Product): Promise<void> => {
 ```ts
 // service/product/fetch-product-list.ts
 /**
- * product 목록. 조회 실패는 호출부가 처리한다
+ * 상품 목록. 조회 실패는 호출부에서 처리
  */
 export const fetchProductList = async (): Promise<Product[]> => {
 	return await client.get("/products");

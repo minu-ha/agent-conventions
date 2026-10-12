@@ -71,7 +71,7 @@ export const formatSignedPercent = (value: number | null | undefined) => {
 ```ts
 // page/product-detail/_function/to-badge/_to-signed-tone.ts
 /**
- * 부호 있는 변화율의 강조 tone. 0은 어느 쪽도 아니라 중립이다
+ * 부호 있는 변화율의 강조 톤. 0은 중립
  */
 export const toSignedTone = (value: number): Tone => {
 	if (value === 0) {
@@ -94,7 +94,7 @@ export const formatSignedPercent = (value: number) => {
 **Correct (경계인 `select`에서 없음과 유한 수를 한 번 검사해 타입을 좁힙니다):**
 
 ```tsx
-// page/product-detail/pg-product-detail.tsx: 서버는 계산 전이면 null을 준다. 여기서 한 번 좁힌다
+// page/product-detail/pg-product-detail.tsx: 서버는 계산 전이면 null. 여기서 한 번 좁힘
 const responseSummarySuspense = useSuspenseQuery({
 	...productDetailSummaryQueryOptions(productId),
 	select: (response) => ({
@@ -108,7 +108,7 @@ const responseSummarySuspense = useSuspenseQuery({
 **Correct (없음을 읽는 자리는 화면을 그리는 분기 하나입니다):**
 
 ```tsx
-// page/product-detail/_pg-product-detail-summary.tsx: 없음을 읽는 곳은 그리는 분기 하나다
+// page/product-detail/_pg-product-detail-summary.tsx: 없음을 읽는 곳은 그리는 분기 하나
 {isNotNil(summary.changeRate) && (
 	<UiBadge tone={toSignedTone(summary.changeRate)}>{formatSignedPercent(summary.changeRate)}</UiBadge>
 )}

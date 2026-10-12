@@ -48,7 +48,7 @@ tags: functions, declarations
 
 ```ts
 /**
- * 검색어 비교에서 공백 차이를 무시하도록 제목의 공백을 정리한다
+ * 제목 공백 정리. 검색어 비교에서 공백 차이 무시
  */
 export function toTrimmedTitle(rawTitle: string): string {
 	return rawTitle.trim().replace(/\s+/g, " ");
@@ -59,7 +59,7 @@ export function toTrimmedTitle(rawTitle: string): string {
 
 ```ts
 /**
- * 검색어 비교에서 공백 차이를 무시하도록 제목의 공백을 정리한다
+ * 제목 공백 정리. 검색어 비교에서 공백 차이 무시
  */
 export const toTrimmedTitle = (rawTitle: string): string => {
 	return rawTitle.trim().replace(/\s+/g, " ");
@@ -80,7 +80,7 @@ export const cellFormatterByValueType = {
 
 ```ts
 /**
- * 값 종류별 표 셀 표시 함수. 문자열은 앞뒤 공백을 지워 보여 준다
+ * 값 종류별 표 셀 표시 함수. 문자열은 앞뒤 공백 제거 후 표시
  */
 export const cellFormatterByValueType = {
 	text: (value: string): string => {
@@ -89,7 +89,7 @@ export const cellFormatterByValueType = {
 } as const;
 
 /**
- * product 식별자 목록
+ * 상품 식별자 목록
  */
 export const toProductIds = (products: Product[]): string[] => {
 	return products.map((product) => product.id);

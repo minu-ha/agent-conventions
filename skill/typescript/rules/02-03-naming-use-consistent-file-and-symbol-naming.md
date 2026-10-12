@@ -51,7 +51,7 @@ API 응답, 요청, 생성 DTO, 라이브러리 인자, DOM 속성, 환경 변�
 
 ```ts
 // userSettings.ts
-// 우리가 선언한 타입은 PascalCase, 그 필드는 camelCase다
+// 우리가 선언한 타입은 PascalCase, 그 필드는 camelCase
 interface User_Profile {
 	avatar_url: string;
 }
@@ -90,14 +90,14 @@ const productStatus = {
 
 ```ts
 /**
- * 요청 재시도 정책. 하위 키도 상수 키다
+ * 요청 재시도 정책. 하위 키도 상수 키
  */
 const retry_policy = {
 	max_attempts: 3,
 } as const;
 
 /**
- * product 게시 상태 값 집합
+ * 상품 게시 상태 값 집합
  */
 const product_status = {
 	draft: "draft",
@@ -109,9 +109,9 @@ const product_status = {
 **Incorrect 3 (밖으로 나가는 키를 우리 표기로 바꿉니다):**
 
 ```ts
-// 서버 계약은 {product_id, display_name} 인데 우리 표기로 바꿔 보낸다
+// 서버 계약은 {product_id, display_name}인데 우리 표기로 바꿔 전송
 /**
- * product 저장 요청 조립
+ * 상품 저장 요청 조립
  */
 const toProductSaveBody = (values: ProductFormValues) => {
 	return {
@@ -125,7 +125,7 @@ const toProductSaveBody = (values: ProductFormValues) => {
 
 ```ts
 /**
- * product 저장 요청 조립. 서버 계약이 snake_case라 그 표기를 그대로 넘긴다
+ * 상품 저장 요청 조립. 서버 계약이 snake_case라 그 표기 그대로 전달
  */
 const toProductSaveBody = (values: ProductFormValues) => {
 	return {

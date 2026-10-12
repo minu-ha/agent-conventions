@@ -141,7 +141,8 @@ titleKo: JSX 안 로직은 이름 붙인 핸들러로 뺍니다
 `.agents/skills/`에 복사해 두었고, 없으면 `npx skills add daleseo/korean-skills`로 설치한다.
 세 스킬의 제안은 기술적 의미와 아래 파일별 문체를 유지하는 범위에서 적용한다.
 규칙 본문과 `_sections.md`, `metadata.json`의 `abstract`는 합쇼체로 쓴다.
-코드 주석과 `SKILL.md`, `AGENTS.md`, `AGENTS.template.md`, `README.md`, 이 문서는 한다체로 쓴다.
+`SKILL.md`, `AGENTS.md`, `AGENTS.template.md`, `README.md`, 이 문서는 한다체로 쓴다.
+코드 주석은 typescript `docs-write-korean-comments-about-purpose-and-constraints`대로 짧은 명사형으로 쓴다.
 수정할 때는 파일의 역할에 맞는 문체를 유지한다.
 `appliesWhen`의 `~할 때`, `~경우`만 예외다. 그건 문체가 아니라 라우팅 문장을 만드는 규칙이라
 `validate`가 강제한다.

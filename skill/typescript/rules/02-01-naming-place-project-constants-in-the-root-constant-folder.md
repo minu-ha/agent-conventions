@@ -64,7 +64,7 @@ const productQuery = useProductQuery({client: productClient, pageSize: default_p
 
 ```ts
 // page/orders/pg-orders.tsx
-// 다른 화면이 같은 값을 다시 선언한다
+// 다른 화면이 같은 값을 다시 선언
 const default_page_size = 20;
 
 const orderQuery = useOrderQuery({pageSize: default_page_size});
@@ -103,7 +103,7 @@ export const config = {
 ```ts
 // constant/api.ts
 /**
- * 요청 하나를 기다리는 최대 시간. 게이트웨이가 30초에 끊어 그보다 먼저 실패를 알린다
+ * 요청 하나의 최대 대기 시간. 게이트웨이가 30초에 끊으므로 그 전에 실패 표시
  */
 export const api_request_timeout_ms = 20_000;
 

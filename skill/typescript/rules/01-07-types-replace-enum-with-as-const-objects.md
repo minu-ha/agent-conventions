@@ -42,7 +42,7 @@ enum ProductStatus {
 
 ```ts
 /**
- * product 심사 상태 값 집합
+ * 상품 심사 상태 값 집합
  */
 const product_status = {
 	pending: "pending",
@@ -51,7 +51,7 @@ const product_status = {
 } as const;
 
 /**
- * product 심사 상태 타입. product_status에 값을 더하면 따라 넓어진다
+ * 상품 심사 상태 타입. product_status에 값을 더하면 함께 넓어짐
  */
 type ProductStatus = (typeof product_status)[keyof typeof product_status];
 ```

@@ -74,7 +74,7 @@ export const toProductSaveRequest = (values: ProductFormValues) => {
 ```ts
 // page/product-detail/_function/to-product-save-request.ts
 /**
- * product 저장 요청 조립. 서버가 앞뒤 공백이 붙은 title을 거부한다
+ * 상품 저장 요청 조립. 서버가 앞뒤 공백이 붙은 title 거부
  */
 export const toProductSaveRequest = (values: ProductFormValues) => {
 	return {body: {title: values.title.trim()}};

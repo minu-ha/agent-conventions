@@ -3618,14 +3618,14 @@ test("v17 semantic contracts reject English-only annotations and effective deep 
 	assertMentions(
 		koreanComments,
 		[
-			/주석은 한국어로 목적, 제약, 부수효과를 설명합니다/i,
-			/본문 전체가 영어인 주석은 허용하지 않습니다/i,
+			/주석에는 이름과 시그니처에 없는 목적, 제약, 부수효과만 짧은 한국어 명사형으로 적습니다/i,
+			/본문 전체가 영어인 주석 \| 쓰지 않습니다/i,
 			/헤더가 영어뿐이면 필드 주석이 한국어여도 요구를 충족하지 못합니다/i,
 		],
 		"koreanComments",
 	);
 	assert.match(koreanComments, /route-local product tree props/);
-	assert.match(koreanComments, /route-local product 트리 입력 계약/);
+	assert.match(koreanComments, /상품 트리 입력 계약/);
 
 	const documentedShape = await readRule("typescript", "types-document-custom-types-and-shapes");
 	assert.match(documentedShape, /주석 내용은 `docs-write-korean-comments-about-purpose-and-constraints`의 한국어 기준을 따릅니다/i);
@@ -3695,14 +3695,14 @@ test("v17 semantic contracts reject English-only annotations and effective deep 
 	assertMentions(
 		koreanComments,
 		[
-			/주석은 한국어로 목적, 제약, 부수효과를 설명합니다/i,
-			/본문 전체가 영어인 주석은 허용하지 않습니다/i,
+			/주석에는 이름과 시그니처에 없는 목적, 제약, 부수효과만 짧은 한국어 명사형으로 적습니다/i,
+			/본문 전체가 영어인 주석 \| 쓰지 않습니다/i,
 			/헤더가 영어뿐이면 필드 주석이 한국어여도 요구를 충족하지 못합니다/i,
 		],
 		"koreanComments",
 	);
 	assert.match(koreanComments, /route-local product tree props/);
-	assert.match(koreanComments, /route-local product 트리 입력 계약/);
+	assert.match(koreanComments, /상품 트리 입력 계약/);
 
 	const documentedShape = await readRule("typescript", "types-document-custom-types-and-shapes");
 	assert.match(documentedShape, /주석 내용은 `docs-write-korean-comments-about-purpose-and-constraints`의 한국어 기준을 따릅니다/i);
@@ -3867,7 +3867,10 @@ test("v17 semantic contracts reject English-only annotations and effective deep 
 	);
 	assertMentions(
 		generatedContracts[1],
-		[/본문 전체가 영어인 주석은 허용하지 않습니다/i, /주석은 한국어로 목적, 제약, 부수효과를 설명합니다/i],
+		[
+			/본문 전체가 영어인 주석 \| 쓰지 않습니다/i,
+			/주석에는 이름과 시그니처에 없는 목적, 제약, 부수효과만 짧은 한국어 명사형으로 적습니다/i,
+		],
 		"generatedContracts",
 	);
 	assert.match(generatedContracts[2], /pseudo-class[\s\S]*조상 블록에서 식별자가 같은 자손을 결합자 하나로 선택합니다/i);

@@ -60,7 +60,7 @@ const disabledProducts = archivedProducts.filter((product) => allowedProductIdSe
 **Correct (반복 키 조회는 `Map`으로 처리합니다):**
 
 ```ts
-// users는 서버 계약상 id가 고유하다
+// users는 서버 계약상 id가 고유
 const userById = new Map(users.map((user) => [user.id, user]));
 
 const owner = userById.get(ownerId);

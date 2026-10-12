@@ -62,7 +62,7 @@ const storedFilter = JSON.parse(localStorage.getItem("product-filter") as string
 const storedValue = localStorage.getItem("product-filter");
 const parsedFilter: unknown = storedValue === null ? undefined : JSON.parse(storedValue);
 
-// 처음 방문이면 저장된 필터가 없고 형태가 다르면 쓰지 않는다. 없다는 사실을 그대로 둔다
+// 첫 방문이면 저장된 필터 없음, 형태가 다르면 버림. 없음은 그대로 유지
 const storedFilter = isProductFilter(parsedFilter) ? parsedFilter : undefined;
 ```
 

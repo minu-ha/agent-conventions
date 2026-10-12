@@ -56,9 +56,9 @@ flowchart LR
 
 ```ts
 // util/profile/to-profile-save-request.ts
-// profile은 값의 종류가 아니라 화면 이름이다. 화면이 없어지면 이 요청도 없다
+// profile은 값의 종류가 아니라 화면 이름. 화면이 없어지면 이 요청도 없음
 /**
- * 서버가 앞뒤 공백이 붙은 displayName을 거부한다
+ * 서버가 앞뒤 공백이 붙은 displayName 거부
  */
 export const toProfileSaveRequest = (values: ProfileFormValues) => {
 	return {body: {displayName: values.displayName.trim()}};
@@ -70,7 +70,7 @@ export const toProfileSaveRequest = (values: ProfileFormValues) => {
 ```ts
 // page/profile/_function/to-profile-save-request.ts
 /**
- * 서버가 앞뒤 공백이 붙은 displayName을 거부한다
+ * 서버가 앞뒤 공백이 붙은 displayName 거부
  */
 export const toProfileSaveRequest = (values: ProfileFormValues) => {
 	return {body: {displayName: values.displayName.trim()}};
@@ -81,9 +81,9 @@ export const toProfileSaveRequest = (values: ProfileFormValues) => {
 
 ```ts
 // page/orders/_function/to-display-date.ts
-// 날짜 표시는 orders 화면을 지워도 남는다. 지금 이 화면만 쓴다는 이유로 여기 있다
+// 날짜 표시는 orders 화면을 지워도 남음. 지금 이 화면만 쓴다는 이유로 여기 있음
 /**
- * 형식을 고정한다. 사용자 로케일을 따라가면 목록 정렬 기준과 어긋난다
+ * 표시 형식 고정. 사용자 로케일을 따르면 목록 정렬 기준과 어긋남
  */
 export const toDisplayDate = (value: string): string => {
 	return dayjs(value).format(date_format);
@@ -95,7 +95,7 @@ export const toDisplayDate = (value: string): string => {
 ```ts
 // util/date/to-display-date.ts
 /**
- * 형식을 고정한다. 사용자 로케일을 따라가면 목록 정렬 기준과 어긋난다
+ * 표시 형식 고정. 사용자 로케일을 따르면 목록 정렬 기준과 어긋남
  */
 export const toDisplayDate = (value: string): string => {
 	return dayjs(value).format(date_format);
@@ -116,7 +116,7 @@ util/
 ```ts
 // util/money/to-signed-amount.ts
 /**
- * 금액 표시는 화면마다 다르지 않다. 소수 두 자리와 부호를 고정한다
+ * 화면 공통 금액 표시. 소수 두 자리와 부호 고정
  */
 export const toSignedAmount = (amount: Amount): string => {
 	return `${amount.value < 0 ? "-" : "+"}$${Math.abs(amount.value).toFixed(2)}`;

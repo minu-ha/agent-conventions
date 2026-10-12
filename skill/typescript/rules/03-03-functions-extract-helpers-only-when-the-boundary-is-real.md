@@ -64,7 +64,7 @@ page/orders/_function/to-order-summary.ts
 ```ts
 // page/orders/_function/to-order-summary.ts
 /**
- * 주문 요약 영역의 표시 데이터. 재고 수량이 넘어올 때만 재고 카드가 온다
+ * 주문 요약 영역의 표시 데이터. 재고 카드는 재고 수량이 있을 때만
  */
 export const toOrderSummary = (params: ToOrderSummaryParams): OrderSummaryContent => {
 	return {
@@ -86,7 +86,7 @@ page/orders/_function/to-order-summary/
 ```ts
 // page/orders/_function/to-order-summary/to-order-summary.ts
 /**
- * 주문 요약 영역의 표시 데이터. 재고 수량이 넘어올 때만 재고 카드가 온다
+ * 주문 요약 영역의 표시 데이터. 재고 카드는 재고 수량이 있을 때만
  */
 export const toOrderSummary = (params: ToOrderSummaryParams): OrderSummaryContent => {
 	// 1. 고른 기간 기준으로 갱신되는 비교 수치 행
@@ -95,7 +95,7 @@ export const toOrderSummary = (params: ToOrderSummaryParams): OrderSummaryConten
 		{id: "orderCount", label: "주문 건수", value: params.orderSummary.orderCount},
 	];
 
-	// 2. 상품 상태 그룹. 설명이 비면 그룹 제목만 남긴다
+	// 2. 상품 상태 그룹. 설명이 비면 그룹 제목만
 	const statusGroups = [
 		{
 			id: "product-status",
@@ -106,7 +106,7 @@ export const toOrderSummary = (params: ToOrderSummaryParams): OrderSummaryConten
 		},
 	];
 
-	// 3. 재고 카드. 재고 수량이 넘어올 때만 온다
+	// 3. 재고 카드. 재고 수량이 있을 때만
 	return {metrics, statusGroups, stockCount: params.stockCount};
 };
 ```
@@ -115,7 +115,7 @@ export const toOrderSummary = (params: ToOrderSummaryParams): OrderSummaryConten
 
 ```tsx
 // page/profile/pg-profile.tsx
-// (previous + 1) % pageCount 한 줄을 page/profile/_function/get-next-page.ts 로 옮겼다
+// (previous + 1) % pageCount 한 줄을 page/profile/_function/get-next-page.ts로 옮김
 import {getNextPage} from "@/page/profile/_function/get-next-page";
 
 const handleNextClick = () => {
@@ -137,7 +137,7 @@ const handleNextClick = () => {
 ```ts
 // page/profile/_function/to-profile-save-request.ts
 /**
- * profile 저장 payload 조립. 서버가 앞뒤 공백이 붙은 displayName을 거부한다
+ * 프로필 저장 페이로드 조립. 서버가 앞뒤 공백이 붙은 displayName 거부
  */
 export const toProfileSaveRequest = (formValues: ProfileFormValues) => {
 	return {
@@ -147,7 +147,7 @@ export const toProfileSaveRequest = (formValues: ProfileFormValues) => {
 ```
 
 ```tsx
-// page/profile/_pg-profile-form.tsx와 page/profile/_pg-profile-drawer.tsx가 함께 부른다
+// page/profile/_pg-profile-form.tsx와 page/profile/_pg-profile-drawer.tsx가 함께 호출
 import {toProfileSaveRequest} from "@/page/profile/_function/to-profile-save-request";
 ```
 
@@ -156,7 +156,7 @@ import {toProfileSaveRequest} from "@/page/profile/_function/to-profile-save-req
 ```ts
 // page/product-detail/_function/to-status-tone.ts
 /**
- * 상태 문자열의 강조 tone. API가 상태를 자유 문자열로 주어 값 포함으로 판정한다
+ * 상태 문자열의 강조 톤. API가 상태를 자유 문자열로 주므로 값 포함 여부로 판정
  */
 export const toStatusTone = (status: string): Tone => {
 	const normalizedStatus = status.trim().toLowerCase();

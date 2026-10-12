@@ -57,7 +57,7 @@ flowchart LR
 
 ```ts
 // 이미 있는 계약: UserRecord { id: string; name: string; email: string }
-// 필드 이름, 타입, 선택 여부가 그대로인데 새로 선언했다
+// 필드 이름, 타입, 선택 여부가 그대로인데 새로 선언
 interface InviteRecipient {
 	id: string;
 	name: string;
@@ -72,7 +72,7 @@ export const sendInvites = (recipients: InviteRecipient[]): Promise<void> => { /
 ```ts
 // 이미 있는 계약: UserRecord { id: string; name: string; email: string }
 /**
- * 초대 대상은 사용자 레코드 그대로다. 필드가 같아 따로 선언하지 않는다
+ * 초대 대상은 사용자 레코드 그대로. 필드가 같아 따로 선언 안 함
  */
 export const sendInvites = (recipients: UserRecord[]): Promise<void> => { /* … */ };
 ```
@@ -83,7 +83,7 @@ export const sendInvites = (recipients: UserRecord[]): Promise<void> => { /* …
 // 이미 있는 계약: UserRecord { id: string; name: string; email: string }
 export const sendInvite = (draft: UserRecord): Promise<void> => { /* … */ };
 
-// 폼은 이름을 비울 수 있고 id 가 아직 없어 빈 문자열을 채워야 타입이 맞는다
+// 폼은 이름을 비울 수 있고 id가 아직 없음. 빈 문자열을 채워야 타입이 맞음
 sendInvite({ id: "", name: "", email });
 ```
 
@@ -92,7 +92,7 @@ sendInvite({ id: "", name: "", email });
 ```ts
 // 이미 있는 계약: UserRecord { id: string; name: string; email: string }
 /**
- * 초대 폼 입력. 이름을 비울 수 있고 id 가 아직 없어 UserRecord 와 필드 조건이 다르다
+ * 초대 폼 입력. 이름을 비울 수 있고 id가 아직 없어 UserRecord와 필드 조건이 다름
  */
 interface InviteDraft {
 	/**
@@ -100,13 +100,13 @@ interface InviteDraft {
 	 */
 	email: UserRecord["email"];
 	/**
-	 * 표시 이름. 비우면 이메일을 그대로 보여 준다
+	 * 표시 이름. 비우면 이메일 표시
 	 */
 	name?: UserRecord["name"];
 }
 
 /**
- * 초대 한 건을 보낸다
+ * 초대 한 건 발송
  */
 export const sendInvite = (draft: InviteDraft): Promise<void> => { /* … */ };
 ```

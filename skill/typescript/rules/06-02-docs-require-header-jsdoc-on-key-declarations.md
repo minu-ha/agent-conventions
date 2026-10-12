@@ -43,14 +43,14 @@ export const toSortedUserIds = (userIds: string[]): string[] => {
 
 ```ts
 /**
- * 선택 목록의 중복 ID를 제거하고 오름차순으로 고정해 요청 순서를 일정하게 유지한다
+ * 요청 순서 고정. 선택 목록의 중복 ID 제거 후 오름차순 정렬
  */
 export const toSortedUserIds = (userIds: string[]): string[] => {
 	return sortBy(uniq(userIds), [(userId) => userId]);
 };
 
 /**
- * product 목록 조회. 로딩과 오류는 이 응답 객체로만 판단한다
+ * 상품 목록 조회. 로딩과 오류는 이 응답 객체로만 판단
  */
 const responseProductList = useProductList();
 ```

@@ -33,7 +33,7 @@ tags: docs, comments
 
 ```ts
 const toMatchedProducts = (products: Product[], keyword: string) => {
-	// keyword를 소문자로 바꾼다.
+	// keyword를 소문자로 변환
 	const lowerKeyword = keyword.trim().toLowerCase();
 
 	return products.filter((product) => product.title.toLowerCase().includes(lowerKeyword));
@@ -71,18 +71,18 @@ const submitProductDraft = async (draft: ProductDraft) => {
 
 ```ts
 const submitProductDraft = async (draft: ProductDraft) => {
-	// SDK가 빈 문자열을 허용하지 않아 trim 이후 값이 없으면 호출하지 않는다.
+	// SDK가 빈 문자열을 거부. trim 후 값이 없으면 호출 안 함
 	if (!draft.title.trim()) {
 		return;
 	}
 
-	// 1. 첨부를 먼저 올려야 본문 저장에서 참조 ID를 쓸 수 있다.
+	// 1. 첨부 먼저 업로드. 본문 저장에 참조 ID 필요
 	const uploadedAttachments = await uploadAttachments(draft.attachments);
 
 	// 2. 본문 저장
 	const savedProduct = await saveProduct({title: draft.title, attachments: uploadedAttachments});
 
-	// 3. 목록 캐시 무효화는 저장이 끝난 뒤에만 한다. 순서가 바뀌면 옛 목록이 다시 채워진다.
+	// 3. 목록 캐시 무효화는 저장 완료 후. 순서가 바뀌면 옛 목록이 다시 채워짐
 	await queryClient.invalidateQueries({queryKey: ["products"]});
 
 	return savedProduct;

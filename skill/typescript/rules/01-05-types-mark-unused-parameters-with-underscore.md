@@ -23,12 +23,12 @@ tags: types, callbacks, naming
 
 ```ts
 /**
- * 로그 sink 콜백 계약
+ * 로그 싱크 콜백 계약
  */
 type LogSink = (message: string, level: "info" | "error") => void;
 
 const noopLog: LogSink = () => {
-	// 아무 일도 하지 않는 sink
+	// 아무 일도 하지 않는 싱크
 };
 ```
 
@@ -36,12 +36,12 @@ const noopLog: LogSink = () => {
 
 ```ts
 /**
- * 로그 sink 콜백 계약
+ * 로그 싱크 콜백 계약
  */
 type LogSink = (message: string, level: "info" | "error") => void;
 
 /**
- * 아무것도 남기지 않는 로그 sink. 테스트에서 출력을 끌 때 쓴다
+ * 아무것도 남기지 않는 로그 싱크. 테스트의 출력 끄기용
  */
 const noopLog: LogSink = (_message, _level) => {};
 ```

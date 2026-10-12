@@ -61,7 +61,7 @@ export interface ToSummaryRowsParams {
 }
 
 /**
- * 요약 표가 그리는 행 목록. 이름이 비면 코드로 표시한다
+ * 요약 표가 그리는 행 목록. 이름이 비면 코드로 표시
  */
 export const toSummaryRows = (params: ToSummaryRowsParams): SummaryRow[] => {
 	return params.response.items.map((item) => ({id: item.id, label: item.name.trim() || item.code}));
@@ -74,7 +74,7 @@ export const toSummaryRows = (params: ToSummaryRowsParams): SummaryRow[] => {
 const selectedLocaleSupported = isSupportedLocale(selectedLocale);
 
 /**
- * 짧고 고정된 지원 로케일 목록을 기준으로 판정한다
+ * 짧고 고정된 지원 로케일 목록 기준 판정
  */
 export const isSupportedLocale = (locale: string): boolean => {
 	return locale_supported_values.includes(locale);
@@ -85,7 +85,7 @@ export const isSupportedLocale = (locale: string): boolean => {
 
 ```ts
 /**
- * 짧고 고정된 지원 로케일 목록을 기준으로 판정한다
+ * 짧고 고정된 지원 로케일 목록 기준 판정
  */
 export const isSupportedLocale = (locale: string): boolean => {
 	return locale_supported_values.includes(locale);
