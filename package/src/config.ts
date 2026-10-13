@@ -29,6 +29,11 @@ export const viewerOutputPath = path.join(repoDir, "conventions.html");
 export const viewerDataOutputPath = path.join(repoDir, "conventions-data.js");
 
 /**
+ * @summary for-humanity가 읽는 생성 Markdown 폴더. 커밋하지 않고 `site` 스크립트가 만듦
+ */
+export const siteOutputDir = path.join(repoDir, "site");
+
+/**
  * @helper 설정된 skill 루트가 심볼릭 링크가 아닌 실제 디렉터리인지 검증
  */
 const assertRealSkillRootDirectory = async (targetSkillRootDir: string): Promise<void> => {

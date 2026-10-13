@@ -360,6 +360,9 @@ test("package.json exposes all-skill and per-skill script aliases", async () => 
 	assert.equal(packageJson.scripts["check:handbooks:all"], "tsx src/check-handbooks.ts --all");
 	assert.equal(packageJson.scripts.viewer, "tsx src/viewer.ts");
 	assert.equal(packageJson.scripts["check:viewer"], "tsx src/check-viewer.ts");
+	assert.equal(packageJson.scripts.site, "tsx src/site.ts");
+	assert.equal(packageJson.scripts["site:dev"], "npm run site && for-humanity dev ../site");
+	assert.equal(packageJson.scripts["site:build"], "npm run site && for-humanity build ../site");
 	assert.equal(
 		packageJson.scripts["check:artifacts"],
 		"npm run check:generated:all && npm run check:handbooks:all && npm run check:viewer",

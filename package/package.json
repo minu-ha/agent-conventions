@@ -20,6 +20,9 @@
 		"check:handbooks": "tsx src/check-handbooks.ts",
 		"check:handbooks:all": "tsx src/check-handbooks.ts --all",
 		"viewer": "tsx src/viewer.ts",
+		"site": "tsx src/site.ts",
+		"site:dev": "npm run site && for-humanity dev ../site",
+		"site:build": "npm run site && for-humanity build ../site",
 		"check:diagrams": "tsx src/check-diagrams.ts",
 		"check:viewer": "tsx src/check-viewer.ts",
 		"check:artifacts": "npm run check:generated:all && npm run check:handbooks:all && npm run check:viewer",
@@ -46,6 +49,8 @@
 		"@biomejs/biome": "^2.5.7",
 		"@types/node": "^26.1.2",
 		"beautiful-mermaid": "^1.1.3",
+		"for-humanity": "0.7.1",
+		"github-slugger": "2.0.0",
 		"tsx": "^4.23.9",
 		"typescript": "^7.0.2"
 	}

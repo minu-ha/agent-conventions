@@ -23,7 +23,7 @@ const canRunNpm = (): boolean => {
 /**
  * @description 같은 CLI 인자로 하위 npm script 순차 실행
  */
-const run = (scriptName: "validate" | "build"): void => {
+const run = (scriptName: "validate" | "build" | "site"): void => {
 	const result = canRunNpm()
 		? spawnSync(npmCommand, ["run", scriptName, "--", ...args], {cwd: packagePaths.packageDir, stdio: "inherit", env: commandEnv})
 		: spawnSync(process.execPath, [tsxBinPath, `src/${scriptName}.ts`, ...args], {
@@ -38,7 +38,8 @@ const run = (scriptName: "validate" | "build"): void => {
 };
 
 /**
- * @description validate 이후 build를 연속 실행하는 개발용 진입점
+ * @description validate, build, site를 연속 실행하는 개발용 진입점. site는 for-humanity dev 서버가 바로 읽음
  */
 run("validate");
 run("build");
+run("site");
