@@ -213,11 +213,18 @@ const collectRuleViolations = (rule: SkillRule): string[] => {
 		}
 	}
 
-	// 라벨 괄호 설명은 검사 안 함
-	// 실제 규칙은 모두 갖췄고, 테스트 fixture는 다른 검사 확인용으로 라벨만 최소로 씀
-	//
+	// 라벨 괄호 설명은 끝맺음만 검사. 사이트에서 예시 제목으로 서는 자리라 명사 종결이 섞이면 목록이 끊겨 읽힘
+	// 빈 라벨은 허용. 테스트 fixture는 다른 검사 확인용으로 라벨 없이 씀
+	for (const example of parsed.examples) {
+		const label = example.label.trim();
+
+		if (label !== "" && !label.endsWith("니다")) {
+			violations.push(`예시 라벨은 합쇼체 "~니다"로 끝맺는다: "${label}"`);
+		}
+	}
+
 	// Incorrect를 앞에 모으라는 제약은 없음
-	// 뷰어가 같은 짝 번호의 `Incorrect`, `Correct`만 좌우 diff로 그려 짝끼리 붙여 쓰는 편이 읽기 좋음
+	// 같은 짝 번호의 `Incorrect`, `Correct`는 붙여 쓰는 편이 읽기 좋음
 	const pairSlots = new Map<number, Partial<Record<RuleExample["kind"], RuleExample>>>();
 
 	for (const example of parsed.examples) {
@@ -258,7 +265,7 @@ const collectRuleViolations = (rule: SkillRule): string[] => {
 	}
 
 	// 예시 차례는 짝(Incorrect n, Correct n이 붙어서) → 홀로 선 Incorrect → 홀로 선 Correct
-	// 뷰어가 이 차례로 그리고 계약이 첫 짝을 실음. 모양이 같은 Incorrect, Correct가 붙어 있으면 반드시 짝
+	// 사이트와 핸드북이 이 차례로 싣고 계약이 첫 짝을 실음. 모양이 같은 Incorrect, Correct가 붙어 있으면 반드시 짝
 	const exampleShape = (example: RuleExample): string => example.blocks.map((block) => block.lang).join("+");
 	let phase = 0;
 	let expectedPair = 1;

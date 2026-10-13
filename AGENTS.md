@@ -117,10 +117,12 @@ npm --prefix package run validate -- --all
 npm --prefix package run build -- --all
 npm --prefix package run check:generated:all
 npm --prefix package run check:handbooks:all
-npm --prefix package run viewer               # conventions.html 재생성
-npm --prefix package run check:viewer
+npm --prefix package run site                      # site/ 에 for-humanity Markdown 생성
+npm --prefix package run site:dev                  # 생성 후 localhost:4321 에서 보기
 npm --prefix package run test
 ```
+
+`site/` 는 커밋하지 않는 생성 폴더다. `dev:<skill>` 이 끝에 다시 만든다.
 
 buildable skill: `css` `figma` `react` `typescript`
 

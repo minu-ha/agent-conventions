@@ -73,22 +73,22 @@ skill/react/
   번호는 1부터 차례로 붙는다. 블록 수와 블록마다의 언어가 같은 Incorrect, Correct 가 붙어 있으면 반드시 짝이다. `validate`가 이 차례를 검사한다.
   Correct 에 딸린 블록이 더 많아 짝이 안 되면, 짝이 되는 블록만 `Correct n` 으로 떼고 나머지는 홀로 선 Correct 로 뒤에 둔다.
 - 판단 순서나 방향을 그림으로 보일 때는 첫 `Incorrect` 앞 산문에 `mermaid` 펜스를 둔다.
-  뷰어가 흐름도로 그리고 에이전트는 원문을 읽는다. 산문에 둘 수 있는 펜스는 이것뿐이다.
+  사이트가 흐름도로 그리고 에이전트는 원문을 읽는다. 산문에 둘 수 있는 펜스는 이것뿐이다.
   도식은 두 종류만 쓴다. 판단, 방향, 자리 고르기는 `flowchart LR`, 호출, 데이터가 오가는 차례는 `sequenceDiagram`(참여자 4 이하, 메시지 6 이하).
-  상태도, 클래스도는 쓰지 않는다. 문자 격자 출력이 폭 125칸을 넘으면 카드에서 줄어들므로 `npm run check:diagrams` 로 폭을 본다.
+  상태도, 클래스도는 쓰지 않는다. 문자 격자 출력이 폭 125칸을 넘으면 본문 밖으로 넘치므로 `npm run check:diagrams` 로 폭을 본다.
   판단 순서형은 `flowchart LR` 로 그린다. 판단은 `q1{"안쪽 요소가<br>하나인가?"}`, 결과는 `r1("이름으로 하나씩 전달")` 이다.
   갈래는 `-- 예 -->`, `-- 아니요 -->` 로 잇고 아니요 결과를 판단 바로 옆에 두어 이른 반환처럼 읽히게 한다.
-  색, 굵기 같은 꾸밈은 두지 않는다. 뷰어가 beautiful-mermaid 의 문자 격자 배치(판단은 모서리 `◇` 상자)를 선으로 옮겨 그린다.
-  긴 라벨은 `<br>` 로 두 줄로 나눈다. 폭이 카드보다 넓어지면 통째로 줄어들어 글자가 작아진다.
+  색, 굵기 같은 꾸밈은 두지 않는다. 사이트가 beautiful-mermaid 의 문자 격자 배치(판단은 모서리 `◇` 상자)를 SVG 로 그린다.
+  긴 라벨은 `<br>` 로 두 줄로 나눈다. 폭이 본문보다 넓어지면 가로 스크롤이 생긴다.
   라벨에 괄호 `()` 를 넣지 않는다. 격자 렌더러가 괄호에서 글을 잘라 낸다(`check:diagrams` 가 잡는다). `clsx()` 는 `clsx` 로 적거나 표 칸에 둔다.
-- 나열은 어디서나 쉼표로 잇는다. 가운뎃점(`·`)은 쓰지 않는다. 뷰어 화면의 구분자만 예외다.
+- 나열은 어디서나 쉼표로 잇는다. 가운뎃점(`·`)은 쓰지 않는다.
 - 규범이 두 주제 이상이면 `###` 소제목으로 가른다. 설명과 표만 이어지면 어디서 주제가 바뀌는지 읽는 사람이 놓친다.
 - `Correct`는 저장소 전체 규칙을 지킨다. 다른 스킬의 규칙도 포함한다.
   `rule-discipline.ts`가 잡는 교차 위반(`mutateAsync` 없는 `try`, `li onClick`, 리터럴 폴백, 손으로 쓴 `sort`, `reduce`, 한 줄 JSX 주석, 스택 밖 이름 등)은 `validate`가 막는다.
 - 라벨 괄호 안 문장은 코드가 보여 주는 것만 말한다. 규칙 문장을 되풀이하지 않는다.
 - 라벨 괄호 안 문장은 규범 산문과 같은 합쇼체로 쓴다.
-  `conventions.html`에서 예시 제목으로 서는 자리라 명사 종결이 섞이면 목록이 끊겨 읽힌다.
-  `viewer.test.ts`가 모든 예시 제목이 `~니다`로 끝나는지 검사한다.
+  사이트에서 예시 제목으로 서는 자리라 명사 종결이 섞이면 목록이 끊겨 읽힌다.
+  `validate`가 모든 예시 제목이 `~니다`로 끝나는지 검사한다.
 - 모든 규칙은 최소 한 시나리오에서 걸려야 한다.
 - 문단은 문장 단위로 끊고 120칸을 넘기지 않는다. `docs/semantic-wrap.py`가 정리한다.
   한글은 두 칸으로 센다. `.editorconfig`의 `max_line_length`도 같은 값이다.
@@ -118,9 +118,9 @@ tags: tag1, tag2
 | 키 | 필수 | 의미 |
 | --- | --- | --- |
 | `title` | 필수 | 영어. 핸드북 헤딩과 앵커 슬러그의 기반. 바꾸면 링크가 깨진다 |
-| `titleKo` | 필수 | 한국어. `conventions.html`에 노출된다 |
+| `titleKo` | 필수 | 한국어. 사이트의 규칙 헤딩과 목차에 노출된다 |
 | `impact` | 필수 | `CRITICAL`, `HIGH`, `MEDIUM`. 사람에게는 중요도, 에이전트에게는 읽는 범위다. `CRITICAL`, `HIGH`는 contract에 원문 링크만 실어 설명과 예제를 전부 읽게 하고(`CRITICAL`은 마무리 때 다시 대조), `MEDIUM`은 contract에 규범과 첫 `Incorrect`, `Correct` 짝을 싣는다 |
-| `impactDescription` | 필수 | 한국어 영향도 설명. 본문 `**Impact:**` 줄과 일치해야 하고 `contracts/*.md`와 `conventions.html`로 나간다 |
+| `impactDescription` | 필수 | 한국어 영향도 설명. 본문 `**Impact:**` 줄과 일치해야 하고 `contracts/*.md`와 사이트로 나간다 |
 | `appliesWhen` | 필수 | `- ` 조건 항목 리스트 또는 한 줄 스칼라. 항목이면 라우팅 문장은 이어 붙여 자동 생성된다. 라우팅 문장은 한 줄 160자 |
 | `requiresSelected` | 선택 | 걸리면 target도 반드시 함께 적용 |
 | `reviewWith` | 선택 | 자동 선택이 아니라 다시 판정하라는 재평가 힌트 |
@@ -147,7 +147,7 @@ titleKo: JSX 안 로직은 이름 붙인 핸들러로 뺍니다
 `appliesWhen`의 `~할 때`, `~경우`만 예외다. 그건 문체가 아니라 라우팅 문장을 만드는 규칙이라
 `validate`가 강제한다.
 
-`appliesWhen` 항목은 `conventions.html`의 "언제 적용할까요?" 목록에 그대로 노출된다.
+`appliesWhen` 항목은 사이트의 "언제 적용할까요?" 노트에 그대로 노출된다.
 걸리는 조건은 `~할 때`로 끝맺고, 걸리지 않는 조건은 `제외:`로 시작해 `~경우`로 끝맺는다.
 조건이 둘이면 항목도 둘로 나눈다. 한 항목에 쉼표로 이어 붙이지 않는다.
 이 셋은 문체가 아니라 라우팅 문장 생성 규칙이다.
@@ -243,7 +243,7 @@ appliesWhen: TSX event prop의 인라인 callback에 분기, 비동기 호출 �
 이는 검토 기준이며 줄 수 제한은 아니다. 조건이나 예외를 지우거나 문장을 한 줄에 몰아넣어 줄이지 않는다.
 압축한 뒤에도 독립된 판단이 남으면 [4절](#4-배치-기준)에 따라 규칙을 분리한다.
 
-`conventions.html`은 표와 텍스트 코드 블록을 렌더링한다. Mermaid는 지원하지 않는다.
+사이트는 표, 코드 블록, `mermaid` 흐름도를 렌더링한다.
 규칙 본문의 표는 `contracts/*.md`에도 남는다. `MEDIUM`은 첫 `Incorrect`, `Correct` 짝까지 실리고 `CRITICAL`, `HIGH`의 contract는 원문 링크만 담는다.
 따라서 텍스트 흐름도는 `Correct` 예제에 두고, 판단 조건은 본문의 표나 문장에도 남긴다.
 표의 셀 안에서 `|`를 쓸 때는 `\|`로 이스케이프한다.
@@ -281,17 +281,17 @@ npm --prefix package install                  # 최초 1회
 npm --prefix package run dev:react            # 단일 skill validate + build
 npm --prefix package run validate -- --all
 npm --prefix package run build -- --all
-npm --prefix package run viewer                # conventions.html 재생성
+npm --prefix package run site                  # site/ 에 for-humanity Markdown 생성
+npm --prefix package run site:dev              # 생성 후 localhost:4321 에 띄움
+npm --prefix package run site:build            # 생성 후 site/dist 에 정적 HTML
 npm --prefix package run check:generated:all  # 생성물과 source 일치 확인
 npm --prefix package run check:handbooks:all
-npm --prefix package run check:viewer
 npm --prefix package run test
 ```
 
-`conventions.html`과 `conventions-data.js`는 한 쌍의 생성물이다. 직접 편집하지 않는다.
-데이터는 `conventions-data.js`에 있고 문서가 script src로 로드하므로 두 파일을 같은 폴더에 둔다.
-규칙을 고쳤으면 `npm --prefix package run viewer`로 다시 만든다.
-낡은 채로 커밋하면 `check:viewer`가 막는다.
+`site/`는 [for-humanity](https://github.com/minu-ha/for-humanity)가 읽는 생성 Markdown 폴더다. 커밋하지 않는다.
+skill 하나가 개요 한 장, 섹션 하나가 한 장이고 규칙은 그 페이지의 `##` 헤딩이다.
+`dev:<skill>`이 끝에 `site`를 다시 돌리므로 `site:dev` 서버를 켜 두면 고친 규칙이 바로 보인다.
 
 `skill/<name>` 안에서 작업하면 `--prefix ../../package`로 바꾼다.
 자세한 script 설명은 [package/README.md](./package/README.md).

@@ -4,7 +4,7 @@
 
 - 규칙 정본은 `skill/` 한 곳
 - 프로젝트는 복사 없이 skill 이름만 참조
-- 사람은 생성된 뷰어와 핸드북으로 읽음
+- 사람은 생성된 사이트와 핸드북으로 읽음
 - 에이전트는 라우터 → 인덱스 → 걸린 규칙만
 
 ---
@@ -59,13 +59,13 @@ Figma 화면을 구현하는 프로젝트는 `convention-figma`도 적는다. TS
 
 ### 1.3 담당 영역 핸드북
 
-사람이 규칙을 찾을 때는 [conventions.html](./conventions.html) 을 먼저 연다.
-네 skill의 규칙이 한 장에 들어 있고, 왼쪽 Skill 목록에서 담당 skill 하나를 고른다.
-브라우저로 파일을 그냥 열면 된다. 서버가 필요 없다.
+사람이 규칙을 찾을 때는 생성 사이트를 먼저 연다.
+`npm --prefix package run site:dev` 를 실행하고 `http://localhost:4321/` 을 연다.
+[for-humanity](https://github.com/minu-ha/for-humanity) 가 `site/` 의 Markdown 으로 사이트를 만들고, `site/` 는 규칙에서 생성한다.
 
-규칙을 펼치면 Incorrect / Correct 코드가 먼저 나오고, 적용 조건과 근거가 그 아래 온다.
-`CRITICAL`부터 훑으려면 왼쪽 Impact 필터에서 `CRITICAL`만 켠다.
-다른 skill 규칙을 가리키는 점선 칩을 누르면 그 skill로 옮겨가 해당 규칙을 펼친다.
+왼쪽에 skill 넷이 있고 skill 아래에 섹션이 한 장씩 있다. 오른쪽 목차가 그 섹션의 규칙이다.
+skill 이름을 누르면 개요와 전체 규칙 표가 나온다. `CRITICAL`부터 훑으려면 그 표의 영향도 열을 본다.
+규칙마다 적용 조건, Incorrect / Correct 코드, 다른 규칙으로 가는 링크가 있다.
 규칙 번호(`1.1`, `7.2`)는 `HANDBOOK.md` 헤딩 번호와 같아서 두 문서를 번호로 맞춰 볼 수 있다.
 
 `HANDBOOK.md`는 규칙 전문을 모은 생성물이다.
@@ -84,7 +84,7 @@ Figma 화면을 구현하는 프로젝트는 `convention-figma`도 적는다. TS
 핸드북마다 번호 목차와 Impact 등급이 있다. `CRITICAL`부터 본다.
 규칙마다 Incorrect / Correct 예시가 붙어 있다.
 
-특정 규칙만 다시 찾을 때는 `conventions.html`의 검색이 빠르다.
+특정 규칙만 다시 찾을 때는 사이트의 skill 개요 표를 브라우저 찾기로 뒤진다.
 
 ### 1.4 동작 확인
 
@@ -109,7 +109,7 @@ TSX 파일 하나를 고쳐 달라고 시켜본다. 에이전트는 이 순서�
 | --- | --- |
 | README.md | 이 문서. 설치와 적용 |
 | [CONTRIBUTING.md](./CONTRIBUTING.md) | 규칙 추가, 수정 절차 |
-| [conventions.html](./conventions.html) | **규칙 조회.** 네 skill의 규칙을 검색, 필터로 찾는다. 데이터인 `conventions-data.js`와 같은 폴더에 두고 연다 |
+| 생성 사이트 (`site/`) | **규칙 조회.** 네 skill의 규칙을 섹션 페이지와 목차로 찾는다. `npm --prefix package run site:dev` 로 띄운다 |
 | `skill/<name>/HANDBOOK.md` | 규칙 전문. 통독과 에이전트 전체 검토용 생성물 |
 | [overview.html](./overview.html) | 실행 흐름, 스킬 관계, 규칙 관계 |
 | [docs/progressive-loading.html](./docs/progressive-loading.html) | 설계 배경, 측정, 검증, 한계 |
@@ -125,8 +125,8 @@ TSX 파일 하나를 고쳐 달라고 시켜본다. 에이전트는 이 순서�
 | `skill/<name>/RULES_INDEX.md` | 규칙 목록. progressive 전용 |
 | `skill/<name>/contracts/*.md` | 걸린 규칙의 계약. progressive 전용 |
 
-HTML 문서는 브라우저나 WebStorm HTML 프리뷰로 연다.
-`conventions.html`은 같은 폴더의 `conventions-data.js`를 함께 사용한다.
+`overview.html`과 `docs/progressive-loading.html`은 브라우저나 WebStorm HTML 프리뷰로 연다.
+사이트는 `site:dev`가 띄우는 서버에서 본다. `site/`는 커밋하지 않는다.
 
 ---
 
@@ -200,11 +200,10 @@ progressive skill 넷은 규칙 전체를 안 읽는다. 단계마다 좁힌다.
 
 절차는 [CONTRIBUTING.md](./CONTRIBUTING.md). 착수 전 알 것 넷.
 
-1. 정본은 `rules/*.md`. `HANDBOOK.md`, `RULES_INDEX.md`, `contracts/*.md`, 
-   `conventions.html`, `conventions-data.js`는 생성물.
+1. 정본은 `rules/*.md`. `HANDBOOK.md`, `RULES_INDEX.md`, `contracts/*.md`, `site/`는 생성물.
 2. 규범은 첫 `Incorrect` 앞에서 끝낸다. 생성기가 그 앞부분만 계약으로 뽑는다.
 3. `appliesWhen` 한 줄이 라우팅을 결정한다. 규칙의 결론이 아니라 관찰 가능한 변경 조건.
-4. 고친 뒤 `npm --prefix package run dev:<skill>` → `viewer` → `check:generated:all` → `check:viewer`.
+4. 고친 뒤 `npm --prefix package run dev:<skill>` → `check:generated:all`. `dev`가 `site/`도 다시 만든다.
 
 이 저장소에서 AI 에이전트로 작업하면 [AGENTS.md](./AGENTS.md) 가 작업 규칙.
 

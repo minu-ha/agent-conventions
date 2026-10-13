@@ -17,18 +17,6 @@ const skillRootDir = path.join(repoDir, "skill");
 export const packagePaths: PackagePaths = {currentDir, packageDir, repoDir, skillRootDir};
 
 /**
- * @summary 사람이 읽는 생성 뷰어 문서 경로
- */
-export const viewerOutputPath = path.join(repoDir, "conventions.html");
-
-/**
- * @summary 뷰어 문서가 script src로 읽는 생성 데이터 파일 경로
- *
- * `file://`에서는 fetch가 막혀 JSON 대신 전역 할당 JS 파일 사용
- */
-export const viewerDataOutputPath = path.join(repoDir, "conventions-data.js");
-
-/**
  * @summary for-humanity가 읽는 생성 Markdown 폴더. 커밋하지 않고 `site` 스크립트가 만듦
  */
 export const siteOutputDir = path.join(repoDir, "site");

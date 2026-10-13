@@ -4,7 +4,7 @@ import {readSkillRules} from "./parser.js";
 import {parseRuleBody} from "./rule-body.js";
 
 /**
- * 뷰어가 카드 폭(약 900px, 칸 7.2px)에 줄이지 않고 그릴 수 있는 문자 격자 폭. 125칸 × 7.2px = 900px
+ * 사이트 본문에서 가로 스크롤 없이 읽히는 문자 격자 폭 상한. 넘으면 흐름도가 본문 밖으로 넘침
  */
 export const maxDiagramColumns = 125;
 
@@ -21,7 +21,7 @@ export interface DiagramReport {
 }
 
 /**
- * 뷰어와 같은 옵션으로 그림. 한글은 전각이라 폭 0 문자를 덧붙여 두 칸 확보
+ * 사이트와 같은 격자 렌더러로 그림. 한글은 전각이라 폭 0 문자를 덧붙여 두 칸 확보
  */
 const wideCharacter = /[ᄀ-ᇿ　-〿㄰-㆏가-힯一-鿿぀-ヿ＀-｠]/g;
 const widenCjk = (source: string): string => source.replace(wideCharacter, (character) => `${character}​`);

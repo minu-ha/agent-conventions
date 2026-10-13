@@ -28,13 +28,16 @@ progressive rule frontmatter의 `reviewWith`는 조건부 재평가, `requiresSe
 - `npm run build:all`: 모든 buildable skill의 generated output을 갱신합니다.
 - `npm run validate -- --skill=<name>` / `npm run validate:<skill>`: source, metadata, companion closure, progressive index 입력, routing eval manifest를 검증합니다.
 - `npm run validate:all`: 모든 buildable skill을 검증합니다.
-- `npm run dev -- --skill=<name>` / `npm run dev:<skill>`: 같은 target에 `validate` 후 `build`를 실행합니다.
-- `npm run dev:all`: 모든 skill에 `validate` 후 `build`를 실행합니다.
+- `npm run dev -- --skill=<name>` / `npm run dev:<skill>`: 같은 target에 `validate`, `build`를 실행한 뒤 `site`를 다시 만듭니다.
+- `npm run dev:all`: 모든 skill에 `validate`, `build` 후 `site`를 실행합니다.
+- `npm run site`: 모든 progressive skill을 `../site/`에 [for-humanity](https://github.com/minu-ha/for-humanity) Markdown으로 생성합니다. 커밋하지 않습니다.
+- `npm run site:dev`: `site` 후 for-humanity 개발 서버를 `localhost:4321`에 띄웁니다.
+- `npm run site:build`: `site` 후 `../site/dist`에 정적 사이트를 만듭니다.
 - `npm run check:generated -- --skill=<name>`: 파일을 수정하지 않고 한 skill과 progressive companion closure의 generated index/contract가 source와 일치하는지 확인합니다.
 - `npm run check:generated:all`: 모든 progressive `RULES_INDEX.md`와 `contracts/*.md`의 missing/stale/orphan output, companion link를 확인합니다.
 - `npm run check:generated:{react,css,typescript,figma}`: progressive skill과 그 companion closure의 generated index/contract를 확인합니다.
 - `npm run check:handbooks:all`: 모든 buildable skill의 generated `HANDBOOK.md`를 source renderer와 byte-for-byte 비교합니다.
-- `npm run check:artifacts`: generated index/contract, full handbook, viewer freshness를 한 번에 확인합니다.
+- `npm run check:artifacts`: generated index/contract, full handbook freshness를 한 번에 확인합니다.
 - `npm run test`: CLI, build, progressive routing, `routing-evals.json`, documentation contract 회귀 테스트를 실행합니다.
 - `npm run typecheck`: package source와 test를 `tsc --noEmit`으로 검사합니다.
 - `npm run biome:check:all`: package source/test 형식을 검사합니다.
@@ -45,9 +48,8 @@ progressive rule frontmatter의 `reviewWith`는 조건부 재평가, `requiresSe
 npm --prefix package run validate:all
 npm --prefix package run build:all
 npm --prefix package run check:generated:all
-npm --prefix package run viewer
 npm --prefix package run check:handbooks:all
-npm --prefix package run check:viewer
+npm --prefix package run site:build
 npm --prefix package run typecheck
 npm --prefix package run test
 npm --prefix package run biome:check:all
@@ -55,7 +57,7 @@ npm --prefix package run biome:check:all
 
 `build` 뒤의 `check:generated:all`은 generated file을 다시 쓰는 단계가 아니라 stale 여부를 검증하는 단계입니다. CI에서는 build로 dirty output을 숨기지 말고 `check:generated:all`을 별도 gate로 유지합니다.
 
-`check:generated`는 progressive router/index/contract의 missing·stale·orphan·symlink와 recursive companion closure, non-progressive skill의 unexpected index/contract 부재를 검사합니다. full `HANDBOOK.md` freshness는 `check:handbooks:all`이 별도로 read-only 검증하며, `check:artifacts`가 두 checker와 `check:viewer`를 함께 묶어 실행합니다.
+`check:generated`는 progressive router/index/contract의 missing·stale·orphan·symlink와 recursive companion closure, non-progressive skill의 unexpected index/contract 부재를 검사합니다. full `HANDBOOK.md` freshness는 `check:handbooks:all`이 별도로 read-only 검증하며, `check:artifacts`가 두 checker를 함께 묶어 실행합니다.
 
 ## Buildable Loading Topology
 
