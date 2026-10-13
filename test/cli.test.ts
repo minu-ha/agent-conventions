@@ -344,31 +344,6 @@ const runPackageCommand = (args: string[]) => {
 	return spawnSync(command, [...scriptArgs, ...passthroughArgs], {cwd: packageDir, encoding: "utf8", env: commandEnv});
 };
 
-test("package.json exposes all-skill and per-skill script aliases", async () => {
-	const packageSource = await readFile(path.join(packageDir, "package.json"), "utf8");
-	const packageJson = JSON.parse(packageSource) as {scripts: Record<string, string>};
-
-	for (const baseScriptName of ["build", "validate", "dev"] as const) {
-		assert.ok(packageJson.scripts[`${baseScriptName}:all`]);
-
-		for (const skillName of expectedSkillScriptNames) {
-			assert.ok(packageJson.scripts[`${baseScriptName}:${skillName}`]);
-		}
-	}
-
-	assert.ok(packageJson.scripts["check:generated"]);
-	assert.ok(packageJson.scripts["check:generated:all"]);
-	assert.equal(packageJson.scripts["check:handbooks:all"], "tsx src/check-handbooks.ts --all");
-	assert.equal(packageJson.scripts.site, "tsx src/site.ts");
-	assert.equal(packageJson.scripts["site:dev"], "npm run site && for-humanity dev site");
-	assert.equal(packageJson.scripts["site:build"], "npm run site && for-humanity build site");
-	assert.equal(packageJson.scripts["check:artifacts"], "npm run check:generated:all && npm run check:handbooks:all");
-
-	for (const skillName of expectedSkillScriptNames) {
-		assert.ok(packageJson.scripts[`check:generated:${skillName}`]);
-	}
-});
-
 test("project template stays a standalone KISS starter, not a convention router", async () => {
 	const template = await readFile(templatePath, "utf8");
 
@@ -550,10 +525,8 @@ test("build CLI executes once for direct and symlinked entry paths", async (cont
 
 test("generated-output check scripts support progressive TypeScript", () => {
 	const directResult = runPackageCommand(["--prefix", packageDir, "run", "check:generated", "--", "--skill=typescript"]);
-	const aliasResult = runPackageCommand(["--prefix", packageDir, "run", "check:generated:typescript"]);
 
 	assert.equal(directResult.status, 0, directResult.stderr);
-	assert.equal(aliasResult.status, 0, aliasResult.stderr);
 });
 
 test("generated-output check CLI executes for direct and symlinked entry paths", async (context) => {
@@ -602,13 +575,6 @@ test("validate script succeeds for the react skill", () => {
 	assert.match(result.stdout, /Validated react:/);
 });
 
-test("validate:react alias succeeds for the react skill", () => {
-	const result = runPackageCommand(["--prefix", packageDir, "run", "validate:react"]);
-
-	assert.equal(result.status, 0, result.stderr);
-	assert.match(result.stdout, /Validated react:/);
-});
-
 test("build script regenerates HANDBOOK.md for the react skill", async () => {
 	const result = runPackageCommand(["--prefix", packageDir, "run", "build", "--", "--skill=react"]);
 
@@ -636,16 +602,6 @@ test("build script regenerates HANDBOOK.md for the react skill", async () => {
 	assert.doesNotMatch(agentsSource, /^ {3}- \d+\.\d+ \[Avoid Premature Abstraction in Screen Code\]/m);
 });
 
-test("build:react alias regenerates HANDBOOK.md for the react skill", async () => {
-	const result = runPackageCommand(["--prefix", packageDir, "run", "build:react"]);
-
-	assert.equal(result.status, 0, result.stderr);
-	await access(reactAgentsPath);
-
-	const agentsSource = await readFile(reactAgentsPath, "utf8");
-	assert.match(agentsSource, /^# React 컨벤션$/m);
-});
-
 test("css skill does not keep stale project-specific route naming guidance", async () => {
 	const checkedFiles = (await listMarkdownFiles(path.join(repoDir, "skill/css"))).filter(
 		(filePath) => !filePath.includes(`${path.sep}deprecated${path.sep}`),
@@ -665,18 +621,10 @@ test("css skill does not keep stale project-specific route naming guidance", asy
 	}
 });
 
-test("build:all alias succeeds for every buildable skill", () => {
-	const result = runPackageCommand(["--prefix", packageDir, "run", "build:all"]);
+test("build script regenerates every buildable skill and the site", () => {
+	const result = runPackageCommand(["--prefix", packageDir, "run", "build"]);
 
 	assert.equal(result.status, 0, result.stderr);
-	assert.match(result.stdout, /Wrote HANDBOOK\.md/);
-});
-
-test("dev:react alias validates and builds the react skill in sequence", () => {
-	const result = runPackageCommand(["--prefix", packageDir, "run", "dev:react"]);
-
-	assert.equal(result.status, 0, result.stderr);
-	assert.match(result.stdout, /Validated react:/);
 	assert.match(result.stdout, /Wrote HANDBOOK\.md/);
 });
 

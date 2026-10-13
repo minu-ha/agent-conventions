@@ -274,22 +274,18 @@ UI를 바꾸면 이벤트, 키보드 조작, 렌더링 조건을 함께 확인�
 ## 5. 명령
 
 ```bash
-npm install                  # 최초 1회
+npm install            # 최초 1회
 
-npm run dev:react            # 단일 skill validate + build
-npm run validate -- --all
-npm run build -- --all
-npm run site                  # site/ 에 for-humanity Markdown 생성
-npm run site:dev              # 생성 후 dev 서버. 주소는 터미널에 찍힌다
-npm run site:build            # 생성 후 site/dist 에 정적 HTML
-npm run check:generated:all  # 생성물과 source 일치 확인
-npm run check:handbooks:all
-npm run test
+npm run validate       # 정본 검사. 한 skill 만: -- --skill=react
+npm run build          # HANDBOOK, RULES_INDEX, contracts, site/ 생성
+npm run check          # validate, 생성물 신선도, 흐름도 폭, typecheck, lint, test
+npm run dev            # build 후 사이트 dev 서버. 주소는 터미널에 찍힌다
+npm run site:build     # 배포용. site/dist 에 정적 HTML
 ```
 
 `site/`는 [for-humanity](https://github.com/minu-ha/for-humanity)가 읽는 생성 Markdown 폴더다. 커밋하지 않는다.
 skill 하나가 개요 한 장, 섹션 하나가 한 장이고 규칙은 그 페이지의 `##` 헤딩이다.
-`dev:<skill>`이 끝에 `site`를 다시 돌리므로 `site:dev` 서버를 켜 두면 고친 규칙이 바로 보인다.
+`build`가 `site/`도 다시 쓰므로 `dev` 서버를 켜 두면 고친 규칙이 바로 보인다.
 
 `skill/<name>` 안에서 작업하면 `npm --prefix ../..`로 바꾼다.
 자세한 script 설명은 [docs/tooling.md](./docs/tooling.md).

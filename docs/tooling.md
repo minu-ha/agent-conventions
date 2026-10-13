@@ -22,42 +22,23 @@ progressive rule frontmatter의 `reviewWith`는 조건부 재평가, `requiresSe
 
 공통 rule은 companion skill이 소유하고 framework/project 전용 규칙은 local overlay에 남깁니다. build 결과를 직접 편집해 overlay를 우회하지 않습니다.
 
-## What Each Script Does
+## Scripts
 
-- `npm run build -- --skill=<name>` / `npm run build:<skill>`: 한 skill의 generated `HANDBOOK.md`를 갱신하고 progressive skill이면 `RULES_INDEX.md`와 `contracts/*.md`도 갱신합니다.
-- `npm run build:all`: 모든 buildable skill의 generated output을 갱신합니다.
-- `npm run validate -- --skill=<name>` / `npm run validate:<skill>`: source, metadata, companion closure, progressive index 입력, routing eval manifest를 검증합니다.
-- `npm run validate:all`: 모든 buildable skill을 검증합니다.
-- `npm run dev -- --skill=<name>` / `npm run dev:<skill>`: 같은 target에 `validate`, `build`를 실행한 뒤 `site`를 다시 만듭니다.
-- `npm run dev:all`: 모든 skill에 `validate`, `build` 후 `site`를 실행합니다.
-- `npm run site`: 모든 progressive skill을 `site/`에 [for-humanity](https://github.com/minu-ha/for-humanity) Markdown으로 생성합니다. 커밋하지 않습니다.
-- `npm run site:dev`: `site` 후 for-humanity 개발 서버를 띄웁니다. 포트는 `site/for-humanity.config.mjs`의 `port`입니다.
-- `npm run site:build`: `site` 후 `site/dist`에 정적 사이트를 만듭니다.
-- `npm run check:generated -- --skill=<name>`: 파일을 수정하지 않고 한 skill과 progressive companion closure의 generated index/contract가 source와 일치하는지 확인합니다.
-- `npm run check:generated:all`: 모든 progressive `RULES_INDEX.md`와 `contracts/*.md`의 missing/stale/orphan output, companion link를 확인합니다.
-- `npm run check:generated:{react,css,typescript,figma}`: progressive skill과 그 companion closure의 generated index/contract를 확인합니다.
-- `npm run check:handbooks:all`: 모든 buildable skill의 generated `HANDBOOK.md`를 source renderer와 byte-for-byte 비교합니다.
-- `npm run check:artifacts`: generated index/contract, full handbook freshness를 한 번에 확인합니다.
-- `npm run test`: CLI, build, progressive routing, `routing-evals.json`, documentation contract 회귀 테스트를 실행합니다.
-- `npm run typecheck`: package source와 test를 `tsc --noEmit`으로 검사합니다.
-- `npm run biome:check:all`: package source/test 형식을 검사합니다.
+| Script | Does |
+| --- | --- |
+| `npm run validate` | source, metadata, companion closure, progressive index 입력, routing eval manifest, 규칙 문체를 검사합니다. `-- --skill=<name>`으로 하나만 봅니다. |
+| `npm run build` | 모든 buildable skill의 `HANDBOOK.md`, `RULES_INDEX.md`, `contracts/*.md`를 다시 쓰고 `site/`에 [for-humanity](https://github.com/minu-ha/for-humanity) Markdown을 생성합니다. `site/`는 커밋하지 않습니다. |
+| `npm run check` | `validate`, `check:generated`, `check:handbooks`, `check:diagrams`, `typecheck`, `lint`, `test`를 차례로 실행합니다. 커밋 전 한 번에 돌리는 명령입니다. |
+| `npm run check:generated` | 파일을 수정하지 않고 progressive `RULES_INDEX.md`와 `contracts/*.md`의 missing, stale, orphan, symlink와 companion closure를 확인합니다. |
+| `npm run check:handbooks` | 모든 `HANDBOOK.md`를 renderer 결과와 byte 단위로 비교합니다. |
+| `npm run check:diagrams` | 규칙의 `mermaid` 흐름도가 격자 폭 125칸 안에 그려지는지 봅니다. |
+| `npm run dev` | `build` 후 for-humanity 개발 서버를 띄웁니다. 포트는 `site/for-humanity.config.mjs`의 `port`입니다. |
+| `npm run site:build` | `build` 후 `site/dist`에 배포용 정적 사이트를 만듭니다. |
+| `npm run test` | CLI, build, progressive routing, `routing-evals.json`, 사이트 생성 회귀 테스트를 실행합니다. |
+| `npm run lint`, `npm run lint:fix` | Biome 검사와 자동 수정입니다. |
+| `npm run typecheck` | `tsc --noEmit`입니다. |
 
-## Typical Workflow
-
-```bash
-npm run validate:all
-npm run build:all
-npm run check:generated:all
-npm run check:handbooks:all
-npm run site:build
-npm run typecheck
-npm run test
-npm run biome:check:all
-```
-
-`build` 뒤의 `check:generated:all`은 generated file을 다시 쓰는 단계가 아니라 stale 여부를 검증하는 단계입니다. CI에서는 build로 dirty output을 숨기지 말고 `check:generated:all`을 별도 gate로 유지합니다.
-
-`check:generated`는 progressive router/index/contract의 missing·stale·orphan·symlink와 recursive companion closure, non-progressive skill의 unexpected index/contract 부재를 검사합니다. full `HANDBOOK.md` freshness는 `check:handbooks:all`이 별도로 read-only 검증하며, `check:artifacts`가 두 checker를 함께 묶어 실행합니다.
+`build` 뒤의 `check:generated`는 generated file을 다시 쓰는 단계가 아니라 stale 여부를 검증하는 단계입니다. CI에서는 build로 dirty output을 숨기지 말고 `check`를 gate로 둡니다.
 
 ## Buildable Loading Topology
 
@@ -75,18 +56,3 @@ progressive owner는 `extends` 대신 `companions`를 사용하고 companion tar
 `routing-evals.json`과 회귀 테스트는 예상 선택 목록, 필수 규칙 관계, 전체 규칙의 적용 사례 유무를 검사합니다.
 이 검사를 통과해도 실제 에이전트의 선택 정확도가 인증되는 것은 아닙니다.
 적용 조건을 바꿀 때는 비적용 사례도 검토하고, 행동 평가를 했다면 사용한 모델·입력·결과를 별도로 기록합니다.
-
-## Per-Skill Aliases
-
-- `react`
-- `css`
-- `typescript`
-- `figma`
-
-예시:
-
-```bash
-npm run validate:react
-npm run build:react
-npm run check:generated:react
-```

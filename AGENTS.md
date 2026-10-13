@@ -36,7 +36,7 @@ build tooling은 [docs/tooling.md](./docs/tooling.md).
 
 1. **정본만 수정.** `rules/*.md`를 고친다. 생성물을 고치고 끝내지 않는다.
 2. **최소 변경.** 요청 범위 밖 리팩터링 금지. 인접 코드 개선 금지.
-3. **검증 후 보고.** `validate` → `build` → `check:generated`의 실제 출력으로 말한다.
+3. **검증 후 보고.** `validate` → `build` → `check`의 실제 출력으로 말한다.
 4. **불확실하면 질문.** 추측으로 규칙 의미를 바꾸지 않는다.
 
 ---
@@ -91,7 +91,7 @@ progressive `routing-evals.json`.
 3. 공통 규칙은 companion skill로. framework · project 예외만 local overlay로.
 4. `metadata.json.companions`의 mode가 현재 활성화 계약과 맞는지 확인.
 5. 생성물은 직접 편집 금지.
-6. `validate` → `build` → `check:generated` 순서로 검증.
+6. `validate` → `build` → `check` 순서로 검증.
 7. skill 인벤토리나 artifact 역할이 바뀌면 [README.md](./README.md),
    [CONTRIBUTING.md](./CONTRIBUTING.md), [docs/tooling.md](./docs/tooling.md) 도 갱신.
 
@@ -111,18 +111,14 @@ progressive `routing-evals.json`.
 ## 5. Commands
 
 ```bash
-npm install                       # 최초 1회
-npm run dev:<skill>               # validate + build
-npm run validate -- --all
-npm run build -- --all
-npm run check:generated:all
-npm run check:handbooks:all
-npm run site                      # site/ 에 for-humanity Markdown 생성
-npm run site:dev                  # 생성 후 dev 서버. 주소는 터미널에 찍힌다
-npm run test
+npm install            # 최초 1회
+npm run validate       # 정본 검사. 한 skill 만: -- --skill=react
+npm run build          # HANDBOOK, RULES_INDEX, contracts, site/ 생성
+npm run check          # validate, 생성물 신선도, 흐름도 폭, typecheck, lint, test
+npm run dev            # build 후 사이트 dev 서버. 주소는 터미널에 찍힌다
 ```
 
-`site/` 는 커밋하지 않는 생성 폴더다. `dev:<skill>` 이 끝에 다시 만든다.
+`site/` 는 커밋하지 않는 생성 폴더다. `build` 가 만든다.
 
 buildable skill: `css` `figma` `react` `typescript`
 
