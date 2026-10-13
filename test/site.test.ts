@@ -183,6 +183,7 @@ test("examples render as a sentence above a toned, numbered snippet whose copy e
 	let snippets = 0;
 	let errorMarks = 0;
 	let addMarks = 0;
+	let titled = 0;
 
 	for (const file of pages) {
 		const lines = file.content.split("\n");
@@ -198,9 +199,10 @@ test("examples render as a sentence above a toned, numbered snippet whose copy e
 
 			snippets += 1;
 
-			const match = /^<<< (\.\.\/examples\/[a-z]+\/[a-z0-9-]+\/\d{2}-(?:incorrect|correct)(?:-\d+)?\.[a-z]+) (bad|good) line-numbers$/.exec(
-				line,
-			);
+			const match =
+				/^<<< (\.\.\/examples\/[a-z]+\/[a-z0-9-]+\/\d{2}-(?:incorrect|correct)(?:-\d+)?\.[a-z]+) (bad|good) line-numbers(?: \[([^\]]+)\])?$/.exec(
+					line,
+				);
 
 			assert.ok(match, `${file.path}: snippet line shape: ${line}`);
 
@@ -212,6 +214,11 @@ test("examples render as a sentence above a toned, numbered snippet whose copy e
 			errorMarks += copy.content.split("[!code error]").length - 1;
 			addMarks += copy.content.split("[!code ++]").length - 1;
 
+			if (match[3] !== undefined) {
+				titled += 1;
+				assert.equal(copy.content.includes(match[3]), false, `${copyPath}: the path comment moved into the title must leave the copy`);
+			}
+
 			const above = lines[index - 2] ?? "";
 
 			assert.equal(/^\*\*(?:Incorrect|Correct)/.test(above), false, `${file.path}: labels must not reach the page`);
@@ -220,6 +227,7 @@ test("examples render as a sentence above a toned, numbered snippet whose copy e
 
 	assert.ok(snippets > expectedRuleCount * 2, `expected a snippet per example block, found ${snippets}`);
 	assert.ok(errorMarks > 0 && addMarks > 0, `expected seeded line marks in the copies, found ${errorMarks} error and ${addMarks} add`);
+	assert.ok(titled > expectedRuleCount, `expected path comments to become titles, found ${titled}`);
 });
 
 test("generateSiteFiles is deterministic", async () => {

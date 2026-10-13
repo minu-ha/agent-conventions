@@ -1,4 +1,5 @@
-import {mkdir, readFile, readdir} from "node:fs/promises";
+import {readFileSync} from "node:fs";
+import {mkdir, readdir} from "node:fs/promises";
 import path from "node:path";
 
 import {slug} from "github-slugger";
@@ -204,7 +205,7 @@ interface RuleRenderContext {
 	 */
 	rulesDir: string;
 	/**
-	 * @field 사이트로 복사할 예제 파일. 사이트 경로 → 원본 절대 경로
+	 * @field 사이트로 복사할 예제 파일. 사이트 경로 → 복사본 본문
 	 */
 	copies: Map<string, string>;
 }
@@ -277,6 +278,52 @@ const exampleLabelPattern = /^\*\*(Incorrect|Correct)(?:\s+(\d+))?\s*(?:\((.+)\)
 const exampleCopyDir = "examples";
 
 /**
+ * 줄 표기만 있는 주석 줄. 제목으로 올릴 경로 주석 앞에 붙어 있으면 같이 뺌
+ */
+const notationLinePattern =
+	/^\s*(?:\{\/\* \[!code [^\]]+\] \*\/\}|\/\/ \[!code [^\]]+\]|\/\* \[!code [^\]]+\] \*\/|# \[!code [^\]]+\])\s*$/;
+
+/**
+ * 파일 경로만 적은 첫 줄 주석. 설명이 붙은 주석은 코드에 남김
+ */
+const pathCommentPattern = /^(?:\/\/|#|\/\*)\s*([\w@./-]+\.(?:tsx?|css|m?js|json|md|txt|grit))\s*(?:\*\/)?\s*$/;
+
+/**
+ * @summary 사이트로 복사할 예제 파일 하나
+ */
+interface ExampleCopy {
+	/**
+	 * @field 복사본 본문. 제목으로 올린 경로 주석은 뺀 상태
+	 */
+	content: string;
+	/**
+	 * @field 제목 띠에 올릴 파일 경로. 첫 줄이 경로 주석이 아니면 없음
+	 */
+	title?: string;
+}
+
+/**
+ * @helper 예제 파일을 읽어 첫 줄의 경로 주석을 제목으로 올림. 그 앞의 줄 표기 주석도 함께 뺌
+ */
+const toExampleCopy = (sourcePath: string): ExampleCopy => {
+	const lines = readFileSync(sourcePath, "utf8").split("\n");
+	const first = lines.findIndex((line) => !notationLinePattern.test(line));
+	const title = first < 0 ? undefined : pathCommentPattern.exec(lines[first] ?? "")?.[1];
+
+	if (title === undefined) {
+		return {content: lines.join("\n")};
+	}
+
+	const rest = lines.slice(first + 1);
+
+	while ((rest[0] ?? "").trim() === "") {
+		rest.shift();
+	}
+
+	return {content: rest.join("\n"), title};
+};
+
+/**
  * @helper 예제 전부를 설명 한 줄과 `<<<` 줄로. 번호와 Incorrect, Correct 글자는 안 보이고 블록 색이 판정을 말함
  * @description 원문의 `<<<` 가 가리키는 파일을 사이트 폴더로 복사하도록 context.copies 에 적고, 줄 표기 주석은 파일 안에 있어 그대로 살아남
  */
@@ -321,8 +368,11 @@ const renderExamples = (rule: SkillRule, context: RuleRenderContext): string[] =
 		const insideExamples = path.posix.normalize(path.posix.join("rules", reference)).replace(/^examples\//, "");
 		const copyPath = `${exampleCopyDir}/${context.document.skillName}/${insideExamples}`;
 
-		context.copies.set(copyPath, sourcePath);
-		out.push(`<<< ${path.posix.relative(path.posix.dirname(context.page), copyPath)} ${tone} line-numbers`, "");
+		const copy = toExampleCopy(sourcePath);
+		const title = copy.title === undefined ? "" : ` [${copy.title}]`;
+
+		context.copies.set(copyPath, copy.content);
+		out.push(`<<< ${path.posix.relative(path.posix.dirname(context.page), copyPath)} ${tone} line-numbers${title}`, "");
 	}
 
 	while (out.length > 0 && (out.at(-1) ?? "").trim() === "") {
@@ -546,8 +596,8 @@ export const generateSiteFiles = async (): Promise<SiteFile[]> => {
 	}
 
 	// 예제 파일 복사본. for-humanity 는 문서 폴더 안의 파일만 읽음
-	for (const [copyPath, sourcePath] of [...copies].sort(([left], [right]) => left.localeCompare(right, "en-US"))) {
-		files.push({path: copyPath, content: await readFile(sourcePath, "utf8")});
+	for (const [copyPath, content] of [...copies].sort(([left], [right]) => left.localeCompare(right, "en-US"))) {
+		files.push({path: copyPath, content});
 	}
 
 	return files;
