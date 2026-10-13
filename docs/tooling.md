@@ -38,7 +38,7 @@ progressive rule frontmatter의 `reviewWith`는 조건부 재평가, `requiresSe
 | `npm run check:diagrams` | 규칙의 `mermaid` 흐름도가 격자 폭 125칸 안에 그려지는지 봅니다. |
 | `npm run dev` | `build` 후 for-humanity 개발 서버를 띄웁니다. 포트는 `docs/for-humanity.config.mjs`의 `port`입니다. |
 | `npm run docs:build` | `build` 후 `docs/dist`에 배포용 정적 사이트를 만듭니다. |
-| `npm run test` | CLI, build, progressive routing, `routing-evals.json`, 사이트 생성 회귀 테스트를 실행합니다. |
+| `npm run test` | 라우터와 생성물 계약, 매니페스트 검증기, build·validate fixture, 규칙 문체, 사이트 생성 테스트를 실행합니다. 규칙 산문은 핀하지 않습니다. |
 | `npm run lint`, `npm run lint:fix` | Biome 검사와 자동 수정입니다. |
 | `npm run typecheck` | `tsc --noEmit`입니다. |
 

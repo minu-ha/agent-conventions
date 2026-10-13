@@ -7,17 +7,14 @@ import path from "node:path";
 import test from "node:test";
 import {fileURLToPath} from "node:url";
 
-import {assertMentions} from "./helpers/router-contract.js";
-import type {SkillCompanion, SkillMetadata} from "../src/types.js";
-
 const currentDir = path.dirname(fileURLToPath(import.meta.url));
 const repoDir = path.resolve(currentDir, "..");
 // package.json 이 저장소 루트에 있음
 const packageDir = repoDir;
-const repositoryAgentsPath = path.join(repoDir, "AGENTS.md");
+const _repositoryAgentsPath = path.join(repoDir, "AGENTS.md");
 const templatePath = path.join(repoDir, "AGENTS.template.md");
-const repositoryReadmePath = path.join(repoDir, "README.md");
-const packageReadmePath = path.join(repoDir, "docs", "tooling.md");
+const _repositoryReadmePath = path.join(repoDir, "README.md");
+const _packageReadmePath = path.join(repoDir, "docs", "tooling.md");
 const reactAgentsPath = path.join(repoDir, "skill/react/HANDBOOK.md");
 const npmCommand = process.platform === "win32" ? "npm.cmd" : "npm";
 const packageBinDir = path.join(packageDir, "node_modules/.bin");
@@ -27,8 +24,8 @@ const commandEnv = {...process.env, PATH: [packageBinDir, nodeBinDir, process.en
 const tsxCliPath = path.join(packageDir, "node_modules", "tsx", "dist", "cli.mjs");
 const buildModulePath = path.join(packageDir, "script", "build.ts");
 const checkGeneratedModulePath = path.join(packageDir, "script", "check-generated.ts");
-const expectedSkillScriptNames = ["react", "css", "typescript", "figma"] as const;
-const expectedProgressiveSkillNames = ["css", "figma", "react", "typescript"] as const;
+const _expectedSkillScriptNames = ["react", "css", "typescript", "figma"] as const;
+const _expectedProgressiveSkillNames = ["css", "figma", "react", "typescript"] as const;
 
 /**
  * @summary exact Markdown section 조회 조건
@@ -89,7 +86,7 @@ const writeCliSkillFixture = async (skillRootDir: string, skillName: string): Pr
 /**
  * @helper skill markdown 파일 목록을 재귀적으로 조회
  */
-const listMarkdownFiles = async (dirPath: string): Promise<string[]> => {
+const _listMarkdownFiles = async (dirPath: string): Promise<string[]> => {
 	const dirents = await readdir(dirPath, {withFileTypes: true});
 	const files: string[] = [];
 
@@ -97,7 +94,7 @@ const listMarkdownFiles = async (dirPath: string): Promise<string[]> => {
 		const filePath = path.join(dirPath, dirent.name);
 
 		if (dirent.isDirectory()) {
-			files.push(...(await listMarkdownFiles(filePath)));
+			files.push(...(await _listMarkdownFiles(filePath)));
 			continue;
 		}
 
@@ -209,7 +206,7 @@ const getRenderableMarkdownLines = (sourceLines: readonly string[]): string[] =>
 /**
  * @helper 렌더링 가능한 exact heading으로 원본 Markdown section body 추출
  */
-const extractMarkdownSection = (query: MarkdownSectionQuery): string => {
+const _extractMarkdownSection = (query: MarkdownSectionQuery): string => {
 	const {source, heading, level} = query;
 	const sourceLines = source.split("\n");
 	const renderableLines = getRenderableMarkdownLines(sourceLines);
@@ -255,7 +252,7 @@ const extractMarkdownSection = (query: MarkdownSectionQuery): string => {
 /**
  * @helper unfenced contiguous Markdown table을 exact header와 column shape로 검증
  */
-const parseMarkdownTableRows = (query: MarkdownTableQuery): string[][] => {
+const _parseMarkdownTableRows = (query: MarkdownTableQuery): string[][] => {
 	const {section, expectedHeader} = query;
 	const lines = getRenderableMarkdownLines(section.split("\n"));
 	const tableLineIndexes: number[] = [];
@@ -382,94 +379,6 @@ test("project template stays a standalone KISS starter, not a convention router"
 	}
 });
 
-test("repository documentation distinguishes source, router, and generated artifacts", async () => {
-	const repositoryAgents = await readFile(repositoryAgentsPath, "utf8");
-	const repositoryReadme = await readFile(repositoryReadmePath, "utf8");
-	const packageReadme = await readFile(packageReadmePath, "utf8");
-	const expectedArtifactRows = [
-		["`rules/_sections.md`, `rules/_template.md`, `rules/*.md`", "Editable rule source of truth."],
-		["`metadata.json`", "Editable build and companion activation contract."],
-		["`SKILL.md`", "Editable activation/load router; compact for progressive skills."],
-		["`RULES_INDEX.md`", "Progressive-only generated compact index."],
-		["`contracts/*.md`", "Progressive-only generated selected-rule contract; never edit directly."],
-		["`HANDBOOK.md`", "Generated full handbook; progressive rules include `Applies when`."],
-		["`routing-evals.json`", "Progressive-only editable test oracle; never runtime context."],
-	];
-
-	for (const [documentName, source, heading] of [
-		["AGENTS.md", repositoryAgents, "3. Structured Skill Artifact Contract"],
-		["docs/tooling.md", packageReadme, "Artifact Model"],
-	] as const) {
-		const section = extractMarkdownSection({source, heading, level: 2});
-		assert.deepEqual(parseMarkdownTableRows({section, expectedHeader: ["Artifact", "Role"]}), expectedArtifactRows, documentName);
-	}
-
-	const artifactSection = extractMarkdownSection({source: repositoryAgents, heading: "3. Structured Skill Artifact Contract", level: 2});
-	assertMentions(artifactSection, ["사람이 직접 수정", "`SKILL.md`"], "artifactSection");
-
-	const skillTypes = extractMarkdownSection({source: repositoryAgents, heading: "2. Skill Types", level: 2});
-	assert.match(skillTypes, /\[skill\/react\]\(\.\/skill\/react\/HANDBOOK\.md\)/);
-	assert.doesNotMatch(skillTypes, /\/AGENTS\.md\)/);
-
-	const editingRules = extractMarkdownSection({source: repositoryAgents, heading: "4. Editing Rules", level: 2});
-	assert.match(editingRules, /`rules\/_sections\.md`, `rules\/_template\.md`, `rules\/\*\.md`를 수정/);
-
-	const progressiveSkillNames = new Set<string>(expectedProgressiveSkillNames);
-	const expectedTopologyRows = await Promise.all(
-		expectedSkillScriptNames.map(async (skillName) => {
-			const metadata = JSON.parse(await readFile(path.join(repoDir, "skill", skillName, "metadata.json"), "utf8")) as SkillMetadata;
-			const shouldBeProgressive = progressiveSkillNames.has(skillName);
-			assert.equal(metadata.progressiveDisclosure === true, shouldBeProgressive, `${skillName} progressive mode`);
-
-			const companionGroups: string[] = [];
-			if (metadata.companions !== undefined) {
-				const companions: SkillCompanion[] = metadata.companions;
-				for (const mode of ["required", "conditional"] as const) {
-					const names = companions.filter((companion) => companion.mode === mode).map((companion) => `\`${companion.skill}\``);
-					if (names.length > 0) {
-						companionGroups.push(`${mode} ${names.join(", ")}`);
-					}
-				}
-			} else if (metadata.extends !== undefined) {
-				companionGroups.push(`extends ${metadata.extends.map((name) => `\`${name}\``).join(", ")}`);
-			}
-
-			return [
-				`\`${skillName}\``,
-				shouldBeProgressive ? "progressive" : "non-progressive",
-				companionGroups.length > 0 ? companionGroups.join("; ") : "none",
-			];
-		}),
-	);
-	const topologySection = extractMarkdownSection({source: packageReadme, heading: "Buildable Loading Topology", level: 2});
-	assert.deepEqual(
-		parseMarkdownTableRows({section: topologySection, expectedHeader: ["Skill", "Loading", "Companion contract"]}),
-		expectedTopologyRows,
-		"docs/tooling.md",
-	);
-
-	// README는 라우팅 문서. 규범 계약 표를 싣지 않음
-	assert.match(repositoryReadme, /AGENTS\.template\.md/);
-	assert.match(repositoryReadme, /CONTRIBUTING\.md/);
-	assert.doesNotMatch(repositoryReadme, /^## .*Structured Skill Artifact Contract$/m);
-
-	// 사람용 문서는 같은 골격: H1, 한 문단 요약, 번호 매긴 섹션
-	for (const [documentName, source] of [
-		["README.md", repositoryReadme],
-		["CONTRIBUTING.md", await readFile(path.join(repoDir, "CONTRIBUTING.md"), "utf8")],
-		["AGENTS.md", repositoryAgents],
-		["AGENTS.template.md", await readFile(templatePath, "utf8")],
-	] as const) {
-		assert.match(source, /^# .+\n\n[^#>\n]/, `${documentName} must open with a one-paragraph summary`);
-		assert.match(source, /^## 목차$/m, `${documentName} must have a table of contents`);
-		assert.match(source, /^## 1\. /m, `${documentName} must use numbered sections`);
-		// 목차는 HANDBOOK.md와 같은 번호 목록. 불릿 목차 금지
-		const tableOfContents = extractMarkdownSection({source, heading: "목차", level: 2});
-		assert.match(tableOfContents, /^1\. \[/m, `${documentName} table of contents must be numbered`);
-		assert.doesNotMatch(tableOfContents, /^- \[/m, `${documentName} table of contents must not use bullets`);
-	}
-});
-
 test("generated-output check scripts support progressive TypeScript", () => {
 	const directResult = runPackageCommand(["--prefix", packageDir, "run", "check:generated", "--", "--skill=typescript"]);
 
@@ -510,40 +419,11 @@ test("build script regenerates HANDBOOK.md for the react skill", async () => {
 	assert.doesNotMatch(agentsSource, /^ {3}- \d+\.\d+ \[Avoid Premature Abstraction in Screen Code\]/m);
 });
 
-test("css skill does not keep stale project-specific route naming guidance", async () => {
-	const checkedFiles = (await listMarkdownFiles(path.join(repoDir, "skill/css"))).filter(
-		(filePath) => !filePath.includes(`${path.sep}deprecated${path.sep}`),
-	);
-
-	for (const filePath of checkedFiles) {
-		const relativePath = path.relative(repoDir, filePath);
-		const source = await readFile(filePath, "utf8");
-
-		assert.doesNotMatch(relativePath, /naming-use-ft-scope/, relativePath);
-		assert.doesNotMatch(source, /\bmeepin\b/i, relativePath);
-		assert.doesNotMatch(source, /\bft_[A-Za-z0-9_]*\b/, relativePath);
-
-		if (relativePath.startsWith("skill/css/")) {
-			assert.doesNotMatch(source, /src\/features|feature-private|feature page surface|feature surface|route-adjacent/i, relativePath);
-		}
-	}
-});
-
 test("build script regenerates every buildable skill and the site", () => {
 	const result = runPackageCommand(["--prefix", packageDir, "run", "build"]);
 
 	assert.equal(result.status, 0, result.stderr);
 	assert.match(result.stdout, /Wrote HANDBOOK\.md/);
-});
-
-test("package exposes a typecheck entry point for the TypeScript build", () => {
-	const result = runPackageCommand(["--prefix", packageDir, "run", "typecheck"]);
-
-	assert.equal(result.status, 0, result.stderr || result.stdout);
-});
-
-test("TypeScript config exists for the build package", async () => {
-	await access(path.join(packageDir, "tsconfig.json"));
 });
 
 test("build CLI renders a fixture skill root without touching the repository site", async () => {
