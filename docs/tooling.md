@@ -1,6 +1,6 @@
-# Skills Build Package
+# Build Tooling
 
-`../skill/*` 아래 structured convention skill을 build, validate, test하는 standalone TypeScript package입니다.
+`skill/*` 아래 structured convention skill을 build, validate, test하는 저장소 루트 `package.json`의 TypeScript 도구입니다. 소스는 `src/`, 테스트는 `test/`입니다.
 
 ## Artifact Model
 
@@ -30,9 +30,9 @@ progressive rule frontmatter의 `reviewWith`는 조건부 재평가, `requiresSe
 - `npm run validate:all`: 모든 buildable skill을 검증합니다.
 - `npm run dev -- --skill=<name>` / `npm run dev:<skill>`: 같은 target에 `validate`, `build`를 실행한 뒤 `site`를 다시 만듭니다.
 - `npm run dev:all`: 모든 skill에 `validate`, `build` 후 `site`를 실행합니다.
-- `npm run site`: 모든 progressive skill을 `../site/`에 [for-humanity](https://github.com/minu-ha/for-humanity) Markdown으로 생성합니다. 커밋하지 않습니다.
-- `npm run site:dev`: `site` 후 for-humanity 개발 서버를 `localhost:4321`에 띄웁니다.
-- `npm run site:build`: `site` 후 `../site/dist`에 정적 사이트를 만듭니다.
+- `npm run site`: 모든 progressive skill을 `site/`에 [for-humanity](https://github.com/minu-ha/for-humanity) Markdown으로 생성합니다. 커밋하지 않습니다.
+- `npm run site:dev`: `site` 후 for-humanity 개발 서버를 띄웁니다. 포트는 `site/for-humanity.config.mjs`의 `port`입니다.
+- `npm run site:build`: `site` 후 `site/dist`에 정적 사이트를 만듭니다.
 - `npm run check:generated -- --skill=<name>`: 파일을 수정하지 않고 한 skill과 progressive companion closure의 generated index/contract가 source와 일치하는지 확인합니다.
 - `npm run check:generated:all`: 모든 progressive `RULES_INDEX.md`와 `contracts/*.md`의 missing/stale/orphan output, companion link를 확인합니다.
 - `npm run check:generated:{react,css,typescript,figma}`: progressive skill과 그 companion closure의 generated index/contract를 확인합니다.
@@ -45,14 +45,14 @@ progressive rule frontmatter의 `reviewWith`는 조건부 재평가, `requiresSe
 ## Typical Workflow
 
 ```bash
-npm --prefix package run validate:all
-npm --prefix package run build:all
-npm --prefix package run check:generated:all
-npm --prefix package run check:handbooks:all
-npm --prefix package run site:build
-npm --prefix package run typecheck
-npm --prefix package run test
-npm --prefix package run biome:check:all
+npm run validate:all
+npm run build:all
+npm run check:generated:all
+npm run check:handbooks:all
+npm run site:build
+npm run typecheck
+npm run test
+npm run biome:check:all
 ```
 
 `build` 뒤의 `check:generated:all`은 generated file을 다시 쓰는 단계가 아니라 stale 여부를 검증하는 단계입니다. CI에서는 build로 dirty output을 숨기지 말고 `check:generated:all`을 별도 gate로 유지합니다.
@@ -86,7 +86,7 @@ progressive owner는 `extends` 대신 `companions`를 사용하고 companion tar
 예시:
 
 ```bash
-npm --prefix package run validate:react
-npm --prefix package run build:react
-npm --prefix package run check:generated:react
+npm run validate:react
+npm run build:react
+npm run check:generated:react
 ```

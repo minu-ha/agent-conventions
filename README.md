@@ -60,7 +60,7 @@ Figma 화면을 구현하는 프로젝트는 `convention-figma`도 적는다. TS
 ### 1.3 담당 영역 핸드북
 
 사람이 규칙을 찾을 때는 생성 사이트를 먼저 연다.
-`npm --prefix package run site:dev` 를 실행하고 `http://localhost:4321/` 을 연다.
+`npm run site:dev` 를 실행하고 터미널에 찍힌 주소를 연다.
 [for-humanity](https://github.com/minu-ha/for-humanity) 가 `site/` 의 Markdown 으로 사이트를 만들고, `site/` 는 규칙에서 생성한다.
 
 왼쪽에 skill 넷이 있고 skill 아래에 섹션이 한 장씩 있다. 오른쪽 목차가 그 섹션의 규칙이다.
@@ -109,10 +109,10 @@ TSX 파일 하나를 고쳐 달라고 시켜본다. 에이전트는 이 순서�
 | --- | --- |
 | README.md | 이 문서. 설치와 적용 |
 | [CONTRIBUTING.md](./CONTRIBUTING.md) | 규칙 추가, 수정 절차 |
-| 생성 사이트 (`site/`) | **규칙 조회.** 네 skill의 규칙을 섹션 페이지와 목차로 찾는다. `npm --prefix package run site:dev` 로 띄운다 |
+| 생성 사이트 (`site/`) | **규칙 조회.** 네 skill의 규칙을 섹션 페이지와 목차로 찾는다. `npm run site:dev` 로 띄운다 |
 | `skill/<name>/HANDBOOK.md` | 규칙 전문. 통독과 에이전트 전체 검토용 생성물 |
 | [docs/progressive-loading.html](./docs/progressive-loading.html) | 설계 배경, 측정, 검증, 한계 |
-| [package/README.md](./package/README.md) | build, validate, test tooling |
+| [docs/tooling.md](./docs/tooling.md) | build, validate, test tooling |
 
 에이전트가 읽는 것.
 
@@ -202,7 +202,7 @@ progressive skill 넷은 규칙 전체를 안 읽는다. 단계마다 좁힌다.
 1. 정본은 `rules/*.md`. `HANDBOOK.md`, `RULES_INDEX.md`, `contracts/*.md`, `site/`는 생성물.
 2. 규범은 첫 `Incorrect` 앞에서 끝낸다. 생성기가 그 앞부분만 계약으로 뽑는다.
 3. `appliesWhen` 한 줄이 라우팅을 결정한다. 규칙의 결론이 아니라 관찰 가능한 변경 조건.
-4. 고친 뒤 `npm --prefix package run dev:<skill>` → `check:generated:all`. `dev`가 `site/`도 다시 만든다.
+4. 고친 뒤 `npm run dev:<skill>` → `check:generated:all`. `dev`가 `site/`도 다시 만든다.
 
 이 저장소에서 AI 에이전트로 작업하면 [AGENTS.md](./AGENTS.md) 가 작업 규칙.
 

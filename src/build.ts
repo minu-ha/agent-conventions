@@ -257,7 +257,7 @@ export const generateMarkdown = (args: GenerateMarkdownArgs): string => {
 	lines.push("> **생성된 문서입니다. 직접 수정하지 마세요.**");
 	lines.push(">");
 	lines.push(
-		`> 현재 skill의 ${sourcePaths.join(", ")}를 수정한 뒤 \`npm --prefix ../../package run build -- --skill=${skillName}\`로 다시 생성하세요.`,
+		`> 현재 skill의 ${sourcePaths.join(", ")}를 수정한 뒤 저장소 루트에서 \`npm run build -- --skill=${skillName}\`로 다시 생성하세요.`,
 	);
 
 	lines.push("");

@@ -307,7 +307,8 @@ const readRoutingDigest = (source: string): string => {
  */
 const readRealSkillGitStatus = (): string => {
 	const result = spawnSync("git", ["status", "--short", "--untracked-files=all", "--", "skill"], {
-		cwd: path.resolve(packageDir, ".."),
+		// package.json 이 저장소 루트에 있어 git 루트와 같음
+		cwd: packageDir,
 		encoding: "utf8",
 	});
 

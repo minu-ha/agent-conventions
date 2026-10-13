@@ -11,12 +11,13 @@ import {assertMentions} from "./helpers/router-contract.js";
 import type {SkillCompanion, SkillMetadata} from "../src/types.js";
 
 const currentDir = path.dirname(fileURLToPath(import.meta.url));
-const repoDir = path.resolve(currentDir, "../..");
-const packageDir = path.join(repoDir, "package");
+const repoDir = path.resolve(currentDir, "..");
+// package.json 이 저장소 루트에 있음
+const packageDir = repoDir;
 const repositoryAgentsPath = path.join(repoDir, "AGENTS.md");
 const templatePath = path.join(repoDir, "AGENTS.template.md");
 const repositoryReadmePath = path.join(repoDir, "README.md");
-const packageReadmePath = path.join(packageDir, "README.md");
+const packageReadmePath = path.join(repoDir, "docs", "tooling.md");
 const reactAgentsPath = path.join(repoDir, "skill/react/HANDBOOK.md");
 const npmCommand = process.platform === "win32" ? "npm.cmd" : "npm";
 const packageBinDir = path.join(packageDir, "node_modules/.bin");
@@ -312,7 +313,7 @@ const parseMarkdownTableRows = (query: MarkdownTableQuery): string[][] => {
 };
 
 /**
- * @description `package/` npm script를 실제 CLI처럼 실행
+ * @description 루트 npm script를 실제 CLI처럼 실행
  */
 const runPackageCommand = (args: string[]) => {
 	const npmCheckResult = spawnSync(npmCommand, ["--version"], {cwd: repoDir, encoding: "utf8", env: commandEnv});
@@ -359,8 +360,8 @@ test("package.json exposes all-skill and per-skill script aliases", async () => 
 	assert.ok(packageJson.scripts["check:generated:all"]);
 	assert.equal(packageJson.scripts["check:handbooks:all"], "tsx src/check-handbooks.ts --all");
 	assert.equal(packageJson.scripts.site, "tsx src/site.ts");
-	assert.equal(packageJson.scripts["site:dev"], "npm run site && for-humanity dev ../site");
-	assert.equal(packageJson.scripts["site:build"], "npm run site && for-humanity build ../site");
+	assert.equal(packageJson.scripts["site:dev"], "npm run site && for-humanity dev site");
+	assert.equal(packageJson.scripts["site:build"], "npm run site && for-humanity build site");
 	assert.equal(packageJson.scripts["check:artifacts"], "npm run check:generated:all && npm run check:handbooks:all");
 
 	for (const skillName of expectedSkillScriptNames) {
@@ -423,7 +424,7 @@ test("repository documentation distinguishes source, router, and generated artif
 
 	for (const [documentName, source, heading] of [
 		["AGENTS.md", repositoryAgents, "3. Structured Skill Artifact Contract"],
-		["package/README.md", packageReadme, "Artifact Model"],
+		["docs/tooling.md", packageReadme, "Artifact Model"],
 	] as const) {
 		const section = extractMarkdownSection({source, heading, level: 2});
 		assert.deepEqual(parseMarkdownTableRows({section, expectedHeader: ["Artifact", "Role"]}), expectedArtifactRows, documentName);
@@ -470,7 +471,7 @@ test("repository documentation distinguishes source, router, and generated artif
 	assert.deepEqual(
 		parseMarkdownTableRows({section: topologySection, expectedHeader: ["Skill", "Loading", "Companion contract"]}),
 		expectedTopologyRows,
-		"package/README.md",
+		"docs/tooling.md",
 	);
 
 	// README는 라우팅 문서. 규범 계약 표를 싣지 않음

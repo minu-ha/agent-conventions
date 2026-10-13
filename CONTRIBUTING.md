@@ -92,7 +92,7 @@ skill/react/
 - 모든 규칙은 최소 한 시나리오에서 걸려야 한다.
 - 문단은 문장 단위로 끊고 120칸을 넘기지 않는다. `docs/semantic-wrap.py`가 정리한다.
   한글은 두 칸으로 센다. `.editorconfig`의 `max_line_length`도 같은 값이다.
-- 코드 펜스 안 인덴트는 탭이다. `package/biome.json`의 `indentStyle`과 맞춘다.
+- 코드 펜스 안 인덴트는 탭이다. `biome.json`의 `indentStyle`과 맞춘다.
 - `**Impact:`로 시작하는 줄은 한 줄로 유지한다. build가 그 형태로 파싱한다.
 
 ---
@@ -276,25 +276,25 @@ UI를 바꾸면 이벤트, 키보드 조작, 렌더링 조건을 함께 확인�
 ## 5. 명령
 
 ```bash
-npm --prefix package install                  # 최초 1회
+npm install                  # 최초 1회
 
-npm --prefix package run dev:react            # 단일 skill validate + build
-npm --prefix package run validate -- --all
-npm --prefix package run build -- --all
-npm --prefix package run site                  # site/ 에 for-humanity Markdown 생성
-npm --prefix package run site:dev              # 생성 후 localhost:4321 에 띄움
-npm --prefix package run site:build            # 생성 후 site/dist 에 정적 HTML
-npm --prefix package run check:generated:all  # 생성물과 source 일치 확인
-npm --prefix package run check:handbooks:all
-npm --prefix package run test
+npm run dev:react            # 단일 skill validate + build
+npm run validate -- --all
+npm run build -- --all
+npm run site                  # site/ 에 for-humanity Markdown 생성
+npm run site:dev              # 생성 후 dev 서버. 주소는 터미널에 찍힌다
+npm run site:build            # 생성 후 site/dist 에 정적 HTML
+npm run check:generated:all  # 생성물과 source 일치 확인
+npm run check:handbooks:all
+npm run test
 ```
 
 `site/`는 [for-humanity](https://github.com/minu-ha/for-humanity)가 읽는 생성 Markdown 폴더다. 커밋하지 않는다.
 skill 하나가 개요 한 장, 섹션 하나가 한 장이고 규칙은 그 페이지의 `##` 헤딩이다.
 `dev:<skill>`이 끝에 `site`를 다시 돌리므로 `site:dev` 서버를 켜 두면 고친 규칙이 바로 보인다.
 
-`skill/<name>` 안에서 작업하면 `--prefix ../../package`로 바꾼다.
-자세한 script 설명은 [package/README.md](./package/README.md).
+`skill/<name>` 안에서 작업하면 `npm --prefix ../..`로 바꾼다.
+자세한 script 설명은 [docs/tooling.md](./docs/tooling.md).
 
 ---
 
@@ -304,6 +304,6 @@ skill 하나가 개요 한 장, 섹션 하나가 한 장이고 규칙은 그 페
 | --- | --- |
 | skill 추가, 제거 | [README.md](./README.md) 의 skill 표, [AGENTS.md](./AGENTS.md) 의 목록 |
 | 로딩, companion 계약 변경 | [AGENTS.md](./AGENTS.md) |
-| 문서 인벤토리, 명령 변경 | [package/README.md](./package/README.md) |
+| 문서 인벤토리, 명령 변경 | [docs/tooling.md](./docs/tooling.md) |
 
 이 저장소에서 AI 에이전트로 작업할 때의 규칙은 [AGENTS.md](./AGENTS.md).

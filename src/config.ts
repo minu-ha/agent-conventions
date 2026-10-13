@@ -8,7 +8,8 @@ import type {CliArgs, PackagePaths, SkillPaths} from "./types.js";
 
 const currentDir = path.dirname(fileURLToPath(import.meta.url));
 const packageDir = path.resolve(currentDir, "..");
-const repoDir = path.resolve(packageDir, "..");
+// package.json 이 저장소 루트에 있어 둘이 같음
+const repoDir = packageDir;
 const skillRootDir = path.join(repoDir, "skill");
 
 /**

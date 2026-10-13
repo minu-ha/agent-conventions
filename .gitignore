@@ -1,6 +1,6 @@
 .DS_Store
 .idea/
-package/node_modules/
+node_modules/
 reference/
 temp/
 site/

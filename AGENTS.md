@@ -28,7 +28,7 @@
 
 사람용 문서는 [README.md](./README.md) 와 [CONTRIBUTING.md](./CONTRIBUTING.md).
 규칙 산문의 문체 · 낱말 · `appliesWhen` 형태는 [CONTRIBUTING.md](./CONTRIBUTING.md) 3절을 따른다. `validate` 가 막는다.
-build tooling은 [package/](./package/README.md).
+build tooling은 [docs/tooling.md](./docs/tooling.md).
 
 ---
 
@@ -93,7 +93,7 @@ progressive `routing-evals.json`.
 5. 생성물은 직접 편집 금지.
 6. `validate` → `build` → `check:generated` 순서로 검증.
 7. skill 인벤토리나 artifact 역할이 바뀌면 [README.md](./README.md),
-   [CONTRIBUTING.md](./CONTRIBUTING.md), [package/README.md](./package/README.md) 도 갱신.
+   [CONTRIBUTING.md](./CONTRIBUTING.md), [docs/tooling.md](./docs/tooling.md) 도 갱신.
 
 새 skill은 이미 정리된 `react`, `typescript`, `css`, `figma`를 템플릿으로 삼는다.
 
@@ -111,15 +111,15 @@ progressive `routing-evals.json`.
 ## 5. Commands
 
 ```bash
-npm --prefix package install                       # 최초 1회
-npm --prefix package run dev:<skill>               # validate + build
-npm --prefix package run validate -- --all
-npm --prefix package run build -- --all
-npm --prefix package run check:generated:all
-npm --prefix package run check:handbooks:all
-npm --prefix package run site                      # site/ 에 for-humanity Markdown 생성
-npm --prefix package run site:dev                  # 생성 후 localhost:4321 에서 보기
-npm --prefix package run test
+npm install                       # 최초 1회
+npm run dev:<skill>               # validate + build
+npm run validate -- --all
+npm run build -- --all
+npm run check:generated:all
+npm run check:handbooks:all
+npm run site                      # site/ 에 for-humanity Markdown 생성
+npm run site:dev                  # 생성 후 dev 서버. 주소는 터미널에 찍힌다
+npm run test
 ```
 
 `site/` 는 커밋하지 않는 생성 폴더다. `dev:<skill>` 이 끝에 다시 만든다.

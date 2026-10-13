@@ -24,7 +24,7 @@ import {generateRulesIndexMarkdown, getRuleId} from "../src/routing.js";
 import type {RoutingEvalManifest, RoutingExpectedPartition, RoutingScopeDrift, SkillCompanion} from "../src/types.js";
 
 const currentDir = path.dirname(fileURLToPath(import.meta.url));
-const repoDir = path.resolve(currentDir, "../..");
+const repoDir = path.resolve(currentDir, "..");
 
 /**
  * @helper 줄바꿈으로 접힌 본문을 한 줄로 펴서 문구 단위로 비교
@@ -2486,7 +2486,7 @@ test("TypeScript progressive metadata matches Appendix A exactly", async () => {
 test("TypeScript naming keeps immutable data constants in snake_case without renaming role-based symbols", async () => {
 	const namingRule = await readRuleSource("typescript", "naming-use-consistent-file-and-symbol-naming");
 	const toolingRule = await readRuleSource("typescript", "tooling-configure-biome-to-enforce-these-rules");
-	const biomeConfigSource = await readFile(path.join(repoDir, "package/biome.json"), "utf8");
+	const biomeConfigSource = await readFile(path.join(repoDir, "biome.json"), "utf8");
 	const snakeCaseFormat = /"formats": \["camelCase", "PascalCase", "snake_case"\]/g;
 
 	assertMentions(

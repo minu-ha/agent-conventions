@@ -428,7 +428,7 @@ const renderHomePage = (documents: LoadedSkillDocument[]): string => {
 		"# 팀 컨벤션",
 		"",
 		"React, CSS, TypeScript, Figma 코딩 규칙을 사람이 읽는 사이트입니다.",
-		"정본은 저장소의 `skill/<skill>/rules/*.md`이고, 이 사이트는 `npm --prefix package run site`가 거기서 생성합니다.",
+		"정본은 저장소의 `skill/<skill>/rules/*.md`이고, 이 사이트는 `npm run site`가 거기서 생성합니다.",
 		"",
 		"| 스킬 | 규칙 수 | 함께 적용 |",
 		"| --- | --- | --- |",
@@ -456,7 +456,7 @@ const renderHomePage = (documents: LoadedSkillDocument[]): string => {
 const renderConfig = (): string => {
 	return [
 		"/*",
-		" * 생성 파일. 원본은 package/src/site.ts",
+		" * 생성 파일. 원본은 src/site.ts",
 		" */",
 		"export default {",
 		'\ttitle: "팀 컨벤션",',
