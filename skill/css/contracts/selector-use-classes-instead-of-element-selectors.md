@@ -23,7 +23,6 @@ flowchart LR
 ### 예외 주석 형태
 
 `selector-disallowed-list`가 `&` 바로 뒤의 요소 선택자를 막으므로 예외에는 다음 주석을 남깁니다.
-
 예외 선택자가 하나면 `stylelint-disable-next-line`을 씁니다.
 둘 이상이면 블록을 `stylelint-disable`과 `stylelint-enable` 주석 쌍으로 감쌉니다.
 

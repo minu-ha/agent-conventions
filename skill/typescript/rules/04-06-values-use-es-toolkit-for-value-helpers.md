@@ -47,7 +47,6 @@ tags: values, es-toolkit
 | 표준 메서드로 끝나지 않는 연산 | 직접 여러 줄로 구현하기 전에 `es-toolkit`에서 찾습니다 |
 
 nullish만 제거하던 공개 계약은 `filter(isNotNil)` 등으로 보존하고 의미 차이를 검증하는 테스트를 남깁니다.
-
 날짜는 `values-handle-dates-with-dayjs`, 정렬은 `values-prefer-immutable-array-sorting`을 따릅니다.
 `groupBy`, `keyBy`는 목록 재구성에 쓰고, 반복 조회는
 `values-use-set-and-map-for-repeated-lookups`에 따라 `Set`, `Map`으로 처리합니다.

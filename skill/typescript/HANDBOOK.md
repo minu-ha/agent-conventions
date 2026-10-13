@@ -820,7 +820,6 @@ type MutableRow = Omit<Row, "children"> & {
 ### 상수 자리 고르기
 
 상수 위치는 사용처 수가 아니라 소유자로 정합니다.
-
 소유자를 지워도 값이 남는지 먼저 보고, 남으면 배포 환경마다 달라지는지에 따라 자리를 고릅니다.
 
 ```mermaid
@@ -1877,7 +1876,6 @@ page/product-detail/_function/
 **Impact: HIGH (파일을 열면 내보낸 함수가 먼저 보이고 호출부에서 호출 대상으로 이어집니다)**
 
 내보낸 계약과 대표 함수를 먼저 보여 주되, 모듈 초기화 시 필요한 선언 순서를 지킵니다.
-
 선언은 파일 위에서 아래로 다음 순서로 놓습니다.
 
 ```mermaid
@@ -2912,7 +2910,6 @@ const order_status_by_api_code = {
 | 표준 메서드로 끝나지 않는 연산 | 직접 여러 줄로 구현하기 전에 `es-toolkit`에서 찾습니다 |
 
 nullish만 제거하던 공개 계약은 `filter(isNotNil)` 등으로 보존하고 의미 차이를 검증하는 테스트를 남깁니다.
-
 날짜는 `values-handle-dates-with-dayjs`, 정렬은 `values-prefer-immutable-array-sorting`을 따릅니다.
 `groupBy`, `keyBy`는 목록 재구성에 쓰고, 반복 조회는
 `values-use-set-and-map-for-repeated-lookups`에 따라 `Set`, `Map`으로 처리합니다.
@@ -3996,7 +3993,6 @@ const filteredRows = useMemo(() => {
 - `performance/noReExportAll`
 
 기본 매개변수와 삼항의 대체 리터럴은 GritQL 검사 밖이므로 리뷰합니다.
-
 Biome 2.5.7의 `recommended`에는 `useConst`, `useImportType`, `noNonNullAssertion`,
 `noUnusedFunctionParameters`, `noExplicitAny`가 포함됩니다.
 담당 컨벤션을 드러내려고 설정에도 명시합니다.

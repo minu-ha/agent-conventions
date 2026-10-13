@@ -17,7 +17,6 @@ flowchart LR
 
 부품 조립이 필요 없는 고정 UI를 화면 지역 JSX로 둘지는
 `screen-extract-local-section-components-for-runtime-boundaries`를 따릅니다.
-
 아래 예제는 같은 대화상자를 필요에 따라 확장합니다.
 합성에 상태를 추가해도 사용처의 공개 이름은 유지하고, 반복되는 조합은 변형으로 감쌉니다.
 합성 진입 파일은 부품을 `{Root, Header, Body} as const` 객체 하나로 내보냅니다.

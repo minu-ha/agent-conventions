@@ -27,7 +27,6 @@
 
 `no-duplicate-selectors`는 `css/selector-declare-each-class-in-one-block`과
 `css/selector-do-not-group-classes-with-commas`의 단독 재선언을 담당합니다.
-
 폴더별 접두사는 `selector-class-pattern`과 `selector-disallowed-list`의 `overrides`로 나눕니다.
 예제 정규식은 `&`로 시작하는 중첩 선택자와 최상위를 구분하지만 `&`의 소유자까지 검사하지는 않습니다.
 `selector-max-combinators`와 `selector-max-type`은 넣지 않습니다.

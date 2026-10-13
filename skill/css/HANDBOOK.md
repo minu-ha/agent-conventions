@@ -435,7 +435,6 @@ flowchart LR
 | `.pg_products__sidebarToolbar .pg_products__sidebarTitle { }` | 같은 소유자의 클래스끼리라 이 규칙의 대상이 아닙니다 |
 
 이렇게 덮어쓰기를 한 블록에 모으면 라이브러리 버전을 올릴 때 확인할 곳도 한곳으로 정해집니다.
-
 다른 소유자의 DOM 경로는 우리가 정하지 않으므로 결합자 개수를 제한하지 않습니다.
 블록 중첩 깊이는 `selector-limit-nesting-block-depth` 규칙을 따릅니다.
 직접 수정할 수 있는 클래스라면 `ownership-change-other-owners-through-their-api`의 세 방법을 먼저 확인하고,
@@ -1317,7 +1316,6 @@ flowchart LR
 ### 예외 주석 형태
 
 `selector-disallowed-list`가 `&` 바로 뒤의 요소 선택자를 막으므로 예외에는 다음 주석을 남깁니다.
-
 예외 선택자가 하나면 `stylelint-disable-next-line`을 씁니다.
 둘 이상이면 블록을 `stylelint-disable`과 `stylelint-enable` 주석 쌍으로 감쌉니다.
 
@@ -2019,7 +2017,6 @@ flowchart LR
 **Impact: MEDIUM (여러 파일이 쓰는 값은 전역 토큰으로 모으고 나머지는 선언 자리에 그대로 둡니다)**
 
 값을 둘 자리는 **파일 경계**로 판정하고 다음 예외를 함께 확인합니다.
-
 여러 파일에서 쓰는지부터 아래 순서로 따져 값을 둘 자리를 고릅니다.
 
 ```mermaid
@@ -3085,7 +3082,6 @@ AAA 기준을 모든 표시의 두께가 반드시 2px이어야 한다는 뜻으
 
 `no-duplicate-selectors`는 `css/selector-declare-each-class-in-one-block`과
 `css/selector-do-not-group-classes-with-commas`의 단독 재선언을 담당합니다.
-
 폴더별 접두사는 `selector-class-pattern`과 `selector-disallowed-list`의 `overrides`로 나눕니다.
 예제 정규식은 `&`로 시작하는 중첩 선택자와 최상위를 구분하지만 `&`의 소유자까지 검사하지는 않습니다.
 `selector-max-combinators`와 `selector-max-type`은 넣지 않습니다.
