@@ -6,6 +6,8 @@ import {slug} from "github-slugger";
 import {getSkillPaths, isBuildableSkill, listSkillNames, siteOutputDir} from "./config.js";
 import {replaceGeneratedFiles} from "./generated-files.js";
 import {normalizeHeadingTitle, readSkillDocument} from "./parser.js";
+import {parseRuleBody} from "./rule-body.js";
+import type {RuleCodeBlock, RuleExample} from "./rule-body.js";
 import {escapeMarkdownProse, getRuleId, getRulesForSection} from "./routing.js";
 import type {LoadedSkillDocument, SkillCompanion, SkillRule, SkillSection} from "./types.js";
 
@@ -258,93 +260,127 @@ const linkRuleReferences = (lines: string[], context: RuleRenderContext): string
 };
 
 /**
- * 예제 라벨 줄. `rule-body.ts` 의 examplePattern 과 같은 형태
+ * 짝 비교에서 바뀐 줄이 블록의 이 비율을 넘으면 통째로 다시 쓴 것이라 표시하지 않음
  */
-const exampleLabelPattern = /^\*\*(Incorrect|Correct)(?:\s+(\d+))?\s*(?:\((.+)\))?\s*:?\*\*$/;
+const markedLineRatioLimit = 0.8;
 
 /**
- * @summary 라벨 줄 다음 코드 펜스에 붙일 for-humanity 코드 라벨
+ * 줄 표기 주석의 모양을 정하는 언어. 나머지는 `#`
  */
-interface PendingCodeLabel {
-	/**
-	 * @field 펜스 메타의 색. 잘못된 예는 bad, 올바른 예는 good
-	 */
-	tone: "bad" | "good";
-	/**
-	 * @field 첫 블록의 첫 줄에 주석으로 넣는 라벨. 같은 라벨의 둘째 블록부터는 색만
-	 */
-	comment: string;
-}
+const slashCommentLanguages = new Set(["ts", "tsx", "js", "jsx", "mjs", "cjs", "json", "grit"]);
+const blockCommentLanguages = new Set(["css", "scss", "less"]);
 
 /**
- * @helper 한 줄 주석. 블록 첫 줄이 이미 주석이면 그 모양을, 아니면 언어의 기본 모양을 따름
+ * @helper 두 블록의 줄을 LCS 로 맞춰 서로 없는 줄의 번호. 공백만 다른 줄은 같은 줄로 봄
  */
-const toCodeComment = (language: string, firstLine: string, text: string): string => {
-	if (firstLine.startsWith("/*") || /^(css|scss|less)$/.test(language)) {
-		return `/* ${text} */`;
+const changedLines = (left: string[], right: string[]): {left: Set<number>; right: Set<number>} => {
+	const table: number[][] = Array.from({length: left.length + 1}, () => new Array<number>(right.length + 1).fill(0));
+
+	for (let i = left.length - 1; i >= 0; i -= 1) {
+		for (let j = right.length - 1; j >= 0; j -= 1) {
+			const same = (left[i] ?? "").trim() === (right[j] ?? "").trim();
+			const row = table[i] ?? [];
+			const nextRow = table[i + 1] ?? [];
+
+			row[j] = same ? (nextRow[j + 1] ?? 0) + 1 : Math.max(nextRow[j] ?? 0, row[j + 1] ?? 0);
+		}
 	}
 
-	if (firstLine.startsWith("<!--") || /^(html|md|markdown|xml|svg)$/.test(language)) {
-		return `<!-- ${text} -->`;
+	const changed = {left: new Set<number>(), right: new Set<number>()};
+	let i = 0;
+	let j = 0;
+
+	while (i < left.length || j < right.length) {
+		if (i < left.length && j < right.length && (left[i] ?? "").trim() === (right[j] ?? "").trim()) {
+			i += 1;
+			j += 1;
+		} else if (j >= right.length || (i < left.length && (table[i + 1]?.[j] ?? 0) >= (table[i]?.[j + 1] ?? 0))) {
+			changed.left.add(i);
+			i += 1;
+		} else {
+			changed.right.add(j);
+			j += 1;
+		}
 	}
 
-	if (firstLine.startsWith("#") || /^(txt|text|sh|bash|zsh|yaml|yml|toml|py|python)$/.test(language)) {
-		return firstLine.startsWith("//") ? `// ${text}` : `# ${text}`;
-	}
-
-	return `// ${text}`;
+	return changed;
 };
 
 /**
- * @helper `**Incorrect 1 (설명):**` 줄을 지우고 뒤따르는 코드 펜스를 `bad`·`good` 메타와 첫 줄 주석으로. 언어 없는 펜스는 text
+ * @helper 언어에 맞는 표기 주석 줄
  */
-const labelExampleFences = (lines: string[]): string[] => {
-	const out: string[] = [];
-	let inFence = false;
-	let pending: PendingCodeLabel | undefined;
-	// 라벨 펜스를 연 직후. 첫 코드 줄을 보고 주석 모양을 정함
-	let opened: {language: string; comment: string} | undefined;
-
-	for (const line of lines) {
-		if (opened !== undefined) {
-			if (opened.comment !== "") {
-				out.push(toCodeComment(opened.language, line, opened.comment));
-			}
-
-			opened = undefined;
-		}
-
-		if (line.startsWith("```")) {
-			if (!inFence && pending !== undefined) {
-				const language = line.slice("```".length).trim() || "text";
-
-				out.push(`\`\`\`${language} ${pending.tone}`);
-				opened = {language, comment: pending.comment};
-				pending = {tone: pending.tone, comment: ""};
-				inFence = true;
-				continue;
-			}
-
-			inFence = !inFence;
-			out.push(line);
-			continue;
-		}
-
-		const match = inFence ? null : exampleLabelPattern.exec(line);
-
-		if (match === null) {
-			out.push(line);
-			continue;
-		}
-
-		const kind = match[1] === "Incorrect" ? "잘못된 예" : "올바른 예";
-		const number = match[2] === undefined ? "" : ` ${match[2]}`;
-		const description = (match[3] ?? "").replace(/`/g, "").trim();
-
-		pending = {tone: match[1] === "Incorrect" ? "bad" : "good", comment: `${kind}${number}${description === "" ? "" : `: ${description}`}`};
+const toNotationLine = (language: string, notation: string): string => {
+	if (slashCommentLanguages.has(language)) {
+		return `// [!code ${notation}]`;
 	}
 
-	return out;
+	if (blockCommentLanguages.has(language)) {
+		return `/* [!code ${notation}] */`;
+	}
+
+	return `# [!code ${notation}]`;
+};
+
+/**
+ * @helper 바뀐 줄 앞에 표기만 있는 주석 줄을 끼움. 빈 줄은 건너뜀
+ * @description 줄 끝 인라인은 JSX 자식 줄과 JSDoc 블록 안에서 주석 토큰이 안 되어 남는다. 표기 줄은 그 다음 줄에 적용되고 렌더에서 사라짐
+ */
+const markLines = (block: RuleCodeBlock, lines: Set<number>, notation: string): string => {
+	const marker = toNotationLine(block.lang, notation);
+	const out: string[] = [];
+
+	block.code.split("\n").forEach((line, index) => {
+		if (lines.has(index) && line.trim() !== "") {
+			out.push(marker);
+		}
+
+		out.push(line);
+	});
+
+	return out.join("\n");
+};
+
+/**
+ * @helper 예제 머리말. 짝 번호와 설명. for-humanity 의 status badge 가 Incorrect, Correct 에 색을 입힘
+ */
+const exampleLabel = (example: RuleExample): string => {
+	const kind = example.kind === "incorrect" ? "Incorrect" : "Correct";
+	const number = example.pair === undefined ? "" : ` ${example.pair}`;
+
+	return example.label === "" ? `${kind}${number}` : `${kind}${number}: ${example.label}`;
+};
+
+/**
+ * @helper 예제 전부를 머리말과 줄 번호 펜스로. 같은 번호의 Incorrect, Correct 짝은 서로 다른 줄을 error, ++ 로 표시
+ */
+const renderExamples = (examples: RuleExample[]): string[] => {
+	const counterpartOf = (example: RuleExample): RuleExample | undefined =>
+		example.pair === undefined ? undefined : examples.find((other) => other.pair === example.pair && other.kind !== example.kind);
+	const lines: string[] = [];
+
+	for (const example of examples) {
+		const counterpart = counterpartOf(example);
+
+		lines.push(exampleLabel(example), "");
+
+		example.blocks.forEach((block, index) => {
+			const other = counterpart?.blocks[index];
+			let code = block.code;
+
+			if (other !== undefined && other.lang === block.lang) {
+				const changed = changedLines(block.code.split("\n"), other.code.split("\n")).left;
+				const lineCount = block.code.split("\n").length;
+
+				if (changed.size > 0 && changed.size <= lineCount * markedLineRatioLimit) {
+					code = markLines(block, changed, example.kind === "incorrect" ? "error" : "++");
+				}
+			}
+
+			lines.push(`\`\`\`${block.lang} line-numbers`, code, "```", "");
+		});
+	}
+
+	return lines;
 };
 
 /**
@@ -353,7 +389,7 @@ const labelExampleFences = (lines: string[]): string[] => {
 const toSummarySentence = (summary: string): string => (summary === "" || /[.!?]$/.test(summary) ? summary : `${summary}.`);
 
 /**
- * @helper 규칙 본문 하나를 섹션 페이지 조각으로. 번호 헤딩, 등급 없는 요지, 사람용 링크, 라벨 코드, 함께 보기
+ * @helper 규칙 본문 하나를 섹션 페이지 조각으로. 번호 헤딩, 등급 없는 요지, 사람용 링크, 머리말 붙은 예제, 함께 보기
  * @description 등급, 순번, ID, 적용 조건은 에이전트의 인덱스와 계약에만 나감. 사람용 페이지에는 싣지 않음
  */
 const renderRule = (rule: SkillRule, context: RuleRenderContext): string => {
@@ -379,7 +415,20 @@ const renderRule = (rule: SkillRule, context: RuleRenderContext): string => {
 		lines.splice(impactIndex, 1, ...(location.summary === "" ? [] : [toSummarySentence(location.summary)]));
 	}
 
-	return [...linkRuleReferences(labelExampleFences(lines), context), ...renderRelated(rule, context)].join("\n");
+	// 산문은 첫 예제 머리말 앞까지. 예제는 분해한 뒤 다시 그림
+	const firstExample = lines.findIndex((line) => /^\*\*(?:Incorrect|Correct)\b/.test(line));
+	const prose = firstExample < 0 ? lines : lines.slice(0, firstExample);
+
+	while (prose.length > 0 && (prose.at(-1) ?? "").trim() === "") {
+		prose.pop();
+	}
+
+	return [
+		...linkRuleReferences(prose, context),
+		"",
+		...renderExamples(parseRuleBody(rule.body).examples),
+		...renderRelated(rule, context),
+	].join("\n");
 };
 
 /**

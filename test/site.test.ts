@@ -174,41 +174,44 @@ test("rule references read as numbered rules in prose and as titled items under 
 	);
 });
 
-test("examples render as bad or good code fences whose first line is a Korean comment", async () => {
+test("examples render with a labelled line above numbered code, and pairs mark their differing lines", async () => {
 	const files = await generateSiteFiles();
 	const pages = files.filter(isSectionPage);
-	let labelled = 0;
-	let commented = 0;
+	let labels = 0;
+	let numbered = 0;
+	let errorMarks = 0;
+	let addMarks = 0;
 
 	for (const file of pages) {
-		const lines = file.content.split("\n");
-
-		lines.forEach((line, index) => {
-			if (!/^```\S+ (?:bad|good)$/.test(line)) {
-				assert.equal(/^```(?: |\S+ )/.test(line), false, `${file.path}: unexpected fence meta ${line}`);
-				return;
+		for (const line of file.content.split("\n")) {
+			if (/^(?:Incorrect|Correct)(?: \d+)?(?::|$)/.test(line)) {
+				labels += 1;
 			}
 
-			labelled += 1;
+			if (line.startsWith("```") && line.length > "```".length) {
+				assert.match(line, /^```\S+(?: line-numbers)?$/, `${file.path}: unexpected fence meta ${line}`);
 
-			if (/(?:잘못된 예|올바른 예)/.test(lines[index + 1] ?? "")) {
-				commented += 1;
-				assert.match(
-					lines[index + 1] ?? "",
-					/^(?:\/\/|\/\*|#|<!--) (?:잘못된 예|올바른 예)(?: \d+)?(?::|$| \*\/| -->)/,
-					`${file.path}: comment shape`,
-				);
+				if (line.endsWith(" line-numbers")) {
+					numbered += 1;
+				}
 			}
-		});
+
+			if (line.includes("[!code error]")) {
+				errorMarks += 1;
+			}
+
+			if (line.includes("[!code ++]")) {
+				addMarks += 1;
+			}
+		}
+
+		assert.equal(file.content.includes("·"), false, `${file.path} uses a middle dot`);
 	}
 
-	assert.ok(labelled > expectedRuleCount * 2, `expected labelled fences for every example, found ${labelled}`);
-	assert.ok(commented > expectedRuleCount * 2, `expected comment labels, found ${commented}`);
-	assert.equal(
-		pages.some((file) => file.content.includes("·")),
-		false,
-		"the site uses commas, never a middle dot",
-	);
+	assert.ok(labels > expectedRuleCount * 2, `expected a label per example, found ${labels}`);
+	assert.equal(numbered, labels === 0 ? 0 : numbered, "every example fence carries line-numbers");
+	assert.ok(numbered >= labels, `expected numbered fences for every example, found ${numbered} for ${labels} labels`);
+	assert.ok(errorMarks > 0 && addMarks > 0, `expected diff marks on paired examples, found ${errorMarks} error and ${addMarks} add marks`);
 });
 
 test("generateSiteFiles is deterministic", async () => {
