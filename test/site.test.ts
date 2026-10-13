@@ -50,18 +50,20 @@ const collectAnchors = (file: SiteFile): Set<string> => {
 	return anchors;
 };
 
-const isSectionPage = (file: SiteFile): boolean => file.path.includes("/");
+const isSectionPage = (file: SiteFile): boolean => file.path.includes("/") && file.path.endsWith(".md");
+const isExampleCopy = (file: SiteFile): boolean => file.path.startsWith("examples/");
 const isOverviewPage = (file: SiteFile): boolean => !file.path.includes("/") && file.path.endsWith(".md");
 
 test("generateSiteFiles emits one overview per skill and one page per section, nothing else", async () => {
 	const files = await generateSiteFiles();
 
-	// 홈과 사이트 설정은 docs/ 에 손으로 쓴 파일이라 생성하지 않음
+	// 홈과 사이트 설정은 docs/ 에 손으로 쓴 파일이라 생성하지 않음. Markdown 밖의 파일은 예제 복사본뿐
 	assert.equal(
-		files.some((file) => !file.path.endsWith(".md")),
+		files.some((file) => !file.path.endsWith(".md") && !isExampleCopy(file)),
 		false,
-		"only Markdown pages are generated",
+		"only Markdown pages and example copies are generated",
 	);
+	assert.ok(files.filter(isExampleCopy).length > expectedRuleCount * 2, "example copies missing");
 	assert.equal(files.filter(isOverviewPage).length, expectedSkillCount);
 	assert.equal(files.filter(isSectionPage).length, expectedSectionCount);
 	assert.equal(new Set(files.map((file) => file.path)).size, files.length, "paths must be unique");
@@ -174,44 +176,50 @@ test("rule references read as numbered rules in prose and as titled items under 
 	);
 });
 
-test("examples render with a labelled line above numbered code, and pairs mark their differing lines", async () => {
+test("examples render as a sentence above a toned, numbered snippet whose copy exists and carries line marks", async () => {
 	const files = await generateSiteFiles();
 	const pages = files.filter(isSectionPage);
-	let labels = 0;
-	let numbered = 0;
+	const copyByPath = new Map(files.filter(isExampleCopy).map((file) => [file.path, file]));
+	let snippets = 0;
 	let errorMarks = 0;
 	let addMarks = 0;
 
 	for (const file of pages) {
-		for (const line of file.content.split("\n")) {
-			if (/^(?:Incorrect|Correct)(?: \d+)?(?::|$)/.test(line)) {
-				labels += 1;
+		const lines = file.content.split("\n");
+
+		lines.forEach((line, index) => {
+			if (line.startsWith("```")) {
+				assert.match(line, /^```(?:[a-z]+)?$/, `${file.path}: prose fences carry no meta: ${line}`);
 			}
 
-			if (line.startsWith("```") && line.length > "```".length) {
-				assert.match(line, /^```\S+(?: line-numbers)?$/, `${file.path}: unexpected fence meta ${line}`);
-
-				if (line.endsWith(" line-numbers")) {
-					numbered += 1;
-				}
+			if (!line.startsWith("<<< ")) {
+				return;
 			}
 
-			if (line.includes("[!code error]")) {
-				errorMarks += 1;
-			}
+			snippets += 1;
 
-			if (line.includes("[!code ++]")) {
-				addMarks += 1;
-			}
-		}
+			const match = /^<<< (\.\.\/examples\/[a-z]+\/[a-z0-9-]+\/\d{2}-(?:incorrect|correct)(?:-\d+)?\.[a-z]+) (bad|good) line-numbers$/.exec(
+				line,
+			);
 
-		assert.equal(file.content.includes("·"), false, `${file.path} uses a middle dot`);
+			assert.ok(match, `${file.path}: snippet line shape: ${line}`);
+
+			const copyPath = path.posix.normalize(path.posix.join(path.posix.dirname(file.path), match[1] ?? ""));
+			const copy = copyByPath.get(copyPath);
+
+			assert.ok(copy, `${file.path}: snippet target ${copyPath} is not generated`);
+			assert.equal((match[1] ?? "").includes("incorrect"), match[2] === "bad", `${file.path}: tone must follow the example kind`);
+			errorMarks += copy.content.split("[!code error]").length - 1;
+			addMarks += copy.content.split("[!code ++]").length - 1;
+
+			const above = lines[index - 2] ?? "";
+
+			assert.equal(/^\*\*(?:Incorrect|Correct)/.test(above), false, `${file.path}: labels must not reach the page`);
+		});
 	}
 
-	assert.ok(labels > expectedRuleCount * 2, `expected a label per example, found ${labels}`);
-	assert.equal(numbered, labels === 0 ? 0 : numbered, "every example fence carries line-numbers");
-	assert.ok(numbered >= labels, `expected numbered fences for every example, found ${numbered} for ${labels} labels`);
-	assert.ok(errorMarks > 0 && addMarks > 0, `expected diff marks on paired examples, found ${errorMarks} error and ${addMarks} add marks`);
+	assert.ok(snippets > expectedRuleCount * 2, `expected a snippet per example block, found ${snippets}`);
+	assert.ok(errorMarks > 0 && addMarks > 0, `expected seeded line marks in the copies, found ${errorMarks} error and ${addMarks} add`);
 });
 
 test("generateSiteFiles is deterministic", async () => {

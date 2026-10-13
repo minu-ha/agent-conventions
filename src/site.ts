@@ -1,4 +1,4 @@
-import {mkdir, readdir} from "node:fs/promises";
+import {mkdir, readFile, readdir} from "node:fs/promises";
 import path from "node:path";
 
 import {slug} from "github-slugger";
@@ -6,8 +6,7 @@ import {slug} from "github-slugger";
 import {getSkillPaths, isBuildableSkill, listSkillNames, siteOutputDir} from "./config.js";
 import {replaceGeneratedFiles} from "./generated-files.js";
 import {normalizeHeadingTitle, readSkillDocument} from "./parser.js";
-import {parseRuleBody} from "./rule-body.js";
-import type {RuleCodeBlock, RuleExample} from "./rule-body.js";
+import {snippetLinePattern} from "./snippets.js";
 import {escapeMarkdownProse, getRuleId, getRulesForSection} from "./routing.js";
 import type {LoadedSkillDocument, SkillCompanion, SkillRule, SkillSection} from "./types.js";
 
@@ -200,6 +199,14 @@ interface RuleRenderContext {
 	 * @field 전체 규칙 위치 색인
 	 */
 	locations: Map<string, RuleLocation>;
+	/**
+	 * @field 규칙 파일이 있는 폴더. `<<<` 상대 경로의 기준
+	 */
+	rulesDir: string;
+	/**
+	 * @field 사이트로 복사할 예제 파일. 사이트 경로 → 원본 절대 경로
+	 */
+	copies: Map<string, string>;
 }
 
 /**
@@ -260,127 +267,69 @@ const linkRuleReferences = (lines: string[], context: RuleRenderContext): string
 };
 
 /**
- * 짝 비교에서 바뀐 줄이 블록의 이 비율을 넘으면 통째로 다시 쓴 것이라 표시하지 않음
+ * 예제 머리말 줄. `rule-body.ts` 의 examplePattern 과 같은 형태
  */
-const markedLineRatioLimit = 0.8;
+const exampleLabelPattern = /^\*\*(Incorrect|Correct)(?:\s+(\d+))?\s*(?:\((.+)\))?\s*:?\*\*$/;
 
 /**
- * 줄 표기 주석의 모양을 정하는 언어. 나머지는 `#`
+ * 사이트 안에서 예제 파일 복사본이 사는 폴더. 섹션 페이지가 `<<<` 로 가리킴
  */
-const slashCommentLanguages = new Set(["ts", "tsx", "js", "jsx", "mjs", "cjs", "json", "grit"]);
-const blockCommentLanguages = new Set(["css", "scss", "less"]);
+const exampleCopyDir = "examples";
 
 /**
- * @helper 두 블록의 줄을 LCS 로 맞춰 서로 없는 줄의 번호. 공백만 다른 줄은 같은 줄로 봄
+ * @helper 예제 전부를 설명 한 줄과 `<<<` 줄로. 번호와 Incorrect, Correct 글자는 안 보이고 블록 색이 판정을 말함
+ * @description 원문의 `<<<` 가 가리키는 파일을 사이트 폴더로 복사하도록 context.copies 에 적고, 줄 표기 주석은 파일 안에 있어 그대로 살아남
  */
-const changedLines = (left: string[], right: string[]): {left: Set<number>; right: Set<number>} => {
-	const table: number[][] = Array.from({length: left.length + 1}, () => new Array<number>(right.length + 1).fill(0));
+const renderExamples = (rule: SkillRule, context: RuleRenderContext): string[] => {
+	const lines = rule.source.trim().split("\n");
+	const start = lines.findIndex((line) => exampleLabelPattern.test(line));
 
-	for (let i = left.length - 1; i >= 0; i -= 1) {
-		for (let j = right.length - 1; j >= 0; j -= 1) {
-			const same = (left[i] ?? "").trim() === (right[j] ?? "").trim();
-			const row = table[i] ?? [];
-			const nextRow = table[i + 1] ?? [];
-
-			row[j] = same ? (nextRow[j + 1] ?? 0) + 1 : Math.max(nextRow[j] ?? 0, row[j + 1] ?? 0);
-		}
+	if (start < 0) {
+		return [];
 	}
 
-	const changed = {left: new Set<number>(), right: new Set<number>()};
-	let i = 0;
-	let j = 0;
-
-	while (i < left.length || j < right.length) {
-		if (i < left.length && j < right.length && (left[i] ?? "").trim() === (right[j] ?? "").trim()) {
-			i += 1;
-			j += 1;
-		} else if (j >= right.length || (i < left.length && (table[i + 1]?.[j] ?? 0) >= (table[i]?.[j + 1] ?? 0))) {
-			changed.left.add(i);
-			i += 1;
-		} else {
-			changed.right.add(j);
-			j += 1;
-		}
-	}
-
-	return changed;
-};
-
-/**
- * @helper 언어에 맞는 표기 주석 줄
- */
-const toNotationLine = (language: string, notation: string): string => {
-	if (slashCommentLanguages.has(language)) {
-		return `// [!code ${notation}]`;
-	}
-
-	if (blockCommentLanguages.has(language)) {
-		return `/* [!code ${notation}] */`;
-	}
-
-	return `# [!code ${notation}]`;
-};
-
-/**
- * @helper 바뀐 줄 앞에 표기만 있는 주석 줄을 끼움. 빈 줄은 건너뜀
- * @description 줄 끝 인라인은 JSX 자식 줄과 JSDoc 블록 안에서 주석 토큰이 안 되어 남는다. 표기 줄은 그 다음 줄에 적용되고 렌더에서 사라짐
- */
-const markLines = (block: RuleCodeBlock, lines: Set<number>, notation: string): string => {
-	const marker = toNotationLine(block.lang, notation);
 	const out: string[] = [];
+	let tone: "bad" | "good" = "bad";
 
-	block.code.split("\n").forEach((line, index) => {
-		if (lines.has(index) && line.trim() !== "") {
-			out.push(marker);
-		}
+	for (const line of lines.slice(start)) {
+		const label = exampleLabelPattern.exec(line);
 
-		out.push(line);
-	});
+		if (label !== null) {
+			tone = label[1] === "Incorrect" ? "bad" : "good";
+			const description = (label[3] ?? "").trim();
 
-	return out.join("\n");
-};
-
-/**
- * @helper 예제 머리말. 짝 번호와 설명. for-humanity 의 status badge 가 Incorrect, Correct 에 색을 입힘
- */
-const exampleLabel = (example: RuleExample): string => {
-	const kind = example.kind === "incorrect" ? "Incorrect" : "Correct";
-	const number = example.pair === undefined ? "" : ` ${example.pair}`;
-
-	return example.label === "" ? `${kind}${number}` : `${kind}${number}: ${example.label}`;
-};
-
-/**
- * @helper 예제 전부를 머리말과 줄 번호 펜스로. 같은 번호의 Incorrect, Correct 짝은 서로 다른 줄을 error, ++ 로 표시
- */
-const renderExamples = (examples: RuleExample[]): string[] => {
-	const counterpartOf = (example: RuleExample): RuleExample | undefined =>
-		example.pair === undefined ? undefined : examples.find((other) => other.pair === example.pair && other.kind !== example.kind);
-	const lines: string[] = [];
-
-	for (const example of examples) {
-		const counterpart = counterpartOf(example);
-
-		lines.push(exampleLabel(example), "");
-
-		example.blocks.forEach((block, index) => {
-			const other = counterpart?.blocks[index];
-			let code = block.code;
-
-			if (other !== undefined && other.lang === block.lang) {
-				const changed = changedLines(block.code.split("\n"), other.code.split("\n")).left;
-				const lineCount = block.code.split("\n").length;
-
-				if (changed.size > 0 && changed.size <= lineCount * markedLineRatioLimit) {
-					code = markLines(block, changed, example.kind === "incorrect" ? "error" : "++");
-				}
+			if (description !== "") {
+				out.push(toSummarySentence(description), "");
 			}
 
-			lines.push(`\`\`\`${block.lang} line-numbers`, code, "```", "");
-		});
+			continue;
+		}
+
+		const snippet = snippetLinePattern.exec(line);
+
+		if (snippet === null) {
+			if (line.trim() !== "") {
+				out.push(line);
+			}
+
+			continue;
+		}
+
+		const [, reference = ""] = snippet;
+		const sourcePath = path.resolve(context.rulesDir, reference);
+		// rules/ 기준 `../examples/<id>/<file>` → 사이트의 `examples/<skill>/<id>/<file>`
+		const insideExamples = path.posix.normalize(path.posix.join("rules", reference)).replace(/^examples\//, "");
+		const copyPath = `${exampleCopyDir}/${context.document.skillName}/${insideExamples}`;
+
+		context.copies.set(copyPath, sourcePath);
+		out.push(`<<< ${path.posix.relative(path.posix.dirname(context.page), copyPath)} ${tone} line-numbers`, "");
 	}
 
-	return lines;
+	while (out.length > 0 && (out.at(-1) ?? "").trim() === "") {
+		out.pop();
+	}
+
+	return out;
 };
 
 /**
@@ -423,12 +372,7 @@ const renderRule = (rule: SkillRule, context: RuleRenderContext): string => {
 		prose.pop();
 	}
 
-	return [
-		...linkRuleReferences(prose, context),
-		"",
-		...renderExamples(parseRuleBody(rule.body).examples),
-		...renderRelated(rule, context),
-	].join("\n");
+	return [...linkRuleReferences(prose, context), "", ...renderExamples(rule, context), ...renderRelated(rule, context)].join("\n");
 };
 
 /**
@@ -439,16 +383,17 @@ interface SectionPageArgs {
 	section: SkillSection;
 	rules: SkillRule[];
 	locations: Map<string, RuleLocation>;
+	copies: Map<string, string>;
 }
 
 /**
  * @helper 섹션 하나가 페이지 하나. 규칙은 `##`, 규칙 안 소제목은 원문 `###` 그대로
  */
 const renderSectionPage = (args: SectionPageArgs): string => {
-	const {document, section, rules, locations} = args;
+	const {document, section, rules, locations, copies} = args;
 	const placement = getPlacement(document.skillName);
 	const page = sectionPagePath(document.skillName, section);
-	const context: RuleRenderContext = {document, page, locations};
+	const context: RuleRenderContext = {document, page, locations, rulesDir: getSkillPaths(document.skillName).rulesDir, copies};
 	const lines = [
 		"---",
 		`name: ${yamlScalar(`${section.order}. ${sectionDisplayTitle(section)}`)}`,
@@ -580,6 +525,7 @@ export const generateSiteFiles = async (): Promise<SiteFile[]> => {
 	documents.sort(comparePlacement);
 
 	const locations = collectRuleLocations(documents);
+	const copies = new Map<string, string>();
 	const files: SiteFile[] = [];
 
 	for (const document of documents) {
@@ -592,23 +538,29 @@ export const generateSiteFiles = async (): Promise<SiteFile[]> => {
 				continue;
 			}
 
-			files.push({path: sectionPagePath(document.skillName, section), content: renderSectionPage({document, section, rules, locations})});
+			files.push({
+				path: sectionPagePath(document.skillName, section),
+				content: renderSectionPage({document, section, rules, locations, copies}),
+			});
 		}
+	}
+
+	// 예제 파일 복사본. for-humanity 는 문서 폴더 안의 파일만 읽음
+	for (const [copyPath, sourcePath] of [...copies].sort(([left], [right]) => left.localeCompare(right, "en-US"))) {
+		files.push({path: copyPath, content: await readFile(sourcePath, "utf8")});
 	}
 
 	return files;
 };
 
 /**
- * @helper 지금 생성 폴더에 있는 Markdown 상대 경로
+ * @helper 지금 생성 폴더에 있는 파일 상대 경로. 페이지와 예제 복사본 전부
  */
-const listSiteMarkdownFiles = async (): Promise<string[]> => {
+const listSiteFiles = async (): Promise<string[]> => {
 	try {
 		const entries = await readdir(siteOutputDir, {recursive: true, withFileTypes: true});
 
-		return entries
-			.filter((entry) => entry.isFile() && entry.name.endsWith(".md"))
-			.map((entry) => path.relative(siteOutputDir, path.join(entry.parentPath, entry.name)));
+		return entries.filter((entry) => entry.isFile()).map((entry) => path.relative(siteOutputDir, path.join(entry.parentPath, entry.name)));
 	} catch (error) {
 		if ((error as NodeJS.ErrnoException).code === "ENOENT") {
 			return [];
@@ -619,12 +571,12 @@ const listSiteMarkdownFiles = async (): Promise<string[]> => {
 };
 
 /**
- * @description 생성 폴더를 현재 원본 기준으로 다시 씀. 사라진 섹션의 옛 페이지는 지움
+ * @description 생성 폴더를 현재 원본 기준으로 다시 씀. 사라진 섹션의 옛 페이지와 옛 예제 복사본은 지움
  */
 export const buildSite = async (): Promise<void> => {
 	const files = await generateSiteFiles();
 	const targetPaths = new Set(files.map((file) => file.path));
-	const stalePaths = (await listSiteMarkdownFiles()).filter((relativePath) => !targetPaths.has(relativePath));
+	const stalePaths = (await listSiteFiles()).filter((relativePath) => !targetPaths.has(relativePath));
 
 	for (const directory of new Set(files.map((file) => path.dirname(path.join(siteOutputDir, file.path))))) {
 		await mkdir(directory, {recursive: true});
