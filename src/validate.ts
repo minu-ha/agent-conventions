@@ -1,6 +1,6 @@
 import path from "node:path";
 
-import {getSkillPaths, isBuildableSkill, listSkillNames, packagePaths, parseCliArgs} from "./config.js";
+import {getSkillPaths, isBuildableSkill, listSkillNames} from "./config.js";
 import {
 	assertRoutingCondition,
 	assertValidRoutingIdentifier,
@@ -9,7 +9,6 @@ import {
 	parseDependencyDeclaration,
 } from "./dependencies.js";
 import type {DependencyDeclaration} from "./dependencies.js";
-import {isDirectExecution} from "./entrypoint.js";
 import {readSkillDocument, readSkillRuleFileNames} from "./parser.js";
 import {assertProgressiveCompanionSource, assertProgressiveSkillEntrypoint} from "./progressive.js";
 import {assertRuleDiscipline} from "./rule-discipline.js";
@@ -472,33 +471,3 @@ export const validateSkill = async (skillPaths: SkillPaths): Promise<void> => {
 		`Validated ${skillPaths.skillName}: ${rootResult.ruleCount} local rule files across ${rootResult.sectionCount} sections${dependencySummary}.`,
 	);
 };
-
-/**
- * @description CLI 입력 기준 skill 문서 형식 검증 실행
- */
-export const main = async (): Promise<void> => {
-	const {all, skill, skillRootDir = packagePaths.skillRootDir} = parseCliArgs(process.argv.slice(2));
-	const targetSkillNames = all ? await listSkillNames(skillRootDir) : [skill];
-
-	for (const skillName of targetSkillNames) {
-		if (!skillName) {
-			continue;
-		}
-
-		const buildable = await isBuildableSkill(skillName, skillRootDir);
-
-		if (!buildable) {
-			if (all) {
-				continue;
-			}
-
-			throw new Error(`Skill "${skillName}" is not buildable yet. Expected rules/_sections.md and metadata.json under skill/${skillName}.`);
-		}
-
-		await validateSkill(getSkillPaths(skillName, skillRootDir));
-	}
-};
-
-if (await isDirectExecution(import.meta.url)) {
-	await main();
-}

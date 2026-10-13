@@ -86,32 +86,3 @@ export const checkDiagrams = async (): Promise<DiagramReport[]> => {
 
 	return reports;
 };
-
-const isEntryPoint = process.argv[1]?.endsWith("check-diagrams.ts") === true;
-
-if (isEntryPoint) {
-	const reports = await checkDiagrams();
-	let failed = false;
-
-	const statusWidth = 8;
-	const statusOf = (report: DiagramReport): string => {
-		if (report.error) {
-			return `ERROR ${report.error}`;
-		}
-
-		return report.columns > maxDiagramColumns ? "TOO WIDE" : "ok";
-	};
-
-	for (const report of reports) {
-		const status = statusOf(report);
-		failed = failed || status !== "ok";
-		console.log(
-			`${status.padEnd(statusWidth)} ${report.skill}/${report.ruleId} #${report.index + 1}  ${report.columns}칸 × ${report.rows}줄`,
-		);
-	}
-
-	console.log(
-		`diagrams: ${reports.length}, over ${maxDiagramColumns} columns or broken: ${reports.filter((r) => r.error || r.columns > maxDiagramColumns).length}`,
-	);
-	process.exitCode = failed ? 1 : 0;
-}

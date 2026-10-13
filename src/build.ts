@@ -1,9 +1,7 @@
 import {mkdir} from "node:fs/promises";
 import path from "node:path";
 
-import {getSkillPaths, isBuildableSkill, listSkillNames, packagePaths, parseCliArgs} from "./config.js";
 import {parseDependencyDeclaration} from "./dependencies.js";
-import {isDirectExecution} from "./entrypoint.js";
 import {readGeneratedDirectoryFileNames, replaceGeneratedFiles} from "./generated-files.js";
 import {buildRuleAnchor, buildSectionAnchor, normalizeHeadingTitle, readResolvedSkillDocuments, replaceRuleHeading} from "./parser.js";
 import {
@@ -485,33 +483,3 @@ export const buildSkill = async (skillPaths: SkillPaths): Promise<void> => {
 		}
 	}
 };
-
-/**
- * @description CLI 입력 기준 build 대상 skill 컴파일 가이드 생성
- */
-export const main = async (): Promise<void> => {
-	const {all, skill, skillRootDir = packagePaths.skillRootDir} = parseCliArgs(process.argv.slice(2));
-	const targetSkillNames = all ? await listSkillNames(skillRootDir) : [skill];
-
-	for (const skillName of targetSkillNames) {
-		if (!skillName) {
-			continue;
-		}
-
-		const buildable = await isBuildableSkill(skillName, skillRootDir);
-
-		if (!buildable) {
-			if (all) {
-				continue;
-			}
-
-			throw new Error(`Skill "${skillName}" is not buildable yet. Expected rules/_sections.md and metadata.json under skill/${skillName}.`);
-		}
-
-		await buildSkill(getSkillPaths(skillName, skillRootDir));
-	}
-};
-
-if (await isDirectExecution(import.meta.url)) {
-	await main();
-}

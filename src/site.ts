@@ -4,7 +4,6 @@ import path from "node:path";
 import {slug} from "github-slugger";
 
 import {getSkillPaths, isBuildableSkill, listSkillNames, siteOutputDir} from "./config.js";
-import {isDirectExecution} from "./entrypoint.js";
 import {replaceGeneratedFiles} from "./generated-files.js";
 import {normalizeHeadingTitle, readSkillDocument} from "./parser.js";
 import {escapeMarkdownProse, getCanonicalRoutingOrdinals, getRuleId, getRulesForSection} from "./routing.js";
@@ -500,14 +499,3 @@ export const buildSite = async (): Promise<void> => {
 	]);
 	console.log(`Wrote site (${files.length} files${stalePaths.length > 0 ? `, removed ${stalePaths.length}` : ""})`);
 };
-
-/**
- * @description CLI 진입점
- */
-export const main = async (): Promise<void> => {
-	await buildSite();
-};
-
-if (await isDirectExecution(import.meta.url)) {
-	await main();
-}

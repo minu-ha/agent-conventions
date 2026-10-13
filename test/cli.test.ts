@@ -1,11 +1,11 @@
 import assert from "node:assert/strict";
-import {access, mkdir, mkdtemp, readFile, readdir, rm, symlink, writeFile} from "node:fs/promises";
+import {access, mkdir, mkdtemp, readFile, readdir, rm, writeFile} from "node:fs/promises";
 import {readFileSync} from "node:fs";
 import {spawnSync} from "node:child_process";
 import {tmpdir} from "node:os";
 import path from "node:path";
 import test from "node:test";
-import {fileURLToPath, pathToFileURL} from "node:url";
+import {fileURLToPath} from "node:url";
 
 import {assertMentions} from "./helpers/router-contract.js";
 import type {SkillCompanion, SkillMetadata} from "../src/types.js";
@@ -25,9 +25,8 @@ const nodeBinDir = path.dirname(process.execPath);
 // biome-ignore lint/style/useNamingConvention: PATH는 OS가 정한 환경변수 이름이라 변경 불가
 const commandEnv = {...process.env, PATH: [packageBinDir, nodeBinDir, process.env.PATH ?? ""].join(path.delimiter)};
 const tsxCliPath = path.join(packageDir, "node_modules", "tsx", "dist", "cli.mjs");
-const buildModulePath = path.join(packageDir, "src", "build.ts");
-const checkGeneratedModulePath = path.join(packageDir, "src", "check-generated.ts");
-const checkHandbooksModulePath = path.join(packageDir, "src", "check-handbooks.ts");
+const buildModulePath = path.join(packageDir, "script", "build.ts");
+const checkGeneratedModulePath = path.join(packageDir, "script", "check-generated.ts");
 const expectedSkillScriptNames = ["react", "css", "typescript", "figma"] as const;
 const expectedProgressiveSkillNames = ["css", "figma", "react", "typescript"] as const;
 
@@ -471,101 +470,10 @@ test("repository documentation distinguishes source, router, and generated artif
 	}
 });
 
-test("build and generated-check modules import without running their CLI main", () => {
-	for (const modulePath of [buildModulePath, checkGeneratedModulePath, checkHandbooksModulePath]) {
-		const result = spawnSync(process.execPath, [tsxCliPath, "--eval", `import(${JSON.stringify(pathToFileURL(modulePath).href)})`], {
-			cwd: packageDir,
-			encoding: "utf8",
-		});
-
-		assert.equal(result.status, 0, result.stderr);
-		assert.doesNotMatch(result.stdout, /Wrote |Checked |Validated /);
-	}
-});
-
-test("build CLI executes once for direct and symlinked entry paths", async (context) => {
-	const temporaryDir = await mkdtemp(path.join(tmpdir(), "agent-conventions-build-cli-"));
-	const skillRootDir = path.join(temporaryDir, "skill");
-	await writeCliSkillFixture(skillRootDir, "fixture");
-	const directResult = spawnSync(process.execPath, [tsxCliPath, buildModulePath, "--skill=fixture", `--skill-root=${skillRootDir}`], {
-		cwd: packageDir,
-		encoding: "utf8",
-	});
-
-	assert.equal(directResult.status, 0, directResult.stderr);
-	assert.equal((directResult.stdout.match(/Wrote HANDBOOK\.md/g) ?? []).length, 1, directResult.stdout);
-
-	const linkedBuildPath = path.join(temporaryDir, "build-link.ts");
-
-	try {
-		try {
-			await symlink(buildModulePath, linkedBuildPath, "file");
-		} catch (error) {
-			const errorCode = (error as NodeJS.ErrnoException).code;
-
-			if (errorCode === "EPERM" || errorCode === "EACCES" || errorCode === "ENOTSUP" || errorCode === "ENOSYS") {
-				context.skip(`Symlink creation is unavailable: ${errorCode}`);
-				return;
-			}
-
-			throw error;
-		}
-
-		const linkedResult = spawnSync(process.execPath, [tsxCliPath, linkedBuildPath, "--skill=fixture", `--skill-root=${skillRootDir}`], {
-			cwd: packageDir,
-			encoding: "utf8",
-		});
-
-		assert.equal(linkedResult.status, 0, linkedResult.stderr);
-		assert.equal((linkedResult.stdout.match(/Wrote HANDBOOK\.md/g) ?? []).length, 1, linkedResult.stdout);
-	} finally {
-		await rm(temporaryDir, {recursive: true, force: true});
-	}
-});
-
 test("generated-output check scripts support progressive TypeScript", () => {
 	const directResult = runPackageCommand(["--prefix", packageDir, "run", "check:generated", "--", "--skill=typescript"]);
 
 	assert.equal(directResult.status, 0, directResult.stderr);
-});
-
-test("generated-output check CLI executes for direct and symlinked entry paths", async (context) => {
-	const missingSkillName = "missing-generated-check-fixture";
-	const directResult = spawnSync(process.execPath, [tsxCliPath, checkGeneratedModulePath, `--skill=${missingSkillName}`], {
-		cwd: packageDir,
-		encoding: "utf8",
-	});
-
-	assert.notEqual(directResult.status, 0);
-	assert.match(directResult.stderr, new RegExp(`Skill "${missingSkillName}" is not buildable`));
-
-	const temporaryDir = await mkdtemp(path.join(tmpdir(), "agent-conventions-check-generated-symlink-"));
-	const linkedCheckPath = path.join(temporaryDir, "check-generated-link.ts");
-
-	try {
-		try {
-			await symlink(checkGeneratedModulePath, linkedCheckPath, "file");
-		} catch (error) {
-			const errorCode = (error as NodeJS.ErrnoException).code;
-
-			if (errorCode === "EPERM" || errorCode === "EACCES" || errorCode === "ENOTSUP" || errorCode === "ENOSYS") {
-				context.skip(`Symlink creation is unavailable: ${errorCode}`);
-				return;
-			}
-
-			throw error;
-		}
-
-		const linkedResult = spawnSync(process.execPath, [tsxCliPath, linkedCheckPath, `--skill=${missingSkillName}`], {
-			cwd: packageDir,
-			encoding: "utf8",
-		});
-
-		assert.notEqual(linkedResult.status, 0);
-		assert.match(linkedResult.stderr, new RegExp(`Skill "${missingSkillName}" is not buildable`));
-	} finally {
-		await rm(temporaryDir, {recursive: true, force: true});
-	}
 });
 
 test("validate script succeeds for the react skill", () => {
@@ -636,4 +544,34 @@ test("package exposes a typecheck entry point for the TypeScript build", () => {
 
 test("TypeScript config exists for the build package", async () => {
 	await access(path.join(packageDir, "tsconfig.json"));
+});
+
+test("build CLI renders a fixture skill root without touching the repository site", async () => {
+	const temporaryDir = await mkdtemp(path.join(tmpdir(), "agent-conventions-build-cli-"));
+	const skillRootDir = path.join(temporaryDir, "skill");
+
+	try {
+		await writeCliSkillFixture(skillRootDir, "fixture");
+		const result = spawnSync(process.execPath, [tsxCliPath, buildModulePath, "--skill=fixture", `--skill-root=${skillRootDir}`], {
+			cwd: packageDir,
+			encoding: "utf8",
+		});
+
+		assert.equal(result.status, 0, result.stderr);
+		assert.equal((result.stdout.match(/Wrote HANDBOOK\.md/g) ?? []).length, 1, result.stdout);
+		assert.doesNotMatch(result.stdout, /Wrote site/);
+	} finally {
+		await rm(temporaryDir, {recursive: true, force: true});
+	}
+});
+
+test("generated-output check CLI rejects a skill that is not buildable", () => {
+	const missingSkillName = "missing-generated-check-fixture";
+	const result = spawnSync(process.execPath, [tsxCliPath, checkGeneratedModulePath, `--skill=${missingSkillName}`], {
+		cwd: packageDir,
+		encoding: "utf8",
+	});
+
+	assert.notEqual(result.status, 0);
+	assert.match(result.stderr, new RegExp(`Skill "${missingSkillName}" is not buildable`));
 });

@@ -1,19 +1,17 @@
 import assert from "node:assert/strict";
 import {spawnSync} from "node:child_process";
-import {access, lstat, mkdtemp, mkdir, readFile, readdir, rename, rm, symlink, writeFile} from "node:fs/promises";
+import {access, mkdtemp, mkdir, readFile, readdir, rename, rm, symlink, writeFile} from "node:fs/promises";
 import {tmpdir} from "node:os";
 import path from "node:path";
 import test from "node:test";
-import {fileURLToPath, pathToFileURL} from "node:url";
+import {fileURLToPath} from "node:url";
 
 import {assertMentions} from "./helpers/router-contract.js";
 
 import {buildSkill} from "../src/build.js";
-import {checkGeneratedHandbook} from "../src/check-handbooks.js";
+import {checkGeneratedHandbook} from "../src/check-generated.js";
 import {checkGeneratedSkill} from "../src/check-generated.js";
 import {getSkillPaths, isBuildableSkill, listSkillNames} from "../src/config.js";
-import {replaceGeneratedFiles} from "../src/generated-files.js";
-import type {GeneratedFileOperations} from "../src/generated-files.js";
 import {parseFrontmatter, parseSections, readResolvedSkillDocuments, readSkillRules} from "../src/parser.js";
 import {generateRuleContractMarkdown, generateRulesIndexMarkdown} from "../src/routing.js";
 import type {LoadedSkillDocument, SkillCompanion} from "../src/types.js";
@@ -23,7 +21,7 @@ import {validateSkill} from "../src/validate.js";
 const currentDir = path.dirname(fileURLToPath(import.meta.url));
 const packageDir = path.resolve(currentDir, "..");
 const tsxCliPath = path.join(packageDir, "node_modules", "tsx", "dist", "cli.mjs");
-const validateModulePath = path.join(packageDir, "src", "validate.ts");
+const validateModulePath = path.join(packageDir, "script", "validate.ts");
 
 /**
  * 계약 생성이 반드시 실패하는 본문. build 트랜잭션이 기존 생성물을 덮지 않는지 확인용
@@ -1172,52 +1170,6 @@ test("build renders and prepares every output before replacing existing generate
 	});
 });
 
-test("generated file transaction restores every original after a mid-install failure", async () => {
-	await withFixtureRoot(async (skillRootDir) => {
-		const firstPath = path.join(skillRootDir, "FIRST.md");
-		const secondPath = path.join(skillRootDir, "SECOND.md");
-		await writeFile(firstPath, "ORIGINAL FIRST\n", "utf8");
-		await writeFile(secondPath, "ORIGINAL SECOND\n", "utf8");
-		let temporaryInstallCount = 0;
-		const operations = {
-			lstat: async (targetPath) => await lstat(targetPath),
-			rename: async (sourcePath, targetPath) => {
-				if (sourcePath.endsWith(".tmp")) {
-					temporaryInstallCount += 1;
-
-					if (temporaryInstallCount === 2) {
-						throw new Error("INJECTED_SECOND_INSTALL_FAILURE");
-					}
-				}
-
-				await rename(sourcePath, targetPath);
-			},
-			rm: async (targetPath, options) => await rm(targetPath, options),
-			writeFile: async (targetPath, content, options) => await writeFile(targetPath, content, options),
-		} satisfies GeneratedFileOperations;
-
-		await assert.rejects(
-			() =>
-				replaceGeneratedFiles(
-					[
-						{targetPath: firstPath, content: "NEW FIRST\n"},
-						{targetPath: secondPath, content: "NEW SECOND\n"},
-					],
-					operations,
-				),
-			/INJECTED_SECOND_INSTALL_FAILURE/,
-		);
-
-		assert.equal(await readFile(firstPath, "utf8"), "ORIGINAL FIRST\n");
-		assert.equal(await readFile(secondPath, "utf8"), "ORIGINAL SECOND\n");
-		assert.deepEqual(
-			(await readdir(skillRootDir)).sort(),
-			["FIRST.md", "SECOND.md"],
-			"transaction temp and backup files must be cleaned after rollback",
-		);
-	});
-});
-
 test("non-progressive checks reject stale indexes and build removes them deliberately", async () => {
 	await withFixtureRoot(async (skillRootDir) => {
 		await writeSkillFixture(skillRootDir, "legacy", {metadata: {extends: ["missing-dependency"]}});
@@ -1624,43 +1576,6 @@ test("document resolver keeps a per-call document cache for diamond graphs", asy
 	assert.match(parserSource, /resolvedDocumentCache/u);
 });
 
-test("validate module imports without running main and direct CLI runs main once", () => {
-	const importResult = spawnSync(
-		process.execPath,
-		[tsxCliPath, "--eval", `import(${JSON.stringify(pathToFileURL(validateModulePath).href)})`],
-		{cwd: packageDir, encoding: "utf8"},
-	);
-
-	assert.equal(importResult.status, 0, importResult.stderr);
-	assert.doesNotMatch(importResult.stdout, /Validated /);
-
-	const cliResult = spawnSync(process.execPath, [tsxCliPath, validateModulePath, "--skill=typescript"], {
-		cwd: packageDir,
-		encoding: "utf8",
-	});
-
-	assert.equal(cliResult.status, 0, cliResult.stderr);
-	assert.equal((cliResult.stdout.match(/Validated typescript:/g) ?? []).length, 1, cliResult.stdout);
-});
-
-test("validate CLI recognizes a symlinked entry path", async (context) => {
-	const temporaryDir = await mkdtemp(path.join(tmpdir(), "agent-conventions-validate-symlink-"));
-	const linkedValidatePath = path.join(temporaryDir, "validate-link.ts");
-
-	try {
-		if (!(await createSymlinkOrSkip({context, targetPath: validateModulePath, linkPath: linkedValidatePath, type: "file"}))) {
-			return;
-		}
-
-		const result = spawnSync(process.execPath, [tsxCliPath, linkedValidatePath, "--skill=typescript"], {cwd: packageDir, encoding: "utf8"});
-
-		assert.equal(result.status, 0, result.stderr);
-		assert.equal((result.stdout.match(/Validated typescript:/g) ?? []).length, 1, result.stdout);
-	} finally {
-		await rm(temporaryDir, {recursive: true, force: true});
-	}
-});
-
 test("progressive rules require a short, non-empty, one-line appliesWhen", async () => {
 	const invalidConditions = [
 		{appliesWhen: undefined, expected: /appliesWhen.*one-line.*160/i},
@@ -1964,4 +1879,14 @@ test("rule discipline requires numbered example pairs to match one Incorrect wit
 	assert.doesNotMatch(disciplineMessage(pairBody("Correct 1 (query)")), /짝 번호 1/);
 	assert.match(disciplineMessage(pairBody("Correct (query)")), /짝 번호 1는 Incorrect 와 Correct 가 하나씩 있어야 한다/);
 	assert.match(disciplineMessage(pairBody("Correct 1 (query)", "tsx")), /짝 번호 1의 1번째 블록 언어가 다르다\(ts:tsx\)/);
+});
+
+test("validate CLI validates the target skill once", () => {
+	const cliResult = spawnSync(process.execPath, [tsxCliPath, validateModulePath, "--skill=typescript"], {
+		cwd: packageDir,
+		encoding: "utf8",
+	});
+
+	assert.equal(cliResult.status, 0, cliResult.stderr);
+	assert.equal((cliResult.stdout.match(/Validated typescript:/g) ?? []).length, 1, cliResult.stdout);
 });

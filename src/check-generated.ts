@@ -1,8 +1,8 @@
 import path from "node:path";
 
-import {getSkillPaths, isBuildableSkill, listSkillNames, packagePaths, parseCliArgs} from "./config.js";
+import {generateCompiledSkillMarkdown} from "./build.js";
+import {getSkillPaths, isBuildableSkill} from "./config.js";
 import {parseDependencyDeclaration} from "./dependencies.js";
-import {isDirectExecution} from "./entrypoint.js";
 import {readGeneratedDirectoryFileNames, readGeneratedRegularFile} from "./generated-files.js";
 import {readSkillDocument} from "./parser.js";
 import {assertProgressiveCompanionSource, assertProgressiveSkillEntrypoint} from "./progressive.js";
@@ -127,42 +127,30 @@ const checkGeneratedSkillTree = async (skillPaths: SkillPaths, visiting: Set<str
 };
 
 /**
- * @description 단일 skill과 progressive companion 전체의 라우팅 생성물 최신 상태 확인
+ * @description 단일 skill의 컴파일 `HANDBOOK.md`가 현재 원본 렌더러와 일치하는지 쓰기 없이 확인
+ */
+export const checkGeneratedHandbook = async (skillPaths: SkillPaths): Promise<void> => {
+	const expectedHandbook = await generateCompiledSkillMarkdown(skillPaths);
+	let actualHandbook: string;
+
+	try {
+		actualHandbook = await readGeneratedRegularFile(skillPaths.outputPath);
+	} catch (error) {
+		if ((error as NodeJS.ErrnoException).code === "ENOENT") {
+			throw new Error(`${skillPaths.skillName}: missing generated HANDBOOK.md at ${skillPaths.outputPath}. Run the skill build.`);
+		}
+
+		throw error;
+	}
+
+	if (actualHandbook !== expectedHandbook) {
+		throw new Error(`${skillPaths.skillName}: stale generated HANDBOOK.md at ${skillPaths.outputPath}. Run the skill build.`);
+	}
+};
+
+/**
+ * @description 단일 skill과 progressive companion 전체의 라우팅 생성물 최신 상태 확인. 라우팅 생성물이 있으면 true
  */
 export const checkGeneratedSkill = async (skillPaths: SkillPaths): Promise<boolean> => {
 	return await checkGeneratedSkillTree(skillPaths, new Set(), new Set());
 };
-
-/**
- * @description CLI 입력 기준 라우팅 index 생성물 최신 상태 확인
- */
-export const main = async (): Promise<void> => {
-	const {all, skill, skillRootDir = packagePaths.skillRootDir} = parseCliArgs(process.argv.slice(2));
-	const targetSkillNames = all ? await listSkillNames(skillRootDir) : [skill];
-
-	for (const skillName of targetSkillNames) {
-		if (!skillName) {
-			continue;
-		}
-
-		const buildable = await isBuildableSkill(skillName, skillRootDir);
-
-		if (!buildable) {
-			if (all) {
-				continue;
-			}
-
-			throw new Error(`Skill "${skillName}" is not buildable yet. Expected rules/_sections.md and metadata.json under skill/${skillName}.`);
-		}
-
-		const checked = await checkGeneratedSkill(getSkillPaths(skillName, skillRootDir));
-
-		if (checked) {
-			console.log(`Checked ${path.join(skillName, "RULES_INDEX.md")}`);
-		}
-	}
-};
-
-if (await isDirectExecution(import.meta.url)) {
-	await main();
-}
