@@ -16,6 +16,11 @@ import type {LoadedSkillDocument, SkillCompanion, SkillRule, SkillSection} from 
 const sectionNumberWidth = 2;
 
 /**
+ * dev·preview 포트. for-humanity 저장소 자체의 dev 서버(4321)와 나란히 띄우려고 다른 값. for-humanity 0.8.0+ 가 읽음
+ */
+const sitePort = 4322;
+
+/**
  * 사이드바 묶음. for-humanity 설정의 `navigation` 순서
  */
 const navigationGroups = ["Coding", "Tool"] as const;
@@ -462,6 +467,7 @@ const renderConfig = (): string => {
 		'\ttitle: "팀 컨벤션",',
 		'\tdescription: "React, CSS, TypeScript, Figma 코딩 규칙",',
 		`\tnavigation: ${JSON.stringify([...navigationGroups])},`,
+		`\tport: ${sitePort},`,
 		"\tstatus: [],",
 		"};",
 		"",
