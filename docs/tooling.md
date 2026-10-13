@@ -38,7 +38,7 @@ progressive rule frontmatter의 `reviewWith`는 조건부 재평가, `requiresSe
 | `npm run check:diagrams` | 규칙의 `mermaid` 흐름도가 격자 폭 125칸 안에 그려지는지 봅니다. |
 | `npm run dev` | `build` 후 for-humanity 개발 서버를 띄웁니다. 포트는 `docs/for-humanity.config.mjs`의 `port`입니다. |
 | `npm run docs:build` | `build` 후 `docs/dist`에 배포용 정적 사이트를 만듭니다. |
-| `npm run test` | 라우터와 생성물 계약, 매니페스트 검증기, build·validate fixture, 규칙 문체, 사이트 생성 테스트를 실행합니다. 규칙 산문은 핀하지 않습니다. |
+| `npm run test` | 라우터와 생성물 계약, 매니페스트 검증기, build, validate fixture, 규칙 문체, 사이트 생성 테스트를 실행합니다. 규칙 산문은 핀하지 않습니다. |
 | `npm run lint`, `npm run lint:fix` | Biome 검사와 자동 수정입니다. |
 | `npm run typecheck` | `tsc --noEmit`입니다. |
 
@@ -59,4 +59,4 @@ progressive owner는 `extends` 대신 `companions`를 사용하고 companion tar
 
 `routing-evals.json`과 회귀 테스트는 예상 선택 목록, 필수 규칙 관계, 전체 규칙의 적용 사례 유무를 검사합니다.
 이 검사를 통과해도 실제 에이전트의 선택 정확도가 인증되는 것은 아닙니다.
-적용 조건을 바꿀 때는 비적용 사례도 검토하고, 행동 평가를 했다면 사용한 모델·입력·결과를 별도로 기록합니다.
+적용 조건을 바꿀 때는 비적용 사례도 검토하고, 행동 평가를 했다면 사용한 모델, 입력, 결과를 별도로 기록합니다.

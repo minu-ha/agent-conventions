@@ -174,25 +174,40 @@ test("rule references read as numbered rules in prose and as titled items under 
 	);
 });
 
-test("examples render as labelled code fences with Korean titles", async () => {
+test("examples render as bad or good code fences whose first line is a Korean comment", async () => {
 	const files = await generateSiteFiles();
-	const fences = files
-		.filter(isSectionPage)
-		.flatMap((file) => file.content.split("\n").filter((line) => line.startsWith("```") && line.length > "```".length));
-	const labelled = fences.filter((line) => /^```\S+ (?:bad|good)(?: |$)/.test(line));
-	const titled = labelled.filter((line) => / (?:bad|good) (?:잘못된 예|올바른 예)/.test(line));
+	const pages = files.filter(isSectionPage);
+	let labelled = 0;
+	let commented = 0;
 
-	assert.ok(labelled.length > expectedRuleCount * 2, `expected labelled fences for every example, found ${labelled.length}`);
-	assert.ok(titled.length > expectedRuleCount * 2, `expected titled labels, found ${titled.length}`);
+	for (const file of pages) {
+		const lines = file.content.split("\n");
+
+		lines.forEach((line, index) => {
+			if (!/^```\S+ (?:bad|good)$/.test(line)) {
+				assert.equal(/^```(?: |\S+ )/.test(line), false, `${file.path}: unexpected fence meta ${line}`);
+				return;
+			}
+
+			labelled += 1;
+
+			if (/(?:잘못된 예|올바른 예)/.test(lines[index + 1] ?? "")) {
+				commented += 1;
+				assert.match(
+					lines[index + 1] ?? "",
+					/^(?:\/\/|\/\*|#|<!--) (?:잘못된 예|올바른 예)(?: \d+)?(?::|$| \*\/| -->)/,
+					`${file.path}: comment shape`,
+				);
+			}
+		});
+	}
+
+	assert.ok(labelled > expectedRuleCount * 2, `expected labelled fences for every example, found ${labelled}`);
+	assert.ok(commented > expectedRuleCount * 2, `expected comment labels, found ${commented}`);
 	assert.equal(
-		fences.some((line) => /^``` /.test(line)),
+		pages.some((file) => file.content.includes("·")),
 		false,
-		"a fence without a language must get text before its label",
-	);
-	assert.equal(
-		fences.some((line) => /`/.test(line.slice("```".length))),
-		false,
-		"captions must not carry backticks",
+		"the site uses commas, never a middle dot",
 	);
 });
 

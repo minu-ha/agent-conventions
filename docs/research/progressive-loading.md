@@ -5,7 +5,7 @@ group: Research
 order: 10
 ---
 
-agent-conventions · 2026-07-21 → 07-27 · 43 commits
+agent-conventions, 2026-07-21 → 07-27, 43 commits
 
 :::note[기록 시점]
 2026년 7월 작업을 그대로 옮긴 기록입니다. 당시 생성 핸드북 이름은 `AGENTS.md`였고 지금은 `HANDBOOK.md`입니다.
@@ -13,14 +13,14 @@ agent-conventions · 2026-07-21 → 07-27 · 43 commits
 현재 구조는 저장소 README와 [Tooling](../tooling.md)을 봅니다.
 :::
 
-React · TypeScript · CSS 컨벤션을 매 작업마다 전체 핸드북으로 주입하던 구조를,
+React, TypeScript, CSS 컨벤션을 매 작업마다 전체 핸드북으로 주입하던 구조를,
 router → index → 선택된 계약 경로로 바꾼 기록입니다.
 규칙 정확도를 유지하면서 컨텍스트 비용만 줄이는 것이 목표였습니다.
 
-- 핸드북 1회 로드 · 토큰: 46,732
-- progressive 중앙값 · 토큰: 9,377
+- 핸드북 1회 로드, 토큰: 46,732
+- progressive 중앙값, 토큰: 9,377
 - 컨텍스트 감소 중앙값: −79.9%
-- 정확도 · 핸드북 대 progressive: 14 : 14
+- 정확도, 핸드북 대 progressive: 14 : 14
 
 ## 문제 (before)
 
@@ -39,21 +39,21 @@ TSX 한 줄을 고쳐도 세 도메인이 함께 켜지면 46,732 토큰이 선�
 막대 폭은 실제 파일 크기 비율입니다 — 아래로 갈수록 비싸고, 그만큼 드물게 읽습니다.
 
 - SKILL.md, 3,479 B: router — scope 판정과 companion 활성화. 항상 읽음
-- RULES_INDEX.md, 11,780 B: 규칙당 한 줄 — id · appliesWhen · routing edge. 전체 scan, 항상 읽음
+- RULES_INDEX.md, 11,780 B: 규칙당 한 줄 — id, appliesWhen, routing edge. 전체 scan, 항상 읽음
 - contracts/*.md, 887 B: 규범 문장만. 예시 코드는 뺌 — 선택된 규칙만 읽음 (42개 중 평균 8~17개)
-- rules/*.md, 2,254 B: 예시 포함 원문 — CRITICAL·HIGH는 항상, MEDIUM은 판단이 모호할 때 확장
+- rules/*.md, 2,254 B: 예시 포함 원문 — CRITICAL, HIGH는 항상, MEDIUM은 판단이 모호할 때 확장
 - AGENTS.md, 93,997 B: full handbook — opt-in. 기본 경로에서 제외됨
 
 ### 절감이 나오는 두 지점
 
 첫째, **예시 코드를 계약에서 분리**했습니다.
-contract는 heading · Impact · 규범 한 문단 · routing edge만 남기고 Incorrect / Correct 코드블록을 원문으로 미룹니다.
+contract는 heading, Impact, 규범 한 문단, routing edge만 남기고 Incorrect / Correct 코드블록을 원문으로 미룹니다.
 react 기준 `rules/` 94,668 B → `contracts/` 37,269 B, 약 61% 삭감.
 선택 여부와 무관하게 적용되는 절감입니다.
 
 둘째, **선택된 것만 읽습니다.**
 85개 규칙(42 + 22 + 21) 중 실제 관련된 계약만 로드합니다.
-인덱스가 얇은 것도 의도된 설계라, title · impact · tags · 설명 · 예시를 전부 제외했습니다.
+인덱스가 얇은 것도 의도된 설계라, title, impact, tags, 설명, 예시를 전부 제외했습니다.
 
 ## 측정 (tiktoken 0.11.0, o200k_base)
 
@@ -95,7 +95,7 @@ progressive arm의 audit phase 비용 15,670 중 35%가 여기서 나옵니다 �
 ## 정확도 (v18, 60 / 66 runs)
 
 컨텍스트만 줄고 규칙을 놓치면 의미가 없으므로,
-같은 시나리오를 no-skill · full-handbook · progressive 세 arm으로 돌려 선택 결과를 비교했습니다.
+같은 시나리오를 no-skill, full-handbook, progressive 세 arm으로 돌려 선택 결과를 비교했습니다.
 
 | Arm | runs | candidate | exact match | completion |
 | --- | ---: | ---: | ---: | --- |
@@ -117,41 +117,41 @@ mutation control은 적용되어야 할 규칙 하나를 의도적으로 N/A로 
 
 ## 검증 과정 (4 phases, 43 commits)
 
-**01 설계 · 계획 · 베이스라인** · 07-21 14:13 → 15:10 · 3 commits
+**01 설계, 계획, 베이스라인**, 07-21 14:13 → 15:10, 3 commits
 
 구현 전에 설계 문서(415줄)와 계획(1,149줄)을 먼저 썼습니다.
 "rules는 유일한 정본", "SKILL.md는 규칙집이 아니라 router",
 "선택하지 않은 규칙도 판정 증거를 남긴다" 같은 원칙과 범위 밖 항목을 먼저 고정했습니다.
 
-- design · plan · baseline + red test
+- design, plan, baseline + red test
 
-**02 빌드 파이프라인** · 07-21 15:33 → 21:40 · 9 commits
+**02 빌드 파이프라인**, 07-21 15:33 → 21:40, 9 commits
 
 frontmatter 스키마부터 쌓았습니다.
 라우팅 메타데이터는 의존 순서대로 TypeScript → CSS → React로 붙였습니다.
 
-- appliesWhen · requiresSelected · reviewWith · requiredOnCompletion 스키마
-- routing.ts → RULES_INDEX.md 생성 · check-generated
-- contracts/*.md 생성 (148 files) · convention-audit 재작성
+- appliesWhen, requiresSelected, reviewWith, requiredOnCompletion 스키마
+- routing.ts → RULES_INDEX.md 생성, check-generated
+- contracts/*.md 생성 (148 files), convention-audit 재작성
 
-**03 평가 주도 하드닝** · 07-21 23:18 → 07-23 02:57 · 20 commits
+**03 평가 주도 하드닝**, 07-21 23:18 → 07-23 02:57, 20 commits
 
 실제 작업량의 대부분입니다.
 behavioral eval harness를 붙인 뒤 **평가를 돌리고 → 깨지고 → 계약을 조이는** 루프를 반복했습니다.
 20개의 fix 커밋이 전부 실제 평가 실패에 대응합니다.
 실패는 지우지 않고 v3~v16까지 34개 디렉터리, 2,097개 파일로 전부 보존했습니다.
 
-- v6 contract blocked · v7 routing order · v8 RTE10 oracle
-- v11 handbook identity · v12 result gate · v13 preflight gate
-- v14 mutation completion · v15 selection gate · v16 boundary
+- v6 contract blocked, v7 routing order, v8 RTE10 oracle
+- v11 handbook identity, v12 result gate, v13 preflight gate
+- v14 mutation completion, v15 selection gate, v16 boundary
 
-**04 v17 · v18 인증** · 07-24 → 07-27
+**04 v17, v18 인증**, 07-24 → 07-27
 
 v17은 66-run 매트릭스 중 12개에서 막혔습니다.
 그 원인과 대응이 이 작업에서 가장 특징적인 판단이었습니다 (아래).
 v18에서 60개 run을 마치고 채택을 결정했습니다.
 
-- v18 · 28/30 exact · mutation 3/3 blocked · 채택
+- v18, 28/30 exact, mutation 3/3 blocked, 채택
 
 ### v17이 막힌 지점
 
@@ -187,7 +187,7 @@ v18에서 해당 시나리오 두 trial 모두 exact match로 통과했습니다
   그 경로 비용은 한 번도 측정된 적이 없습니다.
 - **측정은 이상적 선택을 가정합니다.** (보정 필요)
   측정 컨텍스트의 파일 목록은 오라클의 정답 선택입니다.
-  실제 run에서는 over-selection이 관측됐으므로(precision 0.667 · 0.944) 실제 로드는 모델보다 약간 큽니다.
+  실제 run에서는 over-selection이 관측됐으므로(precision 0.667, 0.944) 실제 로드는 모델보다 약간 큽니다.
   계약 하나가 ~880 B라 영향은 제한적입니다.
 - **prompt caching은 고려하지 않았습니다.** (범위 밖)
   설계에서 명시적으로 제외했는데, 방향은 불리한 쪽입니다.
@@ -205,15 +205,15 @@ v18에서 해당 시나리오 두 trial 모두 exact match로 통과했습니다
 
 - [Progressive loading design](progressive-loading-design.md):
   설계 원칙, 산출물 구조, 범위와 범위 밖 — 415줄. 이 사이트에 남긴 유일한 원문입니다.
-- 구현 계획과 skill별 라우팅 오라클(Appendix A~D, 1,149줄), v17·v18 평가 기록,
-  채택되지 않은 v3~v16 시도(34 디렉터리 · 2,097 파일)는 저장소에서 지웠습니다.
+- 구현 계획과 skill별 라우팅 오라클(Appendix A~D, 1,149줄), v17, v18 평가 기록,
+  채택되지 않은 v3~v16 시도(34 디렉터리, 2,097 파일)는 저장소에서 지웠습니다.
   2026-07-21 → 07-27 사이의 커밋 이력에서 읽을 수 있습니다.
 
 ### 측정 재현
 
 측정 스크립트(`measurement:tokens`)는 저장소에서 지웠습니다.
-당시 결과는 contexts SHA-256 `1a052d41…aaeed3` · 71개 파일 해시 고정 · 게이트 4/4 PASS였고,
+당시 결과는 contexts SHA-256 `1a052d41…aaeed3`, 71개 파일 해시 고정, 게이트 4/4 PASS였고,
 같은 커밋에서 항상 같은 수치가 나왔습니다.
 
-측정 기준 tiktoken 0.11.0 · o200k_base · Python 3.13.7
-v18 bound source HEAD 5634ea1 · criteria SHA-256 b3be5477…71da8b
+측정 기준 tiktoken 0.11.0, o200k_base, Python 3.13.7
+v18 bound source HEAD 5634ea1, criteria SHA-256 b3be5477…71da8b

@@ -271,26 +271,56 @@ interface PendingCodeLabel {
 	 */
 	tone: "bad" | "good";
 	/**
-	 * @field 첫 펜스에만 붙는 제목. 같은 라벨의 둘째 블록부터는 띠만
+	 * @field 첫 블록의 첫 줄에 주석으로 넣는 라벨. 같은 라벨의 둘째 블록부터는 색만
 	 */
-	title: string;
+	comment: string;
 }
 
 /**
- * @helper `**Incorrect 1 (설명):**` 줄을 지우고 뒤따르는 코드 펜스 메타를 `bad 잘못된 예 1 · 설명` 꼴로. 언어 없는 펜스는 text
+ * @helper 한 줄 주석. 블록 첫 줄이 이미 주석이면 그 모양을, 아니면 언어의 기본 모양을 따름
+ */
+const toCodeComment = (language: string, firstLine: string, text: string): string => {
+	if (firstLine.startsWith("/*") || /^(css|scss|less)$/.test(language)) {
+		return `/* ${text} */`;
+	}
+
+	if (firstLine.startsWith("<!--") || /^(html|md|markdown|xml|svg)$/.test(language)) {
+		return `<!-- ${text} -->`;
+	}
+
+	if (firstLine.startsWith("#") || /^(txt|text|sh|bash|zsh|yaml|yml|toml|py|python)$/.test(language)) {
+		return firstLine.startsWith("//") ? `// ${text}` : `# ${text}`;
+	}
+
+	return `// ${text}`;
+};
+
+/**
+ * @helper `**Incorrect 1 (설명):**` 줄을 지우고 뒤따르는 코드 펜스를 `bad`·`good` 메타와 첫 줄 주석으로. 언어 없는 펜스는 text
  */
 const labelExampleFences = (lines: string[]): string[] => {
 	const out: string[] = [];
 	let inFence = false;
 	let pending: PendingCodeLabel | undefined;
+	// 라벨 펜스를 연 직후. 첫 코드 줄을 보고 주석 모양을 정함
+	let opened: {language: string; comment: string} | undefined;
 
 	for (const line of lines) {
+		if (opened !== undefined) {
+			if (opened.comment !== "") {
+				out.push(toCodeComment(opened.language, line, opened.comment));
+			}
+
+			opened = undefined;
+		}
+
 		if (line.startsWith("```")) {
 			if (!inFence && pending !== undefined) {
 				const language = line.slice("```".length).trim() || "text";
 
-				out.push(`\`\`\`${language} ${pending.tone}${pending.title === "" ? "" : ` ${pending.title}`}`);
-				pending = {tone: pending.tone, title: ""};
+				out.push(`\`\`\`${language} ${pending.tone}`);
+				opened = {language, comment: pending.comment};
+				pending = {tone: pending.tone, comment: ""};
 				inFence = true;
 				continue;
 			}
@@ -311,7 +341,7 @@ const labelExampleFences = (lines: string[]): string[] => {
 		const number = match[2] === undefined ? "" : ` ${match[2]}`;
 		const description = (match[3] ?? "").replace(/`/g, "").trim();
 
-		pending = {tone: match[1] === "Incorrect" ? "bad" : "good", title: `${kind}${number}${description === "" ? "" : ` · ${description}`}`};
+		pending = {tone: match[1] === "Incorrect" ? "bad" : "good", comment: `${kind}${number}${description === "" ? "" : `: ${description}`}`};
 	}
 
 	return out;

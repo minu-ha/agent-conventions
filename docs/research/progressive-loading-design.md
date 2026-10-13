@@ -100,7 +100,7 @@ optional routing scalar는 쉼표로 구분한 stable rule id를 사용하고 �
 - `requiresSelected`: source rule이 final Selected이면 target도 반드시 Selected인 edge다. target companion을 활성화하고 N/A를 금지한다.
 - `requiredOnCompletion: true`: 활성 skill 전체의 완료 receipt에서 항상 Selected인 finish gate다. compact index에는 `completionGate` marker로 렌더한다.
 
-Unknown contract는 applicability 해소에만 사용하며 Unknown을 Selected/N/A로 먼저 확정한다. N/A source의 `requiresSelected`는 전이하지 않는다. final Selected contract의 mandatory target과 필수 변경만 scope evidence에 합치고, 예시·선택적 대안·미해소 Unknown은 제외한다. 새 surface, companion, Selected가 생기면 contract 로드와 모든 activated index/`reviewWith` 판정을 activation, partition, scope evidence가 더 이상 바뀌지 않는 고정점까지 반복한다. 같은 target을 `requiresSelected`와 `reviewWith`에 중복 선언하지 않는다.
+Unknown contract는 applicability 해소에만 사용하며 Unknown을 Selected/N/A로 먼저 확정한다. N/A source의 `requiresSelected`는 전이하지 않는다. final Selected contract의 mandatory target과 필수 변경만 scope evidence에 합치고, 예시, 선택적 대안, 미해소 Unknown은 제외한다. 새 surface, companion, Selected가 생기면 contract 로드와 모든 activated index/`reviewWith` 판정을 activation, partition, scope evidence가 더 이상 바뀌지 않는 고정점까지 반복한다. 같은 target을 `requiresSelected`와 `reviewWith`에 중복 선언하지 않는다.
 
 이 routing schema는 progressive React, TypeScript, CSS에 적용한다. 다른 structured skill은 migration 전까지 기존 schema로 계속 build할 수 있어야 한다.
 
@@ -114,7 +114,7 @@ build가 `_sections.md` 순서와 rule 정렬 순서를 이용해 생성한다. 
 - optional `reviewWith`
 - stable rule id와 같은 이름의 generated `contracts/<stable-id>.md` 결정 규칙
 
-문서 header에는 skill identity와 canonical routing/source SHA-256 digest만 생성한다. local rule 수와 section heading은 전체 entry scan에서 얻는 정보라 중복 렌더하지 않는다. 각 entry에는 현재 index 안에서만 쓰는 compact ordinal을 붙인다. `requiresSelected` 목록은 초기 token 비용을 늘리지 않도록 index에서 제외하고 selected/unknown contract에서만 읽는다. digest에는 `requiresSelected`, `requiredOnCompletion`, `reviewWith`, full source body hash, rule-index renderer version, contract renderer version이 모두 들어가므로 규범·예시·renderer가 바뀌면 기존 receipt도 stale이다.
+문서 header에는 skill identity와 canonical routing/source SHA-256 digest만 생성한다. local rule 수와 section heading은 전체 entry scan에서 얻는 정보라 중복 렌더하지 않는다. 각 entry에는 현재 index 안에서만 쓰는 compact ordinal을 붙인다. `requiresSelected` 목록은 초기 token 비용을 늘리지 않도록 index에서 제외하고 selected/unknown contract에서만 읽는다. digest에는 `requiresSelected`, `requiredOnCompletion`, `reviewWith`, full source body hash, rule-index renderer version, contract renderer version이 모두 들어가므로 규범, 예시, renderer가 바뀌면 기존 receipt도 stale이다.
 
 예시:
 
@@ -126,7 +126,7 @@ stable identity는 filename 기반 rule id이고 ordinal은 exact set을 짧게 
 
 ### `contracts/*.md`
 
-build가 source `rules/*.md`에서 자동 생성하고 직접 편집을 금지한다. contract는 `requiresSelected`와 completion metadata를 포함한다. non-CRITICAL contract는 heading, Impact, 첫 Incorrect 전 normative prose를 보존하고 예시는 full rule 링크로 미룬다. CRITICAL contract는 routing metadata와 짧은 redirect만 생성해 full rule을 반드시 읽게 한다. non-CRITICAL도 exact syntax·예외 판단, unresolved Unknown, audit PASS evidence 부족이면 full rule로 확장하고 receipt에 `Expanded: ordinal + ID: reason`을 기록한다.
+build가 source `rules/*.md`에서 자동 생성하고 직접 편집을 금지한다. contract는 `requiresSelected`와 completion metadata를 포함한다. non-CRITICAL contract는 heading, Impact, 첫 Incorrect 전 normative prose를 보존하고 예시는 full rule 링크로 미룬다. CRITICAL contract는 routing metadata와 짧은 redirect만 생성해 full rule을 반드시 읽게 한다. non-CRITICAL도 exact syntax, 예외 판단, unresolved Unknown, audit PASS evidence 부족이면 full rule로 확장하고 receipt에 `Expanded: ordinal + ID: reason`을 기록한다.
 
 ### `AGENTS.md`
 
@@ -137,7 +137,7 @@ progressive full handbook은 각 local rule heading 바로 아래에 source fron
 - 사람의 전체 convention 온보딩
 - skill 자체 유지보수
 - 전체 규칙 문구 비교 또는 comprehensive handbook review를 사용자가 요청한 경우
-- generated index/contract 또는 필요한 개별 rule 원문이 손상·누락되어 정상 경로를 읽을 수 없는 fallback
+- generated index/contract 또는 필요한 개별 rule 원문이 손상, 누락되어 정상 경로를 읽을 수 없는 fallback
 
 일반적인 코드 수정과 완료 audit에서는 기본으로 읽지 않는다.
 
@@ -202,7 +202,7 @@ receipt는 작업 중 audit packet으로 전달되는 ephemeral artifact이며 c
 
 ### 4. Read selected contracts and deterministic full rules
 
-receipt의 selected/unknown stable ID와 같은 이름인 `contracts/<stable-id>.md`를 모두 읽는다. CRITICAL contract는 full rule을 반드시 읽는다. non-CRITICAL은 exact syntax·예외 판단, contract와 코드만으로 해소되지 않는 Unknown, audit PASS evidence 부족일 때만 full rule로 확장한다. Unknown을 먼저 Selected/N/A로 비운 뒤 final Selected의 `requiresSelected` closure를 전이한다. N/A source의 mandatory target은 전이하지 않는다.
+receipt의 selected/unknown stable ID와 같은 이름인 `contracts/<stable-id>.md`를 모두 읽는다. CRITICAL contract는 full rule을 반드시 읽는다. non-CRITICAL은 exact syntax, 예외 판단, contract와 코드만으로 해소되지 않는 Unknown, audit PASS evidence 부족일 때만 full rule로 확장한다. Unknown을 먼저 Selected/N/A로 비운 뒤 final Selected의 `requiresSelected` closure를 전이한다. N/A source의 mandatory target은 전이하지 않는다.
 
 ### 5. Scope drift
 

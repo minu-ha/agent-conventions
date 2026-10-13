@@ -3644,7 +3644,7 @@ const responseProductList = useProductList();
 | 끝맺음 | `~한다`, `~이다` 대신 명사나 명사형(`고정`, `불가`, `필요`, `덮어씀`)으로 끝냅니다. 줄 끝에는 마침표를 찍지 않습니다 |
 | 한 줄 | 사실 하나만 적습니다. 결론이 먼저이고 이유는 마침표 뒤나 다음 줄에 둡니다 |
 | 군더더기 | 접속사, 꾸밈말, 경위를 뺍니다. 예전 동작과 바뀐 과정은 커밋 메시지에 둡니다 |
-| 나열 | 쉼표로 잇습니다. 가운뎃점(`·`)과 대시(`—`)는 쓰지 않습니다 |
+| 나열 | 쉼표로 잇습니다. 가운뎃점(`, `)과 대시(`—`)는 쓰지 않습니다 |
 | 조사 | 영어 낱말과 식별자 뒤에도 붙여 씁니다(`MUI가`, `className을`) |
 
 ### 낱말
@@ -3751,7 +3751,7 @@ export interface PgProductTreeSectionProps {
 ```ts
 // app/query-client.ts
 /**
- * Host 앱·단독 실행·테스트 gallery 가 모두 같은 query client 를 쓰도록 여기 한 곳에서 만들어 둔다 — 예전에는 화면마다 따로 만들어서 retry 횟수가 서로 달랐다.
+ * Host 앱, 단독 실행, 테스트 gallery 가 모두 같은 query client 를 쓰도록 여기 한 곳에서 만들어 둔다 — 예전에는 화면마다 따로 만들어서 retry 횟수가 서로 달랐다.
  */
 export const queryClient = new QueryClient({defaultOptions: {queries: {retry: query_retry_count}}});
 ```
