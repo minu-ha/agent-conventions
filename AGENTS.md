@@ -113,12 +113,12 @@ progressive `routing-evals.json`.
 ```bash
 npm install            # 최초 1회
 npm run validate       # 정본 검사. 한 skill 만: -- --skill=react
-npm run build          # HANDBOOK, RULES_INDEX, contracts, site/ 생성
+npm run build          # HANDBOOK, RULES_INDEX, contracts, docs/convention/ 생성
 npm run check          # validate, 생성물 신선도, 흐름도 폭, typecheck, lint, test
 npm run dev            # build 후 사이트 dev 서버. 주소는 터미널에 찍힌다
 ```
 
-`site/` 는 커밋하지 않는 생성 폴더다. `build` 가 만든다.
+`docs/` 는 for-humanity 가 읽는 사람용 문서 루트다. 그 아래 `convention/` 만 생성 폴더라 커밋하지 않는다.
 
 buildable skill: `css` `figma` `react` `typescript`
 

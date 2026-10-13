@@ -1,4 +1,14 @@
-# Progressive Convention Loading Design
+---
+name: Progressive loading design
+label: 2026-07-21 설계 문서. router, index, contract 구조의 근거와 합격선
+group: Research
+order: 20
+---
+
+:::note[기록 시점]
+2026-07-21 설계 당시 문서를 그대로 둡니다. 생성 핸드북은 `AGENTS.md`에서 `HANDBOOK.md`로 이름이 바뀌었고 `convention-audit` skill은 이후 없앴습니다.
+결과와 한계는 [Progressive loading](progressive-loading.md), 현재 구조는 [Tooling](../tooling.md)을 봅니다.
+:::
 
 **Goal:** React, TypeScript, CSS 작업에서 필요한 규칙을 빠짐없이 적용하면서도, 매번 세 skill의 전체 handbook을 context에 넣는 비용을 없앤다.
 

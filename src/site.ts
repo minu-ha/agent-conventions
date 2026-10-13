@@ -16,12 +16,7 @@ import type {LoadedSkillDocument, SkillCompanion, SkillRule, SkillSection} from 
 const sectionNumberWidth = 2;
 
 /**
- * dev·preview 포트. for-humanity 저장소 자체의 dev 서버(4321)와 나란히 띄우려고 다른 값. for-humanity 0.8.0+ 가 읽음
- */
-const sitePort = 4322;
-
-/**
- * 사이드바 묶음. for-humanity 설정의 `navigation` 순서
+ * 사이드바 묶음. `docs/for-humanity.config.mjs` 의 `navigation` 과 같은 순서
  */
 const navigationGroups = ["Coding", "Tool"] as const;
 
@@ -62,7 +57,7 @@ const ruleReferencePattern = /`((?:[a-z][a-z0-9]*\/)?[a-z][a-z0-9]*(?:-[a-z0-9]+
  */
 interface RuleLocation {
 	/**
-	 * @field `site/` 기준 페이지 경로. `css/02-ownership.md`
+	 * @field 생성 폴더 기준 페이지 경로. `css/02-ownership.md`
 	 */
 	page: string;
 	/**
@@ -88,7 +83,7 @@ interface RuleLocation {
  */
 export interface SiteFile {
 	/**
-	 * @field `site/` 기준 상대 경로
+	 * @field 생성 폴더 기준 상대 경로
 	 */
 	path: string;
 	/**
@@ -331,7 +326,8 @@ const renderSectionPage = (args: SectionPageArgs): string => {
 		`name: ${yamlScalar(`${section.order}. ${sectionDisplayTitle(section)}`)}`,
 		`label: ${yamlScalar(section.title)}`,
 		`group: ${placement.group}`,
-		`parent: ${document.skillName}`,
+		// 파일 위치 기준 참조. 생성 폴더가 어디에 끼워져도 같은 skill 개요를 가리킴
+		`parent: ../${document.skillName}`,
 		`order: ${section.order}`,
 		"---",
 		"",
@@ -426,55 +422,6 @@ const renderOverviewPage = (document: LoadedSkillDocument, locations: Map<string
 };
 
 /**
- * @helper 홈. skill 표와 생성 경로 안내
- */
-const renderHomePage = (documents: LoadedSkillDocument[]): string => {
-	const lines = [
-		"# 팀 컨벤션",
-		"",
-		"React, CSS, TypeScript, Figma 코딩 규칙을 사람이 읽는 사이트입니다.",
-		"정본은 저장소의 `skill/<skill>/rules/*.md`이고, 이 사이트는 `npm run site`가 거기서 생성합니다.",
-		"",
-		"| 스킬 | 규칙 수 | 함께 적용 |",
-		"| --- | --- | --- |",
-	];
-
-	for (const document of documents) {
-		const placement = getPlacement(document.skillName);
-		const companions = (document.metadata.companions ?? []).map(
-			(companion) => `[${getPlacement(companion.skill).name}](${companion.skill}.md) ${companion.mode === "required" ? "항상" : "조건부"}`,
-		);
-
-		lines.push(
-			`| [${placement.name}](${document.skillName}.md) | ${document.rules.length} | ${companions.length > 0 ? companions.join(", ") : "없음"} |`,
-		);
-	}
-
-	lines.push("");
-
-	return lines.join("\n");
-};
-
-/**
- * @helper for-humanity 사이트 설정. 묶음 순서와 상태 표지 끄기
- */
-const renderConfig = (): string => {
-	return [
-		"/*",
-		" * 생성 파일. 원본은 src/site.ts",
-		" */",
-		"export default {",
-		'\ttitle: "팀 컨벤션",',
-		'\tdescription: "React, CSS, TypeScript, Figma 코딩 규칙",',
-		`\tnavigation: ${JSON.stringify([...navigationGroups])},`,
-		`\tport: ${sitePort},`,
-		"\tstatus: [],",
-		"};",
-		"",
-	].join("\n");
-};
-
-/**
  * @api `skill/` 전체를 for-humanity Markdown 파일 목록으로 렌더링. 쓰기 없음
  */
 export const generateSiteFiles = async (): Promise<SiteFile[]> => {
@@ -497,10 +444,7 @@ export const generateSiteFiles = async (): Promise<SiteFile[]> => {
 	documents.sort(comparePlacement);
 
 	const locations = collectRuleLocations(documents);
-	const files: SiteFile[] = [
-		{path: "for-humanity.config.mjs", content: renderConfig()},
-		{path: "README.md", content: renderHomePage(documents)},
-	];
+	const files: SiteFile[] = [];
 
 	for (const document of documents) {
 		files.push({path: `${document.skillName}.md`, content: renderOverviewPage(document, locations)});
@@ -520,7 +464,7 @@ export const generateSiteFiles = async (): Promise<SiteFile[]> => {
 };
 
 /**
- * @helper 지금 `site/`에 있는 Markdown 상대 경로. for-humanity 출력 `dist/`는 제외
+ * @helper 지금 생성 폴더에 있는 Markdown 상대 경로
  */
 const listSiteMarkdownFiles = async (): Promise<string[]> => {
 	try {
@@ -528,8 +472,7 @@ const listSiteMarkdownFiles = async (): Promise<string[]> => {
 
 		return entries
 			.filter((entry) => entry.isFile() && entry.name.endsWith(".md"))
-			.map((entry) => path.relative(siteOutputDir, path.join(entry.parentPath, entry.name)))
-			.filter((relativePath) => !relativePath.startsWith(`dist${path.sep}`));
+			.map((entry) => path.relative(siteOutputDir, path.join(entry.parentPath, entry.name)));
 	} catch (error) {
 		if ((error as NodeJS.ErrnoException).code === "ENOENT") {
 			return [];
@@ -540,7 +483,7 @@ const listSiteMarkdownFiles = async (): Promise<string[]> => {
 };
 
 /**
- * @description `site/`를 현재 원본 기준으로 다시 씀. 사라진 섹션의 옛 페이지는 지움
+ * @description 생성 폴더를 현재 원본 기준으로 다시 씀. 사라진 섹션의 옛 페이지는 지움
  */
 export const buildSite = async (): Promise<void> => {
 	const files = await generateSiteFiles();

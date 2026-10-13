@@ -51,18 +51,16 @@ const collectAnchors = (file: SiteFile): Set<string> => {
 };
 
 const isSectionPage = (file: SiteFile): boolean => file.path.includes("/");
-const isOverviewPage = (file: SiteFile): boolean => !file.path.includes("/") && file.path.endsWith(".md") && file.path !== "README.md";
+const isOverviewPage = (file: SiteFile): boolean => !file.path.includes("/") && file.path.endsWith(".md");
 
-test("generateSiteFiles emits home, config, one overview per skill and one page per section", async () => {
+test("generateSiteFiles emits one overview per skill and one page per section, nothing else", async () => {
 	const files = await generateSiteFiles();
 
-	assert.ok(
-		files.some((file) => file.path === "README.md"),
-		"home page missing",
-	);
-	assert.ok(
-		files.some((file) => file.path === "for-humanity.config.mjs"),
-		"site config missing",
+	// 홈과 사이트 설정은 docs/ 에 손으로 쓴 파일이라 생성하지 않음
+	assert.equal(
+		files.some((file) => !file.path.endsWith(".md")),
+		false,
+		"only Markdown pages are generated",
 	);
 	assert.equal(files.filter(isOverviewPage).length, expectedSkillCount);
 	assert.equal(files.filter(isSectionPage).length, expectedSectionCount);
@@ -78,7 +76,7 @@ test("every section page sits under its skill overview in the same navigation gr
 		const overview = overviewByPath.get(`${skillName}.md`);
 
 		assert.ok(overview, `${file.path} has no overview page ${skillName}.md`);
-		assert.equal(readFrontmatter(file, "parent"), skillName);
+		assert.equal(readFrontmatter(file, "parent"), `../${skillName}`);
 		assert.equal(readFrontmatter(file, "group"), readFrontmatter(overview, "group"));
 		assert.match(readFrontmatter(file, "name") ?? "", /^\d+\. /, `${file.path} name must start with the section number`);
 		assert.match(readFrontmatter(file, "order") ?? "", /^\d+$/);

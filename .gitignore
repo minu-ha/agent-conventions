@@ -3,4 +3,5 @@
 node_modules/
 reference/
 temp/
-site/
+docs/convention/
+docs/dist/

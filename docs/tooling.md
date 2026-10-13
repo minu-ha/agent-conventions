@@ -1,4 +1,9 @@
-# Build Tooling
+---
+name: Tooling
+label: validate, build, check 도구와 생성물 계약
+group: Development
+order: 10
+---
 
 `skill/*` 아래 structured convention skill을 build, validate, test하는 저장소 루트 `package.json`의 TypeScript 도구입니다. 소스는 `src/`, 테스트는 `test/`입니다.
 
@@ -27,13 +32,13 @@ progressive rule frontmatter의 `reviewWith`는 조건부 재평가, `requiresSe
 | Script | Does |
 | --- | --- |
 | `npm run validate` | source, metadata, companion closure, progressive index 입력, routing eval manifest, 규칙 문체를 검사합니다. `-- --skill=<name>`으로 하나만 봅니다. |
-| `npm run build` | 모든 buildable skill의 `HANDBOOK.md`, `RULES_INDEX.md`, `contracts/*.md`를 다시 쓰고 `site/`에 [for-humanity](https://github.com/minu-ha/for-humanity) Markdown을 생성합니다. `site/`는 커밋하지 않습니다. |
+| `npm run build` | 모든 buildable skill의 `HANDBOOK.md`, `RULES_INDEX.md`, `contracts/*.md`를 다시 쓰고 `docs/convention/`에 [for-humanity](https://github.com/minu-ha/for-humanity) Markdown을 생성합니다. 이 폴더는 커밋하지 않습니다. |
 | `npm run check` | `validate`, `check:generated`, `check:handbooks`, `check:diagrams`, `typecheck`, `lint`, `test`를 차례로 실행합니다. 커밋 전 한 번에 돌리는 명령입니다. |
 | `npm run check:generated` | 파일을 수정하지 않고 progressive `RULES_INDEX.md`와 `contracts/*.md`의 missing, stale, orphan, symlink와 companion closure를 확인합니다. |
 | `npm run check:handbooks` | 모든 `HANDBOOK.md`를 renderer 결과와 byte 단위로 비교합니다. |
 | `npm run check:diagrams` | 규칙의 `mermaid` 흐름도가 격자 폭 125칸 안에 그려지는지 봅니다. |
-| `npm run dev` | `build` 후 for-humanity 개발 서버를 띄웁니다. 포트는 `site/for-humanity.config.mjs`의 `port`입니다. |
-| `npm run site:build` | `build` 후 `site/dist`에 배포용 정적 사이트를 만듭니다. |
+| `npm run dev` | `build` 후 for-humanity 개발 서버를 띄웁니다. 포트는 `docs/for-humanity.config.mjs`의 `port`입니다. |
+| `npm run docs:build` | `build` 후 `docs/dist`에 배포용 정적 사이트를 만듭니다. |
 | `npm run test` | CLI, build, progressive routing, `routing-evals.json`, 사이트 생성 회귀 테스트를 실행합니다. |
 | `npm run lint`, `npm run lint:fix` | Biome 검사와 자동 수정입니다. |
 | `npm run typecheck` | `tsc --noEmit`입니다. |

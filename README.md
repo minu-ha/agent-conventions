@@ -61,7 +61,7 @@ Figma 화면을 구현하는 프로젝트는 `convention-figma`도 적는다. TS
 
 사람이 규칙을 찾을 때는 생성 사이트를 먼저 연다.
 `npm run dev` 를 실행하고 터미널에 찍힌 주소를 연다.
-[for-humanity](https://github.com/minu-ha/for-humanity) 가 `site/` 의 Markdown 으로 사이트를 만들고, `site/` 는 규칙에서 생성한다.
+[for-humanity](https://github.com/minu-ha/for-humanity) 가 `docs/` 를 사이트로 만든다. 규칙 페이지는 `docs/convention/` 에 생성한다.
 
 왼쪽에 skill 넷이 있고 skill 아래에 섹션이 한 장씩 있다. 오른쪽 목차가 그 섹션의 규칙이다.
 skill 이름을 누르면 개요와 전체 규칙 표가 나온다. `CRITICAL`부터 훑으려면 그 표의 영향도 열을 본다.
@@ -109,9 +109,9 @@ TSX 파일 하나를 고쳐 달라고 시켜본다. 에이전트는 이 순서�
 | --- | --- |
 | README.md | 이 문서. 설치와 적용 |
 | [CONTRIBUTING.md](./CONTRIBUTING.md) | 규칙 추가, 수정 절차 |
-| 생성 사이트 (`site/`) | **규칙 조회.** 네 skill의 규칙을 섹션 페이지와 목차로 찾는다. `npm run dev` 로 띄운다 |
+| [docs/](./docs/README.md) | **규칙 조회.** `npm run dev` 로 띄우는 사이트. 네 skill의 규칙을 섹션 페이지와 목차로 찾는다 |
 | `skill/<name>/HANDBOOK.md` | 규칙 전문. 통독과 에이전트 전체 검토용 생성물 |
-| [docs/progressive-loading.html](./docs/progressive-loading.html) | 설계 배경, 측정, 검증, 한계 |
+| [docs/research/](./docs/research/) | 설계 배경, 측정, 검증, 한계. 사이트의 Research 묶음 |
 | [docs/tooling.md](./docs/tooling.md) | build, validate, test tooling |
 
 에이전트가 읽는 것.
@@ -124,8 +124,7 @@ TSX 파일 하나를 고쳐 달라고 시켜본다. 에이전트는 이 순서�
 | `skill/<name>/RULES_INDEX.md` | 규칙 목록. progressive 전용 |
 | `skill/<name>/contracts/*.md` | 걸린 규칙의 계약. progressive 전용 |
 
-`docs/progressive-loading.html`은 브라우저나 WebStorm HTML 프리뷰로 연다.
-사이트는 `dev`가 띄우는 서버에서 본다. `site/`는 커밋하지 않는다.
+사이트는 `dev`가 띄우는 서버에서 본다. `docs/convention/`과 `docs/dist/`는 커밋하지 않는다.
 
 ---
 
@@ -180,7 +179,7 @@ progressive skill 넷은 규칙 전체를 안 읽는다. 단계마다 좁힌다.
 
 `settings.local.json` 은 기계마다 다른 파일이라 절대경로를 그대로 적어도 된다. 응답 필드 이름 바꿔치기(react 02-04)처럼 grep 으로 못 잡는 CRITICAL 은 여전히 문장으로만 남는다.
 
-측정 결과와 근거는 [docs/progressive-loading.html](./docs/progressive-loading.html).
+측정 결과와 근거는 [docs/research/](./docs/research/).
 
 ---
 
@@ -199,10 +198,10 @@ progressive skill 넷은 규칙 전체를 안 읽는다. 단계마다 좁힌다.
 
 절차는 [CONTRIBUTING.md](./CONTRIBUTING.md). 착수 전 알 것 넷.
 
-1. 정본은 `rules/*.md`. `HANDBOOK.md`, `RULES_INDEX.md`, `contracts/*.md`, `site/`는 생성물.
+1. 정본은 `rules/*.md`. `HANDBOOK.md`, `RULES_INDEX.md`, `contracts/*.md`, `docs/convention/`은 생성물.
 2. 규범은 첫 `Incorrect` 앞에서 끝낸다. 생성기가 그 앞부분만 계약으로 뽑는다.
 3. `appliesWhen` 한 줄이 라우팅을 결정한다. 규칙의 결론이 아니라 관찰 가능한 변경 조건.
-4. 고친 뒤 `npm run check`. `build`가 `site/`도 다시 만든다.
+4. 고친 뒤 `npm run check`. `build`가 `docs/convention/`도 다시 만든다.
 
 이 저장소에서 AI 에이전트로 작업하면 [AGENTS.md](./AGENTS.md) 가 작업 규칙.
 

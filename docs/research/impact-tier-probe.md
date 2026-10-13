@@ -1,7 +1,12 @@
-# 등급별 읽기 깊이 측정 (2026-09-08)
+---
+name: Impact tier probe
+label: 2026-09-08 등급별 읽기 깊이 측정. 세션 기록으로 잰 규칙 읽기 방식
+group: Research
+order: 30
+---
 
 `impact` 를 읽기 깊이로 재정의한 커밋 `4d7c012`·`3574e92` 가 실제 세션에서 어떻게 작동하는지 잰 기록이다.
-측정은 `measure-skill-reads.py` 로 한다. 옛 프로토콜의 기준선은 이미 남아 있는 sk-ax-gas-pp 세션 기록에서, 새 프로토콜은 읽기 전용 헤드리스 세션 한 건에서 뽑았다.
+측정은 `script/measure-skill-reads.py` 로 한다. 옛 프로토콜의 기준선은 이미 남아 있는 sk-ax-gas-pp 세션 기록에서, 새 프로토콜은 읽기 전용 헤드리스 세션 한 건에서 뽑았다.
 
 ## 기준선: 옛 프로토콜 (sk-ax-gas-pp 계열 39개 세션, 2026-08-12 ~ 09-04)
 
@@ -101,8 +106,8 @@ turns=63 duration=219s cost=$3.20 cache_create=110262 cache_read=611883 out=1679
 ## 다시 재는 법
 
 ```sh
-python3 docs/evaluations/measure-skill-reads.py '*sk-ax-gas-pp*'        # 기록 전체
-python3 docs/evaluations/measure-skill-reads.py --probe run.jsonl         # 헤드리스 세션 한 건
+python3 script/measure-skill-reads.py '*sk-ax-gas-pp*'        # 기록 전체
+python3 script/measure-skill-reads.py --probe run.jsonl         # 헤드리스 세션 한 건
 ```
 
 ## 부수 감사: MEDIUM 계약에서 빠지는 규범
@@ -122,7 +127,7 @@ MEDIUM 계약은 첫 Incorrect·Correct 짝까지만 싣는다. 첫 짝 뒤에 �
 ## 다섯 작업 회차 (2026-09-08 오후, opus·fable)
 
 sk-ax 커밋 이력의 문투로 작업 다섯 건을 만들어 worktree 마다 헤드리스로 돌렸다. 도구는 편집·`tsc`·lint 로 제한하고 Stop 훅을 걸었다.
-fable 로 돌린 첫 회차는 사용량 한도로 1·2·3 이 끊겨 opus 로 다시 돌렸다(4·5 는 fable 로 완주). 결과 diff 는 `review-diff.sh` 가 opus 로 검토했다.
+fable 로 돌린 첫 회차는 사용량 한도로 1·2·3 이 끊겨 opus 로 다시 돌렸다(4·5 는 fable 로 완주). 결과 diff 는 `script/review-diff.sh` 가 opus 로 검토했다.
 
 | 작업 | 모델 | 링크 계약 → 완독 | 스킬 토큰 | 턴 · 비용 | tsc · 훅 | 검토 확정 · 해석여지 |
 | --- | --- | --- | --- | --- | --- | --- |

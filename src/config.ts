@@ -18,9 +18,9 @@ const skillRootDir = path.join(repoDir, "skill");
 export const packagePaths: PackagePaths = {currentDir, packageDir, repoDir, skillRootDir};
 
 /**
- * @summary for-humanity가 읽는 생성 Markdown 폴더. 커밋하지 않고 `site` 스크립트가 만듦
+ * @summary 규칙 페이지를 생성하는 폴더. `docs/` 는 for-humanity 가 읽는 문서 루트이고 이 하위 폴더만 커밋하지 않음
  */
-export const siteOutputDir = path.join(repoDir, "site");
+export const siteOutputDir = path.join(repoDir, "docs", "convention");
 
 /**
  * @helper 설정된 skill 루트가 심볼릭 링크가 아닌 실제 디렉터리인지 검증
