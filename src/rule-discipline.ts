@@ -3,7 +3,7 @@ import type {RuleExample} from "./rule-body.js";
 import type {LoadedSkillDocument, SkillRule} from "./types.js";
 
 /**
- * 한글을 두 칸으로 세는 최대 산문 폭. `docs/semantic-wrap.py`의 MAX와 같아야 함
+ * 한글을 두 칸으로 세는 최대 산문 폭. `.editorconfig`의 `max_line_length`와 같아야 함
  */
 const maxProseWidth = 120;
 

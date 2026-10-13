@@ -90,7 +90,7 @@ skill/react/
   사이트에서 예시 제목으로 서는 자리라 명사 종결이 섞이면 목록이 끊겨 읽힌다.
   `validate`가 모든 예시 제목이 `~니다`로 끝나는지 검사한다.
 - 모든 규칙은 최소 한 시나리오에서 걸려야 한다.
-- 문단은 문장 단위로 끊고 120칸을 넘기지 않는다. `docs/semantic-wrap.py`가 정리한다.
+- 문단은 문장 단위로 끊고 120칸을 넘기지 않는다. `validate`가 넘는 줄을 막는다.
   한글은 두 칸으로 센다. `.editorconfig`의 `max_line_length`도 같은 값이다.
 - 코드 펜스 안 인덴트는 탭이다. `biome.json`의 `indentStyle`과 맞춘다.
 - `**Impact:`로 시작하는 줄은 한 줄로 유지한다. build가 그 형태로 파싱한다.
@@ -136,10 +136,8 @@ title: Use Named Handlers Instead of Hiding Logic in JSX
 titleKo: JSX 안 로직은 이름 붙인 핸들러로 뺍니다
 ```
 
-한국어 문장은 `grammar-checker`로 문법을, `humanizer`로 어색한 표현을,
-`style-guide`로 용어와 문체의 일관성을 점검한다.
-`.agents/skills/`에 복사해 두었고, 없으면 `npx skills add daleseo/korean-skills`로 설치한다.
-세 스킬의 제안은 기술적 의미와 아래 파일별 문체를 유지하는 범위에서 적용한다.
+한국어 문장은 yoonmoon 플러그인의 `proofread`로 맞춤법을, `humanize`로 어색한 표현을, `restyle`로 문체를 점검한다.
+제안은 기술적 의미와 아래 파일별 문체를 유지하는 범위에서 적용한다.
 규칙 본문과 `_sections.md`, `metadata.json`의 `abstract`는 합쇼체로 쓴다.
 `SKILL.md`, `AGENTS.md`, `AGENTS.template.md`, `README.md`, 이 문서는 한다체로 쓴다.
 코드 주석은 typescript `docs-write-korean-comments-about-purpose-and-constraints`대로 짧은 명사형으로 쓴다.
