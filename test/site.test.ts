@@ -101,7 +101,7 @@ test("pages carry no agent routing metadata", async () => {
 	const files = await generateSiteFiles();
 
 	for (const file of files) {
-		for (const marker of ["**Impact:", "언제 적용할까요", "**Rule:**", "CRITICAL", "`rules/*.md`"]) {
+		for (const marker of ["**Impact:", "언제 적용할까요", "**Rule:**", "CRITICAL", "`rules/*.md`", "**Incorrect", "**Correct"]) {
 			assert.equal(file.content.includes(marker), false, `${file.path} still carries ${marker}`);
 		}
 	}
@@ -171,6 +171,28 @@ test("rule references read as numbered rules in prose and as titled items under 
 		sectionPages.some((file) => /\[`[a-z/-]+`\]\(/.test(file.content)),
 		false,
 		"no raw rule IDs as link text",
+	);
+});
+
+test("examples render as labelled code fences with Korean titles", async () => {
+	const files = await generateSiteFiles();
+	const fences = files
+		.filter(isSectionPage)
+		.flatMap((file) => file.content.split("\n").filter((line) => line.startsWith("```") && line.length > "```".length));
+	const labelled = fences.filter((line) => /^```\S+ (?:bad|good)(?: |$)/.test(line));
+	const titled = labelled.filter((line) => / (?:bad|good) (?:잘못된 예|올바른 예)/.test(line));
+
+	assert.ok(labelled.length > expectedRuleCount * 2, `expected labelled fences for every example, found ${labelled.length}`);
+	assert.ok(titled.length > expectedRuleCount * 2, `expected titled labels, found ${titled.length}`);
+	assert.equal(
+		fences.some((line) => /^``` /.test(line)),
+		false,
+		"a fence without a language must get text before its label",
+	);
+	assert.equal(
+		fences.some((line) => /`/.test(line.slice("```".length))),
+		false,
+		"captions must not carry backticks",
 	);
 });
 

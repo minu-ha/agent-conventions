@@ -258,7 +258,72 @@ const linkRuleReferences = (lines: string[], context: RuleRenderContext): string
 };
 
 /**
- * @helper 규칙 본문 하나를 섹션 페이지 조각으로. 번호 헤딩, 등급 없는 요지, 사람용 링크, 함께 보기
+ * 예제 라벨 줄. `rule-body.ts` 의 examplePattern 과 같은 형태
+ */
+const exampleLabelPattern = /^\*\*(Incorrect|Correct)(?:\s+(\d+))?\s*(?:\((.+)\))?\s*:?\*\*$/;
+
+/**
+ * @summary 라벨 줄 다음 코드 펜스에 붙일 for-humanity 코드 라벨
+ */
+interface PendingCodeLabel {
+	/**
+	 * @field 펜스 메타의 색. 잘못된 예는 bad, 올바른 예는 good
+	 */
+	tone: "bad" | "good";
+	/**
+	 * @field 첫 펜스에만 붙는 제목. 같은 라벨의 둘째 블록부터는 띠만
+	 */
+	title: string;
+}
+
+/**
+ * @helper `**Incorrect 1 (설명):**` 줄을 지우고 뒤따르는 코드 펜스 메타를 `bad 잘못된 예 1 · 설명` 꼴로. 언어 없는 펜스는 text
+ */
+const labelExampleFences = (lines: string[]): string[] => {
+	const out: string[] = [];
+	let inFence = false;
+	let pending: PendingCodeLabel | undefined;
+
+	for (const line of lines) {
+		if (line.startsWith("```")) {
+			if (!inFence && pending !== undefined) {
+				const language = line.slice("```".length).trim() || "text";
+
+				out.push(`\`\`\`${language} ${pending.tone}${pending.title === "" ? "" : ` ${pending.title}`}`);
+				pending = {tone: pending.tone, title: ""};
+				inFence = true;
+				continue;
+			}
+
+			inFence = !inFence;
+			out.push(line);
+			continue;
+		}
+
+		const match = inFence ? null : exampleLabelPattern.exec(line);
+
+		if (match === null) {
+			out.push(line);
+			continue;
+		}
+
+		const kind = match[1] === "Incorrect" ? "잘못된 예" : "올바른 예";
+		const number = match[2] === undefined ? "" : ` ${match[2]}`;
+		const description = (match[3] ?? "").replace(/`/g, "").trim();
+
+		pending = {tone: match[1] === "Incorrect" ? "bad" : "good", title: `${kind}${number}${description === "" ? "" : ` · ${description}`}`};
+	}
+
+	return out;
+};
+
+/**
+ * @helper 요지를 완결 문장으로. frontmatter 의 괄호 설명은 마침표 없이 끝남
+ */
+const toSummarySentence = (summary: string): string => (summary === "" || /[.!?]$/.test(summary) ? summary : `${summary}.`);
+
+/**
+ * @helper 규칙 본문 하나를 섹션 페이지 조각으로. 번호 헤딩, 등급 없는 요지, 사람용 링크, 라벨 코드, 함께 보기
  * @description 등급, 순번, ID, 적용 조건은 에이전트의 인덱스와 계약에만 나감. 사람용 페이지에는 싣지 않음
  */
 const renderRule = (rule: SkillRule, context: RuleRenderContext): string => {
@@ -281,10 +346,10 @@ const renderRule = (rule: SkillRule, context: RuleRenderContext): string => {
 
 	if (impactIndex >= 0) {
 		// 등급은 빼고 괄호 안 설명만 요지로 남김
-		lines.splice(impactIndex, 1, ...(location.summary === "" ? [] : [location.summary]));
+		lines.splice(impactIndex, 1, ...(location.summary === "" ? [] : [toSummarySentence(location.summary)]));
 	}
 
-	return [...linkRuleReferences(lines, context), ...renderRelated(rule, context)].join("\n");
+	return [...linkRuleReferences(labelExampleFences(lines), context), ...renderRelated(rule, context)].join("\n");
 };
 
 /**
