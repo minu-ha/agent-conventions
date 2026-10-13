@@ -305,6 +305,5 @@ skill 하나가 개요 한 장, 섹션 하나가 한 장이고 규칙은 그 페
 | skill 추가, 제거 | [README.md](./README.md) 의 skill 표, [AGENTS.md](./AGENTS.md) 의 목록 |
 | 로딩, companion 계약 변경 | [AGENTS.md](./AGENTS.md) |
 | 문서 인벤토리, 명령 변경 | [package/README.md](./package/README.md) |
-| 구조 자체 변경 | [overview.html](./overview.html). 생성기는 `docs/overview-build.py`이고 플로차트 SVG는 `docs/overview-flowcharts.py` |
 
 이 저장소에서 AI 에이전트로 작업할 때의 규칙은 [AGENTS.md](./AGENTS.md).

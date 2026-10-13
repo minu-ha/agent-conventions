@@ -111,7 +111,6 @@ TSX 파일 하나를 고쳐 달라고 시켜본다. 에이전트는 이 순서�
 | [CONTRIBUTING.md](./CONTRIBUTING.md) | 규칙 추가, 수정 절차 |
 | 생성 사이트 (`site/`) | **규칙 조회.** 네 skill의 규칙을 섹션 페이지와 목차로 찾는다. `npm --prefix package run site:dev` 로 띄운다 |
 | `skill/<name>/HANDBOOK.md` | 규칙 전문. 통독과 에이전트 전체 검토용 생성물 |
-| [overview.html](./overview.html) | 실행 흐름, 스킬 관계, 규칙 관계 |
 | [docs/progressive-loading.html](./docs/progressive-loading.html) | 설계 배경, 측정, 검증, 한계 |
 | [package/README.md](./package/README.md) | build, validate, test tooling |
 
@@ -125,7 +124,7 @@ TSX 파일 하나를 고쳐 달라고 시켜본다. 에이전트는 이 순서�
 | `skill/<name>/RULES_INDEX.md` | 규칙 목록. progressive 전용 |
 | `skill/<name>/contracts/*.md` | 걸린 규칙의 계약. progressive 전용 |
 
-`overview.html`과 `docs/progressive-loading.html`은 브라우저나 WebStorm HTML 프리뷰로 연다.
+`docs/progressive-loading.html`은 브라우저나 WebStorm HTML 프리뷰로 연다.
 사이트는 `site:dev`가 띄우는 서버에서 본다. `site/`는 커밋하지 않는다.
 
 ---
