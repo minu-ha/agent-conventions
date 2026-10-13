@@ -55,58 +55,16 @@ flowchart LR
 
 **Incorrect 1 (기존 계약과 같은 구조를 다시 선언합니다):**
 
-```ts
-// 이미 있는 계약: UserRecord { id: string; name: string; email: string }
-// 필드 이름, 타입, 선택 여부가 그대로인데 새로 선언
-interface InviteRecipient {
-	id: string;
-	name: string;
-	email: string;
-}
-
-export const sendInvites = (recipients: InviteRecipient[]): Promise<void> => { /* … */ };
-```
+<<< ../examples/types-reuse-existing-contracts-before-new-types/01-incorrect.ts
 
 **Correct 1 (형태가 같으면 기존 계약을 그대로 참조합니다):**
 
-```ts
-// 이미 있는 계약: UserRecord { id: string; name: string; email: string }
-/**
- * 초대 대상은 사용자 레코드 그대로. 필드가 같아 따로 선언 안 함
- */
-export const sendInvites = (recipients: UserRecord[]): Promise<void> => { /* … */ };
-```
+<<< ../examples/types-reuse-existing-contracts-before-new-types/02-correct.ts
 
 **Incorrect 2 (선택 여부가 다른데 기존 계약을 그대로 써서 없는 값을 빈 문자열로 채웁니다):**
 
-```ts
-// 이미 있는 계약: UserRecord { id: string; name: string; email: string }
-export const sendInvite = (draft: UserRecord): Promise<void> => { /* … */ };
-
-// 폼은 이름을 비울 수 있고 id가 아직 없음. 빈 문자열을 채워야 타입이 맞음
-sendInvite({ id: "", name: "", email });
-```
+<<< ../examples/types-reuse-existing-contracts-before-new-types/03-incorrect.ts
 
 **Correct 2 (선택 여부가 하나라도 다르면 새로 선언하되 필드는 원본에서 파생합니다):**
 
-```ts
-// 이미 있는 계약: UserRecord { id: string; name: string; email: string }
-/**
- * 초대 폼 입력. 이름을 비울 수 있고 id가 아직 없어 UserRecord와 필드 조건이 다름
- */
-interface InviteDraft {
-	/**
-	 * 받는 사람 이메일
-	 */
-	email: UserRecord["email"];
-	/**
-	 * 표시 이름. 비우면 이메일 표시
-	 */
-	name?: UserRecord["name"];
-}
-
-/**
- * 초대 한 건 발송
- */
-export const sendInvite = (draft: InviteDraft): Promise<void> => { /* … */ };
-```
+<<< ../examples/types-reuse-existing-contracts-before-new-types/04-correct.ts

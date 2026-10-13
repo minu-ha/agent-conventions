@@ -1,0 +1,6 @@
+page/product-detail/_function/
+├── to-product-overview/           자기만 쓰는 보조가 있어 폴더
+│   ├── to-product-overview.ts     대표. 폴더와 같은 이름
+│   ├── _to-trend-chart.ts         toProductOverview만 부름
+│   └── _to-trend-points.ts        _to-trend-chart만 부름. 폴더 안은 평평
+└── to-product-filter-request.ts   보조가 없어 파일 하나

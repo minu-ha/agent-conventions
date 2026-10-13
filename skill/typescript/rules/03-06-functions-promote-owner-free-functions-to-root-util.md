@@ -54,71 +54,22 @@ flowchart LR
 
 **Incorrect 1 (소유자와 함께 사라질 함수를 루트 `util`로 올립니다):**
 
-```ts
-// util/profile/to-profile-save-request.ts
-// profile은 값의 종류가 아니라 화면 이름. 화면이 없어지면 이 요청도 없음
-/**
- * 서버가 앞뒤 공백이 붙은 displayName 거부
- */
-export const toProfileSaveRequest = (values: ProfileFormValues) => {
-	return {body: {displayName: values.displayName.trim()}};
-};
-```
+<<< ../examples/functions-promote-owner-free-functions-to-root-util/01-incorrect.ts
 
 **Correct 1 (소유자와 함께 사라질 함수는 그 소유자의 `_function` 폴더에 둡니다):**
 
-```ts
-// page/profile/_function/to-profile-save-request.ts
-/**
- * 서버가 앞뒤 공백이 붙은 displayName 거부
- */
-export const toProfileSaveRequest = (values: ProfileFormValues) => {
-	return {body: {displayName: values.displayName.trim()}};
-};
-```
+<<< ../examples/functions-promote-owner-free-functions-to-root-util/02-correct.ts
 
 **Incorrect 2 (소유자를 지워도 남을 함수를 호출부가 하나라고 소유자 아래 둡니다):**
 
-```ts
-// page/orders/_function/to-display-date.ts
-// 날짜 표시는 orders 화면을 지워도 남음. 지금 이 화면만 쓴다는 이유로 여기 있음
-/**
- * 표시 형식 고정. 사용자 로케일을 따르면 목록 정렬 기준과 어긋남
- */
-export const toDisplayDate = (value: string): string => {
-	return dayjs(value).format(date_format);
-};
-```
+<<< ../examples/functions-promote-owner-free-functions-to-root-util/03-incorrect.ts
 
 **Correct 2 (소유자를 지워도 남는 함수는 받는 값의 종류 폴더로 올립니다):**
 
-```ts
-// util/date/to-display-date.ts
-/**
- * 표시 형식 고정. 사용자 로케일을 따르면 목록 정렬 기준과 어긋남
- */
-export const toDisplayDate = (value: string): string => {
-	return dayjs(value).format(date_format);
-};
-```
+<<< ../examples/functions-promote-owner-free-functions-to-root-util/04-correct.ts
 
 **Correct (종류 폴더 아래에도 함수마다 파일 하나를 둡니다):**
 
-```txt
-util/
-├── date/
-│   ├── to-display-date.ts
-│   └── to-display-date.test.ts
-└── money/
-    └── to-signed-amount.ts
-```
+<<< ../examples/functions-promote-owner-free-functions-to-root-util/05-correct-1.txt
 
-```ts
-// util/money/to-signed-amount.ts
-/**
- * 화면 공통 금액 표시. 소수 두 자리와 부호 고정
- */
-export const toSignedAmount = (amount: Amount): string => {
-	return `${amount.value < 0 ? "-" : "+"}$${Math.abs(amount.value).toFixed(2)}`;
-};
-```
+<<< ../examples/functions-promote-owner-free-functions-to-root-util/05-correct-2.ts

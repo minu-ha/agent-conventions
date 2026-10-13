@@ -33,30 +33,8 @@ tags: docs, handlers, effects
 
 **Incorrect 1 (주요 경계 선언에 의도 설명이 없습니다):**
 
-```ts
-const handleBackButtonClick: MouseEventHandler<HTMLButtonElement> = (_event) => {
-	void navigate("/products");
-};
-
-useEffect(() => {
-	return subscribeToProductChanges(watchedProductIds);
-}, [watchedProductIds]);
-```
+<<< ../examples/docs-require-jsdoc-on-key-declarations/01-incorrect.ts
 
 **Correct 1 (선언 의도를 바로 위에 여러 줄 블록으로 적습니다):**
 
-```ts
-/**
- * 저장하지 않고 목록으로 이동. 입력 중인 값은 버림
- */
-const handleBackButtonClick: MouseEventHandler<HTMLButtonElement> = (_event) => {
-	void navigate("/products");
-};
-
-/**
- * 표에 보이는 상품의 변경 알림 구독. 목록이 바뀌면 재구독
- */
-useEffect(() => {
-	return subscribeToProductChanges(watchedProductIds);
-}, [watchedProductIds]);
-```
+<<< ../examples/docs-require-jsdoc-on-key-declarations/02-correct.ts

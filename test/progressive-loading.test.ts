@@ -256,6 +256,7 @@ const createRoutingDocument = (): LoadedSkillDocument => ({
 			requiresSelected: [],
 			reviewWith: [],
 			body: "## Observe State\n\n**Incorrect 1** hidden body\n\n**Correct 1** hidden body",
+			source: "## Observe State\n\n**Incorrect 1** hidden body\n\n**Correct 1** hidden body",
 		},
 		{
 			fileName: "composition-second.md",
@@ -270,6 +271,7 @@ const createRoutingDocument = (): LoadedSkillDocument => ({
 			requiresSelected: [],
 			reviewWith: [],
 			body: "## Second Composition\n\n**Incorrect 1** hidden body\n\n**Correct 1** hidden body",
+			source: "## Second Composition\n\n**Incorrect 1** hidden body\n\n**Correct 1** hidden body",
 		},
 		{
 			fileName: "composition-first.md",
@@ -284,6 +286,7 @@ const createRoutingDocument = (): LoadedSkillDocument => ({
 			requiresSelected: ["state-observe", "typescript/types-reuse-contracts"],
 			reviewWith: ["state-observe", "typescript/types-reuse-contracts"],
 			body: "## First Composition\n\n**Incorrect 1** hidden body\n\n**Correct 1** hidden body",
+			source: "## First Composition\n\n**Incorrect 1** hidden body\n\n**Correct 1** hidden body",
 		},
 	],
 });

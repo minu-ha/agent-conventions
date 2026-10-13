@@ -1,0 +1,17 @@
+/* page/product-detail/pg-product-detail.css */
+/* [!code ++] */
+.pg_productDetail__chartSlot {
+/* [!code ++] */
+	min-height: 240px;
+
+/* [!code ++] */
+	& .wg_chartCard__caption {
+		letter-spacing: 0.02em;
+	}
+
+/* [!code ++] */
+	& .ui_card__title {
+		font-size: 13px;
+	}
+/* [!code ++] */
+}

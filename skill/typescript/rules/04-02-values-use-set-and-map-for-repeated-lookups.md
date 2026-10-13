@@ -43,33 +43,16 @@ tags: functions
 
 **Incorrect 1 (같은 배열을 반복 순회하며 포함 여부를 확인합니다):**
 
-```ts
-const visibleProducts = products.filter((product) => allowedProductIds.includes(product.id));
-const disabledProducts = archivedProducts.filter((product) => allowedProductIds.includes(product.id));
-```
+<<< ../examples/values-use-set-and-map-for-repeated-lookups/01-incorrect.ts
 
 **Correct 1 (반복 조회는 `Set`으로 처리합니다):**
 
-```ts
-const allowedProductIdSet = new Set(allowedProductIds);
-
-const visibleProducts = products.filter((product) => allowedProductIdSet.has(product.id));
-const disabledProducts = archivedProducts.filter((product) => allowedProductIdSet.has(product.id));
-```
+<<< ../examples/values-use-set-and-map-for-repeated-lookups/02-correct.ts
 
 **Correct (반복 키 조회는 `Map`으로 처리합니다):**
 
-```ts
-// users는 서버 계약상 id가 고유
-const userById = new Map(users.map((user) => [user.id, user]));
-
-const owner = userById.get(ownerId);
-const reviewer = userById.get(reviewerId);
-const approver = userById.get(approverId);
-```
+<<< ../examples/values-use-set-and-map-for-repeated-lookups/03-correct.ts
 
 **Correct (길이가 정해진 짧은 목록은 `includes`를 그대로 씁니다):**
 
-```ts
-const isEditableStatus = editable_order_statuses.includes(order.status);
-```
+<<< ../examples/values-use-set-and-map-for-repeated-lookups/04-correct.ts

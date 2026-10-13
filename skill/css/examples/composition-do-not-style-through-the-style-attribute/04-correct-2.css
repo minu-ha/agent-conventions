@@ -1,0 +1,4 @@
+.pg_orders__virtualRow {
+	position: absolute;
+	transform: translateY(var(--pg-orders-row-offset, 0));
+}

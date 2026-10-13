@@ -31,38 +31,16 @@ tags: naming, constant
 
 **Incorrect 1 (한 소유자의 상수를 루트로 올립니다):**
 
-```ts
-// constant/chart.ts
-// 상품 상세 화면만 쓰는 값이 루트에 있음
-export const chart_axis_tick_count = 6;
-```
+<<< ../examples/naming-place-owner-constants-in-the-owner-constant-folder/01-incorrect.ts
 
 **Correct 1 (소유자 아래 주제 파일에 둡니다):**
 
-```ts
-// page/product-detail/_constant/chart.ts
-/**
- * 상품 상세 차트의 축 눈금 수. 표시 폭이 좁아 여섯을 넘으면 라벨 겹침
- */
-export const chart_axis_tick_count = 6;
-```
+<<< ../examples/naming-place-owner-constants-in-the-owner-constant-folder/02-correct.ts
 
 **Incorrect 2 (파일 이름에 소유자 이름을 되풀이하고 주제를 객체 하나에 모읍니다):**
 
-```ts
-// page/product-detail/_constant/product-detail.ts
-export const product_detail_config = {
-	chart_axis_tick_count: 6,
-	table_page_size: 20,
-} as const;
-```
+<<< ../examples/naming-place-owner-constants-in-the-owner-constant-folder/03-incorrect.ts
 
 **Correct 2 (주제마다 파일을 나누고 상수를 개별 이름으로 내보냅니다):**
 
-```ts
-// page/product-detail/_constant/chart.ts
-export const chart_axis_tick_count = 6;
-
-// page/product-detail/_constant/table.ts
-export const table_page_size = 20;
-```
+<<< ../examples/naming-place-owner-constants-in-the-owner-constant-folder/04-correct.ts

@@ -44,52 +44,24 @@ flowchart LR
 
 **Incorrect 1 (없어도 되는 값에 기본값을 채웁니다):**
 
-```ts
-const productIds = (response.data.rows ?? []).map((row) => row.id);
-const isCompact = (variant ?? "default") === "compact";
-```
+<<< ../examples/absence-resolve-defaults-at-the-boundary/01-incorrect.ts
 
 **Correct 1 (그대로 비교하면 기본값이 필요 없습니다):**
 
-```ts
-const productIds = response.data.rows?.map((row) => row.id);
-const isCompact = variant === "compact";
-```
+<<< ../examples/absence-resolve-defaults-at-the-boundary/02-correct.ts
 
 **Incorrect 2 (같은 기본값을 사용처마다 다시 채웁니다):**
 
-```ts
-fetchProducts({pageSize: query.pageSize ?? pagination_default_page_size});
-setVisibleRowCount(query.pageSize ?? pagination_default_page_size);
-```
+<<< ../examples/absence-resolve-defaults-at-the-boundary/03-incorrect.ts
 
 **Correct 2 (값이 들어오는 경계에서 한 번 채워 이후 코드에서 기본값을 반복하지 않습니다):**
 
-```ts
-/**
- * 상품 목록 search 파라미터. pageSize를 여기서 채우므로 화면에서는 선택 값 아님
- */
-const productUrlParsers = {
-	pageSize: parseAsInteger.withDefault(pagination_default_page_size),
-};
-
-const [query] = useQueryStates(productUrlParsers);
-
-fetchProducts({pageSize: query.pageSize});
-setVisibleRowCount(query.pageSize);
-```
+<<< ../examples/absence-resolve-defaults-at-the-boundary/04-correct.ts
 
 **Correct (경계에서 못 하면 쓰는 자리에 그대로 적습니다):**
 
-```ts
-fetchProducts({pageSize: query.pageSize ?? pagination_default_page_size});
-```
+<<< ../examples/absence-resolve-defaults-at-the-boundary/05-correct.ts
 
 **Correct (이름을 붙인다면 파생값임이 드러나게 짓습니다):**
 
-```ts
-const effectivePageSize = query.pageSize ?? pagination_default_page_size;
-
-fetchProducts({pageSize: effectivePageSize});
-setVisibleRowCount(effectivePageSize);
-```
+<<< ../examples/absence-resolve-defaults-at-the-boundary/06-correct.ts

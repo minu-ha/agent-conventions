@@ -34,32 +34,8 @@ tags: composition, accessibility
 
 **Incorrect 1 (클릭 가능한 `div`와 이름 없는 아이콘 버튼을 씁니다):**
 
-```tsx
-<Fragment>
-	<div className={clsx("pg_products__filterToggle")} onClick={handleFilterToggleClick}>
-		<UiFilterIcon />
-	</div>
-
-	<input value={props.keyword} onChange={props.onKeywordChange} />
-</Fragment>
-```
+<<< ../examples/a11y-give-interactive-elements-an-accessible-name/01-incorrect.tsx
 
 **Correct 1 (`button`으로 만들고 이름을 붙입니다):**
 
-```tsx
-<Fragment>
-	<button
-		type="button"
-		className={clsx("pg_products__filterToggle")}
-		aria-label="필터 열기"
-		onClick={handleFilterToggleClick}
-	>
-		<UiFilterIcon />
-	</button>
-
-	<label className={clsx("pg_products__keywordLabel")} htmlFor="product-keyword">
-		검색어
-	</label>
-	<input id="product-keyword" value={props.keyword} onChange={props.onKeywordChange} />
-</Fragment>
-```
+<<< ../examples/a11y-give-interactive-elements-an-accessible-name/02-correct.tsx

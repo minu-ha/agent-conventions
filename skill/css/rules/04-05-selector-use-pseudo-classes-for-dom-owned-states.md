@@ -32,92 +32,28 @@ tags: pseudo-classes, state, interaction
 
 **Incorrect 1 (앱이 정하는 상태를 `data-*` 속성 선택자로 잡습니다):**
 
-```css
-.pg_products__row {
-	&[data-pg-expanded="true"] {
-		background: #f5f5f5;
-	}
-}
-```
+<<< ../examples/selector-use-pseudo-classes-for-dom-owned-states/01-incorrect.css
 
 **Correct 1 (앱이 정하는 상태는 수정자 클래스로 씁니다):**
 
-```css
-.pg_products__row--expanded {
-	background: #f5f5f5;
-}
-```
+<<< ../examples/selector-use-pseudo-classes-for-dom-owned-states/02-correct.css
 
 **Incorrect 2 (같은 상태를 속성과 수정자 두 표기로 씁니다):**
 
-```css
-.pg_products__card--selected {
-	border-color: #1677ff;
-}
-
-.pg_products__card[aria-pressed="true"] {
-	box-shadow: 0 0 0 1px #1677ff;
-}
-```
+<<< ../examples/selector-use-pseudo-classes-for-dom-owned-states/03-incorrect.css
 
 **Correct 2 (두 표기를 수정자 하나로 모읍니다):**
 
-```css
-.pg_products__card--selected {
-	border-color: #1677ff;
-	box-shadow: 0 0 0 1px #1677ff;
-}
-```
+<<< ../examples/selector-use-pseudo-classes-for-dom-owned-states/04-correct.css
 
 **Incorrect 3 (앱 상태를 속성 선택자로 잡고 DOM 상태를 수정자로 만듭니다):**
 
-```tsx
-<button
-	type="button"
-	aria-pressed={isSelected}
-	className={clsx("pg_products__card", isDisabled && "pg_products__card--disabled")}
->
-	{product.name}
-</button>
-```
+<<< ../examples/selector-use-pseudo-classes-for-dom-owned-states/05-incorrect-1.tsx
 
-```css
-.pg_products__card {
-	border: 1px solid #d9d9d9;
-
-	&[aria-pressed="true"] {
-		border-color: #1677ff;
-	}
-}
-
-.pg_products__card--disabled {
-	opacity: 0.5;
-}
-```
+<<< ../examples/selector-use-pseudo-classes-for-dom-owned-states/05-incorrect-2.css
 
 **Correct 3 (`aria-*`는 마크업에 두고 앱 상태는 수정자로, DOM 상태는 가상 클래스로 씁니다):**
 
-```tsx
-<button
-	type="button"
-	aria-pressed={isSelected}
-	disabled={isDisabled}
-	className={clsx("pg_products__card", isSelected && "pg_products__card--selected")}
->
-	{product.name}
-</button>
-```
+<<< ../examples/selector-use-pseudo-classes-for-dom-owned-states/06-correct-1.tsx
 
-```css
-.pg_products__card {
-	border: 1px solid #d9d9d9;
-
-	&:disabled {
-		opacity: 0.5;
-	}
-}
-
-.pg_products__card--selected {
-	border-color: #1677ff;
-}
-```
+<<< ../examples/selector-use-pseudo-classes-for-dom-owned-states/06-correct-2.css

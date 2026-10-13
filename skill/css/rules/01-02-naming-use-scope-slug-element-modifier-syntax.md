@@ -32,25 +32,8 @@ tags: naming, class-grammar, ownership
 
 **Incorrect 1 (식별자, 요소, 수정자에 snake_case와 kebab-case가 섞입니다):**
 
-```txt
-ui_uiButton__root
-ui_tag_list__root
-ui_tagList__list-item
-wg_site_header__root
-wg_siteHeader__brand-link
-pg_product_detail__root
-pg_productDetail__main-content
-pg_productDetail__main--route_active
-```
+<<< ../examples/naming-use-scope-slug-element-modifier-syntax/01-incorrect.txt
 
 **Correct 1 (범위는 소문자로 쓰고 식별자, 요소, 수정자는 camelCase로 씁니다):**
 
-```txt
-ui_tagList__root
-ui_tagList__listItem
-wg_siteHeader__root
-wg_siteHeader__brandLink
-pg_productDetail__root
-pg_productDetail__mainContent
-pg_productDetail__main--routeActive
-```
+<<< ../examples/naming-use-scope-slug-element-modifier-syntax/02-correct.txt

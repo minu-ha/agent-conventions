@@ -32,51 +32,8 @@ tags: types, interface, type
 
 **Incorrect 1 (독립된 필드 계약을 객체 `type` 별칭으로 선언합니다):**
 
-```ts
-/**
- * 상품 요약
- */
-type ProductSummary = {
-	/**
-	 * 상품 식별자
-	 */
-	id: string;
-	/**
-	 * 목록에 표시할 이름
-	 */
-	name: string;
-};
-```
+<<< ../examples/types-choose-interface-for-object-contracts-and-type-for-composition/01-incorrect.ts
 
 **Correct 1 (필드 계약은 `interface`, 타입 조합은 `type`으로 구분합니다):**
 
-```ts
-/**
- * 상품 요약
- */
-interface ProductSummary {
-	/**
-	 * 상품 식별자
-	 */
-	id: string;
-	/**
-	 * 목록에 표시할 이름
-	 */
-	name: string;
-}
-
-/**
- * 상품 목록 표시 방식
- */
-type ProductMode = "list" | "grid";
-
-/**
- * 자식 목록을 편집할 수 있는 행
- */
-type MutableRow = Omit<Row, "children"> & {
-	/**
-	 * 편집 중인 자식 행
-	 */
-	children: Row[];
-};
-```
+<<< ../examples/types-choose-interface-for-object-contracts-and-type-for-composition/02-correct.ts

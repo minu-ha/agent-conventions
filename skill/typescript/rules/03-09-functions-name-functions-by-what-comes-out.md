@@ -63,78 +63,26 @@ tags: functions, naming
 
 **Incorrect 1 (입력, 구현 동작, 막연한 접미사를 이름에 씁니다):**
 
-```ts
-// page/product-detail/_function/build-user-payload.ts
-export const buildUserPayload = (formValues: UserFormValues) => { /* … */ };
-```
+<<< ../examples/functions-name-functions-by-what-comes-out/01-incorrect-1.ts
 
-```ts
-// page/product-detail/_function/map-response-to-model.ts
-export const mapResponseToModel = (response: UserResponse) => { /* … */ };
-```
+<<< ../examples/functions-name-functions-by-what-comes-out/01-incorrect-2.ts
 
-```ts
-// page/product-detail/_function/process-user-rows.ts
-export const processUserRows = (rows: UserRow[]) => { /* … */ };
-```
+<<< ../examples/functions-name-functions-by-what-comes-out/01-incorrect-3.ts
 
-```ts
-// page/product-detail/_function/resolve-status-tone.ts
-export const resolveStatusTone = (status: string) => { /* … */ };
-```
+<<< ../examples/functions-name-functions-by-what-comes-out/01-incorrect-4.ts
 
 **Correct 1 (출력 역할이나 효과를 이름에 씁니다):**
 
-```ts
-// page/product-detail/_function/to-user-save-request.ts
-/**
- * 사용자 저장 요청 조립. 서버가 빈 문자열을 거부하므로 비운 칸은 제외
- */
-export const toUserSaveRequest = (formValues: UserFormValues) => { /* … */ };
-```
+<<< ../examples/functions-name-functions-by-what-comes-out/02-correct-1.ts
 
-```ts
-// page/product-detail/_function/to-user-rows.ts
-/**
- * 응답 한 건을 표 행으로 변환
- */
-export const toUserRows = (response: UserResponse) => { /* … */ };
-```
+<<< ../examples/functions-name-functions-by-what-comes-out/02-correct-2.ts
 
-```ts
-// page/product-detail/_function/to-active-users.ts
-/**
- * 비활성 사용자를 제외한 목록
- */
-export const toActiveUsers = (rows: UserRow[]) => { /* … */ };
-```
+<<< ../examples/functions-name-functions-by-what-comes-out/02-correct-3.ts
 
-```ts
-// page/product-detail/_function/to-status-tone.ts
-/**
- * 상태 문자열을 강조 톤으로 분류
- */
-export const toStatusTone = (status: string) => { /* … */ };
-```
+<<< ../examples/functions-name-functions-by-what-comes-out/02-correct-4.ts
 
 **Correct (저장, 검사 함수는 역할과 판정으로 이름을 짓습니다):**
 
-```ts
-// util/user/is-admin-user.ts
-/**
- * 관리자 권한 판정. 역할 목록이 비면 조회 전 상태로 보고 false
- */
-export const isAdminUser = (user: User) => { /* … */ };
-```
+<<< ../examples/functions-name-functions-by-what-comes-out/03-correct-1.ts
 
-```ts
-// util/session/assert-logged-in.ts
-/**
- * 로그인 상태가 아니면 예외. 화면 이동은 호출부가 결정
- */
-export const assertLoggedIn = (session: Session): void => {
-	if (!session.userId) {
-		throw new NotLoggedInError();
-	}
-};
-```
+<<< ../examples/functions-name-functions-by-what-comes-out/03-correct-2.ts

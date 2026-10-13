@@ -61,122 +61,16 @@ DOM 속성은 React가 추가한 속성도 받아야 하는 열린 집합이므�
 
 **Incorrect 1 (프롭 타입 하나의 충돌 때문에 DOM 속성 전체를 제외합니다):**
 
-```tsx
-// id, role, tabIndex, aria-*, 이벤트를 전부 잃고 다섯 개만 남음
-export interface UiButtonProps {
-	className?: string;
-	children?: ReactNode;
-	color?: ButtonProps["color"];
-	disabled?: ButtonProps["disabled"];
-	onClick?: MouseEventHandler<HTMLButtonElement>;
-}
-```
+<<< ../examples/typing-open-dom-props-in-three-steps/01-incorrect.tsx
 
 **Correct 1 (1단계. 같은 이름의 프롭도 호환되면 그대로 상속합니다):**
 
-```tsx
-import {Button} from "@mui/material";
-import type {ButtonProps} from "@mui/material";
-import {clsx} from "clsx";
-import type {ButtonHTMLAttributes} from "react";
-
-/**
- * 라이브러리 버튼의 강조 단계를 여는 계약
- *
- * color의 문자열 리터럴은 DOM의 string에 할당 가능해 Omit 불필요
- */
-export interface UiButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-	/**
-	 * 강조 단계
-	 */
-	color?: ButtonProps["color"];
-}
-
-export const UiButton = (props: UiButtonProps) => {
-	return <Button {...props} className={clsx("ui_button__root", props.className)} />;
-};
-```
+<<< ../examples/typing-open-dom-props-in-three-steps/02-correct.tsx
 
 **Correct (2단계. 호환되지 않는 정렬 프롭만 빼고 다시 엽니다):**
 
-```tsx
-import {TableCell} from "@mui/material";
-import type {TableCellProps} from "@mui/material";
-import {clsx} from "clsx";
-import type {TdHTMLAttributes} from "react";
-
-/**
- * 라이브러리 셀의 정렬과 여백을 여는 계약
- *
- * align의 inherit은 DOM td 타입에 없어 그 이름만 빼고 다시 선언
- */
-export interface UiTableCellProps extends Omit<TdHTMLAttributes<HTMLTableCellElement>, "align"> {
-	/**
-	 * 내용 가로 정렬
-	 */
-	align?: TableCellProps["align"];
-	/**
-	 * 셀 여백
-	 */
-	padding?: TableCellProps["padding"];
-}
-
-export const UiTableCell = (props: UiTableCellProps) => {
-	return <TableCell {...props} className={clsx("ui_tableCell__root", props.className)} />;
-};
-```
+<<< ../examples/typing-open-dom-props-in-three-steps/03-correct.tsx
 
 **Correct (3단계. 요소 타입이 달라 필요한 프롭만 선언합니다):**
 
-```tsx
-import {TextField} from "@mui/material";
-import type {TextFieldProps} from "@mui/material";
-import {clsx} from "clsx";
-import type {ChangeEventHandler} from "react";
-
-/**
- * 라벨과 값을 받는 한 줄 입력 계약
- *
- * 겉은 `div`, 이벤트는 안쪽 `input`이 받아 요소 전용 타입을 그대로 못 씀
- * 입력 이름을 반드시 보이려고 label은 선택적인 ReactNode 대신 필수 문자열
- */
-export interface UiTextFieldProps {
-	/**
-	 * 입력 위에 보이는 이름
-	 */
-	label: string;
-	/**
-	 * 최상위에 얹을 클래스
-	 */
-	className?: string;
-	/**
-	 * 입력 식별자
-	 */
-	id?: string;
-	/**
-	 * 입력값
-	 */
-	value: string;
-	/**
-	 * 입력이 바뀔 때
-	 */
-	onChange: ChangeEventHandler<HTMLInputElement>;
-	/**
-	 * 오류 표시 여부
-	 */
-	error?: TextFieldProps["error"];
-}
-
-export const UiTextField = (props: UiTextFieldProps) => {
-	return (
-		<TextField
-			className={clsx("ui_textField__root", props.className)}
-			id={props.id}
-			label={props.label}
-			value={props.value}
-			onChange={props.onChange}
-			error={props.error}
-		/>
-	);
-};
-```
+<<< ../examples/typing-open-dom-props-in-three-steps/04-correct.tsx

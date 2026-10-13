@@ -31,38 +31,16 @@ MCP가 주는 에셋 URL은 오래가지 않습니다.
 
 **Incorrect 1 (MCP 에셋 URL을 그대로 코드에 둡니다):**
 
-```tsx
-/**
- * 고정 상품 표시 아이콘
- */
-export const UiPinIcon = () => {
-	return <img src="https://www.figma.com/api/mcp/asset/30e68a16/b2ddc.svg" alt="" />;
-};
-```
+<<< ../examples/transcription-use-existing-icons-or-downloaded-assets/01-incorrect.tsx
 
 **Correct 1 (내려받아 커밋한 에셋을 가져옵니다):**
 
-```tsx
-import pinIconUrl from "@/asset/icon/pin.svg";
-
-/**
- * 고정 상품 표시 아이콘
- */
-export const UiPinIcon = () => {
-	return <img src={pinIconUrl} alt="" />;
-};
-```
+<<< ../examples/transcription-use-existing-icons-or-downloaded-assets/02-correct.tsx
 
 **Incorrect 2 (스크린샷의 모양을 보고 `path`를 손으로 그립니다):**
 
-```tsx
-<svg viewBox="0 0 16 16">
-	<path d="M3 4h10l-4 5v4l-2-1V9z" />
-</svg>
-```
+<<< ../examples/transcription-use-existing-icons-or-downloaded-assets/03-incorrect.tsx
 
 **Correct 2 (모양이 같은 기존 글리프를 씁니다):**
 
-```tsx
-<UiFilterIcon />
-```
+<<< ../examples/transcription-use-existing-icons-or-downloaded-assets/04-correct.tsx

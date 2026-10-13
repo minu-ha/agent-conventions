@@ -1,0 +1,8 @@
+ui_uiButton__root
+ui_tag_list__root
+ui_tagList__list-item
+wg_site_header__root
+wg_siteHeader__brand-link
+pg_product_detail__root
+pg_productDetail__main-content
+pg_productDetail__main--route_active

@@ -32,16 +32,8 @@ UX 메모와 GUI 화면은 따로 고쳐지므로 한쪽만 최신인 일이 흔
 
 **Incorrect 1 (메모와 다른 화면을 말없이 따라 구현합니다):**
 
-```text
-구현 완료 — 상품 목록
-정렬  상품명 가나다순. 화면 12:341의 정렬 화살표를 따름
-```
+<<< ../examples/intent-ask-when-ux-notes-and-gui-disagree/01-incorrect.txt
 
 **Correct 1 (두 출처를 나란히 적어 구현 전에 묻습니다):**
 
-```text
-확인 필요 — 상품 목록
-정렬  메모 12:395  최초 진입 시 등록일 최신순
-      화면 12:341  상품명 컬럼에 정렬 화살표가 켜져 있음
-      어느 쪽을 따를까요? 답이 없으면 GUI 화면을 따릅니다(정렬 이력 없음)
-```
+<<< ../examples/intent-ask-when-ux-notes-and-gui-disagree/02-correct.txt

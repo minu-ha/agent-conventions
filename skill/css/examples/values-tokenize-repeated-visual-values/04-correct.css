@@ -1,0 +1,12 @@
+.pg_products__rowBadge {
+/* [!code ++] */
+	border: 1px solid transparent;
+}
+
+.pg_products__row {
+/* [!code ++] */
+	&:hover .pg_products__rowBadge {
+/* [!code ++] */
+		border-color: #1677ff;
+	}
+}

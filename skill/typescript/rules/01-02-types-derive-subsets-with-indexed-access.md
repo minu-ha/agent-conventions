@@ -54,132 +54,32 @@ tags: types
 
 **Incorrect 1 (`Pick`으로 골라 필드 이름과 설명이 사라집니다):**
 
-```ts
-// 원본 계약
-interface UserRecord {
-	readonly id: string;
-	name?: string;
-	email: string;
-}
-
-type UserPreview = Pick<UserRecord, "id" | "name">;
-```
+<<< ../examples/types-derive-subsets-with-indexed-access/01-incorrect.ts
 
 **Correct 1 (필드마다 출처를 인덱스 접근으로 가져오고 `?`, `readonly`를 직접 적습니다):**
 
-```ts
-/**
- * 사용자 미리보기 계약
- */
-interface UserPreview {
-	/**
-	 * 사용자 식별자
-	 */
-	readonly id: UserRecord["id"];
-	/**
-	 * 목록에 표시할 이름. 원본이 선택 필드라 여기서도 선택
-	 */
-	name?: UserRecord["name"];
-}
-```
+<<< ../examples/types-derive-subsets-with-indexed-access/02-correct.ts
 
 **Incorrect 2 (인덱스 접근으로 옮기면서 선택 여부와 읽기 전용 속성을 누락합니다):**
 
-```ts
-// 원본: ProductRecord.id는 readonly, UserRecord.name은 선택 필드
-/**
- * 상품 목록 한 행의 표시 계약
- */
-interface ProductListRow {
-	/**
-	 * 상품 식별자
-	 */
-	id: ProductRecord["id"];
-	/**
-	 * 마지막 수정자 이름
-	 */
-	ownerName: UserRecord["name"];
-}
-```
+<<< ../examples/types-derive-subsets-with-indexed-access/03-incorrect.ts
 
 **Correct 2 (여러 계약에서 필드를 모으고 `?`, `readonly`를 직접 적습니다):**
 
-```ts
-/**
- * 상품 목록 한 행의 표시 계약
- */
-interface ProductListRow {
-	/**
-	 * 상품 식별자
-	 */
-	readonly id: ProductRecord["id"];
-	/**
-	 * 마지막 수정자 이름. 원본이 선택 필드라 여기서도 선택
-	 */
-	ownerName?: UserRecord["name"];
-}
-```
+<<< ../examples/types-derive-subsets-with-indexed-access/04-correct.ts
 
 **Incorrect 3 (원본을 따라가야 하는 열린 집합을 인덱스 접근으로 닫아 새 필드를 놓칩니다):**
 
-```ts
-/**
- * 내보내기 요청 전송 형태
- */
-interface ExportRequestBody {
-	/**
-	 * 내보낼 문서 ID
-	 */
-	documentId: GeneratedExportRequest["documentId"];
-	/**
-	 * 내보내기 형식
-	 */
-	format: GeneratedExportRequest["format"];
-}
-```
+<<< ../examples/types-derive-subsets-with-indexed-access/05-incorrect.ts
 
 **Correct 3 (원본을 따라가야 하는 열린 집합은 `Omit`으로 뺍니다):**
 
-```ts
-/**
- * 내보내기 요청 전송 형태. 생성된 계약의 새 필드는 그대로 따라가고 서버가 채우는 시각만 제외
- */
-type ExportRequestBody = Omit<GeneratedExportRequest, "requestedAt">;
-```
+<<< ../examples/types-derive-subsets-with-indexed-access/06-correct.ts
 
 **Incorrect 4 (좁힌 값을 원시 타입으로 다시 적어 원본과의 연결이 사라집니다):**
 
-```ts
-// 원본: TableCellProps.align은 선택 필드, padding은 normal, checkbox, none
-/**
- * 주문 내보내기 표 칸 표시 계약
- */
-interface OrderExportCell {
-	/**
-	 * 칸 정렬
-	 */
-	align: "inherit" | "left" | "center" | "right" | "justify";
-	/**
-	 * 칸 여백. checkbox 칸 없음
-	 */
-	padding?: "normal" | "none";
-}
-```
+<<< ../examples/types-derive-subsets-with-indexed-access/07-incorrect.ts
 
 **Correct 4 (원본 필드를 `NonNullable`, `Extract`로 파생해 출처와 좁힘을 함께 남깁니다):**
 
-```ts
-/**
- * 주문 내보내기 표 칸 표시 계약. align, padding은 TableCell로 그대로 전달
- */
-interface OrderExportCell {
-	/**
-	 * 칸 정렬. TableCell은 비울 수 있지만 이 표는 칸마다 지정
-	 */
-	align: NonNullable<TableCellProps["align"]>;
-	/**
-	 * 칸 여백. checkbox 칸이 없어 normal, none만 허용
-	 */
-	padding?: Extract<TableCellProps["padding"], "normal" | "none">;
-}
-```
+<<< ../examples/types-derive-subsets-with-indexed-access/08-correct.ts

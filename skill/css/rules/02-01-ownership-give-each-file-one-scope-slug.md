@@ -24,34 +24,16 @@ CSS 파일마다 고유한 범위_식별자를 하나씩 씁니다.
 
 **Incorrect 1 (이미 다른 소유자가 쓰는 `scope_slug`를 재사용합니다):**
 
-```txt
-/* products route */
-pg_products__header
-
-/* orders route */
-pg_products__header
-```
+<<< ../examples/ownership-give-each-file-one-scope-slug/01-incorrect.txt
 
 **Correct 1 (소유자가 다르면 별도 식별자를 부여합니다):**
 
-```txt
-/* products route */
-pg_products__header
-
-/* orders route */
-pg_orders__header
-```
+<<< ../examples/ownership-give-each-file-one-scope-slug/02-correct.txt
 
 **Incorrect 2 (부품의 CSS 파일이 부모 식별자를 그대로 씁니다):**
 
-```txt
-/* page/product-detail/_pg-chart-card.css */
-pg_productDetail__chartCard
-```
+<<< ../examples/ownership-give-each-file-one-scope-slug/03-incorrect.txt
 
 **Correct 2 (자기 CSS 파일을 가진 컴포넌트는 자기 식별자를 씁니다):**
 
-```txt
-/* page/product-detail/_pg-chart-card.css */
-pg_chartCard__root
-```
+<<< ../examples/ownership-give-each-file-one-scope-slug/04-correct.txt

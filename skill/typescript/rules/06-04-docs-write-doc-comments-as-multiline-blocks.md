@@ -25,40 +25,12 @@ tags: docs, declarations
 
 **Incorrect 1 (한 줄 블록과 `//`로 선언을 설명합니다):**
 
-```ts
-// service/product/fetch-product-list.ts
-/** 상품 목록. 조회 실패는 호출부에서 처리 */
-export const fetchProductList = async (): Promise<Product[]> => {
-	return await client.get("/products");
-};
-```
+<<< ../examples/docs-write-doc-comments-as-multiline-blocks/01-incorrect-1.ts
 
-```ts
-// service/product/save-product.ts
-// 상품 저장 요청. 응답 본문이 없어 성공은 상태 코드로만 확인
-export const saveProduct = async (product: Product): Promise<void> => {
-	await client.post("/products", product);
-};
-```
+<<< ../examples/docs-write-doc-comments-as-multiline-blocks/01-incorrect-2.ts
 
 **Correct 1 (같은 내용을 여러 줄 블록으로 고정합니다):**
 
-```ts
-// service/product/fetch-product-list.ts
-/**
- * 상품 목록. 조회 실패는 호출부에서 처리
- */
-export const fetchProductList = async (): Promise<Product[]> => {
-	return await client.get("/products");
-};
-```
+<<< ../examples/docs-write-doc-comments-as-multiline-blocks/02-correct-1.ts
 
-```ts
-// service/product/save-product.ts
-/**
- * 상품 저장 요청. 응답 본문이 없어 성공은 상태 코드로만 확인
- */
-export const saveProduct = async (product: Product): Promise<void> => {
-	await client.post("/products", product);
-};
-```
+<<< ../examples/docs-write-doc-comments-as-multiline-blocks/02-correct-2.ts

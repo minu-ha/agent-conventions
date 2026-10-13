@@ -43,74 +43,16 @@ tags: selector, responsive
 
 **Incorrect 1 (기본 선언을 중간 폭에 맞추고 넓고 좁은 방향을 함께 씁니다):**
 
-```css
-.pg_products__layout {
-	display: grid;
-	grid-template-columns: 220px 1fr;
-}
-
-@media (width >= 1440px) {
-	.pg_products__layout {
-		grid-template-columns: 280px 1fr;
-	}
-}
-
-@media (width < 1024px) {
-	.pg_products__layout {
-		grid-template-columns: 1fr;
-	}
-}
-```
+<<< ../examples/layout-write-breakpoints-desktop-first/01-incorrect.css
 
 **Correct 1 (기본 선언은 가장 넓은 화면에 맞추고 좁아질 때만 덮어씁니다):**
 
-```css
-.pg_products__layout {
-	display: grid;
-	grid-template-columns: 280px 1fr;
-}
-
-@media (width < 1440px) {
-	.pg_products__layout {
-		grid-template-columns: 220px 1fr;
-	}
-}
-
-@media (width < 1024px) {
-	.pg_products__layout {
-		grid-template-columns: 1fr;
-	}
-}
-```
+<<< ../examples/layout-write-breakpoints-desktop-first/02-correct.css
 
 **Incorrect 2 (`max-width`를 소수로 보정하고 좁은 쪽부터 씁니다):**
 
-```css
-@media (max-width: 639.98px) {
-	.pg_products__layout {
-		padding: 12px;
-	}
-}
-
-@media (max-width: 1023.98px) {
-	.pg_products__layout {
-		padding: 20px;
-	}
-}
-```
+<<< ../examples/layout-write-breakpoints-desktop-first/03-incorrect.css
 
 **Correct 2 (범위 표기로 적고 넓은 쪽부터 좁혀 갑니다):**
 
-```css
-@media (width < 1024px) {
-	.pg_products__layout {
-		padding: 20px;
-	}
-}
-
-@media (width < 640px) {
-	.pg_products__layout {
-		padding: 12px;
-	}
-}
-```
+<<< ../examples/layout-write-breakpoints-desktop-first/04-correct.css

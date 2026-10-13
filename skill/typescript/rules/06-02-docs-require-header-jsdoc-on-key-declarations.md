@@ -33,24 +33,8 @@ tags: docs, jsdoc, declarations, boundaries
 
 **Incorrect 1 (주요 선언에 헤더 설명이 없습니다):**
 
-```ts
-export const toSortedUserIds = (userIds: string[]): string[] => {
-	return sortBy(uniq(userIds), [(userId) => userId]);
-};
-```
+<<< ../examples/docs-require-header-jsdoc-on-key-declarations/01-incorrect.ts
 
 **Correct 1 (여러 줄 블록에 설명만 적습니다):**
 
-```ts
-/**
- * 요청 순서 고정. 선택 목록의 중복 ID 제거 후 오름차순 정렬
- */
-export const toSortedUserIds = (userIds: string[]): string[] => {
-	return sortBy(uniq(userIds), [(userId) => userId]);
-};
-
-/**
- * 상품 목록 조회. 로딩과 오류는 이 응답 객체로만 판단
- */
-const responseProductList = useProductList();
-```
+<<< ../examples/docs-require-header-jsdoc-on-key-declarations/02-correct.ts

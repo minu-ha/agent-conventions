@@ -27,25 +27,12 @@ tags: composition, props, origin
 
 **Incorrect 1 (본문 첫 줄에서 구조분해합니다):**
 
-```tsx
-const WgUserCard = (props: WgUserCardProps) => {
-	const { label, onSave } = props;
-	return <button onClick={onSave}>{label}</button>;
-};
-```
+<<< ../examples/composition-read-props-without-destructuring/01-incorrect.tsx
 
 **Correct 1 (`props`로 읽어 출처를 남깁니다):**
 
-```tsx
-const WgUserCard = (props: WgUserCardProps) => {
-	return <button onClick={props.onSave}>{props.label}</button>;
-};
-```
+<<< ../examples/composition-read-props-without-destructuring/02-correct.tsx
 
 **Incorrect (시그니처에서 구조분해합니다):**
 
-```tsx
-const WgUserCard = ({ label, onSave }: WgUserCardProps) => {
-	return <button onClick={onSave}>{label}</button>;
-};
-```
+<<< ../examples/composition-read-props-without-destructuring/03-incorrect.tsx

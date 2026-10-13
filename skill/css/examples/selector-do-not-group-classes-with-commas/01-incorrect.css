@@ -1,0 +1,15 @@
+/* [!code error] */
+.pg_products__badge--draft,
+/* [!code error] */
+.pg_products__badge--published,
+/* [!code error] */
+.pg_products__badge--archived,
+/* [!code error] */
+.pg_products__badge--deleted {
+	width: 24px;
+	height: 24px;
+}
+
+.pg_products__badge--deleted {
+	background: rgb(140 152 160 / 12%);
+}

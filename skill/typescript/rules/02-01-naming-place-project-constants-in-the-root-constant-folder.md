@@ -52,63 +52,20 @@ flowchart LR
 
 **Incorrect 1 (프로젝트 전반의 값을 쓰는 자리에서 선언합니다):**
 
-```ts
-// page/products/pg-products.tsx
-const default_page_size = 20;
-const request_timeout_ms = 20_000;
+<<< ../examples/naming-place-project-constants-in-the-root-constant-folder/01-incorrect-1.ts
 
-const productClient = createClient({timeoutMs: request_timeout_ms});
-const productQuery = useProductQuery({client: productClient, pageSize: default_page_size});
-```
-
-```ts
-// page/orders/pg-orders.tsx
-// 다른 화면이 같은 값을 다시 선언
-const default_page_size = 20;
-
-const orderQuery = useOrderQuery({pageSize: default_page_size});
-```
+<<< ../examples/naming-place-project-constants-in-the-root-constant-folder/01-incorrect-2.ts
 
 **Correct 1 (루트 `constant` 폴더에 둔 이름을 쓰는 자리에서 가져옵니다):**
 
-```ts
-// page/products/pg-products.tsx
-import {api_request_timeout_ms} from "@/constant/api";
-import {pagination_default_page_size} from "@/constant/pagination";
+<<< ../examples/naming-place-project-constants-in-the-root-constant-folder/02-correct-1.ts
 
-const productClient = createClient({timeoutMs: api_request_timeout_ms});
-const productQuery = useProductQuery({client: productClient, pageSize: pagination_default_page_size});
-```
-
-```ts
-// page/orders/pg-orders.tsx
-import {pagination_default_page_size} from "@/constant/pagination";
-
-const orderQuery = useOrderQuery({pageSize: pagination_default_page_size});
-```
+<<< ../examples/naming-place-project-constants-in-the-root-constant-folder/02-correct-2.ts
 
 **Incorrect 2 (객체 하나에 모아 색인을 손으로 유지합니다):**
 
-```ts
-// constant/config.ts
-export const config = {
-	api: {request_timeout_ms: 20_000},
-	pagination: {default_page_size: 20},
-} as const;
-```
+<<< ../examples/naming-place-project-constants-in-the-root-constant-folder/03-incorrect.ts
 
 **Correct 2 (주제 파일에 상수를 하나씩 이름 붙여 내보냅니다):**
 
-```ts
-// constant/api.ts
-/**
- * 요청 하나의 최대 대기 시간. 게이트웨이가 30초에 끊으므로 그 전에 실패 표시
- */
-export const api_request_timeout_ms = 20_000;
-
-// constant/pagination.ts
-/**
- * 목록 화면이 처음 불러오는 개수
- */
-export const pagination_default_page_size = 20;
-```
+<<< ../examples/naming-place-project-constants-in-the-root-constant-folder/04-correct.ts

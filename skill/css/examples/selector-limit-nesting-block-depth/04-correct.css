@@ -1,0 +1,8 @@
+/* [!code ++] */
+.pg_orderTable__root {
+/* [!code ++] */
+	& .MuiTableHead-root > tr > th {
+/* [!code ++] */
+		border-bottom: 2px solid #d9d9d9;
+	}
+}

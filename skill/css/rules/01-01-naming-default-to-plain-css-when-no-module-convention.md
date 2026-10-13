@@ -22,41 +22,12 @@ CSS Modules가 공식 표준이고 별도의 이름 규칙과 실행 규칙이 �
 
 **Incorrect 1 (프로젝트 표준이 없는데도 CSS Modules를 기본처럼 씁니다):**
 
-```tsx
-import styles from "./products.module.css";
+<<< ../examples/naming-default-to-plain-css-when-no-module-convention/01-incorrect-1.tsx
 
-<section className={styles.hero}>
-	<span className={styles.eyebrow}>Products</span>
-</section>
-```
-
-```css
-.hero {
-	display: grid;
-}
-
-.eyebrow {
-	letter-spacing: 0.08em;
-}
-```
+<<< ../examples/naming-default-to-plain-css-when-no-module-convention/01-incorrect-2.css
 
 **Correct 1 (기본으로 일반 CSS와 전역 고유 클래스 이름을 씁니다):**
 
-```tsx
-import {clsx} from "clsx";
-import "./pg-products.css";
+<<< ../examples/naming-default-to-plain-css-when-no-module-convention/02-correct-1.tsx
 
-<section className={clsx("pg_products__hero")}>
-	<span className={clsx("pg_products__eyebrow")}>Products</span>
-</section>
-```
-
-```css
-.pg_products__hero {
-	display: grid;
-}
-
-.pg_products__eyebrow {
-	letter-spacing: 0.08em;
-}
-```
+<<< ../examples/naming-default-to-plain-css-when-no-module-convention/02-correct-2.css

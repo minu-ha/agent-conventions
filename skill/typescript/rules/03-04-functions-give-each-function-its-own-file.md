@@ -54,70 +54,24 @@ flowchart LR
 
 **Incorrect 1 (여러 보조를 모은 파일에서 내보낸 함수가 세 단계로 이어집니다):**
 
-```ts
-// utils.ts
-export const toTrimmedTitle = (title: string) => {
-	return title.trim();
-};
-
-export const toProductPayload = (values: ProductFormValues) => {
-	return {title: toTrimmedTitle(values.title)};
-};
-
-export const toProductSaveRequest = (values: ProductFormValues) => {
-	return {body: toProductPayload(values)};
-};
-```
+<<< ../examples/functions-give-each-function-its-own-file/01-incorrect.ts
 
 **Correct 1 (소유자 아래 대표 함수 하나에 파일 하나를 둡니다):**
 
-```ts
-// page/product-detail/_function/to-product-save-request.ts
-/**
- * 상품 저장 요청 조립. 서버가 앞뒤 공백이 붙은 title 거부
- */
-export const toProductSaveRequest = (values: ProductFormValues) => {
-	return {body: {title: values.title.trim()}};
-};
-```
+<<< ../examples/functions-give-each-function-its-own-file/02-correct.ts
 
 **Incorrect 2 (대표 함수 하나만 부르는 보조를 대표 파일 아래 비공개 `const`로 쌓습니다):**
 
-```txt
-page/product-detail/_function/
-├── to-product-overview.ts
-│     toProductOverview      내보낸 함수
-│     toTrendChart           toProductOverview가 차트 둘에서 부름
-│     toTrendPoints          toTrendChart가 두 자리에서 부름
-└── to-product-filter-request.ts
-```
+<<< ../examples/functions-give-each-function-its-own-file/03-incorrect.txt
 
 **Correct 2 (자기만 쓰는 보조가 생긴 대표 함수는 자기 이름 폴더를 갖고 보조는 `_` 파일입니다):**
 
-```txt
-page/product-detail/_function/
-├── to-product-overview/           자기만 쓰는 보조가 있어 폴더
-│   ├── to-product-overview.ts     대표. 폴더와 같은 이름
-│   ├── _to-trend-chart.ts         toProductOverview만 부름
-│   └── _to-trend-points.ts        _to-trend-chart만 부름. 폴더 안은 평평
-└── to-product-filter-request.ts   보조가 없어 파일 하나
-```
+<<< ../examples/functions-give-each-function-its-own-file/04-correct.txt
 
 **Incorrect 3 (한 대표만 부르는 보조를 `_function` 바로 아래에 내보내 둡니다):**
 
-```txt
-page/product-detail/_function/
-├── to-product-overview.ts
-├── to-product-digest.ts
-└── to-trend-chart.ts            toProductOverview만 부르는데 소유자의 공개 면에 놓임
-```
+<<< ../examples/functions-give-each-function-its-own-file/05-incorrect.txt
 
 **Correct 3 (두 대표가 부르게 된 뒤에 `_function` 바로 아래로 올리고 `_`를 뗍니다):**
 
-```txt
-page/product-detail/_function/
-├── to-product-overview/
-│   └── to-product-overview.ts
-├── to-product-digest.ts           toTrendChart를 함께 부르기 시작함
-└── to-trend-chart.ts              대표 둘이 불러 공개 면으로 올라옴
-```
+<<< ../examples/functions-give-each-function-its-own-file/06-correct.txt

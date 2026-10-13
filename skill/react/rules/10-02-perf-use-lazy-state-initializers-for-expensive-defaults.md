@@ -31,15 +31,8 @@ tags: perf, state
 
 **Incorrect 1 (무거운 초기값 계산이 렌더마다 반복됩니다):**
 
-```tsx
-const [searchIndex] = useState(toSearchIndex(product_list));
-const [draftFilter] = useState(parseStoredProductFilter(localStorage.getItem("product-filter")));
-```
+<<< ../examples/perf-use-lazy-state-initializers-for-expensive-defaults/01-incorrect.tsx
 
 **Correct 1 (초기화 함수로 넘겨 이후 렌더에서 다시 계산하지 않습니다):**
 
-```tsx
-const [searchIndex] = useState(() => toSearchIndex(product_list));
-// 서버 렌더링을 하지 않는 클라이언트 전용 화면에서만 저장소를 초기값으로 읽음
-const [draftFilter] = useState(() => parseStoredProductFilter(localStorage.getItem("product-filter")));
-```
+<<< ../examples/perf-use-lazy-state-initializers-for-expensive-defaults/02-correct.tsx

@@ -1,0 +1,14 @@
+page/
+├── pg-outlet.tsx
+└── (main)/
+    ├── pg-main-outlet.tsx
+    ├── products/
+    │   ├── pg-products.tsx
+    │   ├── product-table-section/
+    │   │   └── pg-product-table-section.tsx
+    │   └── (detail)/
+    │       ├── pg-detail-outlet.tsx
+    │       └── product-detail/
+    │           └── pg-product-detail.tsx
+    └── orders/
+        └── pg-orders.tsx

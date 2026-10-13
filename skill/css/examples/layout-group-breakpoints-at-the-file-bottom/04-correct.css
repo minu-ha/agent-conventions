@@ -1,0 +1,8 @@
+/* [!code ++] */
+/* src/component/ui/filter-bar/ui-filter-bar.css */
+@media (width < 1024px) {
+/* [!code ++] */
+	.ui_filterBar__root {
+		flex-direction: column;
+	}
+}

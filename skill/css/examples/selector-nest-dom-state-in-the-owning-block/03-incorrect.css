@@ -1,0 +1,16 @@
+.wg_siteHeader__brandMark {
+	transform: rotate(0deg);
+
+/* [!code error] */
+	/* 링크 전체에 hover하면 로고가 기울어야 하는데 로고 위에서만 적용 */
+/* [!code error] */
+	&:hover {
+/* [!code error] */
+		transform: rotate(-2deg);
+	}
+/* [!code error] */
+}
+
+.wg_siteHeader__brandLink {
+	color: #1677ff;
+}

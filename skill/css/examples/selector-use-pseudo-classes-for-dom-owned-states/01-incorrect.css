@@ -1,0 +1,8 @@
+/* [!code error] */
+.pg_products__row {
+/* [!code error] */
+	&[data-pg-expanded="true"] {
+		background: #f5f5f5;
+	}
+/* [!code error] */
+}

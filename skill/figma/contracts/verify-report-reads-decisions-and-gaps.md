@@ -22,13 +22,13 @@ Figma 기준 작업의 보고는 아래 항목을 이 순서로 담습니다.
 
 **Incorrect 1 (무엇을 읽고 가정했는지 남기지 않습니다):**
 
-```text
+```txt
 Figma대로 상품 목록 화면을 구현했습니다.
 ```
 
 **Correct 1 (읽은 것, 정한 것, 남은 것을 항목별로 남깁니다):**
 
-```text
+```txt
 읽은 노드           get_screenshot 12:341 약 3k, get_metadata 12:340 약 10k, get_variable_defs 12:341 약 1k
 대응표              표 UiTable, 탭 UiTabs, 상태 UiBadge, 재고 경고 칩은 새 마크업(대응물 없음)
 get_design_context  12:377 재고 경고 칩, 대응물 없음

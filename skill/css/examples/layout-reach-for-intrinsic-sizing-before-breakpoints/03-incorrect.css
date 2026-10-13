@@ -1,0 +1,29 @@
+.ui_button__root {
+	display: inline-flex;
+	min-height: 40px;
+	padding: 0 var(--app-space-control-inline);
+/* [!code error] */
+	width: 300px;
+}
+
+/* [!code error] */
+@media (width < 1024px) {
+/* [!code error] */
+	.ui_button__root {
+/* [!code error] */
+		width: 200px;
+/* [!code error] */
+	}
+/* [!code error] */
+}
+
+/* [!code error] */
+@media (width < 640px) {
+/* [!code error] */
+	.ui_button__root {
+/* [!code error] */
+		width: 100%;
+/* [!code error] */
+	}
+/* [!code error] */
+}

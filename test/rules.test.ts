@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
-import {readFile} from "node:fs/promises";
+import {mkdir, mkdtemp, readFile, rm, writeFile} from "node:fs/promises";
+import {tmpdir} from "node:os";
 import path from "node:path";
 import test from "node:test";
 
@@ -9,6 +10,7 @@ import {parseFrontmatter, parseSections, readSkillDocument, readSkillRules} from
 import {parseRuleBody} from "../src/rule-body.js";
 import {getRulesForSection} from "../src/routing.js";
 import {generateSiteFiles} from "../src/site.js";
+import {inlineSnippets} from "../src/snippets.js";
 import type {LoadedSkillDocument} from "../src/types.js";
 
 const expectedRuleCount = 146;
@@ -169,6 +171,79 @@ test("every example label is a 합쇼체 sentence", async () => {
 	assert.deepEqual(offenders, [], "합쇼체로 끝나지 않는 예시 라벨");
 	// 정확한 수는 예제를 손볼 때마다 바뀜. 문체가 검사 대상이고 개수는 검사가 살아 있다는 표시
 	assert.ok(labelCount > 380, `예시 라벨이 ${labelCount}개뿐이다. 검사가 대상을 못 찾고 있다`);
+});
+
+test("inlineSnippets turns a snippet line into a fence and strips regions and line notation", async () => {
+	const temporaryDir = await mkdtemp(path.join(tmpdir(), "agent-conventions-snippets-"));
+
+	try {
+		await mkdir(path.join(temporaryDir, "examples"));
+		await writeFile(
+			path.join(temporaryDir, "examples", "01-incorrect.tsx"),
+			["// #region picked", "// [!code error]", "const a = 1; // [!code error]", "const b = 2;", "// #endregion picked", ""].join("\n"),
+		);
+		await writeFile(
+			path.join(temporaryDir, "examples", "02-correct.css"),
+			[".a {", "\t/* [!code ++] */", "\tcolor: red;", "}", ""].join("\n"),
+		);
+
+		const result = inlineSnippets(
+			[
+				"**Incorrect 1 (a):**",
+				"",
+				"<<< ./examples/01-incorrect.tsx bad",
+				"",
+				"**Correct 1 (b):**",
+				"",
+				"<<< ./examples/02-correct.css",
+			].join("\n"),
+			temporaryDir,
+		);
+
+		assert.equal(
+			result.body,
+			[
+				"**Incorrect 1 (a):**",
+				"",
+				"```tsx",
+				"const a = 1;",
+				"const b = 2;",
+				"```",
+				"",
+				"**Correct 1 (b):**",
+				"",
+				"```css",
+				".a {",
+				"\tcolor: red;",
+				"}",
+				"```",
+			].join("\n"),
+		);
+		assert.deepEqual(
+			result.snippets.map((snippet) => [snippet.reference, snippet.meta]),
+			[
+				["./examples/01-incorrect.tsx", "bad"],
+				["./examples/02-correct.css", ""],
+			],
+		);
+		assert.throws(() => inlineSnippets("<<< ./examples/missing.ts", temporaryDir), /does not exist/);
+	} finally {
+		await rm(temporaryDir, {recursive: true, force: true});
+	}
+});
+
+test("every rule loads its examples from files and no rule keeps an example fence inline", async () => {
+	for (const document of await readProgressiveDocuments()) {
+		for (const rule of document.rules) {
+			const afterFirstLabel = rule.source
+				.split(/^\*\*(?:Incorrect|Correct)/m)
+				.slice(1)
+				.join("");
+
+			assert.equal(afterFirstLabel.includes("```"), false, `${document.skillName}/${rule.fileName} still has an inline example fence`);
+			assert.ok(/^<<< \.\.\/examples\//m.test(rule.source), `${document.skillName}/${rule.fileName} loads no example file`);
+		}
+	}
 });
 
 test("readSkillRules exposes titleKo and tolerates its absence", async () => {

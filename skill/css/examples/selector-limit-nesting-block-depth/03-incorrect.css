@@ -1,0 +1,16 @@
+/* [!code error] */
+.pg_products__sortButton {
+/* [!code error] */
+	&.MuiButtonBase-root {
+/* [!code error] */
+		&:hover {
+/* [!code error] */
+			.pg_products__sortBox {
+/* [!code error] */
+				border-color: #9fadc7;
+/* [!code error] */
+			}
+/* [!code error] */
+		}
+	}
+}

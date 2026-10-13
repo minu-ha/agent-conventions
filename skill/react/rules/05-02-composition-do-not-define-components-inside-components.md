@@ -21,77 +21,12 @@ tags: composition, perf
 
 **Incorrect 1 (렌더마다 새 컴포넌트 타입을 만듭니다):**
 
-```tsx
-// component/widget/user-card/wg-user-card.tsx
-export const WgUserCard = (props: WgUserCardProps) => {
-	const Avatar = () => {
-		return (
-			<img
-				className={clsx(
-					"wg_userCardAvatar__image",
-					props.theme === "dark" && "wg_userCardAvatar__image--dark",
-				)}
-				src={props.user.avatarUrl}
-				alt={props.user.name}
-			/>
-		);
-	};
-
-	return (
-		<section>
-			<Avatar />
-		</section>
-	);
-};
-```
+<<< ../examples/composition-do-not-define-components-inside-components/01-incorrect.tsx
 
 **Correct 1 (형제 파일로 뺀 컴포넌트를 부르고 값은 프롭스로 넘깁니다):**
 
-```tsx
-// component/widget/user-card/wg-user-card.tsx
-import {WgUserCardAvatar} from "@/component/widget/user-card/_wg-user-card-avatar";
-
-export const WgUserCard = (props: WgUserCardProps) => {
-	return (
-		<section>
-			<WgUserCardAvatar src={props.user.avatarUrl} alt={props.user.name} theme={props.theme} />
-		</section>
-	);
-};
-```
+<<< ../examples/composition-do-not-define-components-inside-components/02-correct.tsx
 
 **Correct (뺀 아바타는 소유자 폴더의 형제 파일에 둡니다):**
 
-```tsx
-// component/widget/user-card/_wg-user-card-avatar.tsx
-/**
- * 사용자 카드 아바타 프롭스
- */
-export interface WgUserCardAvatarProps {
-	/**
-	 * 어두운 배경에서 쓸지
-	 */
-	theme: "dark" | "light";
-	/**
-	 * 아바타 이미지 주소
-	 */
-	src: string;
-	/**
-	 * 아바타로 구분하는 사용자 이름
-	 */
-	alt: string;
-}
-
-export const WgUserCardAvatar = (props: WgUserCardAvatarProps) => {
-	return (
-		<img
-			className={clsx(
-				"wg_userCardAvatar__image",
-				props.theme === "dark" && "wg_userCardAvatar__image--dark",
-			)}
-			src={props.src}
-			alt={props.alt}
-		/>
-	);
-};
-```
+<<< ../examples/composition-do-not-define-components-inside-components/03-correct.tsx

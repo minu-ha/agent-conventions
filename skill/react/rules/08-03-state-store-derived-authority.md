@@ -29,50 +29,16 @@ tags: state, zustand
 
 **Incorrect 1 (개별 화면이 도메인을 판별하고 스토어에 저장합니다):**
 
-```ts
-const permissionStore = usePermissionStore();
-const canEditProduct = responseProductGetItemSuspense.data.ownerId === currentUserId;
-
-useEffect(() => {
-	permissionStore.setCanEditProduct(canEditProduct);
-}, [permissionStore, canEditProduct]);
-```
+<<< ../examples/state-store-derived-authority/01-incorrect.ts
 
 **Correct 1 (화면은 스토어에 채워진 결과만 참조합니다):**
 
-```ts
-const permissionStore = usePermissionStore();
-
-if (permissionStore.canEditProduct) {
-	// ...
-}
-```
+<<< ../examples/state-store-derived-authority/02-correct.ts
 
 **Incorrect 2 (스토어 전체에 의존하는 이펙트가 `set`마다 다시 실행됩니다):**
 
-```ts
-// page/_layout/pg-app-layout.tsx
-const permissionStore = usePermissionStore();
-
-/**
- * 부트스트랩 응답의 권한 목록으로 수정 가능 여부 채움
- */
-useEffect(() => {
-	permissionStore.setCanEditProduct(responseAccessBootstrapSuspense.data.capabilities.includes("product:edit"));
-}, [permissionStore, responseAccessBootstrapSuspense.data]);
-```
+<<< ../examples/state-store-derived-authority/03-incorrect.ts
 
 **Correct 2 (초기화 경계에서 스토어를 채우고 스토어에서는 `set` 함수만 선택합니다):**
 
-```ts
-// page/_layout/pg-app-layout.tsx
-const setCanEditProduct = usePermissionStore((state) => state.setCanEditProduct);
-
-/**
- * 부트스트랩 응답의 권한 목록으로 수정 가능 여부 채움. 여러 화면과 라우트 가드가 이 결과를 읽음
- */
-useEffect(() => {
-	// state-calculate-derived-values-during-render 예외: 화면 여럿이 같은 판단을 읽어 경계에서 한 번 채움
-	setCanEditProduct(responseAccessBootstrapSuspense.data.capabilities.includes("product:edit"));
-}, [setCanEditProduct, responseAccessBootstrapSuspense.data]);
-```
+<<< ../examples/state-store-derived-authority/04-correct.ts

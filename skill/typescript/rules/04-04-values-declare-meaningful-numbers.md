@@ -38,75 +38,16 @@ tags: values, config
 
 **Incorrect 1 (뜻이 있는 숫자를 쓰는 자리에 적거나 지역 `const`로 자리만 옮깁니다):**
 
-```ts
-// page/products/pg-products.tsx
-const maxAttempts = 42;
-
-const isOverRetryLimit = (attempts: number): boolean => {
-	return attempts > maxAttempts;
-};
-
-const toPreviewRows = (rows: Row[]): Row[] => {
-	return rows.slice(0, 37);
-};
-```
+<<< ../examples/values-declare-meaningful-numbers/01-incorrect.ts
 
 **Correct 1 (`constant` 폴더에 선언하고 쓰는 자리에서 이름을 가리킵니다):**
 
-```ts
-// constant/retry.ts
-/**
- * 이 횟수를 넘으면 사용자에게 실패 표시
- */
-export const retry_max_attempts = 42;
-
-// constant/preview.ts
-/**
- * 미리보기에 그릴 행 수. 서버가 한 번에 주는 최대치와 같음
- */
-export const preview_row_count = 37;
-
-// page/products/pg-products.tsx
-import {preview_row_count} from "@/constant/preview";
-import {retry_max_attempts} from "@/constant/retry";
-
-const isOverRetryLimit = (attempts: number): boolean => {
-	return attempts > retry_max_attempts;
-};
-
-const toPreviewRows = (rows: Row[]): Row[] => {
-	return rows.slice(0, preview_row_count);
-};
-```
+<<< ../examples/values-declare-meaningful-numbers/02-correct.ts
 
 **Incorrect 2 (뜻이 없는 숫자에까지 이름을 붙입니다):**
 
-```ts
-// constant/table.ts
-export const table_first_row_index = 0;
-export const table_page_step = 1;
-
-// page/products/pg-products.tsx
-import {table_first_row_index, table_page_step} from "@/constant/table";
-
-const toFirstRow = (rows: Row[]): Row | undefined => {
-	return rows[table_first_row_index];
-};
-
-const toNextPage = (page: number): number => {
-	return page + table_page_step;
-};
-```
+<<< ../examples/values-declare-meaningful-numbers/03-incorrect.ts
 
 **Correct 2 (뜻이 없는 숫자는 그대로 둡니다):**
 
-```ts
-// page/products/pg-products.tsx
-const toFirstRow = (rows: Row[]): Row | undefined => {
-	return rows[0];
-};
-
-const toNextPage = (page: number): number => {
-	return page + 1;
-};
-```
+<<< ../examples/values-declare-meaningful-numbers/04-correct.ts

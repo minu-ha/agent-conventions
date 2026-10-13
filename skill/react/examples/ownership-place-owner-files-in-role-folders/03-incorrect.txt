@@ -1,0 +1,20 @@
+page/product-detail/
+├── pg-product-detail.tsx
+# [!code error]
+├── components/
+# [!code error]
+├── constants/
+# [!code error]
+├── utils/
+# [!code error]
+├── helpers/
+# [!code error]
+└── product-table-section/
+    ├── pg-product-table-section.tsx
+# [!code error]
+    └── review/
+# [!code error]
+        ├── pg-review.tsx
+        └── _function/
+# [!code error]
+            └── to-review-rows.ts

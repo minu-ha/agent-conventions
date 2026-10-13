@@ -71,83 +71,10 @@ Biome 2.5.7의 `recommended`에는 `useConst`, `useImportType`, `noNonNullAssert
 
 **Correct (컨벤션 항목을 설정으로 고정합니다):**
 
-```json
-{
-	"linter": {
-		"enabled": true,
-		"rules": {
-			"preset": "recommended",
-			"complexity": {"useMaxParams": {"level": "error", "options": {"max": 3}}},
-			"correctness": {"noUnusedFunctionParameters": "error"},
-			"suspicious": {"noExplicitAny": "error"},
-			"performance": {"noNamespaceImport": "error", "noBarrelFile": "error", "noReExportAll": "error"},
-			"style": {
-				"noDefaultExport": "error",
-				"noEnum": "error",
-				"noMagicNumbers": "error",
-				"noNestedTernary": "error",
-				"useAsConstAssertion": "error",
-				"noNonNullAssertion": "error",
-				"noParameterAssign": "error",
-				"useConst": "error",
-				"useImportType": "error",
-				"useFilenamingConvention": {
-					"level": "error",
-					"options": {"filenameCases": ["kebab-case"]}
-				},
-				"noRestrictedImports": {
-					"level": "error",
-					"options": {
-						"patterns": [
-							{"group": ["../**", "./**", "!./*.css"], "message": "가져오기는 절대경로로 씁니다. 심볼 없이 파일만 불러오는 줄만 같은 폴더를 ./ 로 씁니다."}
-						]
-					}
-				},
-				"useNamingConvention": {
-					"level": "error",
-					"options": {
-						"strictCase": false,
-						"conventions": [
-							{"selector": {"kind": "typeLike"}, "formats": ["PascalCase"]},
-							{"selector": {"kind": "const", "scope": "global"}, "formats": ["camelCase", "PascalCase", "snake_case"]},
-							{"selector": {"kind": "objectLiteralProperty"}, "formats": ["camelCase", "PascalCase", "snake_case"]},
-							{"selector": {"kind": "typeProperty"}, "formats": ["camelCase"]},
-							{"selector": {"kind": "variable"}, "formats": ["camelCase", "PascalCase"]}
-						]
-					}
-				}
-			}
-		}
-	},
-	"overrides": [
-		{
-			"includes": ["**/*.test.ts"],
-			"linter": {"rules": {"style": {"noMagicNumbers": "off"}}}
-		},
-		{
-			"includes": ["**/*.config.ts", "**/*.config.js"],
-			"linter": {"rules": {"style": {"noDefaultExport": "off"}}}
-		}
-	]
-}
-```
+<<< ../examples/tooling-configure-biome-to-enforce-these-rules/01-correct.json
 
 **Correct (`??`, `||` 오른쪽 리터럴은 GritQL 플러그인으로 잡습니다):**
 
-```json
-{
-	"plugins": ["./no-literal-fallback.grit"]
-}
-```
+<<< ../examples/tooling-configure-biome-to-enforce-these-rules/02-correct-1.json
 
-```grit
-language js
-
-or {
-	`$left ?? $right`,
-	`$left || $right`
-} where {
-	$right <: or { string(), number(), `true`, `false`, `[]`, `{}` },
-	register_diagnostic(span = $right, message = "??, || 오른쪽에 리터럴을 두지 않습니다. 선언된 이름을 참조합니다")
-}
-```
+<<< ../examples/tooling-configure-biome-to-enforce-these-rules/02-correct-2.grit

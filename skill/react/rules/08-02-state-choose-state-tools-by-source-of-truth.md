@@ -53,97 +53,30 @@ flowchart LR
 
 **Incorrect 1 (전역 값과 서버 값까지 `useState`가 소유합니다):**
 
-```ts
-const [isOpen, setIsOpen] = useState(false);
-const [theme, setTheme] = useState<Theme>("light");
-
-/**
- * 사용자 상세 조회 API
- */
-const responseUserGetItemSuspense = useUserGetItemSuspense();
-const [userName, setUserName] = useState(responseUserGetItemSuspense.data.name);
-```
+<<< ../examples/state-choose-state-tools-by-source-of-truth/01-incorrect.ts
 
 **Correct 1 (값의 소유자에 맞는 도구를 씁니다):**
 
-```ts
-const [isOpen, setIsOpen] = useState(false);
-const themeStore = useThemeStore();
-
-/**
- * 사용자 상세 조회 API
- */
-const responseUserGetItemSuspense = useUserGetItemSuspense();
-```
+<<< ../examples/state-choose-state-tools-by-source-of-truth/02-correct.ts
 
 **Incorrect 2 (링크 공유로 유지할 목록 필터를 `useState`에 둡니다):**
 
-```ts
-const [keyword, setKeyword] = useState("");
-const [page, setPage] = useState(1);
-```
+<<< ../examples/state-choose-state-tools-by-source-of-truth/03-incorrect.ts
 
 **Correct 2 (주소가 소유한 값은 search 파라미터로 읽고 씁니다):**
 
-```ts
-const [urlParams, setUrlParams] = useQueryStates(productUrlParsers);
-```
+<<< ../examples/state-choose-state-tools-by-source-of-truth/04-correct.ts
 
 **Incorrect 3 (묶음 밖의 화면이 읽는 값을 `Context`로 앱 루트까지 올려 전역 스토어처럼 씁니다):**
 
-```ts
-// 테마는 레이아웃과 모든 화면이 읽는데 Context를 루트에 두고 화면마다 Provider를 찾아 올라감
-const ThemeContext = createContext<Theme>("light");
-```
+<<< ../examples/state-choose-state-tools-by-source-of-truth/05-incorrect.ts
 
 **Correct 3 (묶음 밖에서도 읽는 값은 전역 스토어가 소유합니다):**
 
-```ts
-const themeStore = useThemeStore();
-```
+<<< ../examples/state-choose-state-tools-by-source-of-truth/06-correct.ts
 
 **Correct (합성 컴포넌트 안에서 부품끼리 나눠 쓰는 상태는 `Context`로 내려보냅니다):**
 
-```ts
-// component/ui/tabs/_hook/use-tabs.ts
-/**
- * 탭 부품끼리 나눠 쓰는 값
- */
-interface UiTabsContextValue {
-	/**
-	 * 지금 열린 탭 식별자
-	 */
-	selectedId: string;
-	/**
-	 * 탭을 고를 때
-	 */
-	onSelect: (id: string) => void;
-}
+<<< ../examples/state-choose-state-tools-by-source-of-truth/07-correct-1.ts
 
-export const UiTabsContext = createContext<UiTabsContextValue | null>(null);
-```
-
-```tsx
-// component/ui/tabs/_ui-tabs-root.tsx
-import {UiTabsContext} from "@/component/ui/tabs/_hook/use-tabs";
-
-/**
- * 탭 묶음 루트 입력 계약
- */
-export interface UiTabsRootProps {
-	/**
-	 * 처음 열어 둘 탭 식별자
-	 */
-	defaultId: string;
-	/**
-	 * 탭 목록과 패널 부품
-	 */
-	children: ReactNode;
-}
-
-export const UiTabsRoot = (props: UiTabsRootProps) => {
-	const [selectedId, setSelectedId] = useState(props.defaultId);
-
-	return <UiTabsContext value={{ selectedId, onSelect: setSelectedId }}>{props.children}</UiTabsContext>;
-};
-```
+<<< ../examples/state-choose-state-tools-by-source-of-truth/07-correct-2.tsx

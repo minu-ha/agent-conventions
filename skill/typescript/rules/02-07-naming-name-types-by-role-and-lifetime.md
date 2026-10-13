@@ -54,41 +54,8 @@ tags: naming, types, ownership
 
 **Incorrect 1 (소유자와 막연한 화면 계약 접미사를 반복합니다):**
 
-```ts
-/**
- * 주문 화면 데이터
- */
-interface OrderViewModel {
-	/**
-	 * 조회 시점의 행 목록
-	 */
-	rows: OrderRow[];
-	/**
-	 * 조회에 사용한 필터
-	 */
-	filters: OrderFilters;
-}
-
-const orderVM: OrderViewModel = response.data;
-```
+<<< ../examples/naming-name-types-by-role-and-lifetime/01-incorrect.ts
 
 **Correct 1 (한 조회 시점에 고정된 값이라는 역할을 이름에 표시합니다):**
 
-```ts
-// page/orders/_type/summary-snapshot.ts: 폴더 이름이 이미 orders
-/**
- * 한 조회 시점의 주문 요약 목록과 조건
- */
-interface SummarySnapshot {
-	/**
-	 * 조회 시점의 행 목록
-	 */
-	rows: OrderRow[];
-	/**
-	 * 조회에 사용한 필터
-	 */
-	filters: OrderFilters;
-}
-
-const summarySnapshot: SummarySnapshot = response.data;
-```
+<<< ../examples/naming-name-types-by-role-and-lifetime/02-correct.ts

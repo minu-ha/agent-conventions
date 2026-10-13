@@ -30,79 +30,24 @@ tags: values, origin, destructuring
 
 **Incorrect 1 (이름을 바꿔 꺼내 출처와 원래 이름이 함께 사라집니다):**
 
-```ts
-const {status: orderStatus, owner: orderOwner} = order;
-
-if (orderStatus === "archived") {
-	notify(orderOwner);
-}
-```
+<<< ../examples/values-read-objects-through-chains/01-incorrect.ts
 
 **Correct 1 (체인으로 읽어 출처가 쓰는 자리마다 남습니다):**
 
-```ts
-const toOrderLine = (input: OrderLineInput): OrderLine => {
-	return {
-		label: input.product.title,
-		amount: input.product.unitPrice * input.quantity,
-	};
-};
-
-const toOrderTotal = (lines: OrderLine[]): OrderTotal => {
-	return {
-		currency: pricing_default_currency,
-		amount: sumBy(lines, (line) => line.amount),
-	};
-};
-
-if (order.status === "archived") {
-	notify(order.owner);
-}
-```
+<<< ../examples/values-read-objects-through-chains/02-correct.ts
 
 **Incorrect 2 (시그니처와 본문에서 구조분해해 출처가 사라집니다):**
 
-```ts
-const toOrderLine = ({product, quantity}: OrderLineInput): OrderLine => {
-	const {title, unitPrice} = product;
-
-	return {
-		label: title,
-		amount: unitPrice * quantity,
-	};
-};
-```
+<<< ../examples/values-read-objects-through-chains/03-incorrect.ts
 
 **Correct 2 (배열과 튜플은 자리로 풀어도 됩니다):**
 
-```ts
-const [keyword, setKeyword] = useState("");
-
-for (const [key, value] of Object.entries(target.searchParams)) {
-	requestUrl.searchParams.set(key, value);
-}
-```
+<<< ../examples/values-read-objects-through-chains/04-correct.ts
 
 **Incorrect 3 (별칭 `const`로 끊어 이름만 남깁니다):**
 
-```ts
-const currency = pricing_default_currency;
-
-const toOrderTotal = (lines: OrderLine[]): OrderTotal => {
-	return {
-		currency,
-		amount: sumBy(lines, (line) => line.amount),
-	};
-};
-```
+<<< ../examples/values-read-objects-through-chains/05-incorrect.ts
 
 **Correct 3 (필드 읽기가 아니라 계산한 결과라 이름을 붙입니다):**
 
-```ts
-const toOverdueLines = (order: Order): OrderLine[] => {
-	// 콜백 안으로 옮기면 줄마다 다시 생성
-	const overdueIds = new Set(order.overdueLineIds);
-
-	return order.lines.filter((line) => overdueIds.has(line.id));
-};
-```
+<<< ../examples/values-read-objects-through-chains/06-correct.ts

@@ -31,66 +31,24 @@ flowchart LR
 
 **Incorrect 1 (역할 없는 이름의 래퍼를 늘립니다):**
 
-```tsx
-<div className={clsx("pg_orders__box")}>
-	<div className={clsx("pg_orders__inner")}>
-		<LegacyDatePicker value={value} onChange={handleChange} />
-	</div>
-</div>
-```
+<<< ../examples/composition-do-not-add-wrapper-elements-for-styling/01-incorrect.tsx
 
 **Correct 1 (외부 라이브러리가 `className`을 받지 않으면 역할 이름을 붙여 감쌉니다):**
 
-```tsx
-{/**
- * LegacyDatePicker가 className을 받지 않아 배치용 래퍼 필요
- */}
-<div className={clsx("pg_orders__dateField")}>
-	<LegacyDatePicker value={value} onChange={handleChange} />
-</div>
-```
+<<< ../examples/composition-do-not-add-wrapper-elements-for-styling/02-correct.tsx
 
 **Incorrect 2 (래퍼 `div`로 최상위 스타일을 우회합니다):**
 
-```tsx
-<div className={clsx("pg_orders__collapseWrap")}>
-	<UiCollapse>
-		<PgOrderFilterFields />
-	</UiCollapse>
-</div>
-```
+<<< ../examples/composition-do-not-add-wrapper-elements-for-styling/03-incorrect-1.tsx
 
-```css
-.pg_orders__collapseWrap {
-	margin-block-end: 16px;
-}
-```
+<<< ../examples/composition-do-not-add-wrapper-elements-for-styling/03-incorrect-2.css
 
 **Correct 2 (래퍼를 걷고 컴포넌트에 자기 클래스를 넘깁니다):**
 
-```tsx
-<UiCollapse className={clsx("pg_orders__collapse")}>
-	<PgOrderFilterFields />
-</UiCollapse>
-```
+<<< ../examples/composition-do-not-add-wrapper-elements-for-styling/04-correct-1.tsx
 
-```css
-.pg_orders__collapse {
-	margin-block-end: 16px;
-}
-```
+<<< ../examples/composition-do-not-add-wrapper-elements-for-styling/04-correct-2.css
 
 **Correct (`className`을 받지 않던 우리 컴포넌트에 계약을 더합니다):**
 
-```tsx
-export interface UiCollapseProps {
-	className?: string;
-	children: ReactNode;
-}
-
-export const UiCollapse = (props: UiCollapseProps) => {
-	return (
-		<div className={clsx("ui_collapse__root", props.className)}>{props.children}</div>
-	);
-};
-```
+<<< ../examples/composition-do-not-add-wrapper-elements-for-styling/05-correct.tsx

@@ -1,0 +1,15 @@
+.pg_products__card {
+	border: 1px solid #d9d9d9;
+
+/* [!code ++] */
+	&:disabled {
+/* [!code ++] */
+		opacity: 0.5;
+	}
+}
+
+/* [!code ++] */
+.pg_products__card--selected {
+/* [!code ++] */
+	border-color: #1677ff;
+}

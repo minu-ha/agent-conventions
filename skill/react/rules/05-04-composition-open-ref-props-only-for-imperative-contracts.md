@@ -39,111 +39,16 @@ flowchart LR
 
 **Incorrect 1 (`ref` 계약이 필요 없는 단순 화면 컴포넌트에도 습관적으로 `ref`를 노출합니다):**
 
-```tsx
-import type {Ref} from "react";
-
-export interface UiStatusBadgeProps {
-	ref?: Ref<HTMLSpanElement>;
-	label: string;
-}
-
-export const UiStatusBadge = (props: UiStatusBadgeProps) => {
-	return <span ref={props.ref}>{props.label}</span>;
-};
-```
+<<< ../examples/composition-open-ref-props-only-for-imperative-contracts/01-incorrect.tsx
 
 **Correct 1 (`ref`가 실제로 필요한 공개 API일 때만 React 19 방식으로 직접 받습니다):**
 
-```tsx
-import type {ChangeEventHandler, Ref} from "react";
-
-/**
- * 검색 입력 계약
- *
- * 결과 목록에서 검색어로 포커스를 되돌려야 해 `ref` 공개
- * 보이는 라벨을 둘 자리가 없어 이름은 `aria-label`로만 제공
- */
-export interface UiSearchInputProps {
-	/**
-	 * 사용처가 포커스를 옮길 때 쓰는 참조
-	 */
-	ref?: Ref<HTMLInputElement>;
-	/**
-	 * 스크린 리더가 읽을 이름
-	 */
-	label: string;
-	/**
-	 * 입력값
-	 */
-	value: string;
-	/**
-	 * 입력이 바뀔 때
-	 */
-	onChange: ChangeEventHandler<HTMLInputElement>;
-}
-
-export const UiSearchInput = (props: UiSearchInputProps) => {
-	return (
-		<input
-			ref={props.ref}
-			aria-label={props.label}
-			onChange={props.onChange}
-			value={props.value}
-		/>
-	);
-};
-```
+<<< ../examples/composition-open-ref-props-only-for-imperative-contracts/02-correct.tsx
 
 **Correct (`ref`가 실제 계약이 아닐 때는 일반 프롭만 둡니다):**
 
-```tsx
-/**
- * 상태 배지 계약
- *
- * 밖에서 다룰 일이 없어 `ref` 비공개
- */
-export interface UiStatusBadgeProps {
-	/**
-	 * 배지에 표시할 상태 문구
-	 */
-	label: string;
-}
-
-export const UiStatusBadge = (props: UiStatusBadgeProps) => {
-	return <span>{props.label}</span>;
-};
-```
+<<< ../examples/composition-open-ref-props-only-for-imperative-contracts/03-correct.tsx
 
 **Correct (명령 메서드 묶음을 노출할 때만 `useImperativeHandle`과 `<Owner>Handle` 계약을 만듭니다):**
 
-```tsx
-/**
- * 검색 입력이 밖에 여는 명령. 결과 목록이 포커스와 선택을 되돌릴 때 호출
- */
-export interface UiSearchInputHandle {
-	/**
-	 * 입력에 포커스를 두고 글자 전부 선택
-	 */
-	focusAndSelect: () => void;
-}
-
-export interface UiSearchInputProps {
-	/**
-	 * 명령 계약. 사용처가 포커스를 되돌릴 때만 전달
-	 */
-	ref?: Ref<UiSearchInputHandle>;
-}
-
-export const UiSearchInput = (props: UiSearchInputProps) => {
-	const inputRef = useRef<HTMLInputElement>(null);
-
-	useImperativeHandle(props.ref, () => ({
-		focusAndSelect: () => {
-			inputRef.current?.focus();
-			inputRef.current?.select();
-		},
-	}));
-
-	return <input ref={inputRef} className={clsx("ui_searchInput__root")} aria-label="검색어" />;
-};
-```
+<<< ../examples/composition-open-ref-props-only-for-imperative-contracts/04-correct.tsx

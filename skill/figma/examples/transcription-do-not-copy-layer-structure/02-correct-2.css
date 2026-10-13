@@ -1,0 +1,10 @@
+.pg_products__nameRow {
+	display: flex;
+	gap: var(--app-space-inline);
+	align-items: center;
+}
+
+.pg_products__stock {
+	padding-left: var(--app-space-inline);
+	border-left: 1px solid var(--app-color-border);
+}

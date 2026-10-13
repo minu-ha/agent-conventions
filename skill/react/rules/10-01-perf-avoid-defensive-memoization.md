@@ -41,34 +41,16 @@ React 컴파일러가 없어도 같은 기준을 적용합니다.
 
 **Incorrect 1 (단순 가공을 습관적으로 메모이제이션합니다):**
 
-```ts
-const columns = useMemo(() => {
-	return toTableColumns(props.columns);
-}, [props.columns]);
-```
+<<< ../examples/perf-avoid-defensive-memoization/01-incorrect.ts
 
 **Correct 1 (근거가 없으면 감싸지 않고 그대로 계산합니다):**
 
-```ts
-const columns = toTableColumns(props.columns);
-```
+<<< ../examples/perf-avoid-defensive-memoization/02-correct.ts
 
 **Correct (측정한 계산 비용을 근거로 메모이제이션합니다):**
 
-```ts
-// 열 2,000개의 표시 계약 변환이 입력마다 45ms 측정. 같은 columns의 반복 계산 생략
-const columns = useMemo(() => {
-	return toTableColumns(props.columns);
-}, [props.columns]);
-```
+<<< ../examples/perf-avoid-defensive-memoization/03-correct.ts
 
 **Correct (이펙트에서만 쓰는 배열은 안에서 만들고 원본 값에 의존합니다):**
 
-```ts
-/**
- * 입력된 상품 목록이 바뀔 때만 변경 알림 재구독
- */
-useEffect(() => {
-	return subscribeToProductChanges(props.products.map((product) => product.id));
-}, [props.products]);
-```
+<<< ../examples/perf-avoid-defensive-memoization/04-correct.ts

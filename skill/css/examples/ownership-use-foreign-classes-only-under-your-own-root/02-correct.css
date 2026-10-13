@@ -1,0 +1,13 @@
+/* [!code ++] */
+.pg_products__sidebar {
+/* [!code ++] */
+	& .MuiTreeItem-content {
+		border-radius: 4px;
+	}
+
+/* [!code ++] */
+	& .MuiTreeItem-label {
+		color: #8c8c8c;
+	}
+/* [!code ++] */
+}

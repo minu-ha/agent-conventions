@@ -1,0 +1,12 @@
+/* [!code ++] */
+.pg_products__toolbarField {
+	flex: 1;
+/* [!code ++] */
+	margin-inline-start: 0;
+}
+
+/* [!code ++] */
+.pg_products__toolbarButton {
+/* [!code ++] */
+	height: 32px;
+}

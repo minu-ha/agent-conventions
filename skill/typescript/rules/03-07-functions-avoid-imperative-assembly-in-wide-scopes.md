@@ -36,64 +36,24 @@ flowchart LR
 
 **Incorrect 1 (넓은 스코프에서 명령형으로 조립을 쌓습니다):**
 
-```ts
-let visibleTabs = ["overview"];
-
-if (canManageItems) {
-	visibleTabs.push("items");
-}
-```
+<<< ../examples/functions-avoid-imperative-assembly-in-wide-scopes/01-incorrect.ts
 
 **Correct 1 (조건부 스프레드로 한 번에 계산합니다):**
 
-```ts
-const visibleTabs = ["overview", ...(canManageItems ? ["items"] : [])];
-```
+<<< ../examples/functions-avoid-imperative-assembly-in-wide-scopes/02-correct.ts
 
 **Incorrect 2 (삼항 안에 삼항을 넣어 값 하나를 고릅니다):**
 
-```ts
-const statusLabel = order.isCancelled ? "취소" : order.isDueSoon ? "임박" : "진행";
-```
+<<< ../examples/functions-avoid-imperative-assembly-in-wide-scopes/03-incorrect.ts
 
 **Correct 2 (분기가 셋이면 `return`으로 끝나는 함수로 뺍니다):**
 
-```ts
-// page/orders/_function/to-order-row/_to-status-label.ts
-/**
- * 주문 행의 상태 라벨. 취소가 임박보다 우선
- */
-export const toStatusLabel = (order: OrderRow): StatusLabel => {
-	if (order.isCancelled) {
-		return "취소";
-	}
-	if (order.isDueSoon) {
-		return "임박";
-	}
-	return "진행";
-};
-```
+<<< ../examples/functions-avoid-imperative-assembly-in-wide-scopes/04-correct.ts
 
 **Incorrect 3 (목록 조립에서 조건이 셋이 되자 삼항을 겹칩니다):**
 
-```ts
-const visibleTabs = canManageItems
-	? canInviteMembers
-		? ["overview", "items", "members"]
-		: ["overview", "items"]
-	: canInviteMembers
-		? ["overview", "members"]
-		: ["overview"];
-```
+<<< ../examples/functions-avoid-imperative-assembly-in-wide-scopes/05-incorrect.ts
 
 **Correct 3 (조건이 셋 이상인 목록은 표로 두고 걸러 냅니다):**
 
-```ts
-const visibleTabs = [
-	{id: "overview", isVisible: true},
-	{id: "items", isVisible: canManageItems},
-	{id: "members", isVisible: canInviteMembers},
-]
-	.filter((tab) => tab.isVisible)
-	.map((tab) => tab.id);
-```
+<<< ../examples/functions-avoid-imperative-assembly-in-wide-scopes/06-correct.ts

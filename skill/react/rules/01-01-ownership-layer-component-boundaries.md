@@ -51,85 +51,28 @@ flowchart LR
 
 **Incorrect 1 (라우터 훅을 부르는 화면 전용 로직이 `widget`에 남아 있습니다):**
 
-```tsx
-// component/widget/product-toolbar/_wg-product-toolbar-delete-button.tsx
-export const WgProductToolbarDeleteButton = () => {
-	const navigate = useNavigate();
-
-	/**
-	 * 삭제 후 목록으로 이동
-	 */
-	const handleDeleteButtonClick: MouseEventHandler<HTMLButtonElement> = () => {
-		void navigate("/products");
-	};
-
-	return <UiButton onClick={handleDeleteButtonClick}>삭제</UiButton>;
-};
-```
+<<< ../examples/ownership-layer-component-boundaries/01-incorrect.tsx
 
 **Correct 1 (라우터 훅을 호출하는 코드는 화면 레이어에 둡니다):**
 
-```tsx
-// page/products/_pg-delete-product-button.tsx
-export const PgDeleteProductButton = () => {
-	const navigate = useNavigate();
-
-	/**
-	 * 삭제 후 목록으로 이동
-	 */
-	const handleDeleteButtonClick: MouseEventHandler<HTMLButtonElement> = () => {
-		void navigate("/products");
-	};
-
-	return <UiButton onClick={handleDeleteButtonClick}>삭제</UiButton>;
-};
-```
+<<< ../examples/ownership-layer-component-boundaries/02-correct.tsx
 
 **Incorrect 2 (화면 타입, 훅과 무관한 부품을 사용 횟수만으로 화면 레이어에 둡니다):**
 
-```tsx
-// page/product-detail/_pg-product-status-badge.tsx
-// 프롭스가 도메인 타입 하나만 받고 훅도 안 부름. 이 화면에서만 쓴다는 이유로 남아 있음
-export const PgProductStatusBadge = (props: PgProductStatusBadgeProps) => {
-	return <svg className={clsx("pg_productStatusBadge__root")}>{props.children}</svg>;
-};
-```
+<<< ../examples/ownership-layer-component-boundaries/03-incorrect.tsx
 
 **Correct 2 (화면 타입, 훅과 무관한 도메인 부품은 `widget`에 둡니다):**
 
-```tsx
-// component/widget/product-table/_wg-product-status-badge.tsx
-export const WgProductStatusBadge = (props: WgProductStatusBadgeProps) => {
-	return <svg className={clsx("wg_productTable__statusBadge")}>{props.children}</svg>;
-};
-```
+<<< ../examples/ownership-layer-component-boundaries/04-correct.tsx
 
 **Incorrect 3 (도메인을 모르는 그래프 그리기를 조립 규모만 보고 `widget`에 둡니다):**
 
-```tsx
-// component/widget/chart-card/wg-chart-card.tsx
-// 프롭스가 좌표 배열만 받고 도메인 타입을 모름. widget 폴더에 있다는 이유로 남아 있음
-export const WgChartCard = (props: WgChartCardProps) => {
-	return <svg className={clsx("wg_chartCard__root")}>{props.children}</svg>;
-};
-```
+<<< ../examples/ownership-layer-component-boundaries/05-incorrect.tsx
 
 **Correct 3 (도메인 지식이 없는 조합은 `ui`에 둡니다):**
 
-```tsx
-// component/ui/line-chart/ui-line-chart.tsx
-export const UiLineChart = (props: UiLineChartProps) => {
-	return <svg className={clsx("ui_lineChart__root")}>{props.children}</svg>;
-};
-```
+<<< ../examples/ownership-layer-component-boundaries/06-correct.tsx
 
 **Correct (도메인을 아는 조립은 `widget`이 맡아 `ui` 부품을 씁니다):**
 
-```tsx
-// component/widget/chart-card/wg-chart-card.tsx
-import {UiLineChart} from "@/component/ui/line-chart/ui-line-chart";
-
-export const WgChartCard = (props: WgChartCardProps) => {
-	return <UiLineChart points={toChartPoints(props.dailyCounts)} />;
-};
-```
+<<< ../examples/ownership-layer-component-boundaries/07-correct.tsx

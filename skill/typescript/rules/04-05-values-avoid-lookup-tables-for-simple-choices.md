@@ -31,41 +31,16 @@ flowchart LR
 
 **Incorrect 1 (한 곳의 프롭 값을 고르려고 조회표를 만듭니다):**
 
-```tsx
-const chart_toolbar_variant_by_card_variant = {
-	default: "default",
-	fill: "default",
-	dialog: "dialog",
-} satisfies Record<UiChartCardProps["variant"], UiChartToolbarProps["variant"]>;
-
-<UiChart.Toolbar variant={chart_toolbar_variant_by_card_variant[props.variant]} />;
-```
+<<< ../examples/values-avoid-lookup-tables-for-simple-choices/01-incorrect.tsx
 
 **Correct 1 (값이 달라지는 조건을 사용처에 적습니다):**
 
-```tsx
-<UiChart.Toolbar variant={props.variant === "fill" ? "default" : props.variant} />;
-```
+<<< ../examples/values-avoid-lookup-tables-for-simple-choices/02-correct.tsx
 
 **Incorrect 2 (계약 조회표를 근거 없이 둡니다):**
 
-```ts
-const order_status_by_api_code = {
-	P: "pending",
-	C: "completed",
-	D: "cancelled",
-} as const satisfies Record<OrderStatusCode, OrderStatus>;
-```
+<<< ../examples/values-avoid-lookup-tables-for-simple-choices/03-incorrect.ts
 
 **Correct 2 (외부 코드와 화면 상태의 대응 관계가 계약이면 이유를 남기고 조회표를 둡니다):**
 
-```ts
-/**
- * GET /orders의 P, C, D 코드를 화면의 주문 상태 어휘로 바꾸는 API 경계 계약
- */
-const order_status_by_api_code = {
-	P: "pending",
-	C: "completed",
-	D: "cancelled",
-} as const satisfies Record<OrderStatusCode, OrderStatus>;
-```
+<<< ../examples/values-avoid-lookup-tables-for-simple-choices/04-correct.ts

@@ -66,7 +66,7 @@ progressive는 `SKILL.md` → `RULES_INDEX.md` → 걸린 `contracts/*.md`로 �
 
 | Artifact | Role |
 | --- | --- |
-| `rules/_sections.md`, `rules/_template.md`, `rules/*.md` | Editable rule source of truth. |
+| `rules/_sections.md`, `rules/_template.md`, `rules/*.md`, `examples/<rule-id>/*` | Editable rule source of truth. 규칙은 `<<<` 줄로 예제 파일을 불러온다. |
 | `metadata.json` | Editable build and companion activation contract. |
 | `SKILL.md` | Editable activation/load router; compact for progressive skills. |
 | `RULES_INDEX.md` | Progressive-only generated compact index. |
@@ -75,7 +75,7 @@ progressive는 `SKILL.md` → `RULES_INDEX.md` → 걸린 `contracts/*.md`로 �
 | `routing-evals.json` | Progressive-only editable test oracle; never runtime context. |
 
 사람이 직접 수정하는 정본은
-`rules/_sections.md`, `rules/_template.md`, `rules/*.md`, `metadata.json`, `SKILL.md`,
+`rules/_sections.md`, `rules/_template.md`, `rules/*.md`, `examples/<rule-id>/*`, `metadata.json`, `SKILL.md`,
 progressive `routing-evals.json`.
 
 `HANDBOOK.md`, progressive `RULES_INDEX.md`, progressive `contracts/*.md`는 생성물.
@@ -85,7 +85,7 @@ progressive `routing-evals.json`.
 ## 4. Editing Rules
 
 1. `SKILL.md`, `metadata.json`, `rules/_sections.md`를 먼저 훑어 현재 구성 확인.
-2. 규칙 변경은 `rules/_sections.md`, `rules/_template.md`, `rules/*.md`를 수정.
+2. 규칙 변경은 `rules/_sections.md`, `rules/_template.md`, `rules/*.md`, `examples/<rule-id>/*`를 수정.
    활성화 흐름이 바뀌면 `SKILL.md`, 라우팅 조건이 바뀌면 rule frontmatter와
    `routing-evals.json`도 함께.
 3. 공통 규칙은 companion skill로. framework · project 예외만 local overlay로.

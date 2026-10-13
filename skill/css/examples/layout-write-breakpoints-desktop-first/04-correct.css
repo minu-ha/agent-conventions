@@ -1,0 +1,15 @@
+/* [!code ++] */
+@media (width < 1024px) {
+	.pg_products__layout {
+/* [!code ++] */
+		padding: 20px;
+	}
+}
+
+/* [!code ++] */
+@media (width < 640px) {
+	.pg_products__layout {
+/* [!code ++] */
+		padding: 12px;
+	}
+}

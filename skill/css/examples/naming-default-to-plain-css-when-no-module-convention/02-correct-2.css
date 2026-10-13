@@ -1,0 +1,9 @@
+/* [!code ++] */
+.pg_products__hero {
+	display: grid;
+}
+
+/* [!code ++] */
+.pg_products__eyebrow {
+	letter-spacing: 0.08em;
+}

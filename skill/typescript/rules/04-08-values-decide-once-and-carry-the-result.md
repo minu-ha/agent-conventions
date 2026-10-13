@@ -32,56 +32,20 @@ tags: values, boundaries
 
 **Incorrect 1 (경계에서 포맷한 값을 사용처가 다시 파싱해 포맷합니다):**
 
-```ts
-// page/product-detail/pg-product-detail.tsx: ProductSummary를 만들며 이미 포맷
-const productSummary = {averageRate: formatPercent(responseProductSummarySuspense.data.changeRate)};
-```
+<<< ../examples/values-decide-once-and-carry-the-result/01-incorrect-1.ts
 
-```ts
-// page/product-detail/_function/to-summary-rows.ts: 문자열을 다시 숫자로 읽어 재포맷
-const rows = [{id: "changeRate", value: formatPercent(productSummary.averageRate)}];
-```
+<<< ../examples/values-decide-once-and-carry-the-result/01-incorrect-2.ts
 
 **Correct 1 (경계에서 한 번 포맷하고 사용처는 전달된 값을 그대로 씁니다):**
 
-```ts
-// page/product-detail/pg-product-detail.tsx: ProductSummary를 만드는 경계에서 한 번만 포맷
-const productSummary = {averageRate: formatPercent(responseProductSummarySuspense.data.changeRate)};
-```
+<<< ../examples/values-decide-once-and-carry-the-result/02-correct-1.ts
 
-```ts
-// page/product-detail/_function/to-summary-rows.ts
-const rows = [{id: "changeRate", value: productSummary.averageRate}];
-```
+<<< ../examples/values-decide-once-and-carry-the-result/02-correct-2.ts
 
 **Incorrect 2 (같은 색 판정을 범례와 차트 둘에서 하고 폴백으로 한 번 더 합니다):**
 
-```ts
-// 범례
-const legendSeries = seriesItems.map((series, seriesIndex) => ({
-	id: series.id,
-	colorToken: toSeriesColorToken(series.role, seriesIndex),
-}));
-
-// 차트 둘. 범례 팔레트를 읽고도 같은 판정 반복
-const chartSeries = seriesItems.map((series, index) => ({
-	id: series.id,
-	colorToken: colorTokenById.get(series.id) ?? toSeriesColorToken(series.role, index),
-}));
-```
+<<< ../examples/values-decide-once-and-carry-the-result/03-incorrect.ts
 
 **Correct 2 (경계에서 한 번 정해 항목에 담고 차트는 읽기만 합니다):**
 
-```ts
-// 범례를 만드는 자리에서 색을 정해 항목에 저장
-const comparisonSeries = seriesItems.map((series, seriesIndex) => ({
-	...series,
-	colorToken: toSeriesColorToken(series.role, seriesIndex),
-}));
-
-// 차트 둘은 같은 항목의 색을 그대로 읽음
-const chartSeries = comparisonSeries.map((series) => ({
-	id: series.id,
-	colorToken: series.colorToken,
-}));
-```
+<<< ../examples/values-decide-once-and-carry-the-result/04-correct.ts

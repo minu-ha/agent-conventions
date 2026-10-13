@@ -65,19 +65,8 @@ Figma 노드는 `get_screenshot`, `get_metadata`, `get_variable_defs` 순서로 
 
 **Incorrect 1 (화면 전체에 `get_design_context`를 먼저 부르고 성긴 응답을 코드로 강제합니다):**
 
-```text
-get_design_context  12:340 상품 목록_전체             코드 대신 메타데이터, 성김
-get_design_context  12:340 상품 목록_전체  forceCode  Dev Mode 추정 약 63k
-합계                                                  약 70k
-```
+<<< ../examples/read-start-with-screenshot-and-metadata/01-incorrect.txt
 
 **Correct 1 (싼 도구로 화면을 읽고 대응물이 없는 노드 하나만 코드로 읽습니다):**
 
-```text
-get_screenshot      12:341 상품 목록       maxDimension 1600  약 3k
-get_metadata        12:340 상품 목록_전체                     약 10k
-get_variable_defs   12:341 상품 목록                          약 1k
-저장소 대응         표 UiTable, 탭 UiTabs, 상태 UiBadge
-get_design_context  12:377 재고 경고 칩    excludeScreenshot  약 1.2k
-합계                                                          약 15k
-```
+<<< ../examples/read-start-with-screenshot-and-metadata/02-correct.txt

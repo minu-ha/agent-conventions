@@ -42,96 +42,24 @@ flowchart LR
 
 **Incorrect 1 (우리가 렌더하는 마크업을 요소 선택자로 잡습니다):**
 
-```tsx
-<div className={clsx("pg_products__toolbar")}>
-	<div>
-		<UiSearchInput />
-	</div>
-	<button type="button">초기화</button>
-</div>
-```
+<<< ../examples/selector-use-classes-instead-of-element-selectors/01-incorrect-1.tsx
 
-```css
-.pg_products__toolbar {
-	& button {
-		height: 32px;
-	}
-
-	& > div {
-		flex: 1;
-	}
-
-	& > :first-child {
-		margin-inline-start: 0;
-	}
-}
-```
+<<< ../examples/selector-use-classes-instead-of-element-selectors/01-incorrect-2.css
 
 **Correct 1 (우리가 렌더하면 클래스를 붙입니다):**
 
-```tsx
-<div className={clsx("pg_products__toolbar")}>
-	<div className={clsx("pg_products__toolbarField")}>
-		<UiSearchInput />
-	</div>
-	<button type="button" className={clsx("pg_products__toolbarButton")}>
-		초기화
-	</button>
-</div>
-```
+<<< ../examples/selector-use-classes-instead-of-element-selectors/02-correct-1.tsx
 
-```css
-.pg_products__toolbarField {
-	flex: 1;
-	margin-inline-start: 0;
-}
-
-.pg_products__toolbarButton {
-	height: 32px;
-}
-```
+<<< ../examples/selector-use-classes-instead-of-element-selectors/02-correct-2.css
 
 **Incorrect 2 (요소 선택자를 최상위에 둡니다):**
 
-```tsx
-<div
-	className={clsx("wg_productDetail__prose")}
-	dangerouslySetInnerHTML={{__html: product.bodyHtml}}
-/>
-```
+<<< ../examples/selector-use-classes-instead-of-element-selectors/03-incorrect-1.tsx
 
-```css
-/* 블록 밖에 홀로 둔 요소 선택자. 이 스타일시트를 읽은 문서의 모든 h2에 적용 */
-h2 {
-	margin: 24px 0 12px;
-}
-```
+<<< ../examples/selector-use-classes-instead-of-element-selectors/03-incorrect-2.css
 
 **Correct 2 (마크업을 우리가 쓰지 않으면 래퍼 블록 안에서 요소 선택자를 씁니다):**
 
-```tsx
-<div
-	className={clsx("wg_productDetail__prose")}
-	dangerouslySetInnerHTML={{__html: product.bodyHtml}}
-/>
-```
+<<< ../examples/selector-use-classes-instead-of-element-selectors/04-correct-1.tsx
 
-```css
-/* stylelint-disable selector-disallowed-list -- dangerouslySetInnerHTML로 들어온 마크업 */
-.wg_productDetail__prose {
-	& h2 {
-		margin: 24px 0 12px;
-		font-size: 18px;
-	}
-
-	& p {
-		margin: 0 0 12px;
-		line-height: 1.7;
-	}
-
-	& > :first-child {
-		margin-top: 0;
-	}
-}
-/* stylelint-enable selector-disallowed-list */
-```
+<<< ../examples/selector-use-classes-instead-of-element-selectors/04-correct-2.css

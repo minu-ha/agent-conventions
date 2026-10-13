@@ -29,48 +29,12 @@ tags: selector, cascade, maintainability
 
 **Incorrect 1 (같은 클래스를 파일 두 곳에서 열어 선언 순서에 의존합니다):**
 
-```css
-.pg_products__toolbar {
-	display: flex;
-	gap: 12px;
-	padding: 8px;
-}
-
-.pg_products__row {
-	background: #f5f5f5;
-}
-
-.pg_products__toolbar {
-	padding: 12px 16px;
-}
-```
+<<< ../examples/selector-declare-each-class-in-one-block/01-incorrect.css
 
 **Correct 1 (한 블록에 모으고 최종 값만 남깁니다):**
 
-```css
-.pg_products__toolbar {
-	display: flex;
-	gap: 12px;
-	padding: 12px 16px;
-}
-
-.pg_products__row {
-	background: #f5f5f5;
-}
-```
+<<< ../examples/selector-declare-each-class-in-one-block/02-correct.css
 
 **Correct (조건이 다르면 별개 블록으로 둡니다):**
 
-```css
-.pg_products__toolbar {
-	display: flex;
-	gap: 12px;
-	padding: 12px 16px;
-}
-
-@media (width < 1024px) {
-	.pg_products__toolbar {
-		padding: 8px;
-	}
-}
-```
+<<< ../examples/selector-declare-each-class-in-one-block/03-correct.css

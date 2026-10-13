@@ -1,0 +1,7 @@
+.pg_orders__summary {
+	margin-block-start: 16px;
+}
+
+.pg_orders__summary--critical {
+	color: var(--app-color-text-danger);
+}

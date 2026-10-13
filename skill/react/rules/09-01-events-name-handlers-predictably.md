@@ -29,41 +29,8 @@ tags: events, naming
 
 **Incorrect 1 (구현에 `on*`을 쓰고 대상이 이름에 없어 같은 이름이 겹칩니다):**
 
-```ts
-import type {MouseEventHandler} from "react";
-
-// 목록 항목과 저장 버튼 둘 다 클릭을 받는데 이름에 대상이 없어 뒤에 번호가 붙음
-/**
- * 이미 고른 항목을 다시 누르면 선택 해제
- */
-const onClick: MouseEventHandler<HTMLButtonElement> = (_event) => {
-	toggleSelection();
-};
-
-/**
- * 폼 기본 제출 차단. 저장은 mutation 콜백이 이어서 처리
- */
-const onClick2: MouseEventHandler<HTMLButtonElement> = (event) => {
-	event.preventDefault();
-};
-```
+<<< ../examples/events-name-handlers-predictably/01-incorrect.ts
 
 **Correct 1 (`handle` 접두사와 대상, 이벤트가 드러나는 이름을 씁니다):**
 
-```ts
-import type {MouseEventHandler} from "react";
-
-/**
- * 이미 고른 항목을 다시 누르면 선택 해제
- */
-const handleListItemClick: MouseEventHandler<HTMLButtonElement> = (_event) => {
-	toggleSelection();
-};
-
-/**
- * 폼 기본 제출 차단. 저장은 mutation 콜백이 이어서 처리
- */
-const handleSaveButtonClick: MouseEventHandler<HTMLButtonElement> = (event) => {
-	event.preventDefault();
-};
-```
+<<< ../examples/events-name-handlers-predictably/02-correct.ts

@@ -1,0 +1,10 @@
+/* page/product-detail/pg-product-detail.css */
+/* [!code error] */
+.wg_chartCard__caption {
+	letter-spacing: 0.02em;
+}
+
+/* [!code error] */
+.ui_card__title {
+	font-size: 13px;
+}

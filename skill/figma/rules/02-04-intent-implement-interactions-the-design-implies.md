@@ -29,24 +29,8 @@ Figma 화면은 정지 화면이라 동작은 표시로만 남습니다.
 
 **Incorrect 1 (정렬 아이콘을 컬럼 이름 옆 그림으로만 옮깁니다):**
 
-```tsx
-/**
- * 상품 표의 컬럼 정의
- */
-const productColumns = [
-	{key: "name", label: "상품명"},
-	{key: "price", label: <span>판매가 <img src={sortIcon} /></span>},
-];
-```
+<<< ../examples/intent-implement-interactions-the-design-implies/01-incorrect.tsx
 
 **Correct 1 (정렬 아이콘이 있는 컬럼에 표의 정렬 프롭을 켭니다):**
 
-```tsx
-/**
- * 상품 표의 컬럼 정의
- */
-const productColumns = [
-	{key: "name", label: "상품명"},
-	{key: "price", label: "판매가", sortable: true},
-];
-```
+<<< ../examples/intent-implement-interactions-the-design-implies/02-correct.tsx

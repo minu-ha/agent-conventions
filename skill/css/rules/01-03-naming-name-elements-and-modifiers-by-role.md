@@ -22,16 +22,8 @@ tags: naming, semantics, modifiers
 
 **Incorrect 1 (역할 대신 구조나 치수로 이름을 짓습니다):**
 
-```txt
-ui_card__wrapper
-ui_card__box
-ui_card__body--gap12
-```
+<<< ../examples/naming-name-elements-and-modifiers-by-role/01-incorrect.txt
 
 **Correct 1 (역할과 상태를 기준으로 이름을 붙입니다):**
 
-```txt
-ui_card__toolbar
-ui_card__body
-ui_card__body--dense
-```
+<<< ../examples/naming-name-elements-and-modifiers-by-role/02-correct.txt

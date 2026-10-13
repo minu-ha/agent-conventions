@@ -37,98 +37,16 @@ flowchart LR
 
 **Incorrect 1 (정적인 구조를 렌더 프롭으로 조립합니다):**
 
-```tsx
-// component/ui/panel/ui-panel.tsx
-export interface UiPanelProps {
-	renderHeader?: () => ReactNode;
-	renderFooter?: () => ReactNode;
-}
-
-export const UiPanel = (props: UiPanelProps) => {
-	return (
-		<section className={clsx("ui_panel__root")}>
-			{props.renderHeader?.()}
-			<UiItemList />
-			{props.renderFooter?.()}
-		</section>
-	);
-};
-```
+<<< ../examples/strategy-prefer-children-over-render-props/01-incorrect.tsx
 
 **Correct 1 (부품이 `children`으로 사용처가 넣을 자리를 엽니다):**
 
-```tsx
-// component/ui/panel/_ui-panel-root.tsx
-import {clsx} from "clsx";
-
-import type {UiPanelPartProps} from "@/component/ui/panel/_type/panel-part";
-
-/**
- * 패널 틀. 나머지 부품은 이 안에서만 그림
- */
-export const UiPanelRoot = (props: UiPanelPartProps) => {
-	return <section className={clsx("ui_panel__root")}>{props.children}</section>;
-};
-```
+<<< ../examples/strategy-prefer-children-over-render-props/02-correct.tsx
 
 **Correct (부품 계약, 진입 파일, 화면 조립을 파일마다 나눕니다):**
 
-```ts
-// component/ui/panel/_type/panel-part.ts
-/**
- * 패널 부품 셋이 나눠 쓰는 계약
- *
- * 세 부품 모두 받는 것이 `children` 하나뿐이라 형태 하나로 통일
- */
-export interface UiPanelPartProps {
-	/**
-	 * 그 부품 자리에 사용처가 넣을 내용
-	 */
-	children: ReactNode;
-}
-```
+<<< ../examples/strategy-prefer-children-over-render-props/03-correct-1.ts
 
-```tsx
-// component/ui/panel/ui-panel.tsx
-import {UiPanelFooter} from "@/component/ui/panel/_ui-panel-footer";
-import {UiPanelHeader} from "@/component/ui/panel/_ui-panel-header";
-import {UiPanelRoot} from "@/component/ui/panel/_ui-panel-root";
+<<< ../examples/strategy-prefer-children-over-render-props/03-correct-2.tsx
 
-// Header와 Footer도 Root와 같은 형태로 children만 받음
-export const UiPanel = {
-	Root: UiPanelRoot,
-	Header: UiPanelHeader,
-	Footer: UiPanelFooter,
-} as const;
-```
-
-```tsx
-// page/products/pg-products.tsx
-import {Fragment} from "react";
-
-import {UiPanel} from "@/component/ui/panel/ui-panel";
-
-export const PgProducts = () => {
-	return (
-		<Fragment>
-			<UiPanel.Root>
-				<UiPanel.Header>
-					<h2>제품</h2>
-					<PgProductSearchField />
-				</UiPanel.Header>
-				<PgProductList />
-				<UiPanel.Footer>
-					<UiPagination />
-				</UiPanel.Footer>
-			</UiPanel.Root>
-
-			<UiPanel.Root>
-				<UiPanel.Header>
-					<h2>제품 등록</h2>
-				</UiPanel.Header>
-				<PgProductCreateForm />
-			</UiPanel.Root>
-		</Fragment>
-	);
-};
-```
+<<< ../examples/strategy-prefer-children-over-render-props/03-correct-3.tsx

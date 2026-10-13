@@ -39,44 +39,24 @@ flowchart LR
 
 **Incorrect 1 (화면 이름이 아닌 식별자를 씁니다):**
 
-```txt
-pg_shell__body    <- 역할 낱말이라 어느 화면인지 안 나옴
-pg_doc__content   <- 라우트에 없는 줄임말
-pg_x__root        <- 되짚을 이름이 없음
-```
+<<< ../examples/naming-keep-page-slug-traceable/01-incorrect.txt
 
 **Correct 1 (라우트 진입 파일에는 라우트 세그먼트를 그대로 씁니다):**
 
-```txt
-pg_orders__root         <- orders 화면
-pg_orderDetail__body    <- order-detail 화면
-pg_settings__body       <- settings 화면
-```
+<<< ../examples/naming-keep-page-slug-traceable/02-correct.txt
 
 **Incorrect 2 (충돌이 없는데도 부모 식별자를 미리 붙입니다):**
 
-```txt
-pg_productDetailProductTableOverviewSection__root
-pg_productDetailProductTableSummaryBand__root
-```
+<<< ../examples/naming-keep-page-slug-traceable/03-incorrect.txt
 
 **Correct 2 (화면 안의 컴포넌트는 자기 식별자만 씁니다):**
 
-```txt
-pg_overviewSection__root
-pg_summaryBand__root
-```
+<<< ../examples/naming-keep-page-slug-traceable/04-correct.txt
 
 **Incorrect 3 (충돌을 피하려고 상위 경로 전체를 식별자에 붙입니다):**
 
-```txt
-pg_productDetailProductTableOverviewSection__root
-pg_productsProductTableOverviewSection__root
-```
+<<< ../examples/naming-keep-page-slug-traceable/05-incorrect.txt
 
 **Correct 3 (충돌한 화면 이름만 최소로 덧붙입니다):**
 
-```txt
-pg_productDetailOverviewSection__root
-pg_productsOverviewSection__root
-```
+<<< ../examples/naming-keep-page-slug-traceable/06-correct.txt

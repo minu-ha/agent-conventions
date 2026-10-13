@@ -21,12 +21,8 @@ tags: composition, modifiers, responsibility
 
 **Incorrect 1 (기본 클래스 이름에 상태를 포함합니다):**
 
-```tsx
-<div className={clsx("pg_products__listButtonActive")} />
-```
+<<< ../examples/composition-keep-classes-single-purpose/01-incorrect.tsx
 
 **Correct 1 (기본 클래스와 상태 수정자를 분리합니다):**
 
-```tsx
-<div className={clsx("pg_products__listButton", isActive && "pg_products__listButton--active")} />
-```
+<<< ../examples/composition-keep-classes-single-purpose/02-correct.tsx

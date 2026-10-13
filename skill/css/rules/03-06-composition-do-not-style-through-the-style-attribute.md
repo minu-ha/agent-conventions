@@ -34,44 +34,18 @@ tags: values, inline-style
 
 **Incorrect 1 (인라인으로 꾸밉니다):**
 
-```tsx
-<section className={clsx("pg_orders__summary")} style={{marginTop: 16, color: isCritical ? "#c00" : undefined}}>
-	{summary}
-</section>
-```
+<<< ../examples/composition-do-not-style-through-the-style-attribute/01-incorrect.tsx
 
 **Correct 1 (스타일시트에 두고 수정자로 가릅니다):**
 
-```tsx
-<section className={clsx("pg_orders__summary", isCritical && "pg_orders__summary--critical")}>
-	{summary}
-</section>
-```
+<<< ../examples/composition-do-not-style-through-the-style-attribute/02-correct.tsx
 
 **Correct (인라인으로 적던 선언을 스타일시트에 둡니다):**
 
-```css
-.pg_orders__summary {
-	margin-block-start: 16px;
-}
-
-.pg_orders__summary--critical {
-	color: var(--app-color-text-danger);
-}
-```
+<<< ../examples/composition-do-not-style-through-the-style-attribute/03-correct.css
 
 **Correct (실행 중에만 아는 수치를 CSS 변수 하나로 넘깁니다):**
 
-```tsx
-<div
-	className={clsx("pg_orders__virtualRow")}
-	style={{ "--pg-orders-row-offset": `${rowOffset}px` } as CSSProperties}
-/>
-```
+<<< ../examples/composition-do-not-style-through-the-style-attribute/04-correct-1.tsx
 
-```css
-.pg_orders__virtualRow {
-	position: absolute;
-	transform: translateY(var(--pg-orders-row-offset, 0));
-}
-```
+<<< ../examples/composition-do-not-style-through-the-style-attribute/04-correct-2.css

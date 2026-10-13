@@ -33,66 +33,8 @@ flowchart TD
 
 **Incorrect 1 (같은 종류가 흩어지고 이펙트가 아래 선언을 의존성으로 참조합니다):**
 
-```tsx
-export const PgOrderToolbar = () => {
-	// selectedIds가 아직 초기화 전이라 의존성 배열을 평가하는 이 줄에서 오류
-	useEffect(() => {
-		document.title = `주문 ${selectedIds.length}건 선택`;
-	}, [selectedIds]);
-
-	const [selectedIds, setSelectedIds] = useState<string[]>([]);
-
-	const handleClearButtonClick: MouseEventHandler<HTMLButtonElement> = () => {
-		setSelectedIds([]);
-	};
-
-	const [isPanelOpen, setIsPanelOpen] = useState(false);
-
-	const handlePanelOpenButtonClick: MouseEventHandler<HTMLButtonElement> = () => {
-		setIsPanelOpen(true);
-	};
-
-	return (
-		<section className={clsx("pg_orderToolbar__root")}>
-			<UiButton onClick={handleClearButtonClick}>비우기</UiButton>
-			<UiButton onClick={handlePanelOpenButtonClick}>필터</UiButton>
-			{isPanelOpen && <PgOrderFilterPanel />}
-		</section>
-	);
-};
-```
+<<< ../examples/composition-order-hooks-handlers-effects-then-return/01-incorrect.tsx
 
 **Correct 1 (네 구획이 순서대로 놓입니다):**
 
-```tsx
-export const PgOrderToolbar = () => {
-	const [selectedIds, setSelectedIds] = useState<string[]>([]);
-	const [isPanelOpen, setIsPanelOpen] = useState(false);
-
-	/**
-	 * 비우기는 선택만 지우고 패널은 유지
-	 */
-	const handleClearButtonClick: MouseEventHandler<HTMLButtonElement> = () => {
-		setSelectedIds([]);
-	};
-
-	/**
-	 * 필터 패널 열기
-	 */
-	const handlePanelOpenButtonClick: MouseEventHandler<HTMLButtonElement> = () => {
-		setIsPanelOpen(true);
-	};
-
-	useEffect(() => {
-		document.title = `주문 ${selectedIds.length}건 선택`;
-	}, [selectedIds]);
-
-	return (
-		<section className={clsx("pg_orderToolbar__root")}>
-			<UiButton onClick={handleClearButtonClick}>비우기</UiButton>
-			<UiButton onClick={handlePanelOpenButtonClick}>필터</UiButton>
-			{isPanelOpen && <PgOrderFilterPanel />}
-		</section>
-	);
-};
-```
+<<< ../examples/composition-order-hooks-handlers-effects-then-return/02-correct.tsx

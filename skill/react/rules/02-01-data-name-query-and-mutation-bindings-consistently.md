@@ -24,21 +24,8 @@ tags: data, state, naming
 
 **Incorrect 1 (쿼리와 뮤테이션 바인딩 이름이 제각각입니다):**
 
-```ts
-const responseGetProductListSuspense = useGetProductListSuspense();
-const removeApi = useProductRemove();
-```
+<<< ../examples/data-name-query-and-mutation-bindings-consistently/01-incorrect.ts
 
 **Correct 1 (지역 바인딩 접두사를 통일합니다):**
 
-```ts
-/**
- * 표에 그릴 상품 조회. 멈추는 동안은 섹션 소유자의 경계가 처리
- */
-const responseProductListSuspense = useGetProductListSuspense();
-
-/**
- * 표에서 고른 상품 삭제. 성공 뒤 무효화는 부르는 화면 몫
- */
-const mutationProductRemove = useProductRemove();
-```
+<<< ../examples/data-name-query-and-mutation-bindings-consistently/02-correct.ts

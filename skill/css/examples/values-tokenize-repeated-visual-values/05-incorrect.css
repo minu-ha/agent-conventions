@@ -1,0 +1,11 @@
+/* pg-products.css */
+.pg_products__row {
+/* [!code error] */
+	background: #f5f5f5;
+}
+
+/* pg-product-detail.css */
+.pg_productDetail__row {
+/* [!code error] */
+	background: #f5f5f5;
+}

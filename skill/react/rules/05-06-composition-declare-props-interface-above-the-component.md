@@ -38,75 +38,16 @@ tags: composition, props
 
 **Incorrect 1 (파일 위쪽에 타입을 모으고 내보내지 않습니다):**
 
-```tsx
-// component/ui/badge/ui-badge.tsx: 칩까지 한 파일에 두고 타입은 위쪽에 모음
-interface UiBadgeProps {
-	label: string;
-}
-
-interface UiChipProps {
-	label: string;
-}
-
-export const UiBadge = (props: UiBadgeProps) => {
-	return <span className={clsx("ui_badge__root")}>{props.label}</span>;
-};
-
-export const UiChip = (props: UiChipProps) => {
-	return <span className={clsx("ui_chip__root")}>{props.label}</span>;
-};
-```
+<<< ../examples/composition-declare-props-interface-above-the-component/01-incorrect.tsx
 
 **Correct 1 (컴포넌트 파일마다 계약을 바로 위에 선언하고 내보냅니다):**
 
-```tsx
-// component/ui/badge/ui-badge.tsx
-/**
- * 상태 배지 계약
- */
-export interface UiBadgeProps {
-	/**
-	 * 배지에 표시할 문구
-	 */
-	label: string;
-}
-
-export const UiBadge = (props: UiBadgeProps) => {
-	return <span className={clsx("ui_badge__root")}>{props.label}</span>;
-};
-```
+<<< ../examples/composition-declare-props-interface-above-the-component/02-correct.tsx
 
 **Incorrect 2 (설명이 컴포넌트에 붙어 계약과 떨어집니다):**
 
-```tsx
-export interface UiPanelHeaderProps {
-	children: ReactNode;
-}
-
-/**
- * 패널 헤더 부품
- */
-export const UiPanelHeader = (props: UiPanelHeaderProps) => {
-	return <header className={clsx("ui_panel__header")}>{props.children}</header>;
-};
-```
+<<< ../examples/composition-declare-props-interface-above-the-component/03-incorrect.tsx
 
 **Correct 2 (설명, 계약, 선언을 붙여 둡니다):**
 
-```tsx
-/**
- * 패널 헤더 부품
- *
- * 제목과 우측 동작 영역은 사용처가 직접 조립
- */
-export interface UiPanelHeaderProps {
-	/**
-	 * 헤더 줄에 늘어놓을 제목과 동작
-	 */
-	children: ReactNode;
-}
-
-export const UiPanelHeader = (props: UiPanelHeaderProps) => {
-	return <header className={clsx("ui_panel__header")}>{props.children}</header>;
-};
-```
+<<< ../examples/composition-declare-props-interface-above-the-component/04-correct.tsx

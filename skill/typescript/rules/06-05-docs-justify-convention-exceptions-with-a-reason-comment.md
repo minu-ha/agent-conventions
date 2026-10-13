@@ -42,36 +42,16 @@ flowchart LR
 
 **Incorrect 1 (확인할 수 없는 말로 예외를 정당화합니다):**
 
-```ts
-// 성능을 위해 메모이제이션
-const columns = useMemo(() => {
-	return toTableColumns(responseTableColumnsSuspense.data.columns);
-}, [responseTableColumnsSuspense.data.columns]);
-```
+<<< ../examples/docs-justify-convention-exceptions-with-a-reason-comment/01-incorrect.ts
 
 **Correct 1 (외부 패키지의 제약을 가리킵니다):**
 
-```ts
-// columns 참조 유지. MUI Data Grid는 참조가 바뀌면 열 너비, 순서를 잃을 수 있음
-const columns = useMemo(() => {
-	return toTableColumns(responseTableColumnsSuspense.data.columns);
-}, [responseTableColumnsSuspense.data.columns]);
-```
+<<< ../examples/docs-justify-convention-exceptions-with-a-reason-comment/02-correct.ts
 
 **Incorrect 2 (막연한 말이라 무엇을 재서 넣었는지 알 수 없습니다):**
 
-```ts
-// 안전하게 다시 계산하지 않도록
-const filteredRows = useMemo(() => {
-	return rows.filter((row) => matchRow(row, deferredKeyword));
-}, [deferredKeyword, rows]);
-```
+<<< ../examples/docs-justify-convention-exceptions-with-a-reason-comment/03-incorrect.ts
 
 **Correct 2 (측정 결과를 가리킵니다):**
 
-```ts
-// 행 5,000개에서 매 렌더 필터링 120ms 측정. 지연한 검색어에만 재계산
-const filteredRows = useMemo(() => {
-	return rows.filter((row) => matchRow(row, deferredKeyword));
-}, [deferredKeyword, rows]);
-```
+<<< ../examples/docs-justify-convention-exceptions-with-a-reason-comment/04-correct.ts

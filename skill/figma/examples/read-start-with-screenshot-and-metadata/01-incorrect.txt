@@ -1,0 +1,3 @@
+get_design_context  12:340 상품 목록_전체             코드 대신 메타데이터, 성김
+get_design_context  12:340 상품 목록_전체  forceCode  Dev Mode 추정 약 63k
+합계                                                  약 70k

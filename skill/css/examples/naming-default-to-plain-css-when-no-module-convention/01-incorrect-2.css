@@ -1,0 +1,9 @@
+/* [!code error] */
+.hero {
+	display: grid;
+}
+
+/* [!code error] */
+.eyebrow {
+	letter-spacing: 0.08em;
+}

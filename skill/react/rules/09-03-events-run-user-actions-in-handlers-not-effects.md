@@ -19,51 +19,8 @@ tags: events, handlers, effects
 
 **Incorrect 1 (사용자 액션을 상태 + 이펙트로 모델링합니다):**
 
-```tsx
-/**
- * 생성 성공 시 목록으로 이동
- */
-const mutationProductCreate = useProductCreate({
-	mutation: {
-		onSuccess: () => {
-			void navigate("/products");
-		},
-	},
-});
-
-const [shouldSubmit, setShouldSubmit] = useState(false);
-
-useEffect(() => {
-	if (!shouldSubmit) {
-		return;
-	}
-
-	mutationProductCreate.mutate({data: toProductCreateRequest(formValues)});
-}, [mutationProductCreate, formValues, shouldSubmit]);
-
-const handleSaveButtonClick: MouseEventHandler<HTMLButtonElement> = (_event) => {
-	setShouldSubmit(true);
-};
-```
+<<< ../examples/events-run-user-actions-in-handlers-not-effects/01-incorrect.tsx
 
 **Correct 1 (사용자 액션은 핸들러 안에서 바로 실행합니다):**
 
-```tsx
-/**
- * 생성 성공 시 목록으로 이동
- */
-const mutationProductCreate = useProductCreate({
-	mutation: {
-		onSuccess: () => {
-			void navigate("/products");
-		},
-	},
-});
-
-/**
- * 버튼을 누른 그 자리에서 생성 호출. 상태로 올려 이펙트가 대신 부르게 하지 않음
- */
-const handleSaveButtonClick: MouseEventHandler<HTMLButtonElement> = (_event) => {
-	mutationProductCreate.mutate({data: toProductCreateRequest(formValues)});
-};
-```
+<<< ../examples/events-run-user-actions-in-handlers-not-effects/02-correct.tsx

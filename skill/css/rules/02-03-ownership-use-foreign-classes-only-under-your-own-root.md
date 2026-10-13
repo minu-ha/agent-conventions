@@ -53,74 +53,24 @@ flowchart LR
 
 **Incorrect 1 (최상위 블록 없이 라이브러리 클래스를 바로 씁니다):**
 
-```css
-.MuiTreeItem-content {
-	border-radius: 4px;
-}
-
-.MuiTreeItem-label {
-	color: #8c8c8c;
-}
-```
+<<< ../examples/ownership-use-foreign-classes-only-under-your-own-root/01-incorrect.css
 
 **Correct 1 (내 최상위 블록 안에서 외부 라이브러리 DOM을 선택자로 잡습니다):**
 
-```css
-.pg_products__sidebar {
-	& .MuiTreeItem-content {
-		border-radius: 4px;
-	}
-
-	& .MuiTreeItem-label {
-		color: #8c8c8c;
-	}
-}
-```
+<<< ../examples/ownership-use-foreign-classes-only-under-your-own-root/02-correct.css
 
 **Incorrect 2 (최상위 블록 없이 다른 `scope_slug`의 클래스를 바로 씁니다):**
 
-```css
-/* page/product-detail/pg-product-detail.css */
-.wg_chartCard__caption {
-	letter-spacing: 0.02em;
-}
-
-.ui_card__title {
-	font-size: 13px;
-}
-```
+<<< ../examples/ownership-use-foreign-classes-only-under-your-own-root/03-incorrect.css
 
 **Correct 2 (다른 `scope_slug`의 클래스도 내 최상위 블록 안에서 선택자로 잡습니다):**
 
-```css
-/* page/product-detail/pg-product-detail.css */
-.pg_productDetail__chartSlot {
-	min-height: 240px;
-
-	& .wg_chartCard__caption {
-		letter-spacing: 0.02em;
-	}
-
-	& .ui_card__title {
-		font-size: 13px;
-	}
-}
-```
+<<< ../examples/ownership-use-foreign-classes-only-under-your-own-root/04-correct.css
 
 **Incorrect 3 (최상위 블록을 열지 않고 바깥에서 이어 씁니다):**
 
-```css
-.pg_products__sidebarToolbar > .MuiButton-root > .MuiButton-startIcon {
-	color: #8c8c8c;
-}
-```
+<<< ../examples/ownership-use-foreign-classes-only-under-your-own-root/05-incorrect.css
 
 **Correct 3 (소유자 API로 해결할 수 없으면 내 최상위 블록 안에서 선택합니다):**
 
-```css
-.pg_products__sidebarToolbar {
-	& > .MuiButton-root > .MuiButton-startIcon {
-		color: #8c8c8c;
-	}
-}
-```
+<<< ../examples/ownership-use-foreign-classes-only-under-your-own-root/06-correct.css

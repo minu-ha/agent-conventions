@@ -30,32 +30,12 @@ Figma 화면은 대개 데이터가 가득 찬 한 순간만 그립니다.
 
 **Incorrect 1 (디자인에 없는 로딩 모양을 화면에서 새로 만듭니다):**
 
-```tsx
-<Suspense
-	fallback={
-		<div className="pg_products__loading">
-			<img src={loadingGif} />
-			<p>불러오는 중</p>
-		</div>
-	}
->
-	<PgProductTableSection />
-</Suspense>
-```
+<<< ../examples/intent-fill-undrawn-states-with-project-parts/01-incorrect.tsx
 
 **Correct 1 (프로젝트의 로딩 컴포넌트를 경계의 대체 화면으로 씁니다):**
 
-```tsx
-<Suspense fallback={<UiSpinner />}>
-	<PgProductTableSection />
-</Suspense>
-```
+<<< ../examples/intent-fill-undrawn-states-with-project-parts/02-correct.tsx
 
 **Correct (채운 상태를 보고에 적습니다):**
 
-```text
-디자인 없음 — 상품 목록
-로딩     UiSpinner로 채움
-빈 목록  "등록된 상품이 없습니다" 가정, 확인 필요
-오류     화면 오류 경계의 기본 표시
-```
+<<< ../examples/intent-fill-undrawn-states-with-project-parts/03-correct.txt

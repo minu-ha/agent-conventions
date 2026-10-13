@@ -42,108 +42,24 @@ tags: screen
 
 **Incorrect 1 (컴포넌트 하나만 쓰는 단계 보조 함수를 보조 모듈에 남깁니다):**
 
-```tsx
-const toEditHref = ({editHrefBase, row}: {editHrefBase: string; row: ProductRow}) =>
-	`${editHrefBase}${row.id}/`;
-
-const toProductRows = (response: ProductListResponse) =>
-	response.data.map((product) => ({id: product.id, title: product.title}));
-
-export const PgProductTable = (props: PgProductTableProps) => {
-	const responseProductListSuspense = useProductListSuspense({}, {query: {select: toProductRows}});
-
-	return responseProductListSuspense.data.map((row) => (
-		<a href={toEditHref({editHrefBase: props.editHrefBase, row})} key={row.id}>
-			{row.title}
-		</a>
-	));
-};
-```
+<<< ../examples/screen-avoid-premature-abstraction/01-incorrect.tsx
 
 **Correct 1 (작은 쿼리 가공과 `href` 조립은 사용처에 둡니다):**
 
-```tsx
-export const PgProductTable = (props: PgProductTableProps) => {
-	/**
-	 * 링크에 필요한 두 필드만 남김. 표는 응답 구조를 모름
-	 */
-	const responseProductListSuspense = useProductListSuspense(
-		{},
-		{query: {select: (response) => response.data.map((product) => ({id: product.id, title: product.title}))}},
-	);
-
-	return responseProductListSuspense.data.map((row) => (
-		<a href={`${props.editHrefBase}${row.id}/`} key={row.id}>
-			{row.title}
-		</a>
-	));
-};
-```
+<<< ../examples/screen-avoid-premature-abstraction/02-correct.tsx
 
 **Incorrect 2 (사용처가 한 화면뿐인데 공용 훅으로 먼저 빼냅니다):**
 
-```tsx
-// page/products/pg-products.tsx
-// useProductFilterForm은 두 useState를 돌려주기만 하고 이 화면 하나만 호출
-import {useProductFilterForm} from "@/page/products/_hook/use-product-filter-form";
-
-export const PgProducts = () => {
-	const productFilterForm = useProductFilterForm();
-
-	return <PgProductFilterSection keyword={productFilterForm.keyword} />;
-};
-```
+<<< ../examples/screen-avoid-premature-abstraction/03-incorrect.tsx
 
 **Correct 2 (한 화면만 쓰는 동안은 화면 안에 그대로 둡니다):**
 
-```tsx
-// page/products/pg-products.tsx
-export const PgProducts = () => {
-	const [keyword, setKeyword] = useState("");
-	const [categoryId, setCategoryId] = useState<string>();
-
-	return <PgProductFilterSection keyword={keyword} />;
-};
-```
+<<< ../examples/screen-avoid-premature-abstraction/04-correct.tsx
 
 **Correct (두 화면이 같은 흐름을 부르게 된 뒤에 공용화합니다):**
 
-```ts
-/**
- * 등록 화면과 수정 화면이 저장 실패를 같은 문구로 보여야 해서 한곳에 묶음
- * 두 화면 모두 이 훅을 부르므로 한쪽만 고치면 표시가 갈림
- */
-export const useProductEditor = () => {
-	const form = useForm<ProductEditorFormValues>();
-	const [submitErrorMessage, setSubmitErrorMessage] = useState<string | null>(null);
-
-	/**
-	 * 저장 실패 문구를 이 훅이 함께 들고 있어야 해서 여기서 받음
-	 */
-	const mutationProductSave = useProductSave({
-		mutation: {
-			onError: (error) => {
-				setSubmitErrorMessage(toSubmitErrorMessage(error));
-			},
-		},
-	});
-
-	return {form, mutationProductSave, submitErrorMessage};
-};
-```
+<<< ../examples/screen-avoid-premature-abstraction/05-correct.ts
 
 **Correct (여러 보조 함수 대신 한 함수 안에서 단계별로 정리합니다):**
 
-```ts
-/**
- * 화면이 보낼 값 조립을 한 함수 안에서 마무리. 단계마다 보조 함수를 만들지 않음
- */
-export const toProductSaveRequest = (formValues: ProductFormValues) => {
-	// 1. 사용자가 넣은 앞뒤 공백을 서버로 보내기 전에 정리
-	const title = formValues.title.trim();
-	const description = formValues.description.trim();
-
-	// 2. API가 받는 페이로드 형태로 조립
-	return {categoryId: formValues.categoryId, description, title};
-};
-```
+<<< ../examples/screen-avoid-premature-abstraction/06-correct.ts

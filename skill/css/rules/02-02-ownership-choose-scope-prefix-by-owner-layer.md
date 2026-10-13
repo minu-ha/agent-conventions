@@ -35,26 +35,8 @@ tags: ownership, scope, prefix
 
 **Incorrect 1 (최상위 폴더 대신 사용 횟수와 재사용 예상을 보고 접두사를 고릅니다):**
 
-```txt
-page/product-detail/_pg-product-table-section.css
-  wg_productTableSection__root
-
-component/widget/chart-card/_wg-chart-card-header.css
-  pg_chartCard__header
-```
+<<< ../examples/ownership-choose-scope-prefix-by-owner-layer/01-incorrect.txt
 
 **Correct 1 (소유 레이어대로 접두사를 붙입니다):**
 
-```txt
-page/product-detail/pg-product-detail.css
-  pg_productDetail__root
-
-page/product-detail/_pg-product-table-section.css
-  pg_productTableSection__root
-
-component/widget/chart-card/_wg-chart-card-header.css
-  wg_chartCard__header
-
-component/ui/button/ui-button.css
-  ui_button__root
-```
+<<< ../examples/ownership-choose-scope-prefix-by-owner-layer/02-correct.txt

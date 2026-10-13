@@ -1,0 +1,12 @@
+/* ui-form-footer.css: 한 번 쓰고 여러 화면에서 그대로 사용 */
+.ui_formFooter__root {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: flex-end;
+	gap: var(--app-space-inline);
+}
+
+.ui_formFooter__action {
+	flex: 1 1 200px;
+	max-width: 300px;
+}

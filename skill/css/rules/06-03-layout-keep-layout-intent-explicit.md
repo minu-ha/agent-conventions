@@ -29,58 +29,20 @@ tags: layout, comments, sticky
 
 **Incorrect 1 (층 숫자를 직접 적고 기준 컨테이너 설명이 없습니다):**
 
-```css
-.pg_productDetail__toolbar {
-	position: sticky;
-	top: 0;
-	z-index: 9999;
-}
-```
+<<< ../examples/layout-keep-layout-intent-explicit/01-incorrect.css
 
 **Correct 1 (기준 컨테이너와 의도를 드러냅니다):**
 
-```css
-.pg_productDetail__toolbar {
-	/* 스크롤 컨테이너는 .pg_productDetail__content */
-	position: sticky;
-	top: 0;
-	z-index: var(--app-z-index-sticky);
-}
-
-.pg_productDetail__content {
-	display: grid;
-	min-height: 0;
-	overflow-y: auto;
-}
-```
+<<< ../examples/layout-keep-layout-intent-explicit/02-correct.css
 
 **Incorrect 2 (로딩 대체 화면에만 높이를 따로 적습니다):**
 
-```tsx
-<Suspense fallback={<UiLineChartSkeleton className={clsx("pg_productDetail__chartSkeleton")} />}>
-	<PgProductDetailChartSection />
-</Suspense>
-```
+<<< ../examples/layout-keep-layout-intent-explicit/03-incorrect-1.tsx
 
-```css
-.pg_productDetail__chartSkeleton {
-	height: 320px;
-}
-```
+<<< ../examples/layout-keep-layout-intent-explicit/03-incorrect-2.css
 
 **Correct 2 (대체 화면을 실제 내용과 같은 컨테이너 클래스 안에 넣습니다):**
 
-```tsx
-<div className={clsx("pg_productDetail__chart")}>
-	<Suspense fallback={<UiLineChartSkeleton />}>
-		<PgProductDetailChartSection />
-	</Suspense>
-</div>
-```
+<<< ../examples/layout-keep-layout-intent-explicit/04-correct-1.tsx
 
-```css
-.pg_productDetail__chart {
-	/* 로딩 중과 실제 차트에 같은 최소 높이 확보 */
-	min-height: 320px;
-}
-```
+<<< ../examples/layout-keep-layout-intent-explicit/04-correct-2.css

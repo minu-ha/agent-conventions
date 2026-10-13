@@ -1,0 +1,7 @@
+/* src/page/orders/_pg-order-filter-dialog.css */
+.pg_orderFilterDialog__panel {
+/* [!code error] */
+	gap: var(--app-space-inline, 12px);
+/* [!code error] */
+	color: var(--app-color-text-primary, #212529);
+}

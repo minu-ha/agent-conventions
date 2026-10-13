@@ -1,0 +1,13 @@
+/* src/page/products/pg-products.css */
+.pg_products__toolbar {
+	position: sticky;
+/* [!code error] */
+	z-index: 10;
+}
+
+/* src/component/widget/product-filter/wg-product-filter.css */
+.wg_productFilter__dropdown {
+	position: absolute;
+/* [!code error] */
+	z-index: 11;
+}

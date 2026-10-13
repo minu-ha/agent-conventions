@@ -30,83 +30,24 @@ JSX 자식 자리의 주석은 여러 줄 블록으로 씁니다.
 
 **Incorrect 1 (주석을 한 줄로 접고 마크업 이름을 되풀이합니다):**
 
-```tsx
-<div className={clsx("pg_products__root")}>
-	{/* 검색 구역 */}
-	<PgProductSearchSection />
-	{/* PgProductTable */}
-	<PgProductTable rows={rows} />
-</div>;
-```
+<<< ../examples/docs-write-jsx-comments-as-multiline-blocks/01-incorrect.tsx
 
 **Correct 1 (구역이 무엇을 담당하는지 여러 줄 블록으로 적습니다):**
 
-```tsx
-<div className={clsx("pg_products__root")}>
-	{/**
-	 * 검색 구역: 키워드와 카테고리로 목록 질의를 좁히는 이 화면 전용 입력
-	 */}
-	<PgProductSearchSection />
-	<PgProductTable rows={rows} />
-</div>;
-```
+<<< ../examples/docs-write-jsx-comments-as-multiline-blocks/02-correct.tsx
 
 **Incorrect 2 (예외 이유를 한 줄로 접습니다):**
 
-```tsx
-{/* LegacyDatePicker가 className을 받지 않아 배치용 래퍼 필요 */}
-<div className={clsx("pg_products__datePicker")}>
-	<LegacyDatePicker value={value} onChange={handleChange} />
-</div>;
-```
+<<< ../examples/docs-write-jsx-comments-as-multiline-blocks/03-incorrect.tsx
 
 **Correct 2 (예외 이유도 같은 블록 형태로 적습니다):**
 
-```tsx
-{/**
- * LegacyDatePicker가 className을 받지 않아 배치용 래퍼 필요
- */}
-<div className={clsx("pg_products__datePicker")}>
-	<LegacyDatePicker value={value} onChange={handleChange} />
-</div>;
-```
+<<< ../examples/docs-write-jsx-comments-as-multiline-blocks/04-correct.tsx
 
 **Incorrect 3 (여러 줄 블록 셋 중 하나에만 주석을 둡니다):**
 
-```tsx
-<section className={clsx("wg_orderTable__root")}>
-	{/**
-	 * 헤더 행. 정렬 기준과 단위 표시
-	 */}
-	<WgOrderTableHeader sort={sort} />
-	{rows.map((row) => (
-		<WgOrderTableRow key={row.id} row={row} />
-	))}
-	{expandedRows.map((row) => (
-		<WgOrderTableChildRow key={row.id} row={row} />
-	))}
-</section>;
-```
+<<< ../examples/docs-write-jsx-comments-as-multiline-blocks/05-incorrect.tsx
 
 **Correct 3 (여러 줄 블록마다 주석을 두어 블록과 함께 접히게 합니다):**
 
-```tsx
-<section className={clsx("wg_orderTable__root")}>
-	{/**
-	 * 헤더 행. 정렬 기준과 단위 표시
-	 */}
-	<WgOrderTableHeader sort={sort} />
-	{/**
-	 * 주문 행. 상세 버튼과 아코디언이 있는 기본 행
-	 */}
-	{rows.map((row) => (
-		<WgOrderTableRow key={row.id} row={row} />
-	))}
-	{/**
-	 * 펼친 자식 주문 행. 상세 버튼과 아코디언 없이 같은 칸 구성 반복
-	 */}
-	{expandedRows.map((row) => (
-		<WgOrderTableChildRow key={row.id} row={row} />
-	))}
-</section>;
-```
+<<< ../examples/docs-write-jsx-comments-as-multiline-blocks/06-correct.tsx

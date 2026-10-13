@@ -1,0 +1,17 @@
+/* src/style/token.css */
+:root {
+/* [!code ++] */
+	--app-color-surface: #fff;
+/* [!code ++] */
+	--app-color-surface-muted: #f1f3f5;
+/* [!code ++] */
+	--app-space-section: 16px;
+}
+
+/* src/page/products/pg-products.css */
+.pg_products__panel {
+/* [!code ++] */
+	background-color: var(--app-color-surface);
+/* [!code ++] */
+	padding: var(--app-space-section);
+}

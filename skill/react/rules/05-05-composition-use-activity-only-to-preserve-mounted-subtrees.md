@@ -48,64 +48,20 @@ flowchart LR
 
 **Incorrect 1 (초기화해야 할 폼을 숨겨 상태를 보존합니다):**
 
-```tsx
-// 편집을 취소했다가 다시 들어가면 지난 입력이 그대로 남음
-return (
-	<Fragment>
-		<Activity mode={isEditing ? "visible" : "hidden"}>
-			<PgProductEditorForm />
-		</Activity>
-		<Activity mode={isEditing ? "hidden" : "visible"}>
-			<PgProductPreviewPane />
-		</Activity>
-	</Fragment>
-);
-```
+<<< ../examples/composition-use-activity-only-to-preserve-mounted-subtrees/01-incorrect.tsx
 
 **Correct 1 (폼 초기화가 필요하면 조건부 렌더링을 유지합니다):**
 
-```tsx
-// 편집을 취소하면 폼이 해제돼 다시 들어갈 때 빈 입력으로 시작
-return (
-	<Fragment>
-		{isEditing && <PgProductEditorForm />}
-		{!isEditing && <PgProductPreviewPane />}
-	</Fragment>
-);
-```
+<<< ../examples/composition-use-activity-only-to-preserve-mounted-subtrees/02-correct.tsx
 
 **Incorrect 2 (다시 보여 줄 때 필요한 상태를 조건부 렌더링으로 잃습니다):**
 
-```tsx
-// page/products/_pg-product-sidebar.tsx: 접어 둔 노드와 스크롤 위치를 자기 상태로 보유
-export const PgProductSidebar = () => {
-	const [expandedItems, setExpandedItems] = useState<string[]>([]);
+<<< ../examples/composition-use-activity-only-to-preserve-mounted-subtrees/03-incorrect-1.tsx
 
-	return <UiTree expandedItems={expandedItems} onExpandedItemsChange={setExpandedItems} />;
-};
-```
-
-```tsx
-// page/products/pg-products.tsx: 닫으면 해제돼 접어 둔 노드와 스크롤 위치가 사라짐
-return isSidebarOpen && <PgProductSidebar />;
-```
+<<< ../examples/composition-use-activity-only-to-preserve-mounted-subtrees/03-incorrect-2.tsx
 
 **Correct 2 (다시 보여 줄 때 하위 트리 상태를 보존해야 하는 경우에만 씁니다):**
 
-```tsx
-// page/products/_pg-product-sidebar.tsx: 접어 둔 노드와 스크롤 위치를 자기 상태로 보유
-export const PgProductSidebar = () => {
-	const [expandedItems, setExpandedItems] = useState<string[]>([]);
+<<< ../examples/composition-use-activity-only-to-preserve-mounted-subtrees/04-correct-1.tsx
 
-	return <UiTree expandedItems={expandedItems} onExpandedItemsChange={setExpandedItems} />;
-};
-```
-
-```tsx
-// page/products/pg-products.tsx: 닫아도 상태와 DOM은 보존, 이펙트는 정리
-return (
-	<Activity mode={isSidebarOpen ? "visible" : "hidden"}>
-		<PgProductSidebar />
-	</Activity>
-);
-```
+<<< ../examples/composition-use-activity-only-to-preserve-mounted-subtrees/04-correct-2.tsx

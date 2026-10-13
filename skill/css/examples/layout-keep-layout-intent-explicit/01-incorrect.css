@@ -1,0 +1,6 @@
+.pg_productDetail__toolbar {
+	position: sticky;
+	top: 0;
+/* [!code error] */
+	z-index: 9999;
+}

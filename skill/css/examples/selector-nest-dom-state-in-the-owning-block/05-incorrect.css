@@ -1,0 +1,13 @@
+/* [!code error] */
+.ui_button__root--active {
+/* [!code error] */
+	background: var(--app-color-accent);
+
+	&:hover {
+		background: var(--app-color-accent-strong);
+	}
+
+	&:focus-visible {
+		outline: 2px solid var(--app-color-focus);
+	}
+}

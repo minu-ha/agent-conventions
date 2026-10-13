@@ -1,0 +1,8 @@
+/* [!code ++] */
+.pg_products__sidebarToolbar {
+/* [!code ++] */
+	& > .MuiButton-root > .MuiButton-startIcon {
+		color: #8c8c8c;
+	}
+/* [!code ++] */
+}

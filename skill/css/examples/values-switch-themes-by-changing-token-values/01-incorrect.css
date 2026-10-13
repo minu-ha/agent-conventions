@@ -1,0 +1,11 @@
+/* src/page/products/pg-products.css */
+.pg_products__panel {
+	background-color: var(--app-color-surface);
+
+/* [!code error] */
+	@media (prefers-color-scheme: dark) {
+/* [!code error] */
+		background-color: #1f2225;
+/* [!code error] */
+	}
+}

@@ -1,0 +1,21 @@
+/* [!code error] */
+/* src/page/products/pg-products.css */
+/* [!code error] */
+@media (width < 1024px) {
+/* [!code error] */
+	.pg_products__filterBar {
+/* [!code error] */
+		flex-direction: column;
+/* [!code error] */
+	}
+/* [!code error] */
+}
+
+/* [!code error] */
+/* src/page/orders/pg-orders.css */
+@media (width < 1024px) {
+/* [!code error] */
+	.pg_orders__filterBar {
+		flex-direction: column;
+	}
+}

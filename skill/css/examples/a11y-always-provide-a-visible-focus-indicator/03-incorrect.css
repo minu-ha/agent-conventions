@@ -1,0 +1,9 @@
+/* [!code error] */
+.ui_input__field--invalid {
+	&:focus-visible {
+/* [!code error] */
+		outline: none;
+/* [!code error] */
+		color: #1677ff;
+	}
+}

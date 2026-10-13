@@ -33,149 +33,32 @@ tags: clsx, className, modifiers
 
 **Incorrect 1 (클래스 이름을 값으로 조립합니다):**
 
-```tsx
-export interface UiTooltipProps {
-	variant?: "fit" | "plain";
-	children: ReactNode;
-}
-
-export const UiTooltip = (props: UiTooltipProps) => {
-	return (
-		<div className={clsx("ui_tooltip__body", props.variant && `ui_tooltip__body--${props.variant}`)}>
-			{props.children}
-		</div>
-	);
-};
-```
+<<< ../examples/composition-write-modifiers-as-conditions/01-incorrect.tsx
 
 **Correct 1 (값마다 한 줄로 나열합니다):**
 
-```tsx
-export interface UiTooltipProps {
-	variant?: "fit" | "plain";
-	children: ReactNode;
-}
-
-export const UiTooltip = (props: UiTooltipProps) => {
-	return (
-		<div
-			className={clsx(
-				"ui_tooltip__body",
-				props.variant === "fit" && "ui_tooltip__body--fit",
-				props.variant === "plain" && "ui_tooltip__body--plain",
-			)}
-		>
-			{props.children}
-		</div>
-	);
-};
-```
+<<< ../examples/composition-write-modifiers-as-conditions/02-correct.tsx
 
 **Incorrect 2 (라이브러리가 정하는 값으로 수정자를 만듭니다):**
 
-```tsx
-export interface UiButtonProps {
-	variant?: ButtonProps["variant"];
-	className?: string;
-}
-
-export const UiButton = (props: UiButtonProps) => {
-	return <Button className={clsx("ui_button__root", `ui_button__root--${props.variant}`, props.className)} />;
-};
-```
+<<< ../examples/composition-write-modifiers-as-conditions/03-incorrect.tsx
 
 **Correct 2 (라이브러리가 정하는 값은 수정자로 만들지 않고 그대로 넘깁니다):**
 
-```tsx
-export interface UiButtonProps {
-	variant?: ButtonProps["variant"];
-	className?: string;
-}
-
-export const UiButton = (props: UiButtonProps) => {
-	return <Button className={clsx("ui_button__root", props.className)} variant={props.variant} />;
-};
-```
+<<< ../examples/composition-write-modifiers-as-conditions/04-correct.tsx
 
 **Incorrect 3 (수정자가 없는 값까지 조립해 CSS에 없는 클래스를 붙입니다):**
 
-```tsx
-type Tone = "positive" | "negative" | "neutral" | "unknown";
+<<< ../examples/composition-write-modifiers-as-conditions/05-incorrect-1.tsx
 
-<span className={clsx("pg_products__changeRate", `pg_products__changeRate--${tone}`)}>{amount}</span>;
-```
-
-```css
-.pg_products__changeRate--positive {
-	color: var(--app-color-rise);
-}
-
-.pg_products__changeRate--negative {
-	color: var(--app-color-fall);
-}
-```
+<<< ../examples/composition-write-modifiers-as-conditions/05-incorrect-2.css
 
 **Correct 3 (CSS에 수정자가 있는 두 값만 적고 나머지는 기본 모습을 씁니다):**
 
-```tsx
-<span
-	className={clsx(
-		"pg_products__changeRate",
-		tone === "positive" && "pg_products__changeRate--positive",
-		tone === "negative" && "pg_products__changeRate--negative",
-	)}
->
-	{amount}
-</span>;
-```
+<<< ../examples/composition-write-modifiers-as-conditions/06-correct-1.tsx
 
-```css
-.pg_products__changeRate--positive {
-	color: var(--app-color-rise);
-}
-
-.pg_products__changeRate--negative {
-	color: var(--app-color-fall);
-}
-```
+<<< ../examples/composition-write-modifiers-as-conditions/06-correct-2.css
 
 **Correct (같은 값이 요소 셋의 수정자를 정하면 요소마다 나열을 반복합니다):**
 
-```tsx
-export interface WgUserCardProps {
-	role: "owner" | "member";
-	label: string;
-	description: string;
-}
-
-export const WgUserCard = (props: WgUserCardProps) => {
-	return (
-		<div
-			className={clsx(
-				"wg_userCard__root",
-				props.role === "owner" && "wg_userCard__root--owner",
-				props.role === "member" && "wg_userCard__root--member",
-			)}
-		>
-			<span
-				className={clsx(
-					"wg_userCard__title",
-					props.role === "owner" && "wg_userCard__title--owner",
-					props.role === "member" && "wg_userCard__title--member",
-				)}
-			>
-				{props.label}
-			</span>
-			<p
-				className={clsx(
-					"wg_userCard__description",
-					props.role === "owner" && "wg_userCard__description--owner",
-					props.role === "member" && "wg_userCard__description--member",
-				)}
-			>
-				{props.description}
-			</p>
-		</div>
-	);
-};
-```
+<<< ../examples/composition-write-modifiers-as-conditions/07-correct.tsx

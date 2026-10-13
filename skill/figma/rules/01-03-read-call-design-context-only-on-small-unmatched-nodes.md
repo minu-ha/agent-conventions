@@ -67,26 +67,16 @@ flowchart LR
 
 **Incorrect 1 (성긴 응답을 받고 보이는 자식을 모두 다시 부릅니다):**
 
-```text
-get_design_context  12:341 상품 목록            코드 대신 메타데이터, 성김
-get_design_context  12:420~12:441 상품 행 22개  병렬                        약 26k
-```
+<<< ../examples/read-call-design-context-only-on-small-unmatched-nodes/01-incorrect.txt
 
 **Correct 1 (대응물이 없는 자식 하나만 골라 부릅니다):**
 
-```text
-get_design_context  12:341 상품 목록     부르지 않음, 표는 UiTable로 대응
-get_design_context  12:377 재고 경고 칩  자손 노드 6개, 대응물 없음        약 1.2k
-```
+<<< ../examples/read-call-design-context-only-on-small-unmatched-nodes/02-correct.txt
 
 **Incorrect 2 (스크린샷을 다시 받고 큰 노드를 코드로 강제합니다):**
 
-```json
-{"fileKey": "Ab12Cd34Ef56Gh78Ij90Kl", "nodeId": "12:341", "forceCode": true}
-```
+<<< ../examples/read-call-design-context-only-on-small-unmatched-nodes/03-incorrect.json
 
 **Correct 2 (스크린샷을 빼고 작은 노드만 읽습니다):**
 
-```json
-{"fileKey": "Ab12Cd34Ef56Gh78Ij90Kl", "nodeId": "12:377", "excludeScreenshot": true, "skillNames": "figma-design-to-code"}
-```
+<<< ../examples/read-call-design-context-only-on-small-unmatched-nodes/04-correct.json

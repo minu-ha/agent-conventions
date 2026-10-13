@@ -199,7 +199,7 @@ progressive skill 넷은 규칙 전체를 안 읽는다. 단계마다 좁힌다.
 
 절차는 [CONTRIBUTING.md](./CONTRIBUTING.md). 착수 전 알 것 넷.
 
-1. 정본은 `rules/*.md`. `HANDBOOK.md`, `RULES_INDEX.md`, `contracts/*.md`, `docs/convention/`은 생성물.
+1. 정본은 `rules/*.md`와 `examples/<규칙 ID>/*`. `HANDBOOK.md`, `RULES_INDEX.md`, `contracts/*.md`, `docs/convention/`은 생성물.
 2. 규범은 첫 `Incorrect` 앞에서 끝낸다. 생성기가 그 앞부분만 계약으로 뽑는다.
 3. `appliesWhen` 한 줄이 라우팅을 결정한다. 규칙의 결론이 아니라 관찰 가능한 변경 조건.
 4. 고친 뒤 `npm run check`. `build`가 `docs/convention/`도 다시 만든다.

@@ -1,0 +1,11 @@
+/* [!code error] */
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+	}
+}
+
+.pg_products__panel {
+/* [!code error] */
+	animation: fadeIn 200ms ease-out;
+}

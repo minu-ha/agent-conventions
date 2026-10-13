@@ -36,51 +36,16 @@ AAA 기준을 모든 표시의 두께가 반드시 2px이어야 한다는 뜻으
 
 **Incorrect 1 (포커스 링을 제거하고 대체를 두지 않습니다):**
 
-```css
-.ui_button__root {
-	border: 1px solid #d9d9d9;
-
-	&:focus {
-		outline: none;
-	}
-}
-```
+<<< ../examples/a11y-always-provide-a-visible-focus-indicator/01-incorrect.css
 
 **Correct 1 (`:focus-visible`에 형태가 바뀌는 표시를 기본 블록에 둡니다):**
 
-```css
-.ui_button__root {
-	border: 1px solid #d9d9d9;
-
-	&:focus-visible {
-		outline: 2px solid #1677ff;
-		outline-offset: 2px;
-	}
-}
-```
+<<< ../examples/a11y-always-provide-a-visible-focus-indicator/02-correct.css
 
 **Incorrect 2 (색만 바꾸고 수정자 안에만 둡니다):**
 
-```css
-.ui_input__field--invalid {
-	&:focus-visible {
-		outline: none;
-		color: #1677ff;
-	}
-}
-```
+<<< ../examples/a11y-always-provide-a-visible-focus-indicator/03-incorrect.css
 
 **Correct 2 (그림자 링에 투명한 외곽선을 함께 두어 강제 색상 모드에서도 표시를 남깁니다):**
 
-```css
-.ui_input__field {
-	border: 1px solid #d9d9d9;
-
-	&:focus-visible {
-		outline: 2px solid transparent;
-		outline-offset: 2px;
-		border-color: #1677ff;
-		box-shadow: 0 0 0 3px #1677ff;
-	}
-}
-```
+<<< ../examples/a11y-always-provide-a-visible-focus-indicator/04-correct.css

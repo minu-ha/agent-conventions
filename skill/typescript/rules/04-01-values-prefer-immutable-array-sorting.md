@@ -35,36 +35,16 @@ flowchart LR
 
 **Incorrect 1 (매개변수로 받은 배열을 제자리에서 바꿉니다):**
 
-```ts
-const toSortedUsers = (users: User[]): User[] => {
-	return users.sort((left, right) => left.age - right.age);
-};
-```
+<<< ../examples/values-prefer-immutable-array-sorting/01-incorrect.ts
 
 **Correct 1 (키 기준 정렬은 `sortBy`를 씁니다):**
 
-```ts
-import {sortBy} from "es-toolkit";
-
-const toSortedUsers = (users: readonly User[]): User[] => {
-	return sortBy(users, ["age"]);
-};
-```
+<<< ../examples/values-prefer-immutable-array-sorting/02-correct.ts
 
 **Correct (방향이 섞이면 `orderBy`를 씁니다):**
 
-```ts
-import {orderBy} from "es-toolkit";
-
-const toSortedProducts = (products: readonly Product[]): Product[] => {
-	return orderBy(products, ["category", "price"], ["asc", "desc"]);
-};
-```
+<<< ../examples/values-prefer-immutable-array-sorting/03-correct.ts
 
 **Correct (비교 규칙을 키로 적을 수 없으면 `.toSorted()`를 씁니다):**
 
-```ts
-const toSortedUsers = (users: readonly User[]): User[] => {
-	return users.toSorted((left, right) => left.name.localeCompare(right.name));
-};
-```
+<<< ../examples/values-prefer-immutable-array-sorting/04-correct.ts

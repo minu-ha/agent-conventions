@@ -46,70 +46,20 @@ tags: absence, boundaries
 
 **Incorrect 1 (경계가 타입을 좁히지 않아 아래 함수마다 같은 값을 다시 검사합니다):**
 
-```ts
-// page/product-detail/_function/to-badge/_to-signed-tone.ts
-export const toSignedTone = (value: number | null | undefined): Tone => {
-	if (isNil(value) || !Number.isFinite(value) || value === 0) {
-		return "neutral";
-	}
-	return value > 0 ? "positive" : "negative";
-};
-```
+<<< ../examples/absence-check-once-at-the-boundary/01-incorrect-1.ts
 
-```ts
-// page/product-detail/_function/format-signed-percent.ts
-export const formatSignedPercent = (value: number | null | undefined) => {
-	if (isNil(value) || !Number.isFinite(value)) {
-		return copy_empty_value_text;
-	}
-	return `${value > 0 ? "+" : ""}${value}%`;
-};
-```
+<<< ../examples/absence-check-once-at-the-boundary/01-incorrect-2.ts
 
 **Correct 1 (경계가 좁힌 `number`를 받아 두 함수는 자기 판정만 남깁니다):**
 
-```ts
-// page/product-detail/_function/to-badge/_to-signed-tone.ts
-/**
- * 부호 있는 변화율의 강조 톤. 0은 중립
- */
-export const toSignedTone = (value: number): Tone => {
-	if (value === 0) {
-		return "neutral";
-	}
-	return value > 0 ? "positive" : "negative";
-};
-```
+<<< ../examples/absence-check-once-at-the-boundary/02-correct-1.ts
 
-```ts
-// page/product-detail/_function/format-signed-percent.ts
-/**
- * 부호를 붙인 변화율 표시 문자열
- */
-export const formatSignedPercent = (value: number) => {
-	return `${value > 0 ? "+" : ""}${value}%`;
-};
-```
+<<< ../examples/absence-check-once-at-the-boundary/02-correct-2.ts
 
 **Correct (경계인 `select`에서 없음과 유한 수를 한 번 검사해 타입을 좁힙니다):**
 
-```tsx
-// page/product-detail/pg-product-detail.tsx: 서버는 계산 전이면 null. 여기서 한 번 좁힘
-const responseSummarySuspense = useSuspenseQuery({
-	...productDetailSummaryQueryOptions(productId),
-	select: (response) => ({
-		...response,
-		changeRate:
-			isNotNil(response.changeRate) && Number.isFinite(response.changeRate) ? response.changeRate : undefined,
-	}),
-});
-```
+<<< ../examples/absence-check-once-at-the-boundary/03-correct.tsx
 
 **Correct (없음을 읽는 자리는 화면을 렌더하는 분기 하나입니다):**
 
-```tsx
-// page/product-detail/_pg-product-detail-summary.tsx: 없음을 읽는 곳은 렌더하는 분기 하나
-{isNotNil(summary.changeRate) && (
-	<UiBadge tone={toSignedTone(summary.changeRate)}>{formatSignedPercent(summary.changeRate)}</UiBadge>
-)}
-```
+<<< ../examples/absence-check-once-at-the-boundary/04-correct.tsx

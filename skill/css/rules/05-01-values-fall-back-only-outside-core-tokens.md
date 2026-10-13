@@ -52,46 +52,16 @@ flowchart LR
 
 **Incorrect 1 (공통 토큰에 대체값을 붙여 값을 두 곳에 둡니다):**
 
-```css
-/* src/page/orders/_pg-order-filter-dialog.css */
-.pg_orderFilterDialog__panel {
-	gap: var(--app-space-inline, 12px);
-	color: var(--app-color-text-primary, #212529);
-}
-```
+<<< ../examples/values-fall-back-only-outside-core-tokens/01-incorrect.css
 
 **Correct 1 (공통 토큰 목록에 있는 변수는 대체값 없이 씁니다):**
 
-```css
-/* src/style/token.css: 공통 토큰 목록의 단일 출처 */
-:root {
-	--app-space-inline: 12px;
-	--app-color-text-primary: #212529;
-}
-
-/* src/page/orders/_pg-order-filter-dialog.css */
-.pg_orderFilterDialog__panel {
-	gap: var(--app-space-inline);
-	color: var(--app-color-text-primary);
-}
-```
+<<< ../examples/values-fall-back-only-outside-core-tokens/02-correct.css
 
 **Incorrect 2 (주입이 보장되지 않는 변수를 대체값 없이 씁니다):**
 
-```css
-.pg_orderFilterDialog__collapse {
-	& .MuiAccordion-root {
-		border-radius: var(--mui-shape-borderRadius);
-	}
-}
-```
+<<< ../examples/values-fall-back-only-outside-core-tokens/03-incorrect.css
 
 **Correct 2 (목록에 없는 변수에는 대체값을 붙입니다):**
 
-```css
-.pg_orderFilterDialog__collapse {
-	& .MuiAccordion-root {
-		border-radius: var(--mui-shape-borderRadius, 10px);
-	}
-}
-```
+<<< ../examples/values-fall-back-only-outside-core-tokens/04-correct.css

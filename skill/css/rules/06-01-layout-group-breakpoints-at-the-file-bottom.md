@@ -35,75 +35,16 @@ tags: selector, responsive
 
 **Incorrect 1 (클래스 블록 안에 중첩해서 브레이크포인트가 흩어집니다):**
 
-```css
-.pg_products__toolbar {
-	display: flex;
-	gap: 24px;
-
-	@media (width < 1024px) {
-		flex-direction: column;
-	}
-}
-
-.pg_products__layout {
-	display: grid;
-	grid-template-columns: 280px 1fr;
-
-	@media (width < 1024px) {
-		grid-template-columns: 1fr;
-	}
-}
-```
+<<< ../examples/layout-group-breakpoints-at-the-file-bottom/01-incorrect.css
 
 **Correct 1 (선언은 위에 두고 브레이크포인트는 파일 아래 한곳에 모읍니다):**
 
-```css
-.pg_products__toolbar {
-	display: flex;
-	gap: 24px;
-}
-
-.pg_products__layout {
-	display: grid;
-	grid-template-columns: 280px 1fr;
-}
-
-@media (width < 1024px) {
-	.pg_products__toolbar {
-		flex-direction: column;
-	}
-
-	.pg_products__layout {
-		grid-template-columns: 1fr;
-	}
-}
-```
+<<< ../examples/layout-group-breakpoints-at-the-file-bottom/02-correct.css
 
 **Incorrect 2 (같은 `@media` 블록을 파일마다 복사합니다):**
 
-```css
-/* src/page/products/pg-products.css */
-@media (width < 1024px) {
-	.pg_products__filterBar {
-		flex-direction: column;
-	}
-}
-
-/* src/page/orders/pg-orders.css */
-@media (width < 1024px) {
-	.pg_orders__filterBar {
-		flex-direction: column;
-	}
-}
-```
+<<< ../examples/layout-group-breakpoints-at-the-file-bottom/03-incorrect.css
 
 **Correct 2 (반복되는 배치를 컴포넌트 하나로 만들고 브레이크포인트는 그 파일에만 둡니다):**
 
-```css
-/* src/component/ui/filter-bar/ui-filter-bar.css */
-@media (width < 1024px) {
-	.ui_filterBar__root {
-		flex-direction: column;
-	}
-}
-```
+<<< ../examples/layout-group-breakpoints-at-the-file-bottom/04-correct.css

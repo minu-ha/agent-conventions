@@ -1,0 +1,10 @@
+/* src/page/products/pg-products.css */
+.pg_products__panel {
+	background-color: var(--app-color-surface);
+/* [!code ++] */
+	color: var(--app-color-text-primary);
+/* [!code ++] */
+	border: 1px solid var(--app-color-border);
+/* [!code ++] */
+	box-shadow: var(--app-shadow-panel);
+}

@@ -1,0 +1,6 @@
+.pg_products__cardButton {
+/* [!code error] */
+	&:not(:disabled):hover {
+		background: #f5f5f5;
+	}
+}

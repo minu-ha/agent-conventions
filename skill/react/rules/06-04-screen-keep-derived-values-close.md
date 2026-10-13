@@ -29,54 +29,8 @@ tags: screen, origin
 
 **Incorrect 1 (쓰는 자리에서 먼 화면 상단에 플래그와 표시값을 쌓습니다):**
 
-```tsx
-export const PgProductTableSection = () => {
-	const responseProductListSuspense = useProductListSuspense();
-	const [selectedRows, setSelectedRows] = useState<ProductRow[]>([]);
-
-	/**
-	 * 고른 행은 이 섹션 안에만 두고 search 파라미터로 올리지 않음
-	 */
-	const handleTableRowSelect: UiTableProps["onRowSelect"] = (rows) => {
-		setSelectedRows(rows);
-	};
-
-	// 아래 둘은 이름만 남기고 무엇에서 나온 값인지 지움
-	const hasSelectedRows = selectedRows.length > 0;
-	const bulkActionLabel = `${selectedRows.length}건 삭제`;
-
-	return (
-		<Fragment>
-			<UiTable rows={responseProductListSuspense.data.products} onRowSelect={handleTableRowSelect} />
-
-			{hasSelectedRows && <PgProductBulkActionBar label={bulkActionLabel} />}
-		</Fragment>
-	);
-};
-```
+<<< ../examples/screen-keep-derived-values-close/01-incorrect.tsx
 
 **Correct 1 (선언을 그대로 두고 쓰는 자리에서 계산합니다):**
 
-```tsx
-export const PgProductTableSection = () => {
-	const responseProductListSuspense = useProductListSuspense();
-	const [selectedRows, setSelectedRows] = useState<ProductRow[]>([]);
-
-	/**
-	 * 고른 행은 이 섹션 안에만 두고 search 파라미터로 올리지 않음
-	 */
-	const handleTableRowSelect: UiTableProps["onRowSelect"] = (rows) => {
-		setSelectedRows(rows);
-	};
-
-	return (
-		<Fragment>
-			<UiTable rows={responseProductListSuspense.data.products} onRowSelect={handleTableRowSelect} />
-
-			{selectedRows.length > 0 && (
-				<PgProductBulkActionBar label={`${selectedRows.length}건 삭제`} />
-			)}
-		</Fragment>
-	);
-};
-```
+<<< ../examples/screen-keep-derived-values-close/02-correct.tsx

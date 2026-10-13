@@ -71,60 +71,16 @@ tags: ownership
 
 **Incorrect 1 (단순 컴포넌트에 역할 폴더를 미리 다 만듭니다):**
 
-```txt
-component/ui/button/
-├── ui-button.tsx
-├── ui-button.css
-├── _constant/
-├── _function/
-├── _hook/
-└── _type/
-```
+<<< ../examples/ownership-place-owner-files-in-role-folders/01-incorrect.txt
 
 **Correct 1 (역할 폴더를 미리 만들지 않습니다):**
 
-```txt
-component/ui/button/
-├── ui-button.tsx
-└── ui-button.css
-```
+<<< ../examples/ownership-place-owner-files-in-role-folders/02-correct.txt
 
 **Incorrect 2 (범용 이름 폴더를 섞어 쓰고 하위 소유자 안에 소유자를 다시 둡니다):**
 
-```txt
-page/product-detail/
-├── pg-product-detail.tsx
-├── components/
-├── constants/
-├── utils/
-├── helpers/
-└── product-table-section/
-    ├── pg-product-table-section.tsx
-    └── review/
-        ├── pg-review.tsx
-        └── _function/
-            └── to-review-rows.ts
-```
+<<< ../examples/ownership-place-owner-files-in-role-folders/03-incorrect.txt
 
 **Correct 2 (필요한 역할 폴더만 만들고 부품은 파일로 둡니다):**
 
-```txt
-page/product-detail/
-├── pg-product-detail.tsx
-├── pg-product-detail.css
-├── _pg-product-summary.tsx            자기만 쓰는 파일이 없어 파일로 둠
-├── _pg-product-summary.css
-├── _function/
-│   ├── to-product-summary.ts
-│   └── to-trend-chart/                자기만 쓰는 보조가 있어 폴더
-│       ├── to-trend-chart.ts
-│       └── _to-chart-range.ts         toTrendChart만 부름
-├── _type/
-│   └── product-detail-view-model.ts
-└── product-table-section/             자기만 쓰는 파일이 있어 하위 소유자 폴더가 됨
-    ├── pg-product-table-section.tsx
-    ├── pg-product-table-section.css
-    ├── _pg-review-section.tsx
-    └── _function/
-        └── to-chart-range.ts
-```
+<<< ../examples/ownership-place-owner-files-in-role-folders/04-correct.txt

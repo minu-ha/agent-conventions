@@ -49,88 +49,24 @@ API 응답, 요청, 생성 DTO, 라이브러리 인자, DOM 속성, 환경 변�
 
 **Incorrect 1 (역할과 맞지 않는 표기를 씁니다):**
 
-```ts
-// userSettings.ts
-// 우리가 선언한 타입은 PascalCase, 그 필드는 camelCase
-interface User_Profile {
-	avatar_url: string;
-}
-```
+<<< ../examples/naming-use-consistent-file-and-symbol-naming/01-incorrect.ts
 
 **Correct 1 (파일 이름은 `kebab-case`, 타입 필드는 `camelCase`로 씁니다):**
 
-```ts
-// user-settings.ts
-/**
- * 사용자 프로필
- */
-interface UserProfile {
-	/**
-	 * 프로필 이미지 주소
-	 */
-	avatarUrl: string;
-}
-```
+<<< ../examples/naming-use-consistent-file-and-symbol-naming/02-correct.ts
 
 **Incorrect 2 (불변 데이터 상수와 값 집합의 이름과 키를 `camelCase`로 적습니다):**
 
-```ts
-const retryPolicy = {
-	maxAttempts: 3,
-} as const;
-
-const productStatus = {
-	draft: "draft",
-	waitingReview: "waiting_review",
-	published: "published",
-} as const;
-```
+<<< ../examples/naming-use-consistent-file-and-symbol-naming/03-incorrect.ts
 
 **Correct 2 (불변 데이터 상수와 값 집합은 이름과 상수 키를 모두 `snake_case`로 적습니다):**
 
-```ts
-/**
- * 요청 재시도 정책. 하위 키도 상수 키
- */
-const retry_policy = {
-	max_attempts: 3,
-} as const;
-
-/**
- * 상품 게시 상태 값 집합
- */
-const product_status = {
-	draft: "draft",
-	waiting_review: "waiting_review",
-	published: "published",
-} as const;
-```
+<<< ../examples/naming-use-consistent-file-and-symbol-naming/04-correct.ts
 
 **Incorrect 3 (밖으로 나가는 키를 우리 표기로 바꿉니다):**
 
-```ts
-// 서버 계약은 {product_id, display_name}인데 우리 표기로 바꿔 전송
-/**
- * 상품 저장 요청 조립
- */
-const toProductSaveBody = (values: ProductFormValues) => {
-	return {
-		productId: values.productId,
-		displayName: values.displayName.trim(),
-	};
-};
-```
+<<< ../examples/naming-use-consistent-file-and-symbol-naming/05-incorrect.ts
 
 **Correct 3 (밖으로 나가는 키만 받는 쪽 표기를 그대로 씁니다):**
 
-```ts
-/**
- * 상품 저장 요청 조립. 서버 계약이 snake_case라 그 표기 그대로 전달
- */
-const toProductSaveBody = (values: ProductFormValues) => {
-	return {
-		product_id: values.productId,
-		display_name: values.displayName.trim(),
-	};
-};
-```
+<<< ../examples/naming-use-consistent-file-and-symbol-naming/06-correct.ts

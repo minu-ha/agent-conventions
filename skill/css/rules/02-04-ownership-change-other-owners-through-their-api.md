@@ -40,55 +40,22 @@ flowchart LR
 
 **Incorrect 1 (최상위 배치를 `className`으로 바꿀 수 있는데도 다른 소유자의 클래스를 선택합니다):**
 
-```tsx
-<WgChartCard />
-```
+<<< ../examples/ownership-change-other-owners-through-their-api/01-incorrect-1.tsx
 
-```css
-/* page/product-detail/pg-product-detail.css */
-.pg_productDetail__root {
-	& .wg_chartCard__root {
-		grid-area: chart;
-		margin-block-end: 16px;
-	}
-}
-```
+<<< ../examples/ownership-change-other-owners-through-their-api/01-incorrect-2.css
 
 **Correct 1 (최상위 배치는 사용처가 자기 클래스로 잡습니다):**
 
-```tsx
-<WgChartCard className={clsx("pg_productDetail__chartCard")} />
-```
+<<< ../examples/ownership-change-other-owners-through-their-api/02-correct-1.tsx
 
-```css
-/* page/product-detail/pg-product-detail.css */
-.pg_productDetail__chartCard {
-	grid-area: chart;
-	margin-block-end: 16px;
-}
-```
+<<< ../examples/ownership-change-other-owners-through-their-api/02-correct-2.css
 
 **Correct (여러 화면이 쓰는 모양은 소유자가 `variant` 프롭으로 노출합니다):**
 
-```tsx
-<WgChartCard variant="muted" />
-```
+<<< ../examples/ownership-change-other-owners-through-their-api/03-correct-1.tsx
 
-```css
-/* component/widget/chart-card/wg-chart-card.css */
-.wg_chartCard__caption--muted {
-	color: #8c8c8c;
-}
-```
+<<< ../examples/ownership-change-other-owners-through-their-api/03-correct-2.css
 
 **Correct (화면 소유로 판정한 컴포넌트를 화면 폴더로 옮깁니다):**
 
-```txt
-before
-  component/widget/chart-card/wg-chart-card.tsx      product-detail 화면의 뷰모델 타입을 받음
-  component/widget/chart-card/wg-chart-card.css      pg_productDetail만 내부를 덮어쓰고 있었음
-
-after
-  page/product-detail/_pg-chart-card.tsx
-  page/product-detail/_pg-chart-card.css  pg_chartCard__*로 소유자 하나
-```
+<<< ../examples/ownership-change-other-owners-through-their-api/04-correct.txt

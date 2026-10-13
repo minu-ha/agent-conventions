@@ -28,67 +28,16 @@ flowchart TD
 
 **Incorrect 1 (내보낸 계약 타입이 함수 아래에 있어 시그니처를 읽으려면 파일을 끝까지 내려가야 합니다):**
 
-```ts
-// page/orders/_function/to-summary-rows.ts
-export const toSummaryRows = (params: ToSummaryRowsParams): SummaryRow[] => {
-	return params.response.items.map((item) => ({id: item.id, label: item.name.trim() || item.code}));
-};
-
-/**
- * 요약 표 행을 만들 때 필요한 입력
- */
-export interface ToSummaryRowsParams {
-	/**
-	 * 요약 조회 응답
-	 */
-	response: OrderSummaryResponse;
-}
-```
+<<< ../examples/functions-order-declarations-top-down/01-incorrect.ts
 
 **Correct 1 (내보낸 계약 타입이 먼저, 그 계약을 받는 함수가 바로 아래에 옵니다):**
 
-```ts
-// page/orders/_function/to-summary-rows.ts
-/**
- * 요약 표 행을 만들 때 필요한 입력
- */
-export interface ToSummaryRowsParams {
-	/**
-	 * 요약 조회 응답
-	 */
-	response: OrderSummaryResponse;
-}
-
-/**
- * 요약 표가 그리는 행 목록. 이름이 비면 코드로 표시
- */
-export const toSummaryRows = (params: ToSummaryRowsParams): SummaryRow[] => {
-	return params.response.items.map((item) => ({id: item.id, label: item.name.trim() || item.code}));
-};
-```
+<<< ../examples/functions-order-declarations-top-down/02-correct.ts
 
 **Incorrect 2 (모듈을 불러올 때 계산되는 선언이 자기가 부르는 선언보다 위에 있습니다):**
 
-```ts
-const selectedLocaleSupported = isSupportedLocale(selectedLocale);
-
-/**
- * 짧고 고정된 지원 로케일 목록 기준 판정
- */
-export const isSupportedLocale = (locale: string): boolean => {
-	return locale_supported_values.includes(locale);
-};
-```
+<<< ../examples/functions-order-declarations-top-down/03-incorrect.ts
 
 **Correct 2 (모듈을 불러올 때 계산되는 선언은 자기가 부르는 선언 뒤에 둡니다):**
 
-```ts
-/**
- * 짧고 고정된 지원 로케일 목록 기준 판정
- */
-export const isSupportedLocale = (locale: string): boolean => {
-	return locale_supported_values.includes(locale);
-};
-
-const selectedLocaleSupported = isSupportedLocale(selectedLocale);
-```
+<<< ../examples/functions-order-declarations-top-down/04-correct.ts

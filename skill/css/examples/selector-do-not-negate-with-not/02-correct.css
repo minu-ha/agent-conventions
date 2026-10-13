@@ -1,0 +1,6 @@
+.pg_products__cardButton {
+/* [!code ++] */
+	&:enabled:hover {
+		background: #f5f5f5;
+	}
+}

@@ -1,0 +1,11 @@
+.pg_products__cardButton {
+/* [!code error] */
+	&:not(:disabled) {
+		cursor: pointer;
+/* [!code error] */
+	}
+
+	&:disabled {
+		cursor: default;
+	}
+}

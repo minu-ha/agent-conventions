@@ -117,7 +117,7 @@ Figma 노드는 `get_screenshot`, `get_metadata`, `get_variable_defs` 순서로 
 
 **Incorrect 1 (화면 전체에 `get_design_context`를 먼저 부르고 성긴 응답을 코드로 강제합니다):**
 
-```text
+```txt
 get_design_context  12:340 상품 목록_전체             코드 대신 메타데이터, 성김
 get_design_context  12:340 상품 목록_전체  forceCode  Dev Mode 추정 약 63k
 합계                                                  약 70k
@@ -125,7 +125,7 @@ get_design_context  12:340 상품 목록_전체  forceCode  Dev Mode 추정 약 
 
 **Correct 1 (싼 도구로 화면을 읽고 대응물이 없는 노드 하나만 코드로 읽습니다):**
 
-```text
+```txt
 get_screenshot      12:341 상품 목록       maxDimension 1600  약 3k
 get_metadata        12:340 상품 목록_전체                     약 10k
 get_variable_defs   12:341 상품 목록                          약 1k
@@ -167,13 +167,13 @@ get_design_context  12:377 재고 경고 칩    excludeScreenshot  약 1.2k
 
 **Incorrect 1 (래퍼에 스크린샷을 불러 화면이 메모와 함께 줄어듭니다):**
 
-```text
+```txt
 get_screenshot  12:340 상품 목록_전체  원본 2834x2403 → 1600x1357  표 글자가 읽히지 않음
 ```
 
 **Correct 1 (메타데이터로 화면 프레임을 찾아 그 프레임만 찍습니다):**
 
-```text
+```txt
 get_metadata    12:340 상품 목록_전체  화면 프레임 12:341, 메모 12:395, 이력 12:401
 get_screenshot  12:341 상품 목록       원본 1920x2169 → 1416x1600  표 글자가 읽힘
 ```
@@ -240,14 +240,14 @@ flowchart LR
 
 **Incorrect 1 (성긴 응답을 받고 보이는 자식을 모두 다시 부릅니다):**
 
-```text
+```txt
 get_design_context  12:341 상품 목록            코드 대신 메타데이터, 성김
 get_design_context  12:420~12:441 상품 행 22개  병렬                        약 26k
 ```
 
 **Correct 1 (대응물이 없는 자식 하나만 골라 부릅니다):**
 
-```text
+```txt
 get_design_context  12:341 상품 목록     부르지 않음, 표는 UiTable로 대응
 get_design_context  12:377 재고 경고 칩  자손 노드 6개, 대응물 없음        약 1.2k
 ```
@@ -286,14 +286,14 @@ get_design_context  12:377 재고 경고 칩  자손 노드 6개, 대응물 없�
 
 **Incorrect 1 (메타데이터 이름으로 컬럼 이름을 정해 화면과 다른 글자가 들어갑니다):**
 
-```text
+```txt
 <text id="12:363" name="단위 가격" />   → 컬럼 이름 "단위 가격"
 <text id="12:364" name="thead" />       → 컬럼 이름 "thead"
 ```
 
 **Correct 1 (스크린샷의 글자로 컬럼 이름을 정하고 이름은 노드를 찾는 데만 씁니다):**
 
-```text
+```txt
 <text id="12:363" name="단위 가격" />   → 스크린샷 "판매가"  → 컬럼 이름 "판매가"
 <text id="12:364" name="thead" />       → 스크린샷 "관리"    → 컬럼 이름 "관리"
 ```
@@ -324,7 +324,7 @@ get_design_context  12:377 재고 경고 칩  자손 노드 6개, 대응물 없�
 
 **Incorrect 1 (보이는 레이어만 구현 목록에 올립니다):**
 
-```text
+```txt
 구현 목록 — 12:340 상품 목록_전체
 12:343 필터 바
 12:350 상품 표
@@ -332,7 +332,7 @@ get_design_context  12:377 재고 경고 칩  자손 노드 6개, 대응물 없�
 
 **Correct 1 (숨긴 레이어와 메모를 분류해 상태 목록을 함께 만듭니다):**
 
-```text
+```txt
 상태 목록 — 12:340 상품 목록_전체
 12:343 필터 바      보임  -          -
 12:350 상품 표      보임  -          -
@@ -376,14 +376,14 @@ UX 메모와 GUI 화면은 따로 고쳐지므로 한쪽만 최신인 일이 흔
 
 **Incorrect 1 (메모와 다른 화면을 말없이 따라 구현합니다):**
 
-```text
+```txt
 구현 완료 — 상품 목록
 정렬  상품명 가나다순. 화면 12:341의 정렬 화살표를 따름
 ```
 
 **Correct 1 (두 출처를 나란히 적어 구현 전에 묻습니다):**
 
-```text
+```txt
 확인 필요 — 상품 목록
 정렬  메모 12:395  최초 진입 시 등록일 최신순
       화면 12:341  상품명 컬럼에 정렬 화살표가 켜져 있음
@@ -438,7 +438,7 @@ Figma 화면은 대개 데이터가 가득 찬 한 순간만 그립니다.
 
 **Correct (채운 상태를 보고에 적습니다):**
 
-```text
+```txt
 디자인 없음 — 상품 목록
 로딩     UiSpinner로 채움
 빈 목록  "등록된 상품이 없습니다" 가정, 확인 필요
@@ -592,7 +592,7 @@ Figma 변수 이름은 디자인 파일의 이름이지 프로젝트의 토큰�
 
 **Correct (대응표를 만들어 차이를 함께 적습니다):**
 
-```text
+```txt
 Figma 변수               값        프로젝트 토큰              차이
 Spacing 16               16        --app-space-section        -
 Spacing 12               12        --app-space-inline         -
@@ -872,14 +872,14 @@ export const UiPinIcon = () => {
 
 **Incorrect 1 (눈으로 대조한 결과를 일치로 보고합니다):**
 
-```text
+```txt
 검증 — 상품 목록
 Figma 스크린샷과 대조했고 동일합니다.
 ```
 
 **Correct 1 (렌더 값을 행마다 재고 판정을 붙입니다):**
 
-```text
+```txt
 검증 — 상품 목록, /products, 1회차
 요소                     속성           스펙                               실측       판정
 .pg_products__row        padding-left   --app-space-inline 12px            12px       PASS
@@ -918,13 +918,13 @@ Figma 기준 작업의 보고는 아래 항목을 이 순서로 담습니다.
 
 **Incorrect 1 (무엇을 읽고 가정했는지 남기지 않습니다):**
 
-```text
+```txt
 Figma대로 상품 목록 화면을 구현했습니다.
 ```
 
 **Correct 1 (읽은 것, 정한 것, 남은 것을 항목별로 남깁니다):**
 
-```text
+```txt
 읽은 노드           get_screenshot 12:341 약 3k, get_metadata 12:340 약 10k, get_variable_defs 12:341 약 1k
 대응표              표 UiTable, 탭 UiTabs, 상태 UiBadge, 재고 경고 칩은 새 마크업(대응물 없음)
 get_design_context  12:377 재고 경고 칩, 대응물 없음

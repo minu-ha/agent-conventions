@@ -30,45 +30,20 @@ tags: naming
 
 **Incorrect 1 (배럴과 섞인 가져오기로 경계를 흐립니다):**
 
-```ts
-import {pagination_default_page_size, toDisplayDate, UserProfile} from "./index";
-```
+<<< ../examples/naming-use-direct-imports-and-public-entry-points/01-incorrect.ts
 
 **Correct 1 (필요한 파일에서 이름으로 바로 가져옵니다):**
 
-```ts
-import type {UserProfile} from "@/type/user-profile";
-import {pagination_default_page_size} from "@/constant/pagination";
-import {toDisplayDate} from "@/util/date/to-display-date";
-```
+<<< ../examples/naming-use-direct-imports-and-public-entry-points/02-correct.ts
 
 **Incorrect 2 (`default`로 내보내 사용처마다 다른 이름이 생깁니다):**
 
-```tsx
-// component/ui/tabs/ui-tabs.tsx
-const UiTabs = (props: UiTabsProps) => {
-	return <div role="tablist">{props.children}</div>;
-};
+<<< ../examples/naming-use-direct-imports-and-public-entry-points/03-incorrect-1.tsx
 
-export default UiTabs;
-```
-
-```tsx
-// page/settings/pg-settings.tsx
-// 사용처마다 이름을 지어 같은 컴포넌트가 파일마다 다른 이름
-import Tabs from "@/component/ui/tabs/ui-tabs";
-```
+<<< ../examples/naming-use-direct-imports-and-public-entry-points/03-incorrect-2.tsx
 
 **Correct 2 (선언 앞에 `export`를 붙여 사용처가 그 이름으로 가져옵니다):**
 
-```tsx
-// component/ui/tabs/ui-tabs.tsx
-export const UiTabs = (props: UiTabsProps) => {
-	return <div role="tablist">{props.children}</div>;
-};
-```
+<<< ../examples/naming-use-direct-imports-and-public-entry-points/04-correct-1.tsx
 
-```tsx
-// page/settings/pg-settings.tsx
-import {UiTabs} from "@/component/ui/tabs/ui-tabs";
-```
+<<< ../examples/naming-use-direct-imports-and-public-entry-points/04-correct-2.tsx

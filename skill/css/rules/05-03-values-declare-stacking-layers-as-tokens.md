@@ -59,41 +59,8 @@ tags: values, layering
 
 **Incorrect 1 (숫자를 직접 쓰고 다른 요소보다 하나씩 올립니다):**
 
-```css
-/* src/page/products/pg-products.css */
-.pg_products__toolbar {
-	position: sticky;
-	z-index: 10;
-}
-
-/* src/component/widget/product-filter/wg-product-filter.css */
-.wg_productFilter__dropdown {
-	position: absolute;
-	z-index: 11;
-}
-```
+<<< ../examples/values-declare-stacking-layers-as-tokens/01-incorrect.css
 
 **Correct 1 (층 토큰만 씁니다):**
 
-```css
-/* src/style/token.css */
-:root {
-	--app-z-index-base: 0;
-	--app-z-index-sticky: 100;
-	--app-z-index-overlay: 200;
-	--app-z-index-popper: 300;
-}
-
-/* src/page/products/pg-products.css */
-.pg_products__toolbar {
-	/* 화면 스크롤 컨테이너 기준 고정. 드롭다운이 이 쌓임 맥락을 벗어나야 하면 포털 대상을 밖에 둠 */
-	position: sticky;
-	z-index: var(--app-z-index-sticky);
-}
-
-/* src/component/widget/product-filter/wg-product-filter.css */
-.wg_productFilter__dropdown {
-	position: absolute;
-	z-index: var(--app-z-index-popper);
-}
-```
+<<< ../examples/values-declare-stacking-layers-as-tokens/02-correct.css

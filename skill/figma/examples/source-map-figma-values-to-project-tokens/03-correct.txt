@@ -1,0 +1,6 @@
+Figma 변수               값        프로젝트 토큰              차이
+Spacing 16               16        --app-space-section        -
+Spacing 12               12        --app-space-inline         -
+BorderRadius 10          10        --app-radius-panel         -
+Content/Text/Black       #212529   --app-color-text-primary   -
+Content/Border/Normal    #dee2e6   --app-color-border         토큰 값 #d9d9d9

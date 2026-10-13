@@ -1,0 +1,7 @@
+page/product-detail/_pg-product-table-section.css
+# [!code error]
+  wg_productTableSection__root
+
+component/widget/chart-card/_wg-chart-card-header.css
+# [!code error]
+  pg_chartCard__header

@@ -1,0 +1,1 @@
+<WgChartCard variant="muted" />

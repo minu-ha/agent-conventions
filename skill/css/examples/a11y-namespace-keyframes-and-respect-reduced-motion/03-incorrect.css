@@ -1,0 +1,9 @@
+/* [!code error] */
+/* src/page/products/pg-products.css */
+@media (prefers-reduced-motion: reduce) {
+/* [!code error] */
+	.pg_products__panel {
+/* [!code error] */
+		animation-duration: 0s;
+	}
+}

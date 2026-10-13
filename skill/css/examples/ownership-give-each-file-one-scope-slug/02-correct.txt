@@ -1,0 +1,6 @@
+/* products route */
+pg_products__header
+
+/* orders route */
+# [!code ++]
+pg_orders__header

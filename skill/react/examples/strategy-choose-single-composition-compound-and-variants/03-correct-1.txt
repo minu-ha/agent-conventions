@@ -1,0 +1,7 @@
+component/widget/profile-dialog/
+├── wg-profile-dialog.tsx              진입. 부품을 모아 내보냄
+├── _wg-profile-dialog-root.tsx
+├── _wg-profile-dialog-header.tsx
+├── _wg-profile-dialog-body.tsx
+└── _type/
+    └── profile-dialog-part.ts         세 부품이 나눠 쓰는 계약

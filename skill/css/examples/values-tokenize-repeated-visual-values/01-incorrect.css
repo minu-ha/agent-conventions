@@ -1,0 +1,16 @@
+/* [!code error] */
+.pg_products__root {
+/* [!code error] */
+	--pg-products-gap: 12px;
+/* [!code error] */
+}
+
+.pg_products__toolbar {
+/* [!code error] */
+	gap: var(--pg-products-gap, 12px);
+}
+
+.pg_products__footer {
+/* [!code error] */
+	gap: var(--pg-products-gap, 12px);
+}

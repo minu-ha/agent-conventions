@@ -1,0 +1,15 @@
+/* [!code error] */
+@media (max-width: 639.98px) {
+	.pg_products__layout {
+/* [!code error] */
+		padding: 12px;
+	}
+}
+
+/* [!code error] */
+@media (max-width: 1023.98px) {
+	.pg_products__layout {
+/* [!code error] */
+		padding: 20px;
+	}
+}

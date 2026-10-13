@@ -40,20 +40,8 @@ tags: verify, parity, measurement
 
 **Incorrect 1 (눈으로 대조한 결과를 일치로 보고합니다):**
 
-```text
-검증 — 상품 목록
-Figma 스크린샷과 대조했고 동일합니다.
-```
+<<< ../examples/verify-measure-rendered-values-before-claiming-parity/01-incorrect.txt
 
 **Correct 1 (렌더 값을 행마다 재고 판정을 붙입니다):**
 
-```text
-검증 — 상품 목록, /products, 1회차
-요소                     속성           스펙                               실측       판정
-.pg_products__row        padding-left   --app-space-inline 12px            12px       PASS
-.pg_products__stock      border-left    --app-color-border, Figma #dee2e6  #d9d9d9    DRIFT
-.pg_products__name       font-size      --app-font-size-body 16px          15px 직접  HARDCODED
-.pg_products__row:hover  background     --app-color-fill-muted             -          VARIANT
-빈 목록 문구             -              등록된 상품이 없습니다             없음       MISSING
-.pg_products__pinIcon    width, height  16x16, @/asset/icon/pin.svg        16x16      PASS
-```
+<<< ../examples/verify-measure-rendered-values-before-claiming-parity/02-correct.txt

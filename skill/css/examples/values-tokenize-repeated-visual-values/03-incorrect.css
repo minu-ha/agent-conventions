@@ -1,0 +1,15 @@
+.pg_products__rowBadge {
+/* [!code error] */
+	border-color: var(--pg-products-row-accent);
+}
+
+.pg_products__row {
+/* [!code error] */
+	--pg-products-row-accent: transparent;
+
+/* [!code error] */
+	&:hover {
+/* [!code error] */
+		--pg-products-row-accent: #1677ff;
+	}
+}

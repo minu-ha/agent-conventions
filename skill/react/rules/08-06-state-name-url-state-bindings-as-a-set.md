@@ -32,48 +32,20 @@ tags: state, naming, url
 
 **Incorrect 1 (파서 묶음의 역할이 이름에 드러나지 않습니다):**
 
-```ts
-// page/products/_constant/product-search.ts
-export const productSearch = {
-	page: parseAsInteger.withDefault(pagination_default_page),
-	keyword: parseAsString,
-};
-```
+<<< ../examples/state-name-url-state-bindings-as-a-set/01-incorrect.ts
 
 **Correct 1 (파서 묶음은 `<범위>UrlParsers`로 소유자 `_constant` 폴더에 둡니다):**
 
-```ts
-// page/products/_constant/product-url-parsers.ts
-/**
- * 상품 목록 화면이 주소에 올린 상태의 파서 묶음
- */
-export const productUrlParsers = {
-	page: parseAsInteger.withDefault(pagination_default_page),
-	keyword: parseAsString,
-};
-```
+<<< ../examples/state-name-url-state-bindings-as-a-set/02-correct.ts
 
 **Incorrect 2 (파싱 결과에 플랫폼 객체와 서버 요청용 이름을 섞어 씁니다):**
 
-```tsx
-const [searchParams, setSearchParams] = useQueryStates(productUrlParsers);
-const query = searchParams.keyword;
-
-<UiSearchInput value={query} />;
-```
+<<< ../examples/state-name-url-state-bindings-as-a-set/03-incorrect.tsx
 
 **Correct 2 (파싱을 거친 값은 `urlParams`이고 별칭 없이 체인으로 읽습니다):**
 
-```tsx
-const [urlParams, setUrlParams] = useQueryStates(productUrlParsers);
-
-<UiSearchInput value={urlParams.keyword} />;
-```
+<<< ../examples/state-name-url-state-bindings-as-a-set/04-correct.tsx
 
 **Correct (플랫폼 `URLSearchParams` 객체만 `searchParams`입니다):**
 
-```tsx
-const [searchParams] = useSearchParams();
-
-<UiShareLinkButton href={`/products?${searchParams.toString()}`} />;
-```
+<<< ../examples/state-name-url-state-bindings-as-a-set/05-correct.tsx

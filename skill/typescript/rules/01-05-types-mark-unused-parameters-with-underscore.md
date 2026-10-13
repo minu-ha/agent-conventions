@@ -21,27 +21,8 @@ tags: types, callbacks, naming
 
 **Incorrect 1 (계약의 일부인 콜백 매개변수를 생략합니다):**
 
-```ts
-/**
- * 로그 싱크 콜백 계약
- */
-type LogSink = (message: string, level: "info" | "error") => void;
-
-const noopLog: LogSink = () => {
-	// 아무 일도 하지 않는 싱크
-};
-```
+<<< ../examples/types-mark-unused-parameters-with-underscore/01-incorrect.ts
 
 **Correct 1 (계약은 유지하고 쓰지 않는 매개변수만 `_`로 표시합니다):**
 
-```ts
-/**
- * 로그 싱크 콜백 계약
- */
-type LogSink = (message: string, level: "info" | "error") => void;
-
-/**
- * 아무것도 남기지 않는 로그 싱크. 테스트의 출력 끄기용
- */
-const noopLog: LogSink = (_message, _level) => {};
-```
+<<< ../examples/types-mark-unused-parameters-with-underscore/02-correct.ts

@@ -1,0 +1,17 @@
+/* stylelint-disable selector-disallowed-list -- dangerouslySetInnerHTML로 들어온 마크업 */
+.wg_productDetail__prose {
+	& h2 {
+		margin: 24px 0 12px;
+		font-size: 18px;
+	}
+
+	& p {
+		margin: 0 0 12px;
+		line-height: 1.7;
+	}
+
+	& > :first-child {
+		margin-top: 0;
+	}
+}
+/* stylelint-enable selector-disallowed-list */

@@ -1,0 +1,17 @@
+.pg_products__toolbar {
+	display: flex;
+	gap: 12px;
+/* [!code error] */
+	padding: 8px;
+}
+
+.pg_products__row {
+	background: #f5f5f5;
+}
+
+/* [!code error] */
+.pg_products__toolbar {
+/* [!code error] */
+	padding: 12px 16px;
+/* [!code error] */
+}

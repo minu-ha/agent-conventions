@@ -1,0 +1,39 @@
+/* src/style/token.css */
+:root {
+	color-scheme: light;
+
+	--app-color-surface: #fff;
+	--app-color-text-primary: #212529;
+	--app-color-border: #dee2e6;
+	--app-shadow-panel: 0 1px 3px rgb(0 0 0 / 12%);
+}
+
+@media (prefers-color-scheme: dark) {
+	:root {
+		color-scheme: dark;
+
+		--app-color-surface: #1f2225;
+		--app-color-text-primary: #e9ecef;
+		--app-color-border: #3a3f44;
+		--app-shadow-panel: 0 1px 3px rgb(0 0 0 / 60%);
+	}
+}
+
+/* [data-theme]는 뒤에 오고 명시도도 높아 위 @media 블록보다 우선 */
+:root[data-theme="light"] {
+	color-scheme: light;
+
+	--app-color-surface: #fff;
+	--app-color-text-primary: #212529;
+	--app-color-border: #dee2e6;
+	--app-shadow-panel: 0 1px 3px rgb(0 0 0 / 12%);
+}
+
+:root[data-theme="dark"] {
+	color-scheme: dark;
+
+	--app-color-surface: #1f2225;
+	--app-color-text-primary: #e9ecef;
+	--app-color-border: #3a3f44;
+	--app-shadow-panel: 0 1px 3px rgb(0 0 0 / 60%);
+}

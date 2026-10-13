@@ -47,57 +47,24 @@ tags: ownership, naming
 
 **Incorrect 1 (화면 컴포넌트의 접두사를 누락합니다):**
 
-```tsx
-// page/product-detail/product-table-section.tsx
-export const ProductTable = (props: ProductTableProps) => {
-	return <section className={clsx("pg_productTableSection__root")}>{props.children}</section>;
-};
-```
+<<< ../examples/ownership-prefix-layer-names-on-files-and-symbols/01-incorrect.tsx
 
 **Correct 1 (진입 파일이 아닌 파일에는 `_`를 붙이고 파일 이름과 심볼에 레이어 접두사를 씁니다):**
 
-```tsx
-// page/product-detail/_pg-product-table-section.tsx
-export const PgProductTableSection = (props: PgProductTableSectionProps) => {
-	return <section className={clsx("pg_productTableSection__root")}>{props.children}</section>;
-};
-```
+<<< ../examples/ownership-prefix-layer-names-on-files-and-symbols/02-correct.tsx
 
 **Incorrect 2 (폴더에도 접두사를 붙이고 이름에서 되풀이합니다):**
 
-```tsx
-// component/ui/ui-button/ui-button-button.tsx
-export const UiButtonButton = (props: UiButtonButtonProps) => {
-	return <button type="button">{props.children}</button>;
-};
-```
+<<< ../examples/ownership-prefix-layer-names-on-files-and-symbols/03-incorrect.tsx
 
 **Correct 2 (폴더에는 접두사를 붙이지 않고 파일 이름에서 같은 말을 반복하지 않습니다):**
 
-```tsx
-// component/ui/button/ui-button.tsx
-export const UiButton = (props: UiButtonProps) => {
-	return <button type="button">{props.children}</button>;
-};
-```
+<<< ../examples/ownership-prefix-layer-names-on-files-and-symbols/04-correct.tsx
 
 **Incorrect 3 (역할 낱말 하나로 지어 무엇의 부품인지 알 수 없습니다):**
 
-```text
-component/widget/chatbot/
-├── _wg-launcher.tsx    # WgLauncher, wg_launcher
-└── panel/
-    ├── wg-panel.tsx    # WgPanel, wg_panel
-    └── _wg-header.tsx  # WgHeader, wg_header
-```
+<<< ../examples/ownership-prefix-layer-names-on-files-and-symbols/05-incorrect.txt
 
 **Correct 3 (이름만 보고 뜻을 알 수 있고 소유자 이름은 필요할 때만 들어갑니다):**
 
-```text
-component/widget/chatbot/
-├── _wg-chatbot-launcher.tsx       # WgChatbotLauncher
-└── chat-panel/
-    ├── wg-chat-panel.tsx          # WgChatPanel, wg_chatPanel
-    ├── _wg-chat-panel-header.tsx  # WgChatPanelHeader
-    └── _wg-history-pane.tsx       # WgHistoryPane. history가 뜻을 만들어 소유자 이름이 필요 없음
-```
+<<< ../examples/ownership-prefix-layer-names-on-files-and-symbols/06-correct.txt

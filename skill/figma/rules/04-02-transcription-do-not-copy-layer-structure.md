@@ -32,40 +32,10 @@ Tailwind를 쓰는 프로젝트도 임의 값 클래스는 프로젝트 토큰 �
 
 **Incorrect (회전한 선과 래퍼, 추적 속성을 그대로 옮깁니다):**
 
-```tsx
-<div className="flex gap-[4px] items-center" data-node-id="12:380">
-	<p className="font-['Pretendard:SemiBold'] text-[16px]">{product.name}</p>
-	<div className="flex h-[10px] items-center justify-center w-0">
-		<div className="flex-none rotate-90">
-			<div className="h-0 relative w-[10px]">
-				<div className="absolute inset-[-1px_0_0_0]">
-					<img src={imgLine94} />
-				</div>
-			</div>
-		</div>
-	</div>
-	<span className="text-[14px]">{product.stock}</span>
-</div>
-```
+<<< ../examples/transcription-do-not-copy-layer-structure/01-incorrect.tsx
 
 **Correct (구분선은 `border-left` 한 줄로 쓰고 래퍼를 걷습니다):**
 
-```tsx
-<div className={clsx("pg_products__nameRow")}>
-	<p className={clsx("pg_products__name")}>{product.name}</p>
-	<span className={clsx("pg_products__stock")}>{product.stock}</span>
-</div>
-```
+<<< ../examples/transcription-do-not-copy-layer-structure/02-correct-1.tsx
 
-```css
-.pg_products__nameRow {
-	display: flex;
-	gap: var(--app-space-inline);
-	align-items: center;
-}
-
-.pg_products__stock {
-	padding-left: var(--app-space-inline);
-	border-left: 1px solid var(--app-color-border);
-}
-```
+<<< ../examples/transcription-do-not-copy-layer-structure/02-correct-2.css

@@ -54,57 +54,16 @@ tags: values, motion
 
 **Incorrect 1 (전역 이름을 겹치게 쓰고 시간을 직접 적습니다):**
 
-```css
-@keyframes fadeIn {
-	from {
-		opacity: 0;
-	}
-}
-
-.pg_products__panel {
-	animation: fadeIn 200ms ease-out;
-}
-```
+<<< ../examples/a11y-namespace-keyframes-and-respect-reduced-motion/01-incorrect.css
 
 **Correct 1 (소유자를 붙인 이름과 토큰을 씁니다):**
 
-```css
-@keyframes pg_products__fadeIn {
-	from {
-		opacity: 0;
-	}
-}
-
-.pg_products__panel {
-	animation: pg_products__fadeIn var(--app-motion-duration-fast) var(--app-motion-easing-out);
-}
-```
+<<< ../examples/a11y-namespace-keyframes-and-respect-reduced-motion/02-correct.css
 
 **Incorrect 2 (컴포넌트 파일마다 따로 끄고 지속 시간을 `0`으로 둡니다):**
 
-```css
-/* src/page/products/pg-products.css */
-@media (prefers-reduced-motion: reduce) {
-	.pg_products__panel {
-		animation-duration: 0s;
-	}
-}
-```
+<<< ../examples/a11y-namespace-keyframes-and-respect-reduced-motion/03-incorrect.css
 
 **Correct 2 (전역 스타일시트에서 한 번 처리합니다):**
 
-```css
-/* src/style/motion.css */
-@media (prefers-reduced-motion: reduce) {
-	*,
-	*::before,
-	*::after {
-		animation-duration: 0.01ms !important;
-		animation-delay: 0s !important;
-		animation-iteration-count: 1 !important;
-		transition-duration: 0.01ms !important;
-		transition-delay: 0s !important;
-		scroll-behavior: auto !important;
-	}
-}
-```
+<<< ../examples/a11y-namespace-keyframes-and-respect-reduced-motion/04-correct.css

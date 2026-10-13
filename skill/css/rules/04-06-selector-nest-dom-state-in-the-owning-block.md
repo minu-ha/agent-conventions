@@ -45,101 +45,24 @@ DOM 상태 가상 클래스는 해당 요소의 **조건 없는 기본 클래스
 
 **Incorrect 1 (가상 클래스를 최상위 선택자로 다시 엽니다):**
 
-```css
-.wg_siteHeader__brandLink {
-	color: #1677ff;
-}
-
-.wg_siteHeader__brandLink:hover {
-	color: #0958d9;
-}
-
-.wg_siteHeader__brandLink:focus-visible {
-	color: #0958d9;
-	outline: 2px solid #1677ff;
-}
-```
+<<< ../examples/selector-nest-dom-state-in-the-owning-block/01-incorrect.css
 
 **Correct 1 (기본 블록 안에서 각 상태를 별도의 `&:` 블록으로 선언합니다):**
 
-```css
-.wg_siteHeader__brandLink {
-	color: #1677ff;
-
-	&:hover {
-		color: #0958d9;
-	}
-
-	&:focus-visible {
-		color: #0958d9;
-		outline: 2px solid #1677ff;
-	}
-}
-```
+<<< ../examples/selector-nest-dom-state-in-the-owning-block/02-correct.css
 
 **Incorrect 2 (조상이 hover일 때 바뀌는 모습을 자손 블록의 `&:hover`로 씁니다):**
 
-```css
-.wg_siteHeader__brandMark {
-	transform: rotate(0deg);
-
-	/* 링크 전체에 hover하면 로고가 기울어야 하는데 로고 위에서만 적용 */
-	&:hover {
-		transform: rotate(-2deg);
-	}
-}
-
-.wg_siteHeader__brandLink {
-	color: #1677ff;
-}
-```
+<<< ../examples/selector-nest-dom-state-in-the-owning-block/03-incorrect.css
 
 **Correct 2 (조상 상태가 자손을 바꾸면 같은 소유자 안에서 결합자 하나만 씁니다):**
 
-```css
-.wg_siteHeader__brandMark {
-	transform: rotate(0deg);
-}
-
-.wg_siteHeader__brandLink {
-	color: #1677ff;
-
-	&:hover .wg_siteHeader__brandMark {
-		transform: rotate(-2deg);
-	}
-}
-```
+<<< ../examples/selector-nest-dom-state-in-the-owning-block/04-correct.css
 
 **Incorrect 3 (상호작용 상태를 수정자 아래로 옮겨 적용 대상을 좁힙니다):**
 
-```css
-.ui_button__root--active {
-	background: var(--app-color-accent);
-
-	&:hover {
-		background: var(--app-color-accent-strong);
-	}
-
-	&:focus-visible {
-		outline: 2px solid var(--app-color-focus);
-	}
-}
-```
+<<< ../examples/selector-nest-dom-state-in-the-owning-block/05-incorrect.css
 
 **Correct 3 (상호작용 상태를 조건 없는 기본 블록으로 되돌립니다):**
 
-```css
-.ui_button__root {
-	&:hover {
-		background: var(--app-color-accent-strong);
-	}
-
-	&:focus-visible {
-		outline: 2px solid var(--app-color-focus);
-	}
-}
-
-.ui_button__root--active {
-	background: var(--app-color-accent);
-}
-```
+<<< ../examples/selector-nest-dom-state-in-the-owning-block/06-correct.css

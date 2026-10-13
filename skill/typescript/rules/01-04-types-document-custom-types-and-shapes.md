@@ -44,43 +44,12 @@ tags: types, jsdoc
 
 **Incorrect 1 (필드 설명을 생략하거나 예전 방식으로 헤더에 몰아 씁니다):**
 
-```ts
-/**
- * 게시 결과 요약
- * 게시 대상 문서 ID
- */
-interface PublishResult {
-	documentId: string;
-	published: boolean;
-}
-```
+<<< ../examples/types-document-custom-types-and-shapes/01-incorrect.ts
 
 **Correct 1 (헤더와 필드별 문서 주석을 씁니다):**
 
-```ts
-/**
- * 게시 결과 요약
- */
-export interface PublishResult {
-	/**
-	 * 게시 대상 문서 ID
-	 */
-	documentId: string;
-	/**
-	 * 게시 성공 여부
-	 */
-	published: boolean;
-}
-```
+<<< ../examples/types-document-custom-types-and-shapes/02-correct.ts
 
 **Correct (객체형 상수는 헤더만 달고 키에는 달지 않습니다):**
 
-```ts
-/**
- * 상품 상태 코드. 서버 enum과 같은 값
- */
-export const product_status = {
-	draft: "draft",
-	published: "published",
-} as const;
-```
+<<< ../examples/types-document-custom-types-and-shapes/03-correct.ts

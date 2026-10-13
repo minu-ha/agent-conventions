@@ -54,38 +54,8 @@ flowchart LR
 
 **Incorrect 1 (라이브러리 타입을 그대로 내보냅니다):**
 
-```tsx
-export type UiTableCellProps = TableCellProps;
-
-export const UiTableCell = (props: UiTableCellProps) => {
-	return <TableCell {...props} />;
-};
-```
+<<< ../examples/typing-narrow-library-wrapper-contracts/01-incorrect.tsx
 
 **Correct 1 (표시 프롭은 인덱스 접근으로 열고 DOM 속성은 세 단계 기준을 따릅니다):**
 
-```tsx
-import type {TdHTMLAttributes} from "react";
-import type {TableCellProps} from "@mui/material";
-
-/**
- * 표 셀에서 정렬과 여백만 여는 계약
- *
- * 라이브러리 셀의 나머지 표시 프롭은 표 소유자가 정하므로 열지 않음
- * align의 inherit은 DOM td 타입에 없어 그 이름만 빼고 다시 선언
- */
-export interface UiTableCellProps extends Omit<TdHTMLAttributes<HTMLTableCellElement>, "align"> {
-	/**
-	 * 내용 가로 정렬
-	 */
-	align?: TableCellProps["align"];
-	/**
-	 * 셀 여백
-	 */
-	padding?: TableCellProps["padding"];
-}
-
-export const UiTableCell = (props: UiTableCellProps) => {
-	return <TableCell {...props} />;
-};
-```
+<<< ../examples/typing-narrow-library-wrapper-contracts/02-correct.tsx

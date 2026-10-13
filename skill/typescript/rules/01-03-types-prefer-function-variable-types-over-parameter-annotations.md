@@ -32,93 +32,16 @@ tags: types
 
 **Incorrect 1 (계약이 있는데 시그니처를 다시 적습니다):**
 
-```ts
-// 이미 있는 계약
-/**
- * 사용자 화면 표시 문자열 계약
- */
-interface UserFormatters {
-	/**
-	 * 상태 객체를 화면 문자열로
-	 */
-	toStateLabel: (state: Record<string, unknown>) => string;
-	/**
-	 * 권한 코드를 화면 문자열로
-	 */
-	toRoleLabel: (role: string) => string;
-}
-
-/**
- * 상태 객체를 화면 문자열로 변환
- */
-const toStateLabel = (state: Record<string, unknown>): string => {
-	return JSON.stringify(state);
-};
-```
+<<< ../examples/types-prefer-function-variable-types-over-parameter-annotations/01-incorrect.ts
 
 **Correct 1 (이미 있는 계약에서 시그니처를 가져와 함수 전체에 타입을 붙입니다):**
 
-```ts
-// 이미 있는 계약
-/**
- * 사용자 화면 표시 문자열 계약
- */
-interface UserFormatters {
-	/**
-	 * 상태 객체를 화면 문자열로
-	 */
-	toStateLabel: (state: Record<string, unknown>) => string;
-	/**
-	 * 권한 코드를 화면 문자열로
-	 */
-	toRoleLabel: (role: string) => string;
-}
-
-/**
- * 상태 객체를 화면 문자열로 변환
- */
-const toStateLabel: UserFormatters["toStateLabel"] = (state) => {
-	return JSON.stringify(state);
-};
-```
+<<< ../examples/types-prefer-function-variable-types-over-parameter-annotations/02-correct.ts
 
 **Incorrect 2 (같은 시그니처를 쓰는 구현마다 매개변수와 반환 타입을 다시 적습니다):**
 
-```ts
-/**
- * 앞뒤 공백을 걷어 낸 요청 문자열
- */
-const toRequest = (request: string): string => {
-	return request.trim();
-};
-
-/**
- * 검색어용으로 공백을 한 칸으로 줄인 요청 문자열
- */
-const toSearchRequest = (request: string): string => {
-	return request.replaceAll(/\s+/g, " ").trim();
-};
-```
+<<< ../examples/types-prefer-function-variable-types-over-parameter-annotations/03-incorrect.ts
 
 **Correct 2 (같은 시그니처를 쓰는 구현이 둘 이상이면 함수 타입 별칭을 선언합니다):**
 
-```ts
-/**
- * 요청 문자열 변환 계약
- */
-type ToRequest = (request: string) => string;
-
-/**
- * 앞뒤 공백을 걷어 낸 요청 문자열
- */
-const toRequest: ToRequest = (request) => {
-	return request.trim();
-};
-
-/**
- * 검색어용으로 공백을 한 칸으로 줄인 요청 문자열
- */
-const toSearchRequest: ToRequest = (request) => {
-	return request.replaceAll(/\s+/g, " ").trim();
-};
-```
+<<< ../examples/types-prefer-function-variable-types-over-parameter-annotations/04-correct.ts

@@ -42,91 +42,24 @@ flowchart LR
 
 **Incorrect 1 (한 파일 안 반복을 조상에 선언한 지역 변수로 감쌉니다):**
 
-```css
-.pg_products__root {
-	--pg-products-gap: 12px;
-}
-
-.pg_products__toolbar {
-	gap: var(--pg-products-gap, 12px);
-}
-
-.pg_products__footer {
-	gap: var(--pg-products-gap, 12px);
-}
-```
+<<< ../examples/values-tokenize-repeated-visual-values/01-incorrect.css
 
 **Correct 1 (한 파일 안 반복은 값을 그대로 둡니다):**
 
-```css
-.pg_products__toolbar {
-	gap: 12px;
-}
-
-.pg_products__footer {
-	gap: 12px;
-}
-```
+<<< ../examples/values-tokenize-repeated-visual-values/02-correct.css
 
 **Incorrect 2 (상태를 전달하려고 지역 변수를 만듭니다):**
 
-```css
-.pg_products__rowBadge {
-	border-color: var(--pg-products-row-accent);
-}
-
-.pg_products__row {
-	--pg-products-row-accent: transparent;
-
-	&:hover {
-		--pg-products-row-accent: #1677ff;
-	}
-}
-```
+<<< ../examples/values-tokenize-repeated-visual-values/03-incorrect.css
 
 **Correct 2 (상태 전달은 지역 변수 없이 결합자 하나로 풉니다):**
 
-```css
-.pg_products__rowBadge {
-	border: 1px solid transparent;
-}
-
-.pg_products__row {
-	&:hover .pg_products__rowBadge {
-		border-color: #1677ff;
-	}
-}
-```
+<<< ../examples/values-tokenize-repeated-visual-values/04-correct.css
 
 **Incorrect 3 (여러 파일이 쓰는 값을 각 파일에 하드코딩합니다):**
 
-```css
-/* pg-products.css */
-.pg_products__row {
-	background: #f5f5f5;
-}
-
-/* pg-product-detail.css */
-.pg_productDetail__row {
-	background: #f5f5f5;
-}
-```
+<<< ../examples/values-tokenize-repeated-visual-values/05-incorrect.css
 
 **Correct 3 (여러 파일이 쓰는 값은 전역 공통 토큰으로 둡니다):**
 
-```css
-/* src/style/token.css */
-:root {
-	--app-color-fill-muted: #f5f5f5;
-}
-
-/* pg-products.css */
-.pg_products__row {
-	background: var(--app-color-fill-muted);
-}
-
-/* pg-product-detail.css */
-.pg_productDetail__row {
-	background: var(--app-color-fill-muted);
-}
-```
+<<< ../examples/values-tokenize-repeated-visual-values/06-correct.css

@@ -1,0 +1,19 @@
+.pg_productDetail__toolbar {
+/* [!code ++] */
+	/* 스크롤 컨테이너는 .pg_productDetail__content */
+	position: sticky;
+	top: 0;
+/* [!code ++] */
+	z-index: var(--app-z-index-sticky);
+/* [!code ++] */
+}
+
+/* [!code ++] */
+.pg_productDetail__content {
+/* [!code ++] */
+	display: grid;
+/* [!code ++] */
+	min-height: 0;
+/* [!code ++] */
+	overflow-y: auto;
+}

@@ -36,66 +36,16 @@ tags: selector, duplication, maintainability
 
 **Incorrect 1 (`,`로 공통 선언을 묶고 아래에서 일부만 다시 엽니다):**
 
-```css
-.pg_products__badge--draft,
-.pg_products__badge--published,
-.pg_products__badge--archived,
-.pg_products__badge--deleted {
-	width: 24px;
-	height: 24px;
-}
-
-.pg_products__badge--deleted {
-	background: rgb(140 152 160 / 12%);
-}
-```
+<<< ../examples/selector-do-not-group-classes-with-commas/01-incorrect.css
 
 **Correct 1 (각 클래스가 자기 선언을 전부 가집니다):**
 
-```css
-.pg_products__badge--draft {
-	width: 24px;
-	height: 24px;
-}
-
-.pg_products__badge--published {
-	width: 24px;
-	height: 24px;
-}
-
-.pg_products__badge--archived {
-	width: 24px;
-	height: 24px;
-}
-
-.pg_products__badge--deleted {
-	width: 24px;
-	height: 24px;
-	background: rgb(140 152 160 / 12%);
-}
-```
+<<< ../examples/selector-do-not-group-classes-with-commas/02-correct.css
 
 **Incorrect 2 (한 대상의 진입 조건을 `,`로 나열합니다):**
 
-```css
-.pg_products__sortButton {
-	&:hover .pg_products__sortBox,
-	&.Mui-focusVisible .pg_products__sortBox {
-		border-color: #9fadc7;
-	}
-}
-```
+<<< ../examples/selector-do-not-group-classes-with-commas/03-incorrect.css
 
 **Correct 2 (진입 조건마다 블록을 따로 열고 선언을 그대로 씁니다):**
 
-```css
-.pg_products__sortButton {
-	&:hover .pg_products__sortBox {
-		border-color: #9fadc7;
-	}
-
-	&.Mui-focusVisible .pg_products__sortBox {
-		border-color: #9fadc7;
-	}
-}
-```
+<<< ../examples/selector-do-not-group-classes-with-commas/04-correct.css

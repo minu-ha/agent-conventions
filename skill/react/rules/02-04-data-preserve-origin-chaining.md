@@ -25,49 +25,16 @@ tags: data, state, origin
 
 **Incorrect 1 (구조분해로 출처가 흐려집니다):**
 
-```tsx
-const {products, selectedProduct} = responseProductListSuspense.data;
-
-<Fragment>
-	<UiList rows={products} />
-	<UiTable rows={selectedProduct.fields} />
-</Fragment>;
-```
+<<< ../examples/data-preserve-origin-chaining/01-incorrect.tsx
 
 **Correct 1 (원본 객체의 속성을 직접 읽어 출처를 유지합니다):**
 
-```tsx
-<Fragment>
-	<UiList rows={responseProductListSuspense.data.products} />
-	<UiTable rows={responseProductListSuspense.data.selectedProduct.fields} />
-</Fragment>;
-```
+<<< ../examples/data-preserve-origin-chaining/02-correct.tsx
 
 **Incorrect 2 (이펙트 의존성도 구조분해한 이름으로 적어 출처가 드러나지 않습니다):**
 
-```ts
-const {products} = responseProductSearchSuspense.data;
-
-useEffect(() => {
-	if (products.length > 0) {
-		return;
-	}
-
-	reportEmptySearch(urlParams.keyword);
-}, [products, urlParams.keyword]);
-```
+<<< ../examples/data-preserve-origin-chaining/03-incorrect.ts
 
 **Correct 2 (이펙트 안에서도 원본 이름 그대로 씁니다):**
 
-```ts
-/**
- * 검색 결과가 있으면 빈 검색 보고 생략. 결과가 없을 때만 한 번 보고
- */
-useEffect(() => {
-	if (responseProductSearchSuspense.data.products.length > 0) {
-		return;
-	}
-
-	reportEmptySearch(urlParams.keyword);
-}, [responseProductSearchSuspense.data, urlParams.keyword]);
-```
+<<< ../examples/data-preserve-origin-chaining/04-correct.ts

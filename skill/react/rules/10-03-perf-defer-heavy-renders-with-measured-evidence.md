@@ -53,90 +53,28 @@ flowchart LR
 
 **Incorrect 1 (행 20개 목록을 다시 렌더하는 갱신까지 트랜지션으로 감쌉니다):**
 
-```tsx
-const [selectedTagId, setSelectedTagId] = useState("all");
-const tagRows = responseTagListSuspense.data.tags.slice(0, 20);
-
-const handleTagClick = (nextTagId: string) => {
-	startTransition(() => {
-		setSelectedTagId(nextTagId);
-	});
-};
-
-return <UiTagRows rows={tagRows} selectedTagId={selectedTagId} />;
-```
+<<< ../examples/perf-defer-heavy-renders-with-measured-evidence/01-incorrect.tsx
 
 **Correct 1 (측정 근거가 있는 갱신만 트랜지션으로 감싸고 행 20개 목록은 그대로 둡니다):**
 
-```tsx
-const handleTagClick = (nextTagId: string) => {
-	setSelectedTagId(nextTagId);
-};
-
-const handleStatusFilterChange = (nextStatus: ProductStatusFilter) => {
-	// 행 12,000개에서 필터 전환에 320ms, 클릭이 밀림
-	startTransition(() => {
-		setStatusFilter(nextStatus);
-	});
-};
-```
+<<< ../examples/perf-defer-heavy-renders-with-measured-evidence/02-correct.tsx
 
 **Incorrect 2 (입력과 무거운 파생 렌더를 같은 값에 묶습니다):**
 
-```tsx
-const [keyword, setKeyword] = useState("");
-const filteredRows = rows.filter((row) => fuzzyMatchRow(row, keyword));
-```
+<<< ../examples/perf-defer-heavy-renders-with-measured-evidence/03-incorrect.tsx
 
 **Correct 2 (입력은 즉시 반응하고 무거운 파생 계산만 늦춥니다):**
 
-```tsx
-const [keyword, setKeyword] = useState("");
-const deferredKeyword = useDeferredValue(keyword);
-
-// 행 12,000개에서 매 렌더 필터링 180ms 측정. 지연한 검색어에만 재계산
-const filteredRows = useMemo(() => {
-	return rows.filter((row) => fuzzyMatchRow(row, deferredKeyword));
-}, [deferredKeyword, rows]);
-
-return <PgProductRows rows={filteredRows} />;
-```
+<<< ../examples/perf-defer-heavy-renders-with-measured-evidence/04-correct.tsx
 
 **Correct (진행 표시가 필요하면 `useTransition`의 `isPending`을 씁니다):**
 
-```tsx
-const [isPending, startTransition] = useTransition();
-
-const handleStatusFilterChange = (nextStatus: ProductStatusFilter) => {
-	// 행 12,000개에서 필터 전환에 320ms, 클릭이 밀림
-	startTransition(() => {
-		setStatusFilter(nextStatus);
-	});
-};
-
-return <UiFilterBar isBusy={isPending} onStatusChange={handleStatusFilterChange} />;
-```
+<<< ../examples/perf-defer-heavy-renders-with-measured-evidence/05-correct.tsx
 
 **Correct (`await` 뒤의 상태 갱신은 다시 `startTransition`으로 감쌉니다):**
 
-```tsx
-const handleStatusFilterChange = (nextStatus: ProductStatusFilter) => {
-	startTransition(async () => {
-		const nextRows = await fetchFilteredRows(nextStatus);
-
-		// await 뒤에는 트랜지션 범위가 끊김. 다시 감싸야 급하지 않은 갱신으로 남음
-		startTransition(() => {
-			setRows(nextRows);
-		});
-	});
-};
-```
+<<< ../examples/perf-defer-heavy-renders-with-measured-evidence/06-correct.tsx
 
 **Correct (지연 값을 받는 무거운 하위 트리는 `memo`로 감쌉니다):**
 
-```tsx
-// 행 12,000개 표. 부모가 입력값으로 다시 렌더할 때 이 트리까지 따라 그리지 않도록 memo로 감쌈
-export const PgProductRows = memo((props: PgProductRowsProps) => {
-	return <UiTable rows={props.rows} />;
-});
-```
+<<< ../examples/perf-defer-heavy-renders-with-measured-evidence/07-correct.tsx

@@ -33,48 +33,20 @@ tags: screen, loading, suspense
 
 **Incorrect 1 (`Suspense` 쿼리의 `isPending`을 다시 분기합니다. 타입이 `false`라 죽은 코드입니다):**
 
-```tsx
-if (responseUserGetItemSuspense.isPending) {
-	return <UiSpinner />;
-}
-
-return <WgUserCardName value={responseUserGetItemSuspense.data.name} />;
-```
+<<< ../examples/runtime-avoid-ad-hoc-loading-branches/01-incorrect.tsx
 
 **Correct 1 (초기 로딩은 경계가 받으므로 본문은 데이터가 있는 경로만 렌더합니다):**
 
-```tsx
-return <WgUserCardName value={responseUserGetItemSuspense.data.name} />;
-```
+<<< ../examples/runtime-avoid-ad-hoc-loading-branches/02-correct.tsx
 
 **Incorrect 2 (다시 불러오는 중에 화면 전체를 가립니다):**
 
-```tsx
-if (responseUserGetItemSuspense.isFetching) {
-	return <UiSpinner />;
-}
-
-return <WgUserCardName value={responseUserGetItemSuspense.data.name} />;
-```
+<<< ../examples/runtime-avoid-ad-hoc-loading-branches/03-incorrect.tsx
 
 **Correct 2 (갱신 상태는 이미 렌더된 화면을 보조하는 표시에만 씁니다):**
 
-```tsx
-return (
-	<Fragment>
-		<WgUserCardName value={responseUserGetItemSuspense.data.name} />
-		{responseUserGetItemSuspense.isFetching && <UiRefreshIndicator />}
-	</Fragment>
-);
-```
+<<< ../examples/runtime-avoid-ad-hoc-loading-branches/04-correct.tsx
 
 **Correct (외부 SDK가 잘못 초기화되므로 이유 주석을 남기고 로딩 동안 가립니다):**
 
-```tsx
-// 결제 위젯은 마운트할 때 금액을 한 번만 읽음. 다시 불러오는 중에 그리면 옛 금액으로 초기화
-if (responseOrderAmountSuspense.isFetching) {
-	return <PgOrderAmountLoadingScreen />;
-}
-
-return <PgPaymentWidgetSection amount={responseOrderAmountSuspense.data.confirmedAmount} />;
-```
+<<< ../examples/runtime-avoid-ad-hoc-loading-branches/05-correct.tsx

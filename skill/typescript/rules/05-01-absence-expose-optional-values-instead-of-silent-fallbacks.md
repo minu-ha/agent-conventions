@@ -48,16 +48,8 @@ tags: absence
 
 **Incorrect 1 (`??`, `||`, 기본 매개변수 자리에 리터럴을 적습니다):**
 
-```ts
-const supportEmail = settings.supportEmail ?? "help@example.com";
-const displayName = user.nickname || "-";
-const toPageRequest = (size = 10): PageRequest => { /* … */ };
-```
+<<< ../examples/absence-expose-optional-values-instead-of-silent-fallbacks/01-incorrect.ts
 
 **Correct 1 (이미 선언된 이름만 가리킵니다):**
 
-```ts
-const supportEmail = settings.supportEmail ?? support_email_default;
-const displayName = user.nickname || empty_display_text;
-const toPageRequest = (size = pagination_default_page_size): PageRequest => { /* … */ };
-```
+<<< ../examples/absence-expose-optional-values-instead-of-silent-fallbacks/02-correct.ts

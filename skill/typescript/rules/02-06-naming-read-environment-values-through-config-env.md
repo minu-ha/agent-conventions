@@ -44,34 +44,12 @@ flowchart LR
 
 **Incorrect 1 (쓰는 파일마다 직접 읽고 없을 때 리터럴로 덮습니다):**
 
-```ts
-// service/product-client.ts
-const baseUrl = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:3000";
-```
+<<< ../examples/naming-read-environment-values-through-config-env/01-incorrect-1.ts
 
-```ts
-// service/order-export-client.ts
-// 다른 파일이 같은 키를 다시 읽고 같은 리터럴로 덮음
-const orderExportBaseUrl = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:3000";
-```
+<<< ../examples/naming-read-environment-values-through-config-env/01-incorrect-2.ts
 
 **Correct 1 (`config/env.ts`가 한 번 읽고 없으면 드러냅니다):**
 
-```ts
-// config/env.ts
-if (!import.meta.env.VITE_API_BASE_URL) {
-	throw new MissingEnvironmentValueError("VITE_API_BASE_URL");
-}
+<<< ../examples/naming-read-environment-values-through-config-env/02-correct-1.ts
 
-/**
- * API 서버 주소. 배포 환경마다 다름
- */
-export const env_api_base_url = import.meta.env.VITE_API_BASE_URL;
-```
-
-```ts
-// service/product-client.ts
-import {env_api_base_url} from "@/config/env";
-
-const productClient = createClient({baseUrl: env_api_base_url});
-```
+<<< ../examples/naming-read-environment-values-through-config-env/02-correct-2.ts

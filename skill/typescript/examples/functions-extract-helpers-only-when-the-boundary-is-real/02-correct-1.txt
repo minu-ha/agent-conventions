@@ -1,0 +1,3 @@
+page/orders/_function/to-order-summary/
+├── to-order-summary.ts    본문 안에 // 1. 비교 행  // 2. 상태 그룹  // 3. 재고 카드
+└── _format-amount.ts      비교 행과 상태 그룹 두 자리가 부름

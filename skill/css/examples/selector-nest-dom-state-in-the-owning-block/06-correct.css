@@ -1,0 +1,17 @@
+/* [!code ++] */
+.ui_button__root {
+	&:hover {
+		background: var(--app-color-accent-strong);
+	}
+
+	&:focus-visible {
+		outline: 2px solid var(--app-color-focus);
+	}
+}
+
+/* [!code ++] */
+.ui_button__root--active {
+/* [!code ++] */
+	background: var(--app-color-accent);
+/* [!code ++] */
+}

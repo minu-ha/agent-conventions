@@ -52,32 +52,16 @@ flowchart LR
 
 **Incorrect 1 (앱 밖에서 온 값을 단언으로 통과시킵니다):**
 
-```ts
-const storedFilter = JSON.parse(localStorage.getItem("product-filter") as string) as ProductFilter;
-```
+<<< ../examples/types-narrow-unknown-instead-of-asserting/01-incorrect.ts
 
 **Correct 1 (앱 밖에서 온 값은 좁히기 함수를 통과한 뒤에 씁니다):**
 
-```ts
-const storedValue = localStorage.getItem("product-filter");
-const parsedFilter: unknown = storedValue === null ? undefined : JSON.parse(storedValue);
-
-// 첫 방문이면 저장된 필터 없음, 형태가 다르면 버림. 없음은 그대로 유지
-const storedFilter = isProductFilter(parsedFilter) ? parsedFilter : undefined;
-```
+<<< ../examples/types-narrow-unknown-instead-of-asserting/02-correct.ts
 
 **Incorrect 2 (`!`로 없을 수 있다는 사실을 지웁니다):**
 
-```ts
-const firstProduct = products.find((product) => product.isActive)!;
-```
+<<< ../examples/types-narrow-unknown-instead-of-asserting/03-incorrect.ts
 
 **Correct 2 (없을 수 있으면 그대로 드러냅니다):**
 
-```ts
-const firstProduct = products.find((product) => product.isActive);
-
-if (!firstProduct) {
-	throw new NoActiveProductError();
-}
-```
+<<< ../examples/types-narrow-unknown-instead-of-asserting/04-correct.ts

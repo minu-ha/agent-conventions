@@ -311,7 +311,7 @@ export const UiButton = (props: UiButtonProps) => {
 
 **Incorrect 3 (역할 낱말 하나로 지어 무엇의 부품인지 알 수 없습니다):**
 
-```text
+```txt
 component/widget/chatbot/
 ├── _wg-launcher.tsx    # WgLauncher, wg_launcher
 └── panel/
@@ -321,7 +321,7 @@ component/widget/chatbot/
 
 **Correct 3 (이름만 보고 뜻을 알 수 있고 소유자 이름은 필요할 때만 들어갑니다):**
 
-```text
+```txt
 component/widget/chatbot/
 ├── _wg-chatbot-launcher.tsx       # WgChatbotLauncher
 └── chat-panel/

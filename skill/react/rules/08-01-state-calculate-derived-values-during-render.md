@@ -23,19 +23,8 @@ tags: state, effects
 
 **Incorrect 1 (파생값을 이펙트로 다시 상태에 동기화합니다):**
 
-```tsx
-const [selectedIds, setSelectedIds] = useState<string[]>([]);
-const [selectedCount, setSelectedCount] = useState(0);
-
-useEffect(() => {
-	setSelectedCount(selectedIds.length);
-}, [selectedIds]);
-```
+<<< ../examples/state-calculate-derived-values-during-render/01-incorrect.tsx
 
 **Correct 1 (같은 `selectedIds`에서 렌더 중에 바로 계산합니다):**
 
-```tsx
-const [selectedIds, setSelectedIds] = useState<string[]>([]);
-
-return <UiSelectedCountBadge count={selectedIds.length} />;
-```
+<<< ../examples/state-calculate-derived-values-during-render/02-correct.tsx

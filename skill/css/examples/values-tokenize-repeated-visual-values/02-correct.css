@@ -1,0 +1,9 @@
+.pg_products__toolbar {
+/* [!code ++] */
+	gap: 12px;
+}
+
+.pg_products__footer {
+/* [!code ++] */
+	gap: 12px;
+}

@@ -1,0 +1,23 @@
+/* [!code ++] */
+/* src/style/motion.css */
+@media (prefers-reduced-motion: reduce) {
+/* [!code ++] */
+	*,
+/* [!code ++] */
+	*::before,
+/* [!code ++] */
+	*::after {
+/* [!code ++] */
+		animation-duration: 0.01ms !important;
+/* [!code ++] */
+		animation-delay: 0s !important;
+/* [!code ++] */
+		animation-iteration-count: 1 !important;
+/* [!code ++] */
+		transition-duration: 0.01ms !important;
+/* [!code ++] */
+		transition-delay: 0s !important;
+/* [!code ++] */
+		scroll-behavior: auto !important;
+	}
+}

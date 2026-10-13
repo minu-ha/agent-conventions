@@ -30,46 +30,16 @@ DOM 상태와 앱 상태의 구분은 `selector-use-pseudo-classes-for-dom-owned
 
 **Incorrect 1 (활성 버튼의 hover를 부정 조건으로 표현합니다):**
 
-```css
-.pg_products__cardButton {
-	&:not(:disabled):hover {
-		background: #f5f5f5;
-	}
-}
-```
+<<< ../examples/selector-do-not-negate-with-not/01-incorrect.css
 
 **Correct 1 (네이티브 버튼의 활성 상태를 긍정 조건으로 표현합니다):**
 
-```css
-.pg_products__cardButton {
-	&:enabled:hover {
-		background: #f5f5f5;
-	}
-}
-```
+<<< ../examples/selector-do-not-negate-with-not/02-correct.css
 
 **Incorrect 2 (DOM 상태를 `:not()`으로 뒤집어 기본 모습을 상태 블록에 넣습니다):**
 
-```css
-.pg_products__cardButton {
-	&:not(:disabled) {
-		cursor: pointer;
-	}
-
-	&:disabled {
-		cursor: default;
-	}
-}
-```
+<<< ../examples/selector-do-not-negate-with-not/03-incorrect.css
 
 **Correct 2 (DOM 상태도 기본을 먼저 두고 그 상태만 덮습니다):**
 
-```css
-.pg_products__cardButton {
-	cursor: pointer;
-
-	&:disabled {
-		cursor: default;
-	}
-}
-```
+<<< ../examples/selector-do-not-negate-with-not/04-correct.css

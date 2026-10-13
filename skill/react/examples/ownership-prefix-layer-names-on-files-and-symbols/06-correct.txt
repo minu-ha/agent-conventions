@@ -1,0 +1,6 @@
+component/widget/chatbot/
+├── _wg-chatbot-launcher.tsx       # WgChatbotLauncher
+└── chat-panel/
+    ├── wg-chat-panel.tsx          # WgChatPanel, wg_chatPanel
+    ├── _wg-chat-panel-header.tsx  # WgChatPanelHeader
+    └── _wg-history-pane.tsx       # WgHistoryPane. history가 뜻을 만들어 소유자 이름이 필요 없음

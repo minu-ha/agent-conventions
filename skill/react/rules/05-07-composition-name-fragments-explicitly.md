@@ -23,56 +23,16 @@ tags: composition, jsx
 
 **Incorrect 1 (`Fragment` 단축 문법을 씁니다):**
 
-```tsx
-export const PgProductScreen = () => {
-	return (
-		<>
-			<PgProductFilterSection />
-			<PgProductTableSection />
-		</>
-	);
-};
-```
+<<< ../examples/composition-name-fragments-explicitly/01-incorrect.tsx
 
 **Correct 1 (`Fragment`를 그대로 씁니다):**
 
-```tsx
-import {Fragment} from "react";
-
-export const PgProductScreen = () => {
-	return (
-		<Fragment>
-			<PgProductFilterSection />
-			<PgProductTableSection />
-		</Fragment>
-	);
-};
-```
+<<< ../examples/composition-name-fragments-explicitly/02-correct.tsx
 
 **Incorrect 2 (목록에서도 짧은 문법을 써서 `key`를 붙일 자리가 없습니다):**
 
-```tsx
-export const PgProductRows = (props: PgProductRowsProps) => {
-	return props.products.map((product) => (
-		<>
-			<PgProductRow product={product} />
-			<PgProductRowDivider />
-		</>
-	));
-};
-```
+<<< ../examples/composition-name-fragments-explicitly/03-incorrect.tsx
 
 **Correct 2 (`key`가 필요해도 같은 형태를 씁니다):**
 
-```tsx
-import {Fragment} from "react";
-
-export const PgProductRows = (props: PgProductRowsProps) => {
-	return props.products.map((product) => (
-		<Fragment key={product.id}>
-			<PgProductRow product={product} />
-			<PgProductRowDivider />
-		</Fragment>
-	));
-};
-```
+<<< ../examples/composition-name-fragments-explicitly/04-correct.tsx

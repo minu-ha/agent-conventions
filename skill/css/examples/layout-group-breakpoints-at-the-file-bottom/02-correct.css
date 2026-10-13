@@ -1,0 +1,24 @@
+.pg_products__toolbar {
+	display: flex;
+	gap: 24px;
+}
+
+.pg_products__layout {
+	display: grid;
+	grid-template-columns: 280px 1fr;
+/* [!code ++] */
+}
+
+@media (width < 1024px) {
+/* [!code ++] */
+	.pg_products__toolbar {
+/* [!code ++] */
+		flex-direction: column;
+/* [!code ++] */
+	}
+
+/* [!code ++] */
+	.pg_products__layout {
+		grid-template-columns: 1fr;
+	}
+}

@@ -37,23 +37,8 @@ Figma 레이어가 컴포넌트로 정리돼 있든 아니든, 화면에 보이�
 
 **Incorrect 1 (`get_design_context`가 준 `div` 격자를 표로 씁니다):**
 
-```tsx
-<div className="flex flex-col">
-	<div className="flex">
-		<div className="w-[60px]">번호</div>
-		<div className="w-[270px]">상품명</div>
-	</div>
-	{products.map((product) => (
-		<div className="flex" key={product.id}>
-			<div className="w-[60px]">{product.id}</div>
-			<div className="w-[270px]">{product.name}</div>
-		</div>
-	))}
-</div>
-```
+<<< ../examples/transcription-reuse-project-components-before-new-markup/01-incorrect.tsx
 
 **Correct 1 (저장소 표 컴포넌트에 컬럼과 행을 넘깁니다):**
 
-```tsx
-<UiTable columns={productColumns} rows={responseProductListSuspense.data.products} />
-```
+<<< ../examples/transcription-reuse-project-components-before-new-markup/02-correct.tsx

@@ -27,14 +27,8 @@ tags: mcp, metadata, copy
 
 **Incorrect 1 (메타데이터 이름으로 컬럼 이름을 정해 화면과 다른 글자가 들어갑니다):**
 
-```text
-<text id="12:363" name="단위 가격" />   → 컬럼 이름 "단위 가격"
-<text id="12:364" name="thead" />       → 컬럼 이름 "thead"
-```
+<<< ../examples/read-take-copy-from-the-render-not-layer-names/01-incorrect.txt
 
 **Correct 1 (스크린샷의 글자로 컬럼 이름을 정하고 이름은 노드를 찾는 데만 씁니다):**
 
-```text
-<text id="12:363" name="단위 가격" />   → 스크린샷 "판매가"  → 컬럼 이름 "판매가"
-<text id="12:364" name="thead" />       → 스크린샷 "관리"    → 컬럼 이름 "관리"
-```
+<<< ../examples/read-take-copy-from-the-render-not-layer-names/02-correct.txt

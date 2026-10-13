@@ -48,85 +48,26 @@ flowchart LR
 
 **Incorrect 1 (내부 노드마다 클래스 프롭을 열어 주입 지점을 늘립니다):**
 
-```tsx
-export interface UiCollapseProps {
-	className?: string;
-	headerClassName?: string;
-	titleClassName?: string;
-	contentClassName?: string;
-}
-```
+<<< ../examples/composition-inject-classes-only-at-the-entry-point/01-incorrect.tsx
 
 **Correct 1 (클래스 프롭은 최상위 `className` 하나로 두고 내부는 `variant`로 엽니다):**
 
-```tsx
-export interface UiCollapseProps {
-	className?: string;
-	variant?: "default" | "compact";
-	title: ReactNode;
-	children: ReactNode;
-}
-```
+<<< ../examples/composition-inject-classes-only-at-the-entry-point/02-correct.tsx
 
 **Incorrect 2 (받은 `className`을 내부 노드로 넘깁니다):**
 
-```tsx
-export const UiCollapse = (props: UiCollapseProps) => {
-	return (
-		<div className={clsx("ui_collapse__root")}>
-			<button className={clsx("ui_collapse__header", props.className)} type="button">
-				{props.title}
-			</button>
-			<div className={clsx("ui_collapse__content")}>{props.children}</div>
-		</div>
-	);
-};
-```
+<<< ../examples/composition-inject-classes-only-at-the-entry-point/03-incorrect.tsx
 
 **Correct 2 (`className`은 최상위 클래스와 합치고, 변형은 필요한 노드마다 수정자로 붙입니다):**
 
-```tsx
-export const UiCollapse = (props: UiCollapseProps) => {
-	const isCompact = props.variant === "compact";
-
-	return (
-		<div className={clsx("ui_collapse__root", props.className)}>
-			<button className={clsx("ui_collapse__header", isCompact && "ui_collapse__header--compact")} type="button">
-				<span className={clsx("ui_collapse__title", isCompact && "ui_collapse__title--compact")}>{props.title}</span>
-			</button>
-			<div className={clsx("ui_collapse__content")}>{props.children}</div>
-		</div>
-	);
-};
-```
+<<< ../examples/composition-inject-classes-only-at-the-entry-point/04-correct.tsx
 
 **Correct (수정자의 선언은 소유자 CSS에 둡니다):**
 
-```css
-.ui_collapse__header {
-	padding: 12px 16px;
-}
-
-.ui_collapse__header--compact {
-	padding: 6px 8px;
-}
-
-.ui_collapse__title--compact {
-	font-size: 13px;
-}
-```
+<<< ../examples/composition-inject-classes-only-at-the-entry-point/05-correct.css
 
 **Correct (사용처는 최상위 스타일만 주고 내부 의도는 프롭으로 넘깁니다):**
 
-```tsx
-<UiCollapse className={clsx("pg_orderFilterDialog__collapse")} variant="compact" title="필터">
-	<PgOrderFilterFields />
-</UiCollapse>
-```
+<<< ../examples/composition-inject-classes-only-at-the-entry-point/06-correct-1.tsx
 
-```css
-.pg_orderFilterDialog__collapse {
-	margin-block-start: 16px;
-	width: 100%;
-}
-```
+<<< ../examples/composition-inject-classes-only-at-the-entry-point/06-correct-2.css

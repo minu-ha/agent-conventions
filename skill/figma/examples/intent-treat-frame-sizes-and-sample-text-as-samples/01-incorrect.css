@@ -1,0 +1,6 @@
+.pg_products__nameCell {
+/* [!code error] */
+	width: 270px;
+/* [!code error] */
+	height: 54px;
+}

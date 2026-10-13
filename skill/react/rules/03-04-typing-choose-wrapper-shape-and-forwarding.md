@@ -51,132 +51,16 @@ flowchart LR
 
 **Incorrect 1 (자기 프롭까지 스프레드로 전달합니다):**
 
-```tsx
-export interface UiIconButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-	icon: ReactNode;
-}
-
-// 안쪽 컴포넌트가 거르지 않으면 icon이 DOM까지 내려감. 컴파일은 통과
-export const UiIconButton = (props: UiIconButtonProps) => {
-	return (
-		<Button {...props}>
-			{props.icon}
-			{props.children}
-		</Button>
-	);
-};
-```
+<<< ../examples/typing-choose-wrapper-shape-and-forwarding/01-incorrect.tsx
 
 **Correct 1 (자기 프롭이 있으므로 프롭을 이름으로 전달합니다):**
 
-```tsx
-/**
- * 아이콘만 있는 버튼
- *
- * `icon`과 `label`은 안쪽 컴포넌트가 모르는 자기 프롭이라 타입을 직접 선언
- * `disabled`는 라이브러리에 이미 있어 인덱스 접근으로 가져옴
- */
-export interface UiIconButtonProps {
-	/**
-	 * 최상위에 얹을 클래스
-	 */
-	className?: string;
-	/**
-	 * 버튼 안에 그릴 아이콘
-	 */
-	icon: ReactNode;
-	/**
-	 * 스크린 리더가 읽을 이름. `aria-label`로 전달
-	 */
-	label: string;
-	/**
-	 * 비활성 여부
-	 */
-	disabled?: ButtonProps["disabled"];
-	/**
-	 * 눌렀을 때
-	 */
-	onClick?: MouseEventHandler<HTMLButtonElement>;
-}
-
-export const UiIconButton = (props: UiIconButtonProps) => {
-	return (
-		<Button
-			className={clsx("ui_iconButton__root", props.className)}
-			aria-label={props.label}
-			disabled={props.disabled}
-			onClick={props.onClick}
-		>
-			{props.icon}
-		</Button>
-	);
-};
-```
+<<< ../examples/typing-choose-wrapper-shape-and-forwarding/02-correct.tsx
 
 **Correct (서로 다른 요소에 프롭을 이름으로 전달합니다):**
 
-```tsx
-/**
- * 라벨과 보조 설명을 붙인 입력 한 줄
- */
-export interface UiFieldProps {
-	/**
-	 * 최상위에 얹을 클래스
-	 */
-	className?: string;
-	/**
-	 * 입력 위에 붙는 라벨
-	 */
-	label: string;
-	/**
-	 * 입력 아래 보조 설명
-	 */
-	helperText?: string;
-	/**
-	 * 라벨과 입력을 잇는 id
-	 */
-	inputId: string;
-	/**
-	 * 입력값
-	 */
-	value: string;
-	/**
-	 * 입력이 바뀔 때
-	 */
-	onChange: ChangeEventHandler<HTMLInputElement>;
-}
-
-export const UiField = (props: UiFieldProps) => {
-	return (
-		<div className={clsx("ui_field__root", props.className)}>
-			<label className={clsx("ui_field__label")} htmlFor={props.inputId}>
-				{props.label}
-			</label>
-			<input id={props.inputId} value={props.value} onChange={props.onChange} />
-			{props.helperText && <span className={clsx("ui_field__helper")}>{props.helperText}</span>}
-		</div>
-	);
-};
-```
+<<< ../examples/typing-choose-wrapper-shape-and-forwarding/03-correct.tsx
 
 **Correct (세 조건을 모두 만족하여 스프레드로 전달합니다):**
 
-```tsx
-/**
- * 표 줄
- *
- * 감싸는 컴포넌트의 프롭이 DOM 계약과 호환돼 `HTMLAttributes`를 그대로 받음
- */
-export interface UiTableRowProps extends HTMLAttributes<HTMLTableRowElement> {
-	/**
-	 * 선택된 줄로 표시할지
-	 */
-	selected?: TableRowProps["selected"];
-}
-
-export const UiTableRow = (props: UiTableRowProps) => {
-	return (
-		<TableRow {...props} className={clsx("ui_tableRow__root", props.className)} />
-	);
-};
-```
+<<< ../examples/typing-choose-wrapper-shape-and-forwarding/04-correct.tsx

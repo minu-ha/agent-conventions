@@ -31,20 +31,8 @@ Figma 프레임은 한 기기 폭에서 샘플 데이터로 그린 한 장입니
 
 **Incorrect 1 (샘플 문구에 맞춘 칸 폭과 높이를 그대로 옮깁니다):**
 
-```css
-.pg_products__nameCell {
-	width: 270px;
-	height: 54px;
-}
-```
+<<< ../examples/intent-treat-frame-sizes-and-sample-text-as-samples/01-incorrect.css
 
 **Correct 1 (최소 폭만 두고 긴 이름은 한 줄로 줄입니다):**
 
-```css
-.pg_products__nameCell {
-	min-width: 12rem;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: nowrap;
-}
-```
+<<< ../examples/intent-treat-frame-sizes-and-sample-text-as-samples/02-correct.css

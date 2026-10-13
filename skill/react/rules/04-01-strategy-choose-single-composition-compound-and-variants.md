@@ -41,183 +41,28 @@ flowchart LR
 
 **Incorrect 1 (단일, 합성, 변형을 구분하지 않고 한 컴포넌트에 모두 구현합니다):**
 
-```tsx
-export interface WgProfileDialogProps {
-	isCompact?: boolean;
-	showActivity?: boolean;
-	showFocus?: boolean;
-	dialogTitle?: string;
-	renderFooter?: () => ReactNode;
-}
-
-export const WgProfileDialog = (props: WgProfileDialogProps) => {
-	return (
-		<section className={props.isCompact ? "dialog dialog--compact" : "dialog"}>
-			<header>
-				<h3>{props.dialogTitle}</h3>
-			</header>
-			<WgProfileSummary />
-			{props.showActivity && <WgProfileActivityPanel />}
-			{props.showFocus && <WgProfileFocusPanel />}
-			<footer>{props.renderFooter?.()}</footer>
-		</section>
-	);
-};
-```
+<<< ../examples/strategy-choose-single-composition-compound-and-variants/01-incorrect.tsx
 
 **Correct 1 (1단계. 확장이 필요 없으면 단일 컴포넌트로 둡니다):**
 
-```tsx
-/**
- * 프로필 요약만 보여 주는 고정 구조 대화상자
- *
- * 사용처가 끼워 넣을 자리가 없어 부품으로 안 쪼갬
- */
-export interface WgProfileDialogProps {
-	/**
-	 * 헤더에 그릴 제목
-	 */
-	title: string;
-	/**
-	 * 요약 영역에 그릴 프로필
-	 */
-	profile: Profile;
-}
-
-export const WgProfileDialog = (props: WgProfileDialogProps) => {
-	return (
-		<section className={clsx("wg_profileDialog__root")}>
-			<header className={clsx("wg_profileDialog__header")}>
-				<h3>{props.title}</h3>
-			</header>
-			<WgProfileSummary profile={props.profile} />
-		</section>
-	);
-};
-```
+<<< ../examples/strategy-choose-single-composition-compound-and-variants/02-correct.tsx
 
 **Correct (2단계. 사용처가 부품을 조립해야 하면 상태 없는 합성으로 엽니다):**
 
-```txt
-component/widget/profile-dialog/
-├── wg-profile-dialog.tsx              진입. 부품을 모아 내보냄
-├── _wg-profile-dialog-root.tsx
-├── _wg-profile-dialog-header.tsx
-├── _wg-profile-dialog-body.tsx
-└── _type/
-    └── profile-dialog-part.ts         세 부품이 나눠 쓰는 계약
-```
+<<< ../examples/strategy-choose-single-composition-compound-and-variants/03-correct-1.txt
 
-```tsx
-// component/widget/profile-dialog/_type/profile-dialog-part.ts
-/**
- * 대화상자 부품 셋이 나눠 쓰는 계약
- *
- * 세 부품 모두 받는 것이 `children` 하나뿐이라 형태 하나로 통일
- */
-export interface WgProfileDialogPartProps {
-	/**
-	 * 그 부품 자리에 사용처가 넣을 내용
-	 */
-	children: ReactNode;
-}
-```
+<<< ../examples/strategy-choose-single-composition-compound-and-variants/03-correct-2.tsx
 
-```tsx
-// component/widget/profile-dialog/_wg-profile-dialog-root.tsx
-import {clsx} from "clsx";
+<<< ../examples/strategy-choose-single-composition-compound-and-variants/03-correct-3.tsx
 
-import type {WgProfileDialogPartProps} from "@/component/widget/profile-dialog/_type/profile-dialog-part";
-
-/**
- * 대화상자 틀. 나머지 부품은 이 안에서만 그림
- */
-export const WgProfileDialogRoot = (props: WgProfileDialogPartProps) => {
-	return <section className={clsx("wg_profileDialog__root")}>{props.children}</section>;
-};
-```
-
-```tsx
-// component/widget/profile-dialog/wg-profile-dialog.tsx
-import {WgProfileDialogBody} from "@/component/widget/profile-dialog/_wg-profile-dialog-body";
-import {WgProfileDialogHeader} from "@/component/widget/profile-dialog/_wg-profile-dialog-header";
-import {WgProfileDialogRoot} from "@/component/widget/profile-dialog/_wg-profile-dialog-root";
-
-export const WgProfileDialog = {
-	Root: WgProfileDialogRoot,
-	Header: WgProfileDialogHeader,
-	Body: WgProfileDialogBody,
-} as const;
-```
+<<< ../examples/strategy-choose-single-composition-compound-and-variants/03-correct-4.tsx
 
 **Correct (3단계. 부품이 같은 상태를 읽으면 공개 이름을 그대로 두고 컨텍스트만 더합니다):**
 
-```ts
-// component/widget/profile-dialog/_hook/use-profile-dialog.ts
-/**
- * 대화상자 부품이 나눠 읽는 접힘 상태
- */
-interface WgProfileDialogContextValue {
-	/**
-	 * 본문이 펼쳐져 있는지
-	 */
-	isBodyOpen: boolean;
-	/**
-	 * 헤더가 부르는 접기 토글
-	 */
-	toggleBody: () => void;
-}
+<<< ../examples/strategy-choose-single-composition-compound-and-variants/04-correct-1.ts
 
-export const WgProfileDialogContext = createContext<WgProfileDialogContextValue | null>(null);
-```
-
-```tsx
-// component/widget/profile-dialog/_wg-profile-dialog-root.tsx
-/**
- * 대화상자 틀. 접힘 상태를 소유하고 부품에 컨텍스트로 전달
- */
-export const WgProfileDialogRoot = (props: WgProfileDialogPartProps) => {
-	const [isBodyOpen, setIsBodyOpen] = useState(true);
-
-	/**
-	 * 헤더가 부를 접기 토글. 이전 값에 기대므로 함수형으로 갱신
-	 */
-	const toggleBody = () => {
-		setIsBodyOpen((previous) => !previous);
-	};
-
-	// Header는 useContext(WgProfileDialogContext)로 읽어 toggleBody 호출. 공개 이름은 2단계와 같음
-	return (
-		<WgProfileDialogContext value={{isBodyOpen, toggleBody}}>
-			<section className={clsx("wg_profileDialog__root")}>{props.children}</section>
-		</WgProfileDialogContext>
-	);
-};
-```
+<<< ../examples/strategy-choose-single-composition-compound-and-variants/04-correct-2.tsx
 
 **Correct (4단계. 같은 조합이 반복되면 이름 붙인 변형으로 감쌉니다):**
 
-```tsx
-/**
- * 읽기 전용 프로필 대화상자
- *
- * 세 화면이 같은 조합을 쓰므로 조립을 한 이름 뒤로 고정
- */
-export interface WgReadOnlyProfileDialogProps {
-	/**
-	 * 요약 영역에 그릴 프로필
-	 */
-	profile: Profile;
-}
-
-export const WgReadOnlyProfileDialog = (props: WgReadOnlyProfileDialogProps) => {
-	return (
-		<WgProfileDialog.Root>
-			<WgProfileDialog.Header>프로필 보기</WgProfileDialog.Header>
-			<WgProfileDialog.Body>
-				<WgProfileSummary profile={props.profile} />
-			</WgProfileDialog.Body>
-		</WgProfileDialog.Root>
-	);
-};
-```
+<<< ../examples/strategy-choose-single-composition-compound-and-variants/05-correct.tsx

@@ -53,65 +53,20 @@ nullish만 제거하던 공개 계약은 `filter(isNotNil)` 등으로 보존하�
 
 **Incorrect 1 (`es-toolkit`에 있는 함수를 손으로 다시 씁니다):**
 
-```ts
-const uniqueOwnerIds = ownerIds.filter((ownerId, index) => ownerIds.indexOf(ownerId) === index);
-const uniqueCategories = [...new Set(points.map((point) => point.x))];
-const productsByCategory = products.reduce<Record<string, Product[]>>((grouped, product) => {
-	grouped[product.category] = [...(grouped[product.category] ?? []), product];
-	return grouped;
-}, {});
-const draftFilter = JSON.parse(JSON.stringify(savedFilter)) as ProductFilter;
-const searchKey = rawKey.replace(/([A-Z])/g, "_$1").toLowerCase();
-const tickTimes = Array.from({length: tick_count}, (_unused, tickIndex) => toTickTime(tickIndex));
-```
+<<< ../examples/values-use-es-toolkit-for-value-helpers/01-incorrect.ts
 
 **Correct 1 (`es-toolkit` 함수를 그대로 부릅니다):**
 
-```ts
-import {cloneDeep, groupBy, range, snakeCase, uniq} from "es-toolkit";
-
-const uniqueOwnerIds = uniq(ownerIds);
-const uniqueCategories = uniq(points.map((point) => point.x));
-const productsByCategory = groupBy(products, (product) => product.category);
-const draftFilter = cloneDeep(savedFilter);
-const searchKey = snakeCase(rawKey);
-const tickTimes = range(tick_count).map((tickIndex) => toTickTime(tickIndex));
-```
+<<< ../examples/values-use-es-toolkit-for-value-helpers/02-correct.ts
 
 **Incorrect 2 (빈 목록을 먼저 검사하고 중간 배열을 만들어 양 끝을 읽습니다):**
 
-```ts
-const toChartBounds = (points: readonly ChartPoint[]) => {
-	const yValues = points.map((point) => point.y);
-
-	if (yValues.length === 0) {
-		return undefined;
-	}
-
-	return {min: Math.min(...yValues), max: Math.max(...yValues)};
-};
-```
+<<< ../examples/values-use-es-toolkit-for-value-helpers/03-incorrect.ts
 
 **Correct 2 (빈 목록 판정을 `minBy`, `maxBy`의 결과로 합칩니다):**
 
-```ts
-import {maxBy, minBy} from "es-toolkit";
-
-const toChartBounds = (points: readonly ChartPoint[]) => {
-	const lowestPoint = minBy(points, (point) => point.y);
-	const highestPoint = maxBy(points, (point) => point.y);
-
-	if (lowestPoint === undefined || highestPoint === undefined) {
-		return undefined;
-	}
-
-	return {min: lowestPoint.y, max: highestPoint.y};
-};
-```
+<<< ../examples/values-use-es-toolkit-for-value-helpers/04-correct.ts
 
 **Correct (표준 메서드 하나로 끝나면 감싸지 않습니다):**
 
-```ts
-const activeProducts = products.filter((product) => product.isActive);
-const trimmedKeyword = keyword.trim();
-```
+<<< ../examples/values-use-es-toolkit-for-value-helpers/05-correct.ts

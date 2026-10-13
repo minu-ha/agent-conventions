@@ -14,7 +14,7 @@ trim_trailing_whitespace = true
 [*.md]
 max_line_length = 120
 
-[*.{ts,json}]
+[*.{ts,tsx,css,js,json}]
 indent_style = tab
 indent_size = 2
 max_line_length = 140

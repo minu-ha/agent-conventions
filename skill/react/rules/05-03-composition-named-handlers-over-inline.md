@@ -26,35 +26,8 @@ JSX에는 이름 붙인 핸들러 참조만 넘깁니다.
 
 **Incorrect 1 (분기와 비동기를 JSX 안에 숨깁니다):**
 
-```tsx
-<UiButton
-	onClick={() => {
-		if (!selectedProduct) {
-			return;
-		}
-
-		mutationProductRemove.mutate({params: {productId: selectedProduct.id}});
-	}}
->
-	삭제
-</UiButton>
-```
+<<< ../examples/composition-named-handlers-over-inline/01-incorrect.tsx
 
 **Correct 1 (로직을 이름 붙인 핸들러로 뺍니다):**
 
-```tsx
-import type {MouseEventHandler} from "react";
-
-/**
- * 선택된 상품 삭제. 성공 뒤 이동은 mutation 콜백이 이어 감
- */
-const handleRemoveProductButtonClick: MouseEventHandler<HTMLButtonElement> = (_event) => {
-	if (!selectedProduct) {
-		return;
-	}
-
-	mutationProductRemove.mutate({params: {productId: selectedProduct.id}});
-};
-
-<UiButton onClick={handleRemoveProductButtonClick}>삭제</UiButton>;
-```
+<<< ../examples/composition-named-handlers-over-inline/02-correct.tsx

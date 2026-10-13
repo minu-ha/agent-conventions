@@ -46,68 +46,20 @@ tags: functions, declarations
 
 **Incorrect 1 (이름 붙인 함수를 `function`으로 선언합니다):**
 
-```ts
-/**
- * 제목 공백 정리. 검색어 비교에서 공백 차이 무시
- */
-export function toTrimmedTitle(rawTitle: string): string {
-	return rawTitle.trim().replace(/\s+/g, " ");
-}
-```
+<<< ../examples/functions-declare-functions-as-arrow-consts/01-incorrect.ts
 
 **Correct 1 (같은 함수를 `const` 화살표와 블록 본문으로 선언합니다):**
 
-```ts
-/**
- * 제목 공백 정리. 검색어 비교에서 공백 차이 무시
- */
-export const toTrimmedTitle = (rawTitle: string): string => {
-	return rawTitle.trim().replace(/\s+/g, " ");
-};
-```
+<<< ../examples/functions-declare-functions-as-arrow-consts/02-correct.ts
 
 **Incorrect 2 (객체 속성의 함수를 메서드 축약형으로 씁니다):**
 
-```ts
-export const cellFormatterByValueType = {
-	text(value: string): string {
-		return value.trim();
-	},
-} as const;
-```
+<<< ../examples/functions-declare-functions-as-arrow-consts/03-incorrect.ts
 
 **Correct 2 (객체 속성의 함수는 화살표, 인라인 콜백은 한 줄로 씁니다):**
 
-```ts
-/**
- * 값 종류별 표 셀 표시 함수. 문자열은 앞뒤 공백 제거 후 표시
- */
-export const cellFormatterByValueType = {
-	text: (value: string): string => {
-		return value.trim();
-	},
-} as const;
-
-/**
- * 상품 식별자 목록
- */
-export const toProductIds = (products: Product[]): string[] => {
-	return products.map((product) => product.id);
-};
-```
+<<< ../examples/functions-declare-functions-as-arrow-consts/04-correct.ts
 
 **Correct (클래스 메서드와 제너레이터는 그대로 둡니다):**
 
-```ts
-export class ProductCursor {
-	private buffer: Product[] = [];
-
-	*pages(): Generator<Product[]> {
-		yield this.buffer;
-	}
-
-	reset(): void {
-		this.buffer = [];
-	}
-}
-```
+<<< ../examples/functions-declare-functions-as-arrow-consts/05-correct.ts

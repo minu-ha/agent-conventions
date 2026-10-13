@@ -31,60 +31,16 @@ tags: docs, comments
 
 **Incorrect 1 (지역 선언에 코드를 옮겨 적은 주석을 답니다):**
 
-```ts
-const toMatchedProducts = (products: Product[], keyword: string) => {
-	// keyword를 소문자로 변환
-	const lowerKeyword = keyword.trim().toLowerCase();
-
-	return products.filter((product) => product.title.toLowerCase().includes(lowerKeyword));
-};
-```
+<<< ../examples/docs-keep-body-comments-for-intent-and-steps/01-incorrect.ts
 
 **Correct 1 (선언 이름이 이미 드러내는 내용만 적은 주석은 지웁니다):**
 
-```ts
-const toMatchedProducts = (products: Product[], keyword: string) => {
-	const lowerKeyword = keyword.trim().toLowerCase();
-
-	return products.filter((product) => product.title.toLowerCase().includes(lowerKeyword));
-};
-```
+<<< ../examples/docs-keep-body-comments-for-intent-and-steps/02-correct.ts
 
 **Incorrect 2 (지켜야 할 순서와 제약을 주석 없이 코드에만 둡니다):**
 
-```ts
-const submitProductDraft = async (draft: ProductDraft) => {
-	if (!draft.title.trim()) {
-		return;
-	}
-
-	const uploadedAttachments = await uploadAttachments(draft.attachments);
-	const savedProduct = await saveProduct({title: draft.title, attachments: uploadedAttachments});
-
-	await queryClient.invalidateQueries({queryKey: ["products"]});
-
-	return savedProduct;
-};
-```
+<<< ../examples/docs-keep-body-comments-for-intent-and-steps/03-incorrect.ts
 
 **Correct 2 (`//`로 제약과 단계를 적습니다):**
 
-```ts
-const submitProductDraft = async (draft: ProductDraft) => {
-	// SDK가 빈 문자열을 거부. trim 후 값이 없으면 호출 안 함
-	if (!draft.title.trim()) {
-		return;
-	}
-
-	// 1. 첨부 먼저 업로드. 본문 저장에 참조 ID 필요
-	const uploadedAttachments = await uploadAttachments(draft.attachments);
-
-	// 2. 본문 저장
-	const savedProduct = await saveProduct({title: draft.title, attachments: uploadedAttachments});
-
-	// 3. 목록 캐시 무효화는 저장 완료 후. 순서가 바뀌면 옛 목록이 다시 채워짐
-	await queryClient.invalidateQueries({queryKey: ["products"]});
-
-	return savedProduct;
-};
-```
+<<< ../examples/docs-keep-body-comments-for-intent-and-steps/04-correct.ts

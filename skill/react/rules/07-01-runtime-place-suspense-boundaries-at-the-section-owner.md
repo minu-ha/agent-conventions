@@ -41,56 +41,20 @@ flowchart LR
 
 **Incorrect 1 (진입에 경계가 없어 화면 전체가 함께 멈춥니다):**
 
-```tsx
-// page/products/pg-products.tsx: PgProductTreeSection이 Suspense 쿼리를 부르는데 감싸는 경계 없음
-return <PgProductTreeSection />;
-```
+<<< ../examples/runtime-place-suspense-boundaries-at-the-section-owner/01-incorrect.tsx
 
 **Correct 1 (섹션 소유자가 경계와 대체 화면을 가집니다):**
 
-```tsx
-// page/products/pg-products.tsx: 쿼리를 부르는 섹션을 경계로 감쌈
-return (
-	<Suspense fallback={<PgProductTreeSkeleton />}>
-		<PgProductTreeSection />
-	</Suspense>
-);
-```
+<<< ../examples/runtime-place-suspense-boundaries-at-the-section-owner/02-correct.tsx
 
 **Incorrect 2 (한 화면에 경계를 여러 겹 쌓습니다):**
 
-```tsx
-// page/products/_pg-product-tree-section.tsx: 진입 파일에 이미 경계가 있는데 같은 쿼리를 다시 감쌈
-export const PgProductTreeSection = () => {
-	return (
-		<Suspense fallback={<PgProductTreeSkeleton />}>
-			<PgProductTreeInner />
-		</Suspense>
-	);
-};
-```
+<<< ../examples/runtime-place-suspense-boundaries-at-the-section-owner/03-incorrect.tsx
 
 **Correct 2 (라우트 진입이 직접 쿼리를 부르면 진입을 감싸는 레이아웃이 경계를 가집니다):**
 
-```tsx
-// page/products/pg-products.tsx: 섹션이 따로 없어 진입이 쿼리 호출. 경계는 이 진입을 그리는 셸 몫
-export const PgProducts = () => {
-	const responseProductListSuspense = useProductListSuspense();
-
-	return <UiTable rows={responseProductListSuspense.data.products} />;
-};
-```
+<<< ../examples/runtime-place-suspense-boundaries-at-the-section-owner/04-correct.tsx
 
 **Correct (쿼리를 부르는 섹션은 자기 자신을 감싸지 않습니다):**
 
-```tsx
-// page/products/_pg-product-tree-section.tsx
-export const PgProductTreeSection = () => {
-	/**
-	 * 사이드바 분류 트리 조회. 이 쿼리가 멈추는 동안은 진입 파일의 경계가 처리
-	 */
-	const responseProductTreeSuspense = useProductTreeSuspense();
-
-	return <UiTree items={responseProductTreeSuspense.data.categoryNodes} />;
-};
-```
+<<< ../examples/runtime-place-suspense-boundaries-at-the-section-owner/05-correct.tsx

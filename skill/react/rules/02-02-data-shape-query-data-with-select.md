@@ -37,33 +37,8 @@ tags: data, state, react-query
 
 **Incorrect 1 (렌더에서 응답 원본 구조를 가공합니다):**
 
-```tsx
-const responseProductListSuspense = useProductListSuspense();
-
-<UiTable
-	rows={responseProductListSuspense.data.list.map((product) => ({
-		id: product.id,
-		label: product.title,
-	}))}
-/>;
-```
+<<< ../examples/data-shape-query-data-with-select/01-incorrect.tsx
 
 **Correct 1 (`query.select`에서 화면에 필요한 형태로 가공합니다):**
 
-```tsx
-/**
- * 표가 그대로 쓰는 필드 이름으로 목록 변환. 화면은 응답 구조를 모름
- */
-const responseProductListSuspense = useProductListSuspense(
-	{},
-	{
-		query: {
-			select: (response) => ({
-				items: response.data.list.map((product) => ({id: product.id, label: product.title})),
-			}),
-		},
-	},
-);
-
-<UiTable rows={responseProductListSuspense.data.items} />;
-```
+<<< ../examples/data-shape-query-data-with-select/02-correct.tsx

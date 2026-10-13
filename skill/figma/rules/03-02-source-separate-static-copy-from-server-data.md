@@ -29,18 +29,8 @@ Figma 화면의 글자에는 고정 문구와 샘플 데이터가 섞여 있습�
 
 **Incorrect 1 (샘플 행과 개수를 화면에 하드코딩합니다):**
 
-```tsx
-<Fragment>
-	<UiTable rows={[{id: 1, name: "기본 티셔츠", price: 12000}]} />
-	<p className={clsx("pg_products__count")}>총 128건</p>
-</Fragment>
-```
+<<< ../examples/source-separate-static-copy-from-server-data/01-incorrect.tsx
 
 **Correct 1 (행과 개수는 응답에서, 단위는 고정 문구로 둡니다):**
 
-```tsx
-<Fragment>
-	<UiTable rows={responseProductListSuspense.data.products} />
-	<p className={clsx("pg_products__count")}>총 {responseProductListSuspense.data.total}건</p>
-</Fragment>
-```
+<<< ../examples/source-separate-static-copy-from-server-data/02-correct.tsx

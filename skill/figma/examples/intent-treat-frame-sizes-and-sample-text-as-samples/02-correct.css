@@ -1,0 +1,10 @@
+.pg_products__nameCell {
+/* [!code ++] */
+	min-width: 12rem;
+/* [!code ++] */
+	overflow: hidden;
+/* [!code ++] */
+	text-overflow: ellipsis;
+/* [!code ++] */
+	white-space: nowrap;
+}

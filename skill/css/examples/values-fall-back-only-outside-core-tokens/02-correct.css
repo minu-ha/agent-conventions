@@ -1,0 +1,18 @@
+/* [!code ++] */
+/* src/style/token.css: 공통 토큰 목록의 단일 출처 */
+/* [!code ++] */
+:root {
+/* [!code ++] */
+	--app-space-inline: 12px;
+/* [!code ++] */
+	--app-color-text-primary: #212529;
+/* [!code ++] */
+}
+
+/* src/page/orders/_pg-order-filter-dialog.css */
+.pg_orderFilterDialog__panel {
+/* [!code ++] */
+	gap: var(--app-space-inline);
+/* [!code ++] */
+	color: var(--app-color-text-primary);
+}

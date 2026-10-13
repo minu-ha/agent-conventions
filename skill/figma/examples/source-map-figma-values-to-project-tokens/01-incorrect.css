@@ -1,0 +1,8 @@
+.pg_products__row {
+/* [!code error] */
+	padding: 16px var(--spacing-12, 12px);
+/* [!code error] */
+	border-radius: var(--borderradius-10, 10px);
+/* [!code error] */
+	color: var(--content\/text\/black, #212529);
+}

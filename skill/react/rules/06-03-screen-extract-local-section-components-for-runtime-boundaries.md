@@ -29,53 +29,8 @@ tags: screen, routes
 
 **Incorrect 1 (감싸기만 하는 래퍼를 섹션으로 추출합니다):**
 
-```tsx
-// page/products/_pg-product-sidebar-panel.tsx: 감싸기만 하고 자기 책임 없음
-export const PgProductSidebarPanel = (props: PgProductSidebarPanelProps) => {
-	return <section className={clsx("pg_products__sidebar")}>{props.children}</section>;
-};
-```
+<<< ../examples/screen-extract-local-section-components-for-runtime-boundaries/01-incorrect.tsx
 
 **Correct 1 (데이터, 상태, 상호작용을 소유한 섹션만 추출하고 자신의 쿼리 키로 읽습니다):**
 
-```tsx
-// page/products/_pg-product-tree-section.tsx
-export const PgProductTreeSection = () => {
-	const [urlParams, setUrlParams] = useQueryStates(productUrlParsers);
-	const [expandedItems, setExpandedItems] = useState<string[]>([]);
-
-	/**
-	 * 사이드바가 그릴 분류 노드만 남김. 트리 펼침 상태는 이 섹션이 따로 보유
-	 */
-	const responseProductTreeSuspense = useProductTreeSuspense(
-		{},
-		{query: {select: (response) => ({categoryNodes: response.data.nodes.map(toTreeData)})}},
-	);
-
-	/**
-	 * 고른 분류를 URL에 기록. 새로 고침해도 같은 화면
-	 */
-	const handleTreeSelectedItemsChange: UiTreeProps["onSelectedItemsChange"] = (itemId) => {
-		if (itemId === null) {
-			return;
-		}
-
-		void setUrlParams({categoryId: itemId});
-	};
-
-	return (
-		<section className={clsx("pg_products__sidebar")}>
-			{responseProductTreeSuspense.data.categoryNodes.length > 0 && (
-				<UiTree
-					items={responseProductTreeSuspense.data.categoryNodes}
-					expandedItems={expandedItems}
-					selectedItems={urlParams.categoryId}
-					onExpandedItemsChange={setExpandedItems}
-					onSelectedItemsChange={handleTreeSelectedItemsChange}
-				/>
-			)}
-			{responseProductTreeSuspense.data.categoryNodes.length === 0 && <UiEmpty description="분류가 없습니다" />}
-		</section>
-	);
-};
-```
+<<< ../examples/screen-extract-local-section-components-for-runtime-boundaries/02-correct.tsx

@@ -39,7 +39,7 @@ skill/react/
   HANDBOOK.md         생성물. 사람이 읽는 전체 핸드북
 ```
 
-정본은 `rules/*.md`, `rules/_sections.md`, `rules/_template.md`, `metadata.json`, 
+정본은 `rules/*.md`, `examples/<규칙 ID>/*`, `rules/_sections.md`, `rules/_template.md`, `metadata.json`, 
 `SKILL.md`, `routing-evals.json` 여섯.
 
 생성물은 `HANDBOOK.md`, `RULES_INDEX.md`, `contracts/*.md` 셋.
@@ -64,9 +64,15 @@ skill/react/
 주의할 것.
 
 - `## 1. Ownership and Boundaries (ownership)` 섹션이면 파일명은 `ownership-*.md`.
-- 첫 예시 라벨 뒤에는 `Incorrect` / `Correct` 라벨, 코드 펜스, 빈 줄만 온다.
+- 첫 예시 라벨 뒤에는 `Incorrect` / `Correct` 라벨, `<<<` 줄, 빈 줄만 온다.
   생성되는 `contracts/*.md`가 첫 예시 앞부분을 규범으로 뽑고, `MEDIUM`은 그 뒤 첫 짝(또는 첫 Correct)만 덧붙이기 때문이다.
 - `Correct`는 하나 이상 있어야 하고 `Incorrect`는 선택이다. 도구 설정처럼 "이렇게 쓴다"만 있고 대비가 뜻이 없는 규칙은 `Correct`만 둔다.
+- 예제 코드는 `examples/<규칙 ID>/` 아래 실제 파일이다. 라벨 다음 줄에 `<<< ../examples/<규칙 ID>/01-incorrect.tsx` 로 불러온다.
+  파일 이름은 `NN-incorrect.tsx`, `NN-correct.css` 처럼 예제 순번과 종류이고, 한 라벨에 블록이 둘 이상이면 `NN-correct-1.tsx`, `NN-correct-2.css` 다.
+  `validate`, `build`, 사이트가 전부 같은 `<<<` 문법을 읽는다. 에이전트 산출물에는 코드 펜스로 들어가고 사이트는 for-humanity 가 파일을 불러온다.
+- 핵심 줄은 파일 안에서 Shiki 줄 표기로 가리킨다. 표시할 줄 바로 앞에 `// [!code error]`(Incorrect), `// [!code ++]`(Correct) 주석 줄을 둔다.
+  CSS 는 `/* [!code error] */`, 텍스트는 `# [!code error]`. 사이트에서는 그 줄이 진하게 칠해지고 주석은 사라지며, 에이전트 산출물에서는 지워진다.
+  짝을 처음 만들 때는 서로 다른 줄에 표기를 두고, 뜻이 없는 줄은 뺀다.
 - 한 쌍은 한 변수만 바꾼다. `Incorrect`와 `Correct`는 그 규칙이 말하는 것 하나만 달라야 독자가 무엇이 규칙인지 짚는다.
   이름, 구조, 무관한 코드를 함께 바꾸지 않는다.
 - 예시 차례는 **짝 → 홀로 선 Incorrect → 홀로 선 Correct** 다. 짝은 `**Incorrect 1 (…):**` 바로 뒤에 `**Correct 1 (…):**`이 오고
@@ -96,7 +102,7 @@ skill/react/
   한 문장 문단은 바로 뒤의 표, 흐름도, 예제를 소개하는 안내문일 때만 둔다.
   산문이 이어지는데 문장 하나를 따로 두면 화면에서 행간이 갑자기 벌어져 끊겨 읽힌다. 앞뒤 문단에 붙인다.
   한글은 두 칸으로 센다. `.editorconfig`의 `max_line_length`도 같은 값이다.
-- 코드 펜스 안 인덴트는 탭이다. `biome.json`의 `indentStyle`과 맞춘다.
+- 예제 파일과 코드 펜스 안 인덴트는 탭이다. `biome.json`의 `indentStyle`과 맞춘다.
 - `**Impact:`로 시작하는 줄은 한 줄로 유지한다. build가 그 형태로 파싱한다.
 
 ---

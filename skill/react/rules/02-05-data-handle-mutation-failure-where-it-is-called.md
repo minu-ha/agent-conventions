@@ -49,79 +49,16 @@ flowchart LR
 
 **Incorrect 1 (`await`만 쓰고 거부된 Promise를 처리하지 않습니다):**
 
-```tsx
-const handleSaveButtonClick: MouseEventHandler<HTMLButtonElement> = async (_event) => {
-	await mutationProductSave.mutateAsync({data: toProductSaveRequest(props.formValues)});
-	void navigate("/products");
-};
-```
+<<< ../examples/data-handle-mutation-failure-where-it-is-called/01-incorrect.tsx
 
 **Correct 1 (후속 작업이 없는 호출은 성공, 실패 콜백으로 처리합니다):**
 
-```tsx
-/**
- * 저장 성공 시 목록 화면으로 이동. 실패 문구는 폼 위에 표시
- */
-const mutationProductSave = useProductSave({
-	mutation: {
-		onSuccess: () => {
-			void navigate("/products");
-		},
-		onError: (error) => {
-			setSubmitErrorMessage(toSubmitErrorMessage(error));
-		},
-	},
-});
-
-const handleSaveButtonClick: MouseEventHandler<HTMLButtonElement> = (_event) => {
-	if (mutationProductSave.isPending) {
-		return;
-	}
-
-	mutationProductSave.mutate({data: toProductSaveRequest(props.formValues)});
-};
-```
+<<< ../examples/data-handle-mutation-failure-where-it-is-called/02-correct.tsx
 
 **Correct (버튼과 핸들러 첫 줄에서 중복 저장을 막습니다):**
 
-```tsx
-/**
- * 버튼 disabled와 별개로 겹쳐 들어온 저장을 한 번 더 차단
- */
-const handleSaveButtonClick: MouseEventHandler<HTMLButtonElement> = (_event) => {
-	if (mutationProductSave.isPending) {
-		return;
-	}
-
-	mutationProductSave.mutate({data: toProductSaveRequest(props.formValues)});
-};
-
-<UiButton disabled={mutationProductSave.isPending} onClick={handleSaveButtonClick}>
-	저장
-</UiButton>;
-```
+<<< ../examples/data-handle-mutation-failure-where-it-is-called/03-correct.tsx
 
 **Correct (결과를 기다리는 후속 작업에는 `try`/`catch`를 씁니다):**
 
-```tsx
-/**
- * 첨부를 먼저 올린 뒤 그 식별자로 상품 저장
- */
-const handleSaveButtonClick: MouseEventHandler<HTMLButtonElement> = async (_event) => {
-	if (mutationAttachmentUpload.isPending || mutationProductSave.isPending) {
-		return;
-	}
-
-	try {
-		const uploaded = await mutationAttachmentUpload.mutateAsync({files: draftFiles});
-
-		await mutationProductSave.mutateAsync({
-			data: toProductSaveRequest(props.formValues, uploaded.attachmentIds),
-		});
-
-		void navigate("/products");
-	} catch (error) {
-		setSubmitErrorMessage(toSubmitErrorMessage(error));
-	}
-};
-```
+<<< ../examples/data-handle-mutation-failure-where-it-is-called/04-correct.tsx

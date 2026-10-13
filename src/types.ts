@@ -284,9 +284,13 @@ export interface SkillRule {
 	 */
 	reviewWith: string[];
 	/**
-	 * @field frontmatter를 제외한 markdown 본문
+	 * @field frontmatter를 제외한 markdown 본문. `<<<` 스니펫은 코드 펜스로 바꿔 넣은 상태
 	 */
 	body: string;
+	/**
+	 * @field 스니펫을 바꾸기 전 원문. 사람용 사이트가 `<<<` 줄을 그대로 쓸 때 읽음
+	 */
+	source: string;
 }
 
 /**

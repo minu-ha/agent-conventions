@@ -1,0 +1,10 @@
+/* [!code error] */
+.pg_products__sortButton {
+/* [!code error] */
+	&:hover .pg_products__sortBox {
+		&::before {
+/* [!code error] */
+			border-color: #9fadc7;
+		}
+	}
+}

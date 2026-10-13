@@ -58,150 +58,40 @@ tags: docs, comments
 
 **Incorrect 1 (영문이거나 선언 이름을 옮겨 적기만 합니다):**
 
-```ts
-// util/array/to-sorted-product-refs.ts
-/**
- * This function sorts product refs and returns the result.
- */
-export const toSortedProductRefs = (refs: ProductRef[]): ProductRef[] => {
-	return sortBy(uniq(refs), [(ref) => ref.id]);
-};
-```
+<<< ../examples/docs-write-korean-comments-about-purpose-and-constraints/01-incorrect-1.ts
 
-```ts
-// util/array/to-products-newest-first.ts
-/**
- * 상품을 정렬하는 함수
- */
-export const toProductsNewestFirst = (products: Product[]): Product[] => {
-	return orderBy(products, ["updatedAt", "id"], ["desc", "asc"]);
-};
-```
+<<< ../examples/docs-write-korean-comments-about-purpose-and-constraints/01-incorrect-2.ts
 
-```ts
-// page/products/_pg-product-tree-section.tsx
-/**
- * route-local product tree props
- */
-export interface PgProductTreeSectionProps {
-	categoryNodes: ProductCategoryNode[];
-}
-```
+<<< ../examples/docs-write-korean-comments-about-purpose-and-constraints/01-incorrect-3.ts
 
 **Correct 1 (이름에 없는 정보를 명사형으로 더합니다):**
 
-```ts
-// util/array/to-sorted-product-refs.ts
-/**
- * 검토 목록 순서 고정. 중복 참조 제거 후 식별자순 정렬
- */
-export const toSortedProductRefs = (refs: ProductRef[]): ProductRef[] => {
-	return sortBy(uniq(refs), [(ref) => ref.id]);
-};
-```
+<<< ../examples/docs-write-korean-comments-about-purpose-and-constraints/02-correct-1.ts
 
-```ts
-// util/array/to-products-newest-first.ts
-/**
- * 저장 응답 순서 대신 최신순으로 다시 정렬
- *
- * 서버가 같은 updatedAt 항목의 순서를 보장하지 않음
- * 응답 순서 그대로면 새로고침마다 목록이 흔들림
- */
-export const toProductsNewestFirst = (products: Product[]): Product[] => {
-	return orderBy(products, ["updatedAt", "id"], ["desc", "asc"]);
-};
-```
+<<< ../examples/docs-write-korean-comments-about-purpose-and-constraints/02-correct-2.ts
 
-```ts
-// page/products/_pg-product-tree-section.tsx
-/**
- * 상품 트리 입력 계약
- */
-export interface PgProductTreeSectionProps {
-	/**
-	 * 사이드바에 그릴 분류 노드 목록
-	 */
-	categoryNodes: ProductCategoryNode[];
-}
-```
+<<< ../examples/docs-write-korean-comments-about-purpose-and-constraints/02-correct-3.ts
 
 **Incorrect 2 (긴 동사형 문장에 경위, 가운뎃점, 대시, 영어 낱말을 섞습니다):**
 
-```ts
-// app/query-client.ts
-/**
- * Host 앱/단독 실행/테스트 gallery 가 모두 같은 query client 를 쓰도록 여기 한 곳에서 만들어 둔다 — 예전에는 화면마다 따로 만들어서 retry 횟수가 서로 달랐다.
- */
-export const queryClient = new QueryClient({defaultOptions: {queries: {retry: query_retry_count}}});
-```
+<<< ../examples/docs-write-korean-comments-about-purpose-and-constraints/03-incorrect.ts
 
 **Correct 2 (결론을 명사형으로 먼저 쓰고 이유는 다음 줄에 짧게 둡니다):**
 
-```ts
-// app/query-client.ts
-/**
- * 호스트 앱, 단독 실행, 테스트가 함께 쓰는 쿼리 클라이언트
- *
- * 재시도 횟수는 이 한 곳에서만 설정
- */
-export const queryClient = new QueryClient({defaultOptions: {queries: {retry: query_retry_count}}});
-```
+<<< ../examples/docs-write-korean-comments-about-purpose-and-constraints/04-correct.ts
 
 **Incorrect 3 (제약 셋을 한 문장에 몰아 씁니다):**
 
-```ts
-// service/product/to-product-save-request.ts
-/**
- * 상품 저장 요청. 서버가 빈 문자열과 앞뒤 공백을 거부하고, 가격은 원 단위 정수만 받으며, 태그는 한도를 넘기면 저장 자체가 실패하기 때문에 여기서 미리 정리해서 보낸다.
- */
-export const toProductSaveRequest = (draft: ProductDraft): ProductSaveRequest => {
-	return {
-		title: draft.title.trim(),
-		price: Math.round(draft.price),
-		tags: draft.tags.slice(0, product_tag_limit),
-	};
-};
-```
+<<< ../examples/docs-write-korean-comments-about-purpose-and-constraints/05-incorrect.ts
 
 **Correct 3 (요약 한 줄 뒤에 제약을 한 줄씩 목록으로 나눕니다):**
 
-```ts
-// service/product/to-product-save-request.ts
-/**
- * 상품 저장 요청. 서버 검증에 맞춰 미리 정리
- *
- * - title: 앞뒤 공백 거부
- * - price: 원 단위 정수만 허용
- * - tags: 한도를 넘기면 저장 실패
- */
-export const toProductSaveRequest = (draft: ProductDraft): ProductSaveRequest => {
-	return {
-		title: draft.title.trim(),
-		price: Math.round(draft.price),
-		tags: draft.tags.slice(0, product_tag_limit),
-	};
-};
-```
+<<< ../examples/docs-write-korean-comments-about-purpose-and-constraints/06-correct.ts
 
 **Incorrect 4 (역할 태그로 선언의 성격을 다시 적습니다):**
 
-```ts
-/**
- * @api 상품 목록. 조회 실패는 호출부에서 처리
- */
-export const fetchProductList = async (): Promise<Product[]> => {
-	return await client.get("/products");
-};
-```
+<<< ../examples/docs-write-korean-comments-about-purpose-and-constraints/07-incorrect.ts
 
 **Correct 4 (태그를 지우고 헤더 첫 줄에 선언이 하는 일을 적습니다):**
 
-```ts
-/**
- * 상품 목록. 조회 실패는 호출부에서 처리
- */
-export const fetchProductList = async (): Promise<Product[]> => {
-	return await client.get("/products");
-};
-```
+<<< ../examples/docs-write-korean-comments-about-purpose-and-constraints/08-correct.ts

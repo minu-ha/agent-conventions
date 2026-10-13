@@ -1,0 +1,10 @@
+/* page/product-detail/pg-product-detail.css */
+/* [!code error] */
+.pg_productDetail__root {
+/* [!code error] */
+	& .wg_chartCard__root {
+		grid-area: chart;
+		margin-block-end: 16px;
+	}
+/* [!code error] */
+}

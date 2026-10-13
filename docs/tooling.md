@@ -11,7 +11,7 @@ order: 10
 
 | Artifact | Role |
 | --- | --- |
-| `rules/_sections.md`, `rules/_template.md`, `rules/*.md` | Editable rule source of truth. |
+| `rules/_sections.md`, `rules/_template.md`, `rules/*.md`, `examples/<rule-id>/*` | Editable rule source of truth. Rules load example files through `<<<` lines. |
 | `metadata.json` | Editable build and companion activation contract. |
 | `SKILL.md` | Editable activation/load router; compact for progressive skills. |
 | `RULES_INDEX.md` | Progressive-only generated compact index. |

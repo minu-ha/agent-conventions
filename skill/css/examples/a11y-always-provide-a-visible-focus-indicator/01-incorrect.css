@@ -1,0 +1,9 @@
+.ui_button__root {
+	border: 1px solid #d9d9d9;
+
+/* [!code error] */
+	&:focus {
+/* [!code error] */
+		outline: none;
+	}
+}

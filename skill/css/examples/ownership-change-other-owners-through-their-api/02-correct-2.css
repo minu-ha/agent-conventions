@@ -1,0 +1,6 @@
+/* page/product-detail/pg-product-detail.css */
+/* [!code ++] */
+.pg_productDetail__chartCard {
+	grid-area: chart;
+	margin-block-end: 16px;
+}

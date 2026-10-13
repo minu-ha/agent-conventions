@@ -1,0 +1,20 @@
+/* [!code error] */
+.pg_products__toolbar {
+/* [!code error] */
+	& button {
+/* [!code error] */
+		height: 32px;
+/* [!code error] */
+	}
+
+/* [!code error] */
+	& > div {
+		flex: 1;
+/* [!code error] */
+	}
+
+/* [!code error] */
+	& > :first-child {
+		margin-inline-start: 0;
+	}
+}

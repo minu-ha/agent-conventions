@@ -1,0 +1,7 @@
+.pg_products__sortButton {
+/* [!code error] */
+	&:hover .pg_products__sortBox,
+	&.Mui-focusVisible .pg_products__sortBox {
+		border-color: #9fadc7;
+	}
+}

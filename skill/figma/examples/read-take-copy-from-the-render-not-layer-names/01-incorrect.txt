@@ -1,0 +1,2 @@
+<text id="12:363" name="단위 가격" />   → 컬럼 이름 "단위 가격"
+<text id="12:364" name="thead" />       → 컬럼 이름 "thead"

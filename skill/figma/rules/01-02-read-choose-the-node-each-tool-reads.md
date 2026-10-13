@@ -38,13 +38,8 @@ tags: mcp, node, url
 
 **Incorrect 1 (래퍼에 스크린샷을 불러 화면이 메모와 함께 줄어듭니다):**
 
-```text
-get_screenshot  12:340 상품 목록_전체  원본 2834x2403 → 1600x1357  표 글자가 읽히지 않음
-```
+<<< ../examples/read-choose-the-node-each-tool-reads/01-incorrect.txt
 
 **Correct 1 (메타데이터로 화면 프레임을 찾아 그 프레임만 찍습니다):**
 
-```text
-get_metadata    12:340 상품 목록_전체  화면 프레임 12:341, 메모 12:395, 이력 12:401
-get_screenshot  12:341 상품 목록       원본 1920x2169 → 1416x1600  표 글자가 읽힘
-```
+<<< ../examples/read-choose-the-node-each-tool-reads/02-correct.txt

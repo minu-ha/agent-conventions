@@ -31,48 +31,16 @@ JSX에 직접 쓴 화살표 함수와 달리, 팩토리가 반환하는 함수�
 
 **Incorrect 1 (팩토리 반환 타입을 적지 않아 이벤트가 암시적 `any`가 됩니다):**
 
-```ts
-const handleRowSelectToggle = (rowId: string) => (event) => {
-	event.preventDefault();
-	toggleSelection(rowId);
-};
-```
+<<< ../examples/typing-take-handler-types-from-existing-contracts/01-incorrect.ts
 
 **Correct 1 (팩토리 반환 타입을 기존 별칭으로 고정합니다):**
 
-```ts
-import type {MouseEventHandler} from "react";
-
-/**
- * 행 id를 커링으로 고정. 목록 JSX에 인라인 래퍼를 두지 않음
- */
-const handleRowSelectToggle =
-	(rowId: string): MouseEventHandler<HTMLButtonElement> =>
-	(event) => {
-		event.preventDefault();
-		toggleSelection(rowId);
-	};
-```
+<<< ../examples/typing-take-handler-types-from-existing-contracts/02-correct.ts
 
 **Incorrect 2 (래퍼를 쓰면서 라이브러리 원본 프롭스를 참조합니다):**
 
-```ts
-import type {ButtonProps} from "@mui/material";
-
-const handleSubmitClick: ButtonProps["onClick"] = (event) => {
-	event.preventDefault();
-};
-```
+<<< ../examples/typing-take-handler-types-from-existing-contracts/03-incorrect.ts
 
 **Correct 2 (래퍼가 노출한 계약을 참조합니다):**
 
-```ts
-import type {UiButtonProps} from "@/component/ui/button/ui-button";
-
-/**
- * 저장 버튼 클릭 기본 동작 차단
- */
-const handleSubmitClick: UiButtonProps["onClick"] = (event) => {
-	event.preventDefault();
-};
-```
+<<< ../examples/typing-take-handler-types-from-existing-contracts/04-correct.ts

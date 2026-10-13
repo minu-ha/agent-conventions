@@ -17,7 +17,8 @@ tags: tag1, tag2
 조건별 선택은 2~3열 표로 비교하고, 같은 내용을 문단으로 반복하지 않는다.
 예외는 해당 조건과 함께 적는다. 긴 설명의 압축, 분리 기준은 CONTRIBUTING.md 3.4절을 따른다.
 
-규범과 예외는 첫 `Incorrect` 앞에서 끝낸다. 이후에는 예제 라벨과 코드 펜스, 빈 줄만 둔다.
+규범과 예외는 첫 `Incorrect` 앞에서 끝낸다. 이후에는 예제 라벨과 `<<<` 줄, 빈 줄만 둔다.
+예제 코드는 `../examples/<규칙 ID>/NN-incorrect.tsx` 같은 파일에 두고 `<<<` 로 불러온다. 파일 이름은 예제 순번, 종류, 블록이 둘 이상이면 블록 번호다.
 판단 순서나 폴더 구조는 `Correct` 예제의 `text` 코드 블록으로 보여 준다.
 흐름도의 판단 조건은 위 본문에도 남겨 `contracts/*.md`에서 빠지지 않게 한다.
 같은 판단을 보여 주는 `Incorrect`와 `Correct`는 한 쌍으로 붙인다.
@@ -36,12 +37,8 @@ frontmatter 키와 appliesWhen 작성 기준은 CONTRIBUTING.md 3절 참고.
 
 **Incorrect 1 (무엇이 문제인지 `~합니다`로):**
 
-```ts
-// 나쁜 예제
-```
+<<< ../examples/<규칙 ID>/01-incorrect.tsx
 
 **Correct 1 (무엇이 좋아졌는지 `~합니다`로):**
 
-```ts
-// 좋은 예제
-```
+<<< ../examples/<규칙 ID>/02-correct.tsx

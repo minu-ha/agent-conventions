@@ -38,59 +38,28 @@ flowchart LR
 
 **Incorrect 1 (JSX 두 분기를 삼항 하나로 묶습니다):**
 
-```tsx
-return (
-	<section>
-		{props.view === "chart" ? <PgChart /> : <PgTable />}
-	</section>
-);
-```
+<<< ../examples/composition-render-one-branch-with-and/01-incorrect.tsx
 
 **Correct 1 (각 JSX 요소 앞에 표시 조건을 둡니다):**
 
-```tsx
-return (
-	<section>
-		{props.view === "chart" && <PgChart />}
-		{props.view === "table" && <PgTable />}
-	</section>
-);
-```
+<<< ../examples/composition-render-one-branch-with-and/02-correct.tsx
 
 **Incorrect 2 (`&&` 왼쪽에 숫자를 둬서 `0`이 렌더됩니다):**
 
-```tsx
-return <section>{selectedRows.length && <PgProductBulkActionBar />}</section>;
-```
+<<< ../examples/composition-render-one-branch-with-and/03-incorrect.tsx
 
 **Correct 2 (`&&` 왼쪽에 불리언 비교식을 씁니다):**
 
-```tsx
-return <section>{selectedRows.length > 0 && <PgProductBulkActionBar selectedRows={selectedRows} />}</section>;
-```
+<<< ../examples/composition-render-one-branch-with-and/04-correct.tsx
 
 **Incorrect 3 (컴포넌트 전체를 표시하지 않을 때 `&&`를 씁니다):**
 
-```tsx
-const PgProductPanel = (props: PgProductPanelProps) => {
-	return props.isVisible && <section className={clsx("pg_productPanel__root")}>{props.children}</section>;
-};
-```
+<<< ../examples/composition-render-one-branch-with-and/05-incorrect.tsx
 
 **Correct 3 (컴포넌트 전체를 표시하지 않으면 이른 반환으로 끝냅니다):**
 
-```tsx
-const PgProductPanel = (props: PgProductPanelProps) => {
-	if (!props.isVisible) {
-		return null;
-	}
-
-	return <section className={clsx("pg_productPanel__root")}>{props.children}</section>;
-};
-```
+<<< ../examples/composition-render-one-branch-with-and/06-correct.tsx
 
 **Correct (프롭 값 하나는 삼항으로 고릅니다):**
 
-```tsx
-return <UiBadge tone={props.isSelected ? "accent" : "neutral"} />;
-```
+<<< ../examples/composition-render-one-branch-with-and/07-correct.tsx

@@ -42,39 +42,16 @@ flowchart LR
 
 **Incorrect 1 (인라인 래퍼로 인자를 넘깁니다):**
 
-```tsx
-<UiButton onClick={() => handleListItemClick(product.id)}>{product.name}</UiButton>;
-```
+<<< ../examples/events-curry-extra-handler-arguments/01-incorrect.tsx
 
 **Correct 1 (JSX에는 팩토리 호출만 두고 감싸는 화살표를 만들지 않습니다):**
 
-```tsx
-<UiButton onClick={handleListItemClick(product.id)}>{product.name}</UiButton>;
-```
+<<< ../examples/events-curry-extra-handler-arguments/02-correct.tsx
 
 **Incorrect 2 (안쪽 핸들러에 별도 이름을 붙이고 팩토리에 `With` 접미사를 붙입니다):**
 
-```tsx
-const handleListItemClickWithProductId = (productId: string): MouseEventHandler<HTMLButtonElement> => {
-	const handleListItemClick: MouseEventHandler<HTMLButtonElement> = (_event) => {
-		toggleSelection(productId);
-	};
-
-	return handleListItemClick;
-};
-```
+<<< ../examples/events-curry-extra-handler-arguments/03-incorrect.tsx
 
 **Correct 2 (추가 인자는 바깥 함수, 이벤트는 안쪽 함수입니다):**
 
-```tsx
-import type {MouseEventHandler} from "react";
-
-/**
- * 클릭한 항목을 이벤트 대신 팩토리 인자로 받아 어느 상품인지 식별
- */
-const handleListItemClick =
-	(productId: string): MouseEventHandler<HTMLButtonElement> =>
-	(_event) => {
-		toggleSelection(productId);
-	};
-```
+<<< ../examples/events-curry-extra-handler-arguments/04-correct.tsx

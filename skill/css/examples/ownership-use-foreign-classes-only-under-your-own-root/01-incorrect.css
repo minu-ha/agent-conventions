@@ -1,0 +1,9 @@
+/* [!code error] */
+.MuiTreeItem-content {
+	border-radius: 4px;
+}
+
+/* [!code error] */
+.MuiTreeItem-label {
+	color: #8c8c8c;
+}

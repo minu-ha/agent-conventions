@@ -64,61 +64,12 @@ URL마다 빈 화면 파일을 만들거나, 같은 본문을 쓴다는 이유�
 
 **Incorrect 1 (화면 아래에 그룹을 만들어 소유자를 한 겹 더 쌓습니다):**
 
-```txt
-page/
-├── pg-outlet.tsx
-└── (main)/
-    ├── pg-main-outlet.tsx
-    ├── products/
-    │   ├── pg-products.tsx
-    │   ├── product-table-section/
-    │   │   └── pg-product-table-section.tsx
-    │   └── (detail)/
-    │       ├── pg-detail-outlet.tsx
-    │       └── product-detail/
-    │           └── pg-product-detail.tsx
-    └── orders/
-        └── pg-orders.tsx
-```
+<<< ../examples/ownership-group-route-frames-with-outlets/01-incorrect.txt
 
 **Correct 1 (더 깊은 URL을 쓰는 화면도 그룹 밖 형제 소유자로 둡니다):**
 
-```txt
-page/
-├── pg-outlet.tsx
-├── (main)/
-│   ├── pg-main-outlet.tsx
-│   ├── products/
-│   │   ├── pg-products.tsx
-│   │   └── product-table-section/
-│   │       └── pg-product-table-section.tsx
-│   └── orders/
-│       └── pg-orders.tsx
-└── product-detail/
-    └── pg-product-detail.tsx
-```
+<<< ../examples/ownership-group-route-frames-with-outlets/02-correct.txt
 
 **Correct (라우터가 프레임과 화면의 진입 파일을 중첩으로 잇습니다):**
 
-```tsx
-// route/app-routes.tsx
-import {PgOutlet} from "@/page/pg-outlet";
-import {PgMainOutlet} from "@/page/(main)/pg-main-outlet";
-import {PgOrders} from "@/page/(main)/orders/pg-orders";
-import {PgProducts} from "@/page/(main)/products/pg-products";
-import {PgProductDetail} from "@/page/product-detail/pg-product-detail";
-
-export const AppRoutes = () => {
-	return (
-		<Routes>
-			<Route path="/" element={<PgOutlet />}>
-				<Route element={<PgMainOutlet />}>
-					<Route path="products" element={<PgProducts />} />
-					<Route path="orders" element={<PgOrders />} />
-				</Route>
-				<Route path="products/:productId" element={<PgProductDetail />} />
-			</Route>
-		</Routes>
-	);
-};
-```
+<<< ../examples/ownership-group-route-frames-with-outlets/03-correct.tsx

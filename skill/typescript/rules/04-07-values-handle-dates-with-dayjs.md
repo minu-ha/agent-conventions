@@ -54,48 +54,20 @@ flowchart LR
 
 **Incorrect 1 (정해진 경과 시간을 밀리초로 더하고 자릿수를 손으로 채웁니다):**
 
-```ts
-// 만료 계약은 발급 시점부터 정확히 token_expiry_hours시간 뒤
-const expiresAt = new Date(issuedAt.getTime() + token_expiry_hours * 60 * 60 * 1000);
-const expiresLabel = `${expiresAt.getFullYear()}.${toPaddedDatePart(expiresAt.getMonth() + 1)}`;
-```
+<<< ../examples/values-handle-dates-with-dayjs/01-incorrect.ts
 
 **Correct 1 (더하기와 형식은 `dayjs`, 형식 문자열은 상수로 둡니다):**
 
-```ts
-import dayjs from "dayjs";
-
-import {date_expiry_month_format} from "@/constant/date";
-
-// date_expiry_month_format은 원래 표시와 같은 YYYY.MM 형식
-const expiresAt = dayjs(issuedAt).add(token_expiry_hours, "hour");
-const expiresLabel = expiresAt.format(date_expiry_month_format);
-```
+<<< ../examples/values-handle-dates-with-dayjs/02-correct.ts
 
 **Incorrect 2 (형식만 보고 없는 날짜를 통과시킵니다):**
 
-```ts
-const isValidDateText = /^\d{4}-\d{2}-\d{2}$/.test(dateText);
-```
+<<< ../examples/values-handle-dates-with-dayjs/03-incorrect.ts
 
 **Correct 2 (라운드트립으로 없는 날짜를 거릅니다):**
 
-```ts
-import dayjs from "dayjs";
-
-import {date_input_format} from "@/constant/date";
-
-/**
- * 형식은 맞지만 없는 날짜(2026-02-30 등) 제외
- */
-export const parseEntryDateText = (dateText: string): string | undefined => {
-	return dayjs(dateText).format(date_input_format) === dateText ? dateText : undefined;
-};
-```
+<<< ../examples/values-handle-dates-with-dayjs/04-correct.ts
 
 **Correct (서버가 표시 형식까지 확정한 문자열은 필요한 부분만 자릅니다):**
 
-```ts
-// 서버가 이미 표시 타임존으로 준 고정 형식. 시각 변환 없이 분까지만 표시
-const compactDateTime = responseDateTime.slice(0, 16).replace("T", " ");
-```
+<<< ../examples/values-handle-dates-with-dayjs/05-correct.ts

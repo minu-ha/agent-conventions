@@ -52,120 +52,30 @@ flowchart LR
 
 **Incorrect 1 (한 자리에서만 쓰는 단계를 함수로 떼어 내 흐름이 파일 안에서 흩어집니다):**
 
-```txt
-page/orders/_function/to-order-summary.ts
-  toOrderSummary     내보낸 함수. 본문은 세 줄이고 나머지는 아래 함수로 갔다
-  toComparisonRows   toOrderSummary만 부름
-  toStatusGroups     toOrderSummary만 부름
-  toStockCard        toOrderSummary만 부름
-  formatAmount       toComparisonRows와 toStatusGroups가 부름
-```
+<<< ../examples/functions-extract-helpers-only-when-the-boundary-is-real/01-incorrect-1.txt
 
-```ts
-// page/orders/_function/to-order-summary.ts
-/**
- * 주문 요약 영역의 표시 데이터. 재고 카드는 재고 수량이 있을 때만
- */
-export const toOrderSummary = (params: ToOrderSummaryParams): OrderSummaryContent => {
-	return {
-		metrics: toComparisonRows(params),
-		statusGroups: toStatusGroups(params),
-		stockCount: toStockCard(params),
-	};
-};
-```
+<<< ../examples/functions-extract-helpers-only-when-the-boundary-is-real/01-incorrect-2.ts
 
 **Correct 1 (한 번 쓰는 단계는 호출부에 두고 재사용하는 계산은 함수로 추출합니다):**
 
-```txt
-page/orders/_function/to-order-summary/
-├── to-order-summary.ts    본문 안에 // 1. 비교 행  // 2. 상태 그룹  // 3. 재고 카드
-└── _format-amount.ts      비교 행과 상태 그룹 두 자리가 부름
-```
+<<< ../examples/functions-extract-helpers-only-when-the-boundary-is-real/02-correct-1.txt
 
-```ts
-// page/orders/_function/to-order-summary/to-order-summary.ts
-/**
- * 주문 요약 영역의 표시 데이터. 재고 카드는 재고 수량이 있을 때만
- */
-export const toOrderSummary = (params: ToOrderSummaryParams): OrderSummaryContent => {
-	// 1. 고른 기간 기준으로 갱신되는 비교 수치 행
-	const metrics = [
-		{id: "orderAmount", label: "주문 금액", value: formatAmount(params.orderSummary.orderAmount)},
-		{id: "orderCount", label: "주문 건수", value: params.orderSummary.orderCount},
-	];
-
-	// 2. 상품 상태 그룹. 설명이 비면 그룹 제목만
-	const statusGroups = [
-		{
-			id: "product-status",
-			title: "상품 상태",
-			description: params.orderSummary.statusDescription,
-			total: formatAmount(params.orderSummary.totalAmount),
-			rows: metrics,
-		},
-	];
-
-	// 3. 재고 카드. 재고 수량이 있을 때만
-	return {metrics, statusGroups, stockCount: params.stockCount};
-};
-```
+<<< ../examples/functions-extract-helpers-only-when-the-boundary-is-real/02-correct-2.ts
 
 **Incorrect 2 (한 번만 쓰는 한 줄 계산을 파일로 떼어 내 호출부가 가져옵니다):**
 
-```tsx
-// page/profile/pg-profile.tsx
-// (previous + 1) % pageCount 한 줄을 page/profile/_function/get-next-page.ts로 옮김
-import {getNextPage} from "@/page/profile/_function/get-next-page";
-
-const handleNextClick = () => {
-	setPage((previous) => getNextPage(previous, pageCount));
-};
-```
+<<< ../examples/functions-extract-helpers-only-when-the-boundary-is-real/03-incorrect.tsx
 
 **Correct 2 (작은 계산은 쓰는 자리에 그대로 둡니다):**
 
-```tsx
-// page/profile/pg-profile.tsx
-const handleNextClick = () => {
-	setPage((previous) => (previous + 1) % pageCount);
-};
-```
+<<< ../examples/functions-extract-helpers-only-when-the-boundary-is-real/04-correct.tsx
 
 **Correct (서로 다른 파일 둘이 이미 부르는 순수 함수를 뺍니다):**
 
-```ts
-// page/profile/_function/to-profile-save-request.ts
-/**
- * 프로필 저장 페이로드 조립. 서버가 앞뒤 공백이 붙은 displayName 거부
- */
-export const toProfileSaveRequest = (formValues: ProfileFormValues) => {
-	return {
-		displayName: formValues.displayName.trim(),
-	};
-};
-```
+<<< ../examples/functions-extract-helpers-only-when-the-boundary-is-real/05-correct-1.ts
 
-```tsx
-// page/profile/_pg-profile-form.tsx와 page/profile/_pg-profile-drawer.tsx가 함께 호출
-import {toProfileSaveRequest} from "@/page/profile/_function/to-profile-save-request";
-```
+<<< ../examples/functions-extract-helpers-only-when-the-boundary-is-real/05-correct-2.tsx
 
 **Correct (삼항 하나에 담기지 않는 판정은 호출부가 하나여도 함수로 추출하고 분기마다 `return`으로 끝냅니다):**
 
-```ts
-// page/product-detail/_function/to-status-tone.ts
-/**
- * 상태 문자열의 강조 톤. API가 상태를 자유 문자열로 주므로 값 포함 여부로 판정
- */
-export const toStatusTone = (status: string): Tone => {
-	const normalizedStatus = status.trim().toLowerCase();
-	if (status_positive_values.some((value) => normalizedStatus.includes(value))) {
-		return "positive";
-	}
-	if (status_negative_values.some((value) => normalizedStatus.includes(value))) {
-		return "negative";
-	}
-	return "neutral";
-};
-```
+<<< ../examples/functions-extract-helpers-only-when-the-boundary-is-real/06-correct.ts

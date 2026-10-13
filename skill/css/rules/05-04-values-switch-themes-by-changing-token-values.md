@@ -42,78 +42,16 @@ flowchart LR
 
 **Incorrect 1 (컴포넌트 파일에서 테마를 분기합니다):**
 
-```css
-/* src/page/products/pg-products.css */
-.pg_products__panel {
-	background-color: var(--app-color-surface);
-
-	@media (prefers-color-scheme: dark) {
-		background-color: #1f2225;
-	}
-}
-```
+<<< ../examples/values-switch-themes-by-changing-token-values/01-incorrect.css
 
 **Correct 1 (컴포넌트는 토큰만 씁니다):**
 
-```css
-/* src/page/products/pg-products.css */
-.pg_products__panel {
-	background-color: var(--app-color-surface);
-	color: var(--app-color-text-primary);
-	border: 1px solid var(--app-color-border);
-	box-shadow: var(--app-shadow-panel);
-}
-```
+<<< ../examples/values-switch-themes-by-changing-token-values/02-correct.css
 
 **Incorrect 2 (그림자를 직접 적어 어두운 배경에서 사라집니다):**
 
-```css
-/* src/page/products/pg-products.css */
-.pg_products__panel {
-	box-shadow: 0 1px 3px rgb(0 0 0 / 12%);
-}
-```
+<<< ../examples/values-switch-themes-by-changing-token-values/03-incorrect.css
 
 **Correct 2 (토큰 파일에서 값을 바꾸고 사용자 테마를 시스템 설정보다 우선합니다):**
 
-```css
-/* src/style/token.css */
-:root {
-	color-scheme: light;
-
-	--app-color-surface: #fff;
-	--app-color-text-primary: #212529;
-	--app-color-border: #dee2e6;
-	--app-shadow-panel: 0 1px 3px rgb(0 0 0 / 12%);
-}
-
-@media (prefers-color-scheme: dark) {
-	:root {
-		color-scheme: dark;
-
-		--app-color-surface: #1f2225;
-		--app-color-text-primary: #e9ecef;
-		--app-color-border: #3a3f44;
-		--app-shadow-panel: 0 1px 3px rgb(0 0 0 / 60%);
-	}
-}
-
-/* [data-theme]는 뒤에 오고 명시도도 높아 위 @media 블록보다 우선 */
-:root[data-theme="light"] {
-	color-scheme: light;
-
-	--app-color-surface: #fff;
-	--app-color-text-primary: #212529;
-	--app-color-border: #dee2e6;
-	--app-shadow-panel: 0 1px 3px rgb(0 0 0 / 12%);
-}
-
-:root[data-theme="dark"] {
-	color-scheme: dark;
-
-	--app-color-surface: #1f2225;
-	--app-color-text-primary: #e9ecef;
-	--app-color-border: #3a3f44;
-	--app-shadow-panel: 0 1px 3px rgb(0 0 0 / 60%);
-}
-```
+<<< ../examples/values-switch-themes-by-changing-token-values/04-correct.css

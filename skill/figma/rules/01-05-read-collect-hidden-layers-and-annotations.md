@@ -31,21 +31,8 @@ tags: mcp, metadata, states, annotations
 
 **Incorrect 1 (보이는 레이어만 구현 목록에 올립니다):**
 
-```text
-구현 목록 — 12:340 상품 목록_전체
-12:343 필터 바
-12:350 상품 표
-```
+<<< ../examples/read-collect-hidden-layers-and-annotations/01-incorrect.txt
 
 **Correct 1 (숨긴 레이어와 메모를 분류해 상태 목록을 함께 만듭니다):**
 
-```text
-상태 목록 — 12:340 상품 목록_전체
-12:343 필터 바      보임  -          -
-12:350 상품 표      보임  -          -
-12:358 선택 칩      숨김  상태       필터를 하나 이상 고르면 표시
-12:360 초기화 버튼  숨김  상태       필터를 하나 이상 고르면 표시
-12:371 안내 배너    숨김  미정       조건 없음, 질문
-12:395 메모         -     요구 조건  최초 진입 시 등록일 최신순
-12:401 이력 9/10    -     요구 조건  숨긴 상품은 목록 끝으로
-```
+<<< ../examples/read-collect-hidden-layers-and-annotations/02-correct.txt

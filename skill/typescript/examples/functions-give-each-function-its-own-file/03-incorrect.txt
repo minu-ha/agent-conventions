@@ -1,0 +1,6 @@
+page/product-detail/_function/
+├── to-product-overview.ts
+│     toProductOverview      내보낸 함수
+│     toTrendChart           toProductOverview가 차트 둘에서 부름
+│     toTrendPoints          toTrendChart가 두 자리에서 부름
+└── to-product-filter-request.ts

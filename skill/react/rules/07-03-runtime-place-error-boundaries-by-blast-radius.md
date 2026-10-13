@@ -65,112 +65,28 @@ flowchart LR
 
 **Incorrect 1 (캐시가 있는 재조회 실패도 자동으로 경계에 전달된다고 가정합니다):**
 
-```tsx
-// 이 화면은 낡은 추천을 계속 보이면 안 되는데 재조회 실패를 던지지 않음
-return <WgProductRecommendations items={responseProductRecommendationsSuspense.data.items} />;
-```
+<<< ../examples/runtime-place-error-boundaries-by-blast-radius/01-incorrect.tsx
 
 **Correct 1 (낡은 데이터를 허용하지 않는 화면만 재조회 실패를 경계로 보냅니다):**
 
-```tsx
-// 추천을 확정하는 화면은 재조회 실패 시 이전 추천을 계속 선택하게 두지 않음
-if (responseProductRecommendationsSuspense.error && !responseProductRecommendationsSuspense.isFetching) {
-	throw responseProductRecommendationsSuspense.error;
-}
-
-return <WgProductRecommendations items={responseProductRecommendationsSuspense.data.items} />;
-```
+<<< ../examples/runtime-place-error-boundaries-by-blast-radius/02-correct.tsx
 
 **Incorrect 2 (경계 없이 화면 본문에서 실패를 분기합니다):**
 
-```tsx
-export const PgProducts = () => {
-	const responseProductListSuspense = useProductListSuspense();
-
-	if (responseProductListSuspense.isError) {
-		return <UiErrorState />;
-	}
-
-	return <UiTable rows={responseProductListSuspense.data.products} />;
-};
-```
+<<< ../examples/runtime-place-error-boundaries-by-blast-radius/03-incorrect.tsx
 
 **Correct 2 (화면 층 경계가 오류를 받으므로 본문에 성공 경로만 남깁니다):**
 
-```tsx
-// page/products/pg-products.tsx
-export const PgProducts = () => {
-	/**
-	 * 실패는 셸의 화면 층 경계가 처리. 본문은 성공 경로만 그림
-	 */
-	const responseProductListSuspense = useProductListSuspense();
-
-	return <UiTable rows={responseProductListSuspense.data.products} />;
-};
-```
+<<< ../examples/runtime-place-error-boundaries-by-blast-radius/04-correct.tsx
 
 **Correct (셸이 화면 층 오류 경계와 로딩 경계를 조립합니다):**
 
-```tsx
-// component/widget/app-shell/wg-app-shell.tsx
-export const WgAppShell = (props: WgAppShellProps) => {
-	return (
-		<div className={clsx("wg_appShell__root")}>
-			<WgAppNavigation />
-
-			<main className={clsx("wg_appShell__main")}>
-				<UiErrorBoundary fallback={<UiScreenErrorState />}>
-					<Suspense fallback={<UiScreenSkeleton />}>{props.children}</Suspense>
-				</UiErrorBoundary>
-			</main>
-		</div>
-	);
-};
-```
+<<< ../examples/runtime-place-error-boundaries-by-blast-radius/05-correct.tsx
 
 **Correct (나머지 섹션만으로도 쓸모가 있을 때만 섹션 경계를 둡니다):**
 
-```tsx
-export const PgProducts = () => {
-	return (
-		<div className={clsx("pg_products__layout")}>
-			<PgProductTreeSection />
-
-			{/**
-			 * 추천 목록이 실패해도 본문 표는 그대로 사용 가능
-			 */}
-			<UiErrorBoundary fallback={<UiInlineErrorState />}>
-				<Suspense fallback={<UiRecommendationSkeleton />}>
-					<PgProductRecommendationSection />
-				</Suspense>
-			</UiErrorBoundary>
-
-			<PgProductTableSection />
-		</div>
-	);
-};
-```
+<<< ../examples/runtime-place-error-boundaries-by-blast-radius/06-correct.tsx
 
 **Correct (재시도는 오류 경계와 쿼리 오류를 초기화하고 하위 트리를 다시 마운트합니다):**
 
-```tsx
-export const PgProductRecommendationBoundary = () => {
-	const queryErrorResetBoundary = useQueryErrorResetBoundary();
-
-	return (
-		<UiErrorBoundary
-			onReset={queryErrorResetBoundary.reset}
-			fallbackRender={(fallbackProps) => (
-				<UiInlineErrorState
-					retryLabel="다시 불러오기"
-					onRetry={fallbackProps.resetErrorBoundary}
-				/>
-			)}
-		>
-			<Suspense fallback={<UiRecommendationSkeleton />}>
-				<PgProductRecommendationSection />
-			</Suspense>
-		</UiErrorBoundary>
-	);
-};
-```
+<<< ../examples/runtime-place-error-boundaries-by-blast-radius/07-correct.tsx

@@ -1,0 +1,7 @@
+.pg_products__changeRate--positive {
+	color: var(--app-color-rise);
+}
+
+.pg_products__changeRate--negative {
+	color: var(--app-color-fall);
+}

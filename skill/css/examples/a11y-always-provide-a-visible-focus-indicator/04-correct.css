@@ -1,0 +1,16 @@
+/* [!code ++] */
+.ui_input__field {
+/* [!code ++] */
+	border: 1px solid #d9d9d9;
+
+	&:focus-visible {
+/* [!code ++] */
+		outline: 2px solid transparent;
+/* [!code ++] */
+		outline-offset: 2px;
+/* [!code ++] */
+		border-color: #1677ff;
+/* [!code ++] */
+		box-shadow: 0 0 0 3px #1677ff;
+	}
+}

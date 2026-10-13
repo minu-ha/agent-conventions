@@ -34,31 +34,12 @@ Figma 변수 이름은 디자인 파일의 이름이지 프로젝트의 토큰�
 
 **Incorrect 1 (Figma 변수 이름과 대체값을 그대로 옮깁니다):**
 
-```css
-.pg_products__row {
-	padding: 16px var(--spacing-12, 12px);
-	border-radius: var(--borderradius-10, 10px);
-	color: var(--content\/text\/black, #212529);
-}
-```
+<<< ../examples/source-map-figma-values-to-project-tokens/01-incorrect.css
 
 **Correct 1 (값과 용도가 같은 프로젝트 토큰으로 옮깁니다):**
 
-```css
-.pg_products__row {
-	padding: var(--app-space-section) var(--app-space-inline);
-	border-radius: var(--app-radius-panel);
-	color: var(--app-color-text-primary);
-}
-```
+<<< ../examples/source-map-figma-values-to-project-tokens/02-correct.css
 
 **Correct (대응표를 만들어 차이를 함께 적습니다):**
 
-```text
-Figma 변수               값        프로젝트 토큰              차이
-Spacing 16               16        --app-space-section        -
-Spacing 12               12        --app-space-inline         -
-BorderRadius 10          10        --app-radius-panel         -
-Content/Text/Black       #212529   --app-color-text-primary   -
-Content/Border/Normal    #dee2e6   --app-color-border         토큰 값 #d9d9d9
-```
+<<< ../examples/source-map-figma-values-to-project-tokens/03-correct.txt

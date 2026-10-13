@@ -1,0 +1,9 @@
+component/widget/chatbot/
+# [!code error]
+├── _wg-launcher.tsx    # WgLauncher, wg_launcher
+# [!code error]
+└── panel/
+# [!code error]
+    ├── wg-panel.tsx    # WgPanel, wg_panel
+# [!code error]
+    └── _wg-header.tsx  # WgHeader, wg_header

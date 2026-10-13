@@ -40,40 +40,8 @@ React 19.2 문서가 요구하는 최신 `eslint-plugin-react-hooks`를 사용�
 
 **Incorrect 1 (최신 콜백을 읽기 위해 `ref`를 직접 동기화합니다):**
 
-```tsx
-const onChangeRef = useRef(props.onChange);
-
-useEffect(() => {
-	onChangeRef.current = props.onChange;
-}, [props.onChange]);
-
-useEffect(() => {
-	const unsubscribe = subscribeToProductChanges(props.productId, (change) => {
-		onChangeRef.current(change);
-	});
-
-	return unsubscribe;
-}, [props.productId]);
-```
+<<< ../examples/state-use-effectevent-for-non-reactive-effect-callbacks/01-incorrect.tsx
 
 **Correct 1 (비반응형 콜백은 `useEffectEvent`로 분리합니다):**
 
-```tsx
-/**
- * 상품 변경 수신 시 최신 onChange 로직 실행
- */
-const handleProductChange = useEffectEvent((change: ProductChange) => {
-	props.onChange(change);
-});
-
-/**
- * 상품 변경 구독 생명주기 유지
- */
-useEffect(() => {
-	const unsubscribe = subscribeToProductChanges(props.productId, (change) => {
-		handleProductChange(change);
-	});
-
-	return unsubscribe;
-}, [props.productId]);
-```
+<<< ../examples/state-use-effectevent-for-non-reactive-effect-callbacks/02-correct.tsx

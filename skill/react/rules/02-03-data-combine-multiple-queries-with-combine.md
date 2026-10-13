@@ -59,40 +59,8 @@ Suspense의 불필요한 대기 분기는 `runtime-avoid-ad-hoc-loading-branches
 
 **Incorrect 1 (화면 본문에서 두 응답을 꺼내 합칩니다):**
 
-```tsx
-const responseProductListSuspense = useProductListSuspense();
-const responseCategoryListSuspense = useCategoryListSuspense();
-
-const rows = responseProductListSuspense.data.products.map((product) => ({
-	id: product.id,
-	categoryName: responseCategoryListSuspense.data.categories.find(
-		(category) => category.id === product.categoryId,
-	)?.name,
-}));
-```
+<<< ../examples/data-combine-multiple-queries-with-combine/01-incorrect.tsx
 
 **Correct 1 (값을 렌더하는 섹션이 인라인 `combine`으로 합칩니다):**
 
-```tsx
-export const PgProductTableSection = () => {
-	/**
- * 분류 이름이 목록 응답에 없어 표 한 행에 두 응답을 함께 담음
-	 */
-	const responseProductRowsSuspense = useSuspenseQueries({
-		queries: [productListQueryOptions(), categoryListQueryOptions()],
-		combine: ([productResult, categoryResult]) => {
-			// 분류 응답의 id는 유일. 모든 행이 같은 분류 목록을 찾으므로 Map은 한 번만 생성
-			const categoryById = new Map(categoryResult.data.categories.map((category) => [category.id, category]));
-
-			return {
-				rows: productResult.data.products.map((product) => ({
-					id: product.id,
-					categoryName: categoryById.get(product.categoryId)?.name,
-				})),
-			};
-		},
-	});
-
-	return <UiTable rows={responseProductRowsSuspense.rows} />;
-};
-```
+<<< ../examples/data-combine-multiple-queries-with-combine/02-correct.tsx

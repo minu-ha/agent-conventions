@@ -40,55 +40,12 @@ flowchart LR
 
 **Incorrect 1 (순수 지역 계산을 커스텀 훅으로 감쌉니다):**
 
-```ts
-// page/products/_hook/use-media-upload-payload.ts
-export const useMediaUploadPayload = (files: File[]) => {
-	return files.map((file) => ({name: file.name, size: file.size}));
-};
-```
+<<< ../examples/ownership-prefer-plain-ts-for-local-react-helpers/01-incorrect-1.ts
 
-```tsx
-// page/products/_pg-media-upload-panel.tsx
-import {useMediaUploadPayload} from "@/page/products/_hook/use-media-upload-payload";
-
-export const PgMediaUploadPanel = (props: PgMediaUploadPanelProps) => {
-	const mediaUploadPayload = useMediaUploadPayload(props.files);
-
-	/**
-	 * 업로드를 확정할 때 이미 만들어 둔 값을 보냄
-	 */
-	const handleSaveButtonClick: MouseEventHandler<HTMLButtonElement> = () => {
-		mutationMediaSave.mutate({data: mediaUploadPayload});
-	};
-
-	return <UiButton onClick={handleSaveButtonClick}>저장</UiButton>;
-};
-```
+<<< ../examples/ownership-prefer-plain-ts-for-local-react-helpers/01-incorrect-2.tsx
 
 **Correct 1 (순수 계산은 소유자의 `_function` 폴더에 두고 핸들러가 직접 부릅니다):**
 
-```ts
-// page/products/_function/to-media-upload-payload.ts
-/**
- * 업로드 파일 목록으로 저장 요청 본문을 조립
- */
-export const toMediaUploadPayload = (files: File[]) => {
-	return files.map((file) => ({name: file.name, size: file.size}));
-};
-```
+<<< ../examples/ownership-prefer-plain-ts-for-local-react-helpers/02-correct-1.ts
 
-```tsx
-// page/products/_pg-media-upload-panel.tsx
-import {toMediaUploadPayload} from "@/page/products/_function/to-media-upload-payload";
-
-export const PgMediaUploadPanel = (props: PgMediaUploadPanelProps) => {
-	/**
-	 * 업로드를 확정할 때만 정규화해서 보냄. 렌더 중에는 계산 안 함
-	 */
-	const handleSaveButtonClick: MouseEventHandler<HTMLButtonElement> = () => {
-		mutationMediaSave.mutate({data: toMediaUploadPayload(props.files)});
-	};
-
-	return <UiButton onClick={handleSaveButtonClick}>저장</UiButton>;
-};
-```
+<<< ../examples/ownership-prefer-plain-ts-for-local-react-helpers/02-correct-2.tsx

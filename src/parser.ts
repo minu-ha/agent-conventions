@@ -4,6 +4,7 @@ import path from "node:path";
 import {assertRealSkillDirectory, getSkillPaths, isBuildableSkill} from "./config.js";
 import {assertMetadataObject, getRuleStableId, parseDependencyDeclaration} from "./dependencies.js";
 import {assertProgressiveCompanionSource, assertProgressiveSkillEntrypoint} from "./progressive.js";
+import {inlineSnippets} from "./snippets.js";
 import type {LoadedSkillDocument, SkillMetadata, SkillPaths, SkillRule, SkillSection} from "./types.js";
 
 const allowedRuleFrontmatterKeys = new Set([
@@ -294,7 +295,14 @@ export const readSkillRules = async (skillPaths: SkillPaths): Promise<SkillRule[
 
 	for (const ruleFileName of ruleFileNames) {
 		const source = await readFile(path.join(skillPaths.rulesDir, ruleFileName), "utf8");
-		const {frontmatter, body} = parseFrontmatter(source);
+		const {frontmatter, body: rawBody} = parseFrontmatter(source);
+		let body: string;
+
+		try {
+			body = inlineSnippets(rawBody, skillPaths.rulesDir).body;
+		} catch (error) {
+			throw new Error(`${skillPaths.skillName}: ${ruleFileName} ${error instanceof Error ? error.message : String(error)}`);
+		}
 		// 번호 접두사(`NN-MM-`)를 뗀 stable ID의 첫 토큰이 section 접두사
 		const prefix = getRuleStableId(ruleFileName).split("-")[0];
 
@@ -311,6 +319,7 @@ export const readSkillRules = async (skillPaths: SkillPaths): Promise<SkillRule[
 			requiredOnCompletion: parseBooleanScalar(frontmatter.requiredOnCompletion, "requiredOnCompletion"),
 			reviewWith: splitScalarList(frontmatter.reviewWith),
 			body,
+			source: rawBody,
 		});
 	}
 

@@ -1,0 +1,17 @@
+/* src/style/token.css */
+:root {
+/* [!code error] */
+	--app-color-white: #fff;
+/* [!code error] */
+	--app-color-gray-100: #f1f3f5;
+/* [!code error] */
+	--app-space-16: 16px;
+}
+
+/* src/page/products/pg-products.css */
+.pg_products__panel {
+/* [!code error] */
+	background-color: var(--app-color-white);
+/* [!code error] */
+	padding: var(--app-space-16);
+}

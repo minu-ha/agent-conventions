@@ -59,100 +59,24 @@ flowchart LR
 
 **Incorrect 1 (열 개수를 브레이크포인트마다 직접 지정합니다):**
 
-```css
-.pg_products__grid {
-	display: grid;
-	grid-template-columns: repeat(4, 1fr);
-	gap: 16px;
-}
-
-@media (width < 1440px) {
-	.pg_products__grid {
-		grid-template-columns: repeat(3, 1fr);
-	}
-}
-
-@media (width < 1024px) {
-	.pg_products__grid {
-		grid-template-columns: repeat(2, 1fr);
-	}
-}
-
-@media (width < 640px) {
-	.pg_products__grid {
-		grid-template-columns: 1fr;
-	}
-}
-```
+<<< ../examples/layout-reach-for-intrinsic-sizing-before-breakpoints/01-incorrect.css
 
 **Correct 1 (사용 가능한 폭에 따라 열 개수를 조정합니다):**
 
-```css
-.pg_products__grid {
-	display: grid;
-	grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
-	gap: 16px;
-}
-```
+<<< ../examples/layout-reach-for-intrinsic-sizing-before-breakpoints/02-correct.css
 
 **Incorrect 2 (버튼이 자기 폭을 뷰포트로 정합니다):**
 
-```css
-.ui_button__root {
-	display: inline-flex;
-	min-height: 40px;
-	padding: 0 var(--app-space-control-inline);
-	width: 300px;
-}
-
-@media (width < 1024px) {
-	.ui_button__root {
-		width: 200px;
-	}
-}
-
-@media (width < 640px) {
-	.ui_button__root {
-		width: 100%;
-	}
-}
-```
+<<< ../examples/layout-reach-for-intrinsic-sizing-before-breakpoints/03-incorrect.css
 
 **Correct 2 (버튼은 폭을 정하지 않고 모양만 소유합니다):**
 
-```css
-/* ui-button.css: 폭 지정 없음 */
-.ui_button__root {
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
-	min-height: 40px;
-	padding: 0 var(--app-space-control-inline);
-}
-```
+<<< ../examples/layout-reach-for-intrinsic-sizing-before-breakpoints/04-correct.css
 
 **Correct (폭은 사용처가 자기 배치 안에서 정합니다):**
 
-```css
-/* ui-form-footer.css: 한 번 쓰고 여러 화면에서 그대로 사용 */
-.ui_formFooter__root {
-	display: flex;
-	flex-wrap: wrap;
-	justify-content: flex-end;
-	gap: var(--app-space-inline);
-}
-
-.ui_formFooter__action {
-	flex: 1 1 200px;
-	max-width: 300px;
-}
-```
+<<< ../examples/layout-reach-for-intrinsic-sizing-before-breakpoints/05-correct.css
 
 **Correct (값이 매끄럽게 변하면 `clamp`를 씁니다):**
 
-```css
-.pg_products__hero {
-	padding-block: clamp(24px, 4vw, 64px);
-	font-size: clamp(1.5rem, 1rem + 2vw, 2.5rem);
-}
-```
+<<< ../examples/layout-reach-for-intrinsic-sizing-before-breakpoints/06-correct.css

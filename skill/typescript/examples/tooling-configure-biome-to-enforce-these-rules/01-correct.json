@@ -1,0 +1,58 @@
+{
+	"linter": {
+		"enabled": true,
+		"rules": {
+			"preset": "recommended",
+			"complexity": {"useMaxParams": {"level": "error", "options": {"max": 3}}},
+			"correctness": {"noUnusedFunctionParameters": "error"},
+			"suspicious": {"noExplicitAny": "error"},
+			"performance": {"noNamespaceImport": "error", "noBarrelFile": "error", "noReExportAll": "error"},
+			"style": {
+				"noDefaultExport": "error",
+				"noEnum": "error",
+				"noMagicNumbers": "error",
+				"noNestedTernary": "error",
+				"useAsConstAssertion": "error",
+				"noNonNullAssertion": "error",
+				"noParameterAssign": "error",
+				"useConst": "error",
+				"useImportType": "error",
+				"useFilenamingConvention": {
+					"level": "error",
+					"options": {"filenameCases": ["kebab-case"]}
+				},
+				"noRestrictedImports": {
+					"level": "error",
+					"options": {
+						"patterns": [
+							{"group": ["../**", "./**", "!./*.css"], "message": "가져오기는 절대경로로 씁니다. 심볼 없이 파일만 불러오는 줄만 같은 폴더를 ./ 로 씁니다."}
+						]
+					}
+				},
+				"useNamingConvention": {
+					"level": "error",
+					"options": {
+						"strictCase": false,
+						"conventions": [
+							{"selector": {"kind": "typeLike"}, "formats": ["PascalCase"]},
+							{"selector": {"kind": "const", "scope": "global"}, "formats": ["camelCase", "PascalCase", "snake_case"]},
+							{"selector": {"kind": "objectLiteralProperty"}, "formats": ["camelCase", "PascalCase", "snake_case"]},
+							{"selector": {"kind": "typeProperty"}, "formats": ["camelCase"]},
+							{"selector": {"kind": "variable"}, "formats": ["camelCase", "PascalCase"]}
+						]
+					}
+				}
+			}
+		}
+	},
+	"overrides": [
+		{
+			"includes": ["**/*.test.ts"],
+			"linter": {"rules": {"style": {"noMagicNumbers": "off"}}}
+		},
+		{
+			"includes": ["**/*.config.ts", "**/*.config.js"],
+			"linter": {"rules": {"style": {"noDefaultExport": "off"}}}
+		}
+	]
+}

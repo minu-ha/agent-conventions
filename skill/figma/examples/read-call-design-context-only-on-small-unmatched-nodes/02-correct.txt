@@ -1,0 +1,2 @@
+get_design_context  12:341 상품 목록     부르지 않음, 표는 UiTable로 대응
+get_design_context  12:377 재고 경고 칩  자손 노드 6개, 대응물 없음        약 1.2k

@@ -44,119 +44,40 @@ tags: functions, origin
 
 **Incorrect 1 (두 번 쓴다는 이유만으로 변수로 뺍니다):**
 
-```ts
-const toRowClassNames = (row: Row): string[] => {
-	const isOverdue = row.dueDate < today;
-
-	return [
-		isOverdue ? "ui_row__root--overdue" : "ui_row__root",
-		isOverdue ? "ui_row__badge--overdue" : "ui_row__badge",
-	];
-};
-```
+<<< ../examples/functions-name-a-value-only-for-recompute-or-judgment/01-incorrect.ts
 
 **Correct 1 (항이 하나라 두 번 적어도 그 자리에 그대로 씁니다):**
 
-```ts
-const toRowClassNames = (row: Row): string[] => {
-	return [
-		row.dueDate < today ? "ui_row__root--overdue" : "ui_row__root",
-		row.dueDate < today ? "ui_row__badge--overdue" : "ui_row__badge",
-	];
-};
-```
+<<< ../examples/functions-name-a-value-only-for-recompute-or-judgment/02-correct.ts
 
 **Incorrect 2 (돌려주기만 할 값을 변수로 뺍니다):**
 
-```ts
-const toNextPage = (page: number): number => {
-	const nextPage = page + 1;
-
-	return nextPage;
-};
-
-const toRowLabel = (row: Row): string => {
-	const rowLabel = `${row.title} (${row.id})`;
-
-	return rowLabel;
-};
-```
+<<< ../examples/functions-name-a-value-only-for-recompute-or-judgment/03-incorrect.ts
 
 **Correct 2 (이름을 붙이지 않고 그대로 돌려줍니다):**
 
-```ts
-const toNextPage = (page: number): number => {
-	return page + 1;
-};
-
-const toRowLabel = (row: Row): string => {
-	return `${row.title} (${row.id})`;
-};
-```
+<<< ../examples/functions-name-a-value-only-for-recompute-or-judgment/04-correct.ts
 
 **Incorrect 3 (세 항을 엮은 판정을 쓰는 자리에 그대로 늘어놓습니다):**
 
-```ts
-const toRowAction = (row: Row): RowAction => {
-	return row.status === product_status.draft && !row.lockedAt && row.ownerId === session.userId
-		? row_action.edit
-		: row_action.view;
-};
-```
+<<< ../examples/functions-name-a-value-only-for-recompute-or-judgment/05-incorrect.ts
 
 **Correct 3 (한 번만 써도 합성 판정이라 변수로 뺍니다):**
 
-```ts
-const toRowAction = (row: Row): RowAction => {
-	const isEditable = row.status === product_status.draft && !row.lockedAt && row.ownerId === session.userId;
-
-	return isEditable ? row_action.edit : row_action.view;
-};
-```
+<<< ../examples/functions-name-a-value-only-for-recompute-or-judgment/06-correct.ts
 
 **Incorrect 4 (콜백 안에 두어 행마다 다시 계산합니다):**
 
-```ts
-const toVisibleRows = (rows: Row[], keyword: string): Row[] => {
-	return rows.filter((row) => row.title.toLowerCase().includes(keyword.trim().toLowerCase()));
-};
-```
+<<< ../examples/functions-name-a-value-only-for-recompute-or-judgment/07-incorrect.ts
 
 **Correct 4 (콜백 밖으로 빼 행마다 다시 계산하지 않습니다):**
 
-```ts
-const toVisibleRows = (rows: Row[], keyword: string): Row[] => {
-	// 콜백 안으로 옮기면 행마다 다시 계산
-	const lowerKeyword = keyword.trim().toLowerCase();
-
-	return rows.filter((row) => row.title.toLowerCase().includes(lowerKeyword));
-};
-```
+<<< ../examples/functions-name-a-value-only-for-recompute-or-judgment/08-correct.ts
 
 **Incorrect 5 (변수를 없애느라 저장과 캐시 비우기 순서가 뒤집힙니다):**
 
-```ts
-/**
- * 초안 저장 후 목록 캐시 비움
- */
-const submitDraft = async (draft: Draft) => {
-	await queryClient.invalidateQueries({queryKey: ["records"]});
-
-	return await saveRecord(draft);
-};
-```
+<<< ../examples/functions-name-a-value-only-for-recompute-or-judgment/09-incorrect.ts
 
 **Correct 5 (외부 호출의 실행 순서를 유지하려고 변수로 뺍니다):**
 
-```ts
-/**
- * 초안 저장 후 목록 캐시 비움
- */
-const submitDraft = async (draft: Draft) => {
-	const savedRecord = await saveRecord(draft);
-
-	await queryClient.invalidateQueries({queryKey: ["records"]});
-
-	return savedRecord;
-};
-```
+<<< ../examples/functions-name-a-value-only-for-recompute-or-judgment/10-correct.ts

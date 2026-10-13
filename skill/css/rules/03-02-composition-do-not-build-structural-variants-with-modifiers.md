@@ -38,30 +38,18 @@ flowchart LR
 
 **Incorrect 1 (그 화면 하나를 고치려고 수정자를 붙입니다):**
 
-```tsx
-<div className={clsx("pg_productDetail__section", "pg_productDetail__section--compactTop")} />
-```
+<<< ../examples/composition-do-not-build-structural-variants-with-modifiers/01-incorrect-1.tsx
 
-```tsx
-<div className={clsx("pg_productDetail__aside", "pg_productDetail__aside--marginLeft0")} />
-```
+<<< ../examples/composition-do-not-build-structural-variants-with-modifiers/01-incorrect-2.tsx
 
 **Correct 1 (한 곳의 보정은 역할 이름을 붙인 요소 클래스로 분리합니다):**
 
-```tsx
-<div className={clsx("pg_productDetail__specSection")} />
-```
+<<< ../examples/composition-do-not-build-structural-variants-with-modifiers/02-correct-1.tsx
 
-```tsx
-<div className={clsx("pg_productDetail__metaAside")} />
-```
+<<< ../examples/composition-do-not-build-structural-variants-with-modifiers/02-correct-2.tsx
 
 **Correct (상태와 반복되는 모양만 수정자로 씁니다):**
 
-```tsx
-<div className={clsx("ui_table__root", isDense && "ui_table__root--dense")} />
-```
+<<< ../examples/composition-do-not-build-structural-variants-with-modifiers/03-correct-1.tsx
 
-```tsx
-<div className={clsx("pg_products__row", isSelected && "pg_products__row--selected")} />
-```
+<<< ../examples/composition-do-not-build-structural-variants-with-modifiers/03-correct-2.tsx

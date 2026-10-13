@@ -19,27 +19,8 @@ tags: state, handlers
 
 **Incorrect 1 (오래 사는 콜백이 등록 시점의 상태를 붙잡습니다):**
 
-```tsx
-/**
- * 새 참여자가 들어오면 선택 목록에 추가
- */
-useEffect(() => {
-	// 콜백은 등록 시점의 selectedUserIds를 붙잡음. 나중에 도착한 참여자가 옛 목록에 더해져 그사이 고른 항목이 지워짐
-	return subscribeToUserJoined((joinedUserId) => {
-		setSelectedUserIds([...selectedUserIds, joinedUserId]);
-	});
-}, []);
-```
+<<< ../examples/state-use-functional-setstate-updates/01-incorrect.tsx
 
 **Correct 1 (함수형 업데이터로 항상 최신 상태를 기준으로 갱신합니다):**
 
-```tsx
-/**
- * 새 참여자가 들어오면 선택 목록에 추가
- */
-useEffect(() => {
-	return subscribeToUserJoined((joinedUserId) => {
-		setSelectedUserIds((currentUserIds) => [...currentUserIds, joinedUserId]);
-	});
-}, []);
-```
+<<< ../examples/state-use-functional-setstate-updates/02-correct.tsx

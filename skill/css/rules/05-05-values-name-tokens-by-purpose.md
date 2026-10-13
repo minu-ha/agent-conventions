@@ -32,34 +32,8 @@ tags: values, naming
 
 **Incorrect 1 (값으로 이름을 짓습니다):**
 
-```css
-/* src/style/token.css */
-:root {
-	--app-color-white: #fff;
-	--app-color-gray-100: #f1f3f5;
-	--app-space-16: 16px;
-}
-
-/* src/page/products/pg-products.css */
-.pg_products__panel {
-	background-color: var(--app-color-white);
-	padding: var(--app-space-16);
-}
-```
+<<< ../examples/values-name-tokens-by-purpose/01-incorrect.css
 
 **Correct 1 (쓰임으로 이름을 짓습니다):**
 
-```css
-/* src/style/token.css */
-:root {
-	--app-color-surface: #fff;
-	--app-color-surface-muted: #f1f3f5;
-	--app-space-section: 16px;
-}
-
-/* src/page/products/pg-products.css */
-.pg_products__panel {
-	background-color: var(--app-color-surface);
-	padding: var(--app-space-section);
-}
-```
+<<< ../examples/values-name-tokens-by-purpose/02-correct.css

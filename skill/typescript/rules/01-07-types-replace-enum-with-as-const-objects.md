@@ -30,28 +30,8 @@ tags: types
 
 **Incorrect 1 (`enum`을 직접 씁니다):**
 
-```ts
-enum ProductStatus {
-	pending = "pending",
-	passed = "passed",
-	failed = "failed",
-}
-```
+<<< ../examples/types-replace-enum-with-as-const-objects/01-incorrect.ts
 
 **Correct 1 (객체 리터럴과 타입 추출을 조합합니다):**
 
-```ts
-/**
- * 상품 심사 상태 값 집합
- */
-const product_status = {
-	pending: "pending",
-	passed: "passed",
-	failed: "failed",
-} as const;
-
-/**
- * 상품 심사 상태 타입. product_status에 값을 더하면 함께 넓어짐
- */
-type ProductStatus = (typeof product_status)[keyof typeof product_status];
-```
+<<< ../examples/types-replace-enum-with-as-const-objects/02-correct.ts
