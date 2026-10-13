@@ -3,9 +3,7 @@ const queryClient = useQueryClient();
 
 // [!code ++]
 /**
-// [!code ++]
  * 저장이 목록과 요약 집계를 함께 바꾸므로 두 키를 나란히 무효화
-// [!code ++]
  */
 const mutationProductSave = useProductSave({
 	mutation: {

@@ -11,9 +11,7 @@ export interface ToSummaryRowsParams {
 
 // [!code ++]
 /**
-// [!code ++]
  * 요약 표가 그리는 행 목록. 이름이 비면 코드로 표시
-// [!code ++]
  */
 // [!code ++]
 export const toSummaryRows = (params: ToSummaryRowsParams): SummaryRow[] => {

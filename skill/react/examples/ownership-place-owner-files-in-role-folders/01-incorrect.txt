@@ -1,12 +1,7 @@
 component/ui/button/
 ├── ui-button.tsx
-# [!code error]
 ├── ui-button.css
-# [!code error]
 ├── _constant/
-# [!code error]
 ├── _function/
-# [!code error]
 ├── _hook/
-# [!code error]
 └── _type/

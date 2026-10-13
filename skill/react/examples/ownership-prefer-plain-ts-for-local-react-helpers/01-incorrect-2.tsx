@@ -7,7 +7,6 @@ export const PgMediaUploadPanel = (props: PgMediaUploadPanelProps) => {
 	const mediaUploadPayload = useMediaUploadPayload(props.files);
 
 	/**
-// [!code error]
 	 * 업로드를 확정할 때 이미 만들어 둔 값을 보냄
 	 */
 	const handleSaveButtonClick: MouseEventHandler<HTMLButtonElement> = () => {

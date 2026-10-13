@@ -12,9 +12,9 @@ export const snippetLinePattern = /^<<<\s+(\S+?)(?:#([\w-]+))?(?:\s+(.+?))?\s*$/
 const regionLinePattern = /^\s*\S*\s*#(?:end)?region\s+[\w-]+/;
 
 /**
- * Shiki 줄 표기만 있는 주석 줄. 사람용 사이트에서만 뜻이 있어 에이전트 산출물에서는 지움
+ * Shiki 줄 표기만 있는 주석 줄. JSX 자식 자리의 중괄호로 감싼 블록 주석 꼴도 포함. 사람용 사이트에서만 뜻이 있어 에이전트 산출물에서는 지움
  */
-const notationOnlyLinePattern = /^\s*(?:\/\/|#|\/\*|<!--)\s*\[!code [^\]]*\]\s*(?:\*\/|-->)?\s*$/;
+const notationOnlyLinePattern = /^\s*\{?\s*(?:\/\/|#|\/\*|<!--)\s*\[!code [^\]]*\]\s*(?:\*\/|-->)?\s*\}?\s*$/;
 
 /**
  * 줄 끝에 붙은 Shiki 줄 표기

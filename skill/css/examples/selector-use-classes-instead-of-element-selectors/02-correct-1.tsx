@@ -1,12 +1,12 @@
 <div className={clsx("pg_products__toolbar")}>
-// [!code ++]
+{/* [!code ++] */}
 	<div className={clsx("pg_products__toolbarField")}>
 		<UiSearchInput />
 	</div>
-// [!code ++]
+{/* [!code ++] */}
 	<button type="button" className={clsx("pg_products__toolbarButton")}>
-// [!code ++]
+{/* [!code ++] */}
 		초기화
-// [!code ++]
+{/* [!code ++] */}
 	</button>
 </div>

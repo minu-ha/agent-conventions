@@ -3,11 +3,11 @@ export const PgProducts = () => {
 	return (
 		<Fragment>
 			<PgProductFilterSection />
-// [!code ++]
+{/* [!code ++] */}
 			<Suspense fallback={<UiLoadingFallback ariaLabel="product 목록을 불러오는 중" />}>
-// [!code ++]
+{/* [!code ++] */}
 				<PgProductListSection />
-// [!code ++]
+{/* [!code ++] */}
 			</Suspense>
 		</Fragment>
 	);

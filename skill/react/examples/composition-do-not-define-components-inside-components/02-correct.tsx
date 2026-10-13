@@ -5,7 +5,7 @@ import {WgUserCardAvatar} from "@/component/widget/user-card/_wg-user-card-avata
 export const WgUserCard = (props: WgUserCardProps) => {
 	return (
 		<section>
-// [!code ++]
+{/* [!code ++] */}
 			<WgUserCardAvatar src={props.user.avatarUrl} alt={props.user.name} theme={props.theme} />
 		</section>
 	);

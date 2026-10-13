@@ -7,7 +7,7 @@ export const PgProductRows = (props: PgProductRowsProps) => {
 		<Fragment key={product.id}>
 			<PgProductRow product={product} />
 			<PgProductRowDivider />
-// [!code ++]
+{/* [!code ++] */}
 		</Fragment>
 	));
 };

@@ -1,4 +1,4 @@
 const WgUserCard = (props: WgUserCardProps) => {
 // [!code ++]
-	return <button onClick={props.onSave}>{props.label}</button>;
+	return <button type="button" onClick={props.onSave}>{props.label}</button>;
 };

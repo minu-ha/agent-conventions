@@ -1,7 +1,5 @@
 /**
-// [!code ++]
  * 요청 문자열 변환 계약
-// [!code ++]
  */
 // [!code ++]
 type ToRequest = (request: string) => string;

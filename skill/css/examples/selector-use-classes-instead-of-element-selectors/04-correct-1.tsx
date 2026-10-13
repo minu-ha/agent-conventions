@@ -1,4 +1,7 @@
 <div
 	className={clsx("wg_productDetail__prose")}
-	dangerouslySetInnerHTML={{__html: product.bodyHtml}}
+	dangerouslySetInnerHTML={{
+		// biome-ignore lint/style/useNamingConvention: React 가 정한 속성 이름
+		__html: product.bodyHtml,
+	}}
 />

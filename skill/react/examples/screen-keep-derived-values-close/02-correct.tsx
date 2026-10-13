@@ -13,7 +13,7 @@ export const PgProductTableSection = () => {
 		<Fragment>
 			<UiTable rows={responseProductListSuspense.data.products} onRowSelect={handleTableRowSelect} />
 
-// [!code ++]
+{/* [!code ++] */}
 			{selectedRows.length > 0 && (
 // [!code ++]
 				<PgProductBulkActionBar label={`${selectedRows.length}건 삭제`} />

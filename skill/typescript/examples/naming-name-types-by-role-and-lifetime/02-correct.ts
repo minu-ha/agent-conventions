@@ -1,7 +1,6 @@
 // [!code ++]
 // page/orders/_type/summary-snapshot.ts: 폴더 이름이 이미 orders
 /**
-// [!code ++]
  * 한 조회 시점의 주문 요약 목록과 조건
  */
 // [!code ++]

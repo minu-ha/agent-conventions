@@ -1,7 +1,4 @@
 page/product-detail/_function/
-# [!code error]
 ├── to-product-overview.ts
-# [!code error]
 ├── to-product-digest.ts
-# [!code error]
 └── to-trend-chart.ts            toProductOverview만 부르는데 소유자의 공개 면에 놓임

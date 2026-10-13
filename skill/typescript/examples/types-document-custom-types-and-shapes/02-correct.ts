@@ -1,6 +1,5 @@
 /**
  * 게시 결과 요약
-// [!code ++]
  */
 // [!code ++]
 export interface PublishResult {
@@ -11,9 +10,7 @@ export interface PublishResult {
 	documentId: string;
 // [!code ++]
 	/**
-// [!code ++]
 	 * 게시 성공 여부
-// [!code ++]
 	 */
 	published: boolean;
 }

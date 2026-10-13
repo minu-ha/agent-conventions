@@ -1,9 +1,5 @@
 page/product-detail/_function/
-# [!code ++]
 ├── to-product-overview/
-# [!code ++]
 │   └── to-product-overview.ts
-# [!code ++]
 ├── to-product-digest.ts           toTrendChart를 함께 부르기 시작함
-# [!code ++]
 └── to-trend-chart.ts              대표 둘이 불러 공개 면으로 올라옴

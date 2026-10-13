@@ -1,7 +1,4 @@
-/* [!code ++] */
 .pg_productDetail__chart {
-/* [!code ++] */
 	/* 로딩 중과 실제 차트에 같은 최소 높이 확보 */
-/* [!code ++] */
 	min-height: 320px;
 }

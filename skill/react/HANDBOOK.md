@@ -190,7 +190,7 @@ export const PgDeleteProductButton = () => {
 // page/product-detail/_pg-product-status-badge.tsx
 // 프롭스가 도메인 타입 하나만 받고 훅도 안 부름. 이 화면에서만 쓴다는 이유로 남아 있음
 export const PgProductStatusBadge = (props: PgProductStatusBadgeProps) => {
-	return <svg className={clsx("pg_productStatusBadge__root")}>{props.children}</svg>;
+	return <span className={clsx("pg_productStatusBadge__root")}>{props.children}</span>;
 };
 ```
 
@@ -199,7 +199,7 @@ export const PgProductStatusBadge = (props: PgProductStatusBadgeProps) => {
 ```tsx
 // component/widget/product-table/_wg-product-status-badge.tsx
 export const WgProductStatusBadge = (props: WgProductStatusBadgeProps) => {
-	return <svg className={clsx("wg_productTable__statusBadge")}>{props.children}</svg>;
+	return <span className={clsx("wg_productTable__statusBadge")}>{props.children}</span>;
 };
 ```
 
@@ -209,7 +209,7 @@ export const WgProductStatusBadge = (props: WgProductStatusBadgeProps) => {
 // component/widget/chart-card/wg-chart-card.tsx
 // 프롭스가 좌표 배열만 받고 도메인 타입을 모름. widget 폴더에 있다는 이유로 남아 있음
 export const WgChartCard = (props: WgChartCardProps) => {
-	return <svg className={clsx("wg_chartCard__root")}>{props.children}</svg>;
+	return <span className={clsx("wg_chartCard__root")}>{props.children}</span>;
 };
 ```
 
@@ -218,7 +218,7 @@ export const WgChartCard = (props: WgChartCardProps) => {
 ```tsx
 // component/ui/line-chart/ui-line-chart.tsx
 export const UiLineChart = (props: UiLineChartProps) => {
-	return <svg className={clsx("ui_lineChart__root")}>{props.children}</svg>;
+	return <span className={clsx("ui_lineChart__root")}>{props.children}</span>;
 };
 ```
 
@@ -2426,7 +2426,7 @@ export const PgProducts = () => {
 ```tsx
 const WgUserCard = (props: WgUserCardProps) => {
 	const { label, onSave } = props;
-	return <button onClick={onSave}>{label}</button>;
+	return <button type="button" onClick={onSave}>{label}</button>;
 };
 ```
 
@@ -2434,7 +2434,7 @@ const WgUserCard = (props: WgUserCardProps) => {
 
 ```tsx
 const WgUserCard = (props: WgUserCardProps) => {
-	return <button onClick={props.onSave}>{props.label}</button>;
+	return <button type="button" onClick={props.onSave}>{props.label}</button>;
 };
 ```
 

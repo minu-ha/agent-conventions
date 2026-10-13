@@ -1,8 +1,8 @@
 return (
 	<section>
-// [!code ++]
+{/* [!code ++] */}
 		{props.view === "chart" && <PgChart />}
-// [!code ++]
+{/* [!code ++] */}
 		{props.view === "table" && <PgTable />}
 	</section>
 );

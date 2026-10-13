@@ -1,5 +1,4 @@
 /**
-// [!code error]
  * 주문 화면 데이터
  */
 // [!code error]

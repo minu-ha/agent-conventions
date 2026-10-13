@@ -1,30 +1,20 @@
-/* [!code ++] */
 /* src/style/token.css */
-/* [!code ++] */
 :root {
-/* [!code ++] */
 	--app-z-index-base: 0;
-/* [!code ++] */
 	--app-z-index-sticky: 100;
-/* [!code ++] */
 	--app-z-index-overlay: 200;
-/* [!code ++] */
 	--app-z-index-popper: 300;
-/* [!code ++] */
 }
 
 /* src/page/products/pg-products.css */
 .pg_products__toolbar {
-/* [!code ++] */
 	/* 화면 스크롤 컨테이너 기준 고정. 드롭다운이 이 쌓임 맥락을 벗어나야 하면 포털 대상을 밖에 둠 */
 	position: sticky;
-/* [!code ++] */
 	z-index: var(--app-z-index-sticky);
 }
 
 /* src/component/widget/product-filter/wg-product-filter.css */
 .wg_productFilter__dropdown {
 	position: absolute;
-/* [!code ++] */
 	z-index: var(--app-z-index-popper);
 }

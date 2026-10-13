@@ -10,7 +10,6 @@ interface ProductListRow {
 // [!code error]
 	id: ProductRecord["id"];
 	/**
-// [!code error]
 	 * 마지막 수정자 이름
 	 */
 // [!code error]

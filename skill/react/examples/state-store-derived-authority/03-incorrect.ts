@@ -3,7 +3,6 @@
 const permissionStore = usePermissionStore();
 
 /**
-// [!code error]
  * 부트스트랩 응답의 권한 목록으로 수정 가능 여부 채움
  */
 useEffect(() => {

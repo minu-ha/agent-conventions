@@ -7,7 +7,7 @@ export const PgProductScreen = () => {
 		<Fragment>
 			<PgProductFilterSection />
 			<PgProductTableSection />
-// [!code ++]
+{/* [!code ++] */}
 		</Fragment>
 	);
 };

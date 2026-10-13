@@ -246,6 +246,25 @@ test("every rule loads its examples from files and no rule keeps an example fenc
 	}
 });
 
+test("the example lint config is the biome config that the TypeScript tooling rule shows", async () => {
+	const exampleDir = getSkillPaths("typescript").skillDir;
+	const shown = JSON.parse(
+		await readFile(path.join(exampleDir, "examples", "tooling-configure-biome-to-enforce-these-rules", "01-correct.json"), "utf8"),
+	);
+	const plugin = JSON.parse(
+		await readFile(path.join(exampleDir, "examples", "tooling-configure-biome-to-enforce-these-rules", "02-correct-1.json"), "utf8"),
+	);
+	const used = JSON.parse(await readFile(path.join(exampleDir, "..", "examples.biome.json"), "utf8"));
+
+	assert.deepEqual(used.linter, shown.linter, "linter rules must match the rule's example");
+	assert.deepEqual(used.overrides.slice(0, shown.overrides.length), shown.overrides, "the shown overrides come first");
+	assert.deepEqual(used.plugins, plugin.plugins, "the GritQL plugin must match the rule's example");
+	assert.equal(
+		await readFile(path.join(exampleDir, "..", "no-literal-fallback.grit"), "utf8"),
+		await readFile(path.join(exampleDir, "examples", "tooling-configure-biome-to-enforce-these-rules", "02-correct-2.grit"), "utf8"),
+	);
+});
+
 test("readSkillRules exposes titleKo and tolerates its absence", async () => {
 	const rules = await readSkillRules(getSkillPaths("react"));
 	const sample = rules.find((rule) => rule.fileName.endsWith("composition-named-handlers-over-inline.md"));

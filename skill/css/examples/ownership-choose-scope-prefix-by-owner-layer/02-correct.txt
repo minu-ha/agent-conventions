@@ -1,17 +1,11 @@
-# [!code ++]
 page/product-detail/pg-product-detail.css
-# [!code ++]
   pg_productDetail__root
 
 page/product-detail/_pg-product-table-section.css
-# [!code ++]
   pg_productTableSection__root
 
 component/widget/chart-card/_wg-chart-card-header.css
-# [!code ++]
   wg_chartCard__header
 
-# [!code ++]
 component/ui/button/ui-button.css
-# [!code ++]
   ui_button__root

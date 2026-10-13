@@ -1,10 +1,7 @@
 // app/query-client.ts
 /**
-// [!code ++]
  * 호스트 앱, 단독 실행, 테스트가 함께 쓰는 쿼리 클라이언트
-// [!code ++]
  *
-// [!code ++]
  * 재시도 횟수는 이 한 곳에서만 설정
  */
 export const queryClient = new QueryClient({defaultOptions: {queries: {retry: query_retry_count}}});

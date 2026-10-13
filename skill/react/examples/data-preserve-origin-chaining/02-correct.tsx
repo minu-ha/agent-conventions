@@ -1,6 +1,6 @@
 <Fragment>
-// [!code ++]
+{/* [!code ++] */}
 	<UiList rows={responseProductListSuspense.data.products} />
-// [!code ++]
+{/* [!code ++] */}
 	<UiTable rows={responseProductListSuspense.data.selectedProduct.fields} />
 </Fragment>;

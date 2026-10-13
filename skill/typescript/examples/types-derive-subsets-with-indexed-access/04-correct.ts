@@ -8,7 +8,6 @@ interface ProductListRow {
 // [!code ++]
 	readonly id: ProductRecord["id"];
 	/**
-// [!code ++]
 	 * 마지막 수정자 이름. 원본이 선택 필드라 여기서도 선택
 	 */
 // [!code ++]

@@ -8,11 +8,12 @@
 		"dev": "npm run build && for-humanity dev docs",
 		"build": "tsx script/build.ts",
 		"validate": "tsx script/validate.ts",
-		"check": "npm run validate && npm run check:generated && npm run check:diagrams && npm run typecheck && npm run lint && npm run test",
+		"check": "npm run validate && npm run check:generated && npm run check:diagrams && npm run typecheck && npm run lint && npm run lint:examples && npm run test",
 		"check:generated": "tsx script/check-generated.ts",
 		"check:diagrams": "tsx script/check-diagrams.ts",
 		"docs:build": "npm run build && for-humanity build docs",
 		"test": "tsx --test --test-concurrency=1 test/*.test.ts",
+		"lint:examples": "biome lint --config-path=skill/examples.biome.json skill && stylelint --config skill/stylelint.config.mjs \"skill/*/examples/**/*-correct*.css\"",
 		"lint": "biome check --files-ignore-unknown=true",
 		"lint:fix": "biome check --write --files-ignore-unknown=true",
 		"typecheck": "tsc --noEmit"
@@ -21,8 +22,10 @@
 		"@biomejs/biome": "^2.5.7",
 		"@types/node": "^26.1.2",
 		"beautiful-mermaid": "^1.1.3",
-		"for-humanity": "0.10.0",
+		"for-humanity": "0.11.0",
 		"github-slugger": "2.0.0",
+		"stylelint": "16.26.1",
+		"stylelint-config-standard": "39.0.1",
 		"tsx": "^4.23.9",
 		"typescript": "^7.0.2"
 	}

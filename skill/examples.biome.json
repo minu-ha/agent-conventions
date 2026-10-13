@@ -1,0 +1,199 @@
+{
+	"$schema": "https://biomejs.dev/schemas/2.5.7/schema.json",
+	"root": true,
+	"files": {
+		"includes": [
+			"**/examples/**/*-correct*.ts",
+			"**/examples/**/*-correct*.tsx",
+			"**/examples/**/*-correct*.js",
+			"**/examples/**/*-correct*.json",
+			"!**/composition-render-one-branch-with-and/02-correct.tsx",
+			"!**/composition-render-one-branch-with-and/04-correct.tsx",
+			"!**/composition-render-one-branch-with-and/07-correct.tsx",
+			"!**/composition-use-activity-only-to-preserve-mounted-subtrees/02-correct.tsx",
+			"!**/composition-use-activity-only-to-preserve-mounted-subtrees/04-correct-2.tsx",
+			"!**/perf-defer-heavy-renders-with-measured-evidence/04-correct.tsx",
+			"!**/perf-defer-heavy-renders-with-measured-evidence/05-correct.tsx",
+			"!**/runtime-avoid-ad-hoc-loading-branches/02-correct.tsx",
+			"!**/runtime-avoid-ad-hoc-loading-branches/04-correct.tsx",
+			"!**/runtime-avoid-ad-hoc-loading-branches/05-correct.tsx",
+			"!**/runtime-place-error-boundaries-by-blast-radius/02-correct.tsx",
+			"!**/runtime-place-suspense-boundaries-at-the-section-owner/02-correct.tsx",
+			"!**/state-calculate-derived-values-during-render/02-correct.tsx",
+			"!**/absence-do-not-guard-what-types-guarantee/04-correct.ts",
+			"!**/absence-check-once-at-the-boundary/04-correct.tsx"
+		]
+	},
+	"plugins": [
+		"./no-literal-fallback.grit"
+	],
+	"linter": {
+		"enabled": true,
+		"rules": {
+			"preset": "recommended",
+			"complexity": {
+				"useMaxParams": {
+					"level": "error",
+					"options": {
+						"max": 3
+					}
+				}
+			},
+			"correctness": {
+				"noUnusedFunctionParameters": "error"
+			},
+			"suspicious": {
+				"noExplicitAny": "error"
+			},
+			"performance": {
+				"noNamespaceImport": "error",
+				"noBarrelFile": "error",
+				"noReExportAll": "error"
+			},
+			"style": {
+				"noDefaultExport": "error",
+				"noEnum": "error",
+				"noMagicNumbers": "error",
+				"noNestedTernary": "error",
+				"useAsConstAssertion": "error",
+				"noNonNullAssertion": "error",
+				"noParameterAssign": "error",
+				"useConst": "error",
+				"useImportType": "error",
+				"useFilenamingConvention": {
+					"level": "error",
+					"options": {
+						"filenameCases": [
+							"kebab-case"
+						]
+					}
+				},
+				"noRestrictedImports": {
+					"level": "error",
+					"options": {
+						"patterns": [
+							{
+								"group": [
+									"../**",
+									"./**",
+									"!./*.css"
+								],
+								"message": "가져오기는 절대경로로 씁니다. 심볼 없이 파일만 불러오는 줄만 같은 폴더를 ./ 로 씁니다."
+							}
+						]
+					}
+				},
+				"useNamingConvention": {
+					"level": "error",
+					"options": {
+						"strictCase": false,
+						"conventions": [
+							{
+								"selector": {
+									"kind": "typeLike"
+								},
+								"formats": [
+									"PascalCase"
+								]
+							},
+							{
+								"selector": {
+									"kind": "const",
+									"scope": "global"
+								},
+								"formats": [
+									"camelCase",
+									"PascalCase",
+									"snake_case"
+								]
+							},
+							{
+								"selector": {
+									"kind": "objectLiteralProperty"
+								},
+								"formats": [
+									"camelCase",
+									"PascalCase",
+									"snake_case"
+								]
+							},
+							{
+								"selector": {
+									"kind": "typeProperty"
+								},
+								"formats": [
+									"camelCase"
+								]
+							},
+							{
+								"selector": {
+									"kind": "variable"
+								},
+								"formats": [
+									"camelCase",
+									"PascalCase"
+								]
+							}
+						]
+					}
+				}
+			}
+		}
+	},
+	"overrides": [
+		{
+			"includes": [
+				"**/*.test.ts"
+			],
+			"linter": {
+				"rules": {
+					"style": {
+						"noMagicNumbers": "off"
+					}
+				}
+			}
+		},
+		{
+			"includes": [
+				"**/*.config.ts",
+				"**/*.config.js"
+			],
+			"linter": {
+				"rules": {
+					"style": {
+						"noDefaultExport": "off"
+					}
+				}
+			}
+		},
+		{
+			"includes": [
+				"**/examples/**"
+			],
+			"linter": {
+				"rules": {
+					"correctness": {
+						"noUnusedVariables": "off",
+						"noUnusedImports": "off",
+						"noUnusedFunctionParameters": "off"
+					},
+					"suspicious": {
+						"noRedeclare": "off"
+					}
+				}
+			}
+		},
+		{
+			"includes": [
+				"**/tooling-*/**"
+			],
+			"linter": {
+				"rules": {
+					"style": {
+						"noDefaultExport": "off"
+					}
+				}
+			}
+		}
+	]
+}

@@ -1,32 +1,18 @@
 page/product-detail/
 ├── pg-product-detail.tsx
-# [!code ++]
 ├── pg-product-detail.css
-# [!code ++]
 ├── _pg-product-summary.tsx            자기만 쓰는 파일이 없어 파일로 둠
-# [!code ++]
 ├── _pg-product-summary.css
-# [!code ++]
 ├── _function/
-# [!code ++]
 │   ├── to-product-summary.ts
-# [!code ++]
 │   └── to-trend-chart/                자기만 쓰는 보조가 있어 폴더
-# [!code ++]
 │       ├── to-trend-chart.ts
-# [!code ++]
 │       └── _to-chart-range.ts         toTrendChart만 부름
-# [!code ++]
 ├── _type/
-# [!code ++]
 │   └── product-detail-view-model.ts
-# [!code ++]
 └── product-table-section/             자기만 쓰는 파일이 있어 하위 소유자 폴더가 됨
     ├── pg-product-table-section.tsx
-# [!code ++]
     ├── pg-product-table-section.css
-# [!code ++]
     ├── _pg-review-section.tsx
     └── _function/
-# [!code ++]
         └── to-chart-range.ts

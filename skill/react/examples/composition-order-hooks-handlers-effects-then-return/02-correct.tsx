@@ -5,9 +5,7 @@ export const PgOrderToolbar = () => {
 
 // [!code ++]
 	/**
-// [!code ++]
 	 * 비우기는 선택만 지우고 패널은 유지
-// [!code ++]
 	 */
 	const handleClearButtonClick: MouseEventHandler<HTMLButtonElement> = () => {
 		setSelectedIds([]);
@@ -15,9 +13,7 @@ export const PgOrderToolbar = () => {
 
 // [!code ++]
 	/**
-// [!code ++]
 	 * 필터 패널 열기
-// [!code ++]
 	 */
 	const handlePanelOpenButtonClick: MouseEventHandler<HTMLButtonElement> = () => {
 		setIsPanelOpen(true);

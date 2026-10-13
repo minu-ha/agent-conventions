@@ -1,23 +1,14 @@
-/* [!code ++] */
 .pg_products__sortBox {
-/* [!code ++] */
 	&::before {
-/* [!code ++] */
 		border: 2px solid #ced4da;
-/* [!code ++] */
 	}
-/* [!code ++] */
 }
 
 .pg_products__sortButton {
-/* [!code ++] */
 	&.MuiButtonBase-root {
-/* [!code ++] */
 		display: inline-flex;
-/* [!code ++] */
 	}
 
-/* [!code ++] */
 	&:hover .pg_products__sortBox::before {
 		border-color: #9fadc7;
 	}

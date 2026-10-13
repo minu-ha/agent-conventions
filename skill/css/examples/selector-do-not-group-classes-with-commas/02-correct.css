@@ -1,31 +1,20 @@
-/* [!code ++] */
 .pg_products__badge--draft {
-/* [!code ++] */
 	width: 24px;
-/* [!code ++] */
 	height: 24px;
-/* [!code ++] */
 }
 
-/* [!code ++] */
 .pg_products__badge--published {
-/* [!code ++] */
 	width: 24px;
-/* [!code ++] */
 	height: 24px;
-/* [!code ++] */
 }
 
-/* [!code ++] */
 .pg_products__badge--archived {
 	width: 24px;
 	height: 24px;
 }
 
 .pg_products__badge--deleted {
-/* [!code ++] */
 	width: 24px;
-/* [!code ++] */
 	height: 24px;
 	background: rgb(140 152 160 / 12%);
 }

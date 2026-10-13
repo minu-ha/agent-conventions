@@ -1,8 +1,5 @@
 .pg_products__row {
-/* [!code ++] */
 	padding: var(--app-space-section) var(--app-space-inline);
-/* [!code ++] */
 	border-radius: var(--app-radius-panel);
-/* [!code ++] */
 	color: var(--app-color-text-primary);
 }
