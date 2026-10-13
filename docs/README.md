@@ -1,4 +1,4 @@
-# 팀 컨벤션
+# agent conventions
 
 React, CSS, TypeScript, Figma 코딩 규칙을 사람이 읽는 사이트입니다.
 정본은 저장소의 `skill/<skill>/rules/*.md`이고, 규칙 페이지는 `npm run build`가 `docs/convention/`에 생성합니다.
