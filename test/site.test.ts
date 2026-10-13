@@ -83,20 +83,28 @@ test("every section page sits under its skill overview in the same navigation gr
 	}
 });
 
-test("every rule renders once as a numbered heading with its condition note, and the overview tables list all of them", async () => {
+test("every rule renders once as a numbered heading, and the overview tables list all of them with a summary", async () => {
 	const files = await generateSiteFiles();
 	const headings = files
 		.filter(isSectionPage)
 		.flatMap((file) => [...file.content.matchAll(/^## (\d+\.\d+) .+$/gm)].map((match) => `${file.path}#${match[1]}`));
-	const notes = files.filter(isSectionPage).reduce((total, file) => total + file.content.split(":::note[언제 적용할까요?]").length - 1, 0);
 	const tableRows = files
 		.filter(isOverviewPage)
-		.reduce((total, file) => total + [...file.content.matchAll(/^\| \[\d+\.\d+ .+\]\(.+\) \| (?:CRITICAL|HIGH|MEDIUM) \|$/gm)].length, 0);
+		.reduce((total, file) => total + [...file.content.matchAll(/^\| \[\d+\.\d+ .+\]\(.+\) \| \S.* \|$/gm)].length, 0);
 
 	assert.equal(headings.length, expectedRuleCount);
 	assert.equal(new Set(headings).size, expectedRuleCount, "rule numbers must be unique within a skill");
-	assert.equal(notes, expectedRuleCount);
 	assert.equal(tableRows, expectedRuleCount);
+});
+
+test("pages carry no agent routing metadata", async () => {
+	const files = await generateSiteFiles();
+
+	for (const file of files) {
+		for (const marker of ["**Impact:", "언제 적용할까요", "**Rule:**", "CRITICAL", "`rules/*.md`"]) {
+			assert.equal(file.content.includes(marker), false, `${file.path} still carries ${marker}`);
+		}
+	}
 });
 
 test("every relative link resolves to a generated page and an existing heading anchor", async () => {
@@ -138,23 +146,32 @@ test("every relative link resolves to a generated page and an existing heading a
 	assert.ok(linkCount > expectedRuleCount * 2, `expected overview rows plus prose references, found ${linkCount} links`);
 });
 
-test("rule references in prose become links but the Rule line never links to itself", async () => {
+test("rule references read as numbered rules in prose and as titled items under 함께 보기", async () => {
 	const files = await generateSiteFiles();
 	const sectionPages = files.filter(isSectionPage);
-	const ruleLines = sectionPages.flatMap((file) => file.content.split("\n").filter((line) => line.startsWith("- **Rule:**")));
-
-	assert.equal(ruleLines.length, expectedRuleCount);
-
-	for (const line of ruleLines) {
-		assert.match(line, /^- \*\*Rule:\*\* `[A-Z]\d+-\d+` `[a-z][a-z0-9-]+` \S/, `Rule line must stay plain: ${line}`);
-	}
-
 	const proseLinks = sectionPages.reduce(
-		(total, file) => total + [...file.content.matchAll(/\[`[a-z/-]+`\]\((?:\.\.\/|#|[a-z])/g)].length,
+		(total, file) => total + [...file.content.matchAll(/\[(?:[A-Za-z]+ )?규칙 \d+\.\d+\]\(/g)].length,
 		0,
 	);
+	const relatedItems = sectionPages.flatMap((file) =>
+		file.content
+			.split("**함께 보기**")
+			.slice(1)
+			.flatMap((block) => (block.split("\n\n")[1] ?? "").split("\n").filter((line) => line.startsWith("- "))),
+	);
 
-	assert.ok(proseLinks > 0, "expected linked rule references in prose");
+	assert.ok(proseLinks > 0, "expected numbered rule links in prose");
+	assert.ok(relatedItems.length > 0, "expected related rule items");
+
+	for (const item of relatedItems) {
+		assert.match(item, /^- \[(?:[A-Za-z]+ )?\d+\.\d+ .+\]\((?:\.\.\/|#|[a-z0-9])/, `related item must link a titled rule: ${item}`);
+	}
+
+	assert.equal(
+		sectionPages.some((file) => /\[`[a-z/-]+`\]\(/.test(file.content)),
+		false,
+		"no raw rule IDs as link text",
+	);
 });
 
 test("generateSiteFiles is deterministic", async () => {

@@ -64,8 +64,9 @@ Figma 화면을 구현하는 프로젝트는 `convention-figma`도 적는다. TS
 [for-humanity](https://github.com/minu-ha/for-humanity) 가 `docs/` 를 사이트로 만든다. 규칙 페이지는 `docs/convention/` 에 생성한다.
 
 왼쪽에 skill 넷이 있고 skill 아래에 섹션이 한 장씩 있다. 오른쪽 목차가 그 섹션의 규칙이다.
-skill 이름을 누르면 개요와 전체 규칙 표가 나온다. `CRITICAL`부터 훑으려면 그 표의 영향도 열을 본다.
-규칙마다 적용 조건, Incorrect / Correct 코드, 다른 규칙으로 가는 링크가 있다.
+skill 이름을 누르면 개요와 전체 규칙 표가 나온다. 표의 요지 열로 훑는다.
+규칙마다 한 줄 요지, 판정 기준, Incorrect / Correct 코드, 함께 볼 규칙 링크가 있다.
+적용 조건, 등급, 규칙 ID 같은 에이전트용 메타는 사이트에 싣지 않는다.
 규칙 번호(`1.1`, `7.2`)는 `HANDBOOK.md` 헤딩 번호와 같아서 두 문서를 번호로 맞춰 볼 수 있다.
 
 `HANDBOOK.md`는 규칙 전문을 모은 생성물이다.

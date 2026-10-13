@@ -6,7 +6,7 @@ import {slug} from "github-slugger";
 import {getSkillPaths, isBuildableSkill, listSkillNames, siteOutputDir} from "./config.js";
 import {replaceGeneratedFiles} from "./generated-files.js";
 import {normalizeHeadingTitle, readSkillDocument} from "./parser.js";
-import {escapeMarkdownProse, getCanonicalRoutingOrdinals, getRuleId, getRulesForSection} from "./routing.js";
+import {escapeMarkdownProse, getRuleId, getRulesForSection} from "./routing.js";
 import type {LoadedSkillDocument, SkillCompanion, SkillRule, SkillSection} from "./types.js";
 
 /**
@@ -72,9 +72,13 @@ interface RuleLocation {
 	 */
 	heading: string;
 	/**
-	 * @field 중요도 등급
+	 * @field 규칙을 소유한 skill 이름
 	 */
-	impact: string;
+	skill: string;
+	/**
+	 * @field 사람이 읽는 한 줄 요지. frontmatter `impactDescription`
+	 */
+	summary: string;
 }
 
 /**
@@ -168,7 +172,8 @@ const collectRuleLocations = (documents: LoadedSkillDocument[]): Map<string, Rul
 					anchor: slug(heading.replace(/`/g, "")),
 					number,
 					heading,
-					impact: rule.impact,
+					skill: document.skillName,
+					summary: rule.impactDescription ?? "",
 				});
 			});
 		}
@@ -193,10 +198,6 @@ interface RuleRenderContext {
 	 * @field 전체 규칙 위치 색인
 	 */
 	locations: Map<string, RuleLocation>;
-	/**
-	 * @field 규칙 ID별 라우팅 순번
-	 */
-	ordinalByRuleId: Map<string, string>;
 }
 
 /**
@@ -207,12 +208,33 @@ const resolveReference = (reference: string, context: RuleRenderContext): RuleLo
 };
 
 /**
- * @helper 규칙 ID 하나를 링크로. 해석되지 않으면 코드 스팬 그대로
+ * @helper 다른 skill 규칙이면 앞에 붙이는 skill 이름. 같은 skill 이면 빈 문자열
+ */
+const skillPrefix = (target: RuleLocation, context: RuleRenderContext): string => {
+	return target.skill === context.document.skillName ? "" : `${getPlacement(target.skill).name} `;
+};
+
+/**
+ * @helper 산문 속 규칙 ID를 사람이 읽는 링크로. `규칙 2.4` 꼴이라 조사가 자연스럽게 붙음. 해석되지 않으면 코드 스팬 그대로
  */
 const renderReference = (reference: string, context: RuleRenderContext): string => {
 	const target = resolveReference(reference, context);
 
-	return target ? `[\`${reference}\`](${relativeLink(context.page, target.page, target.anchor)})` : `\`${reference}\``;
+	return target
+		? `[${skillPrefix(target, context)}규칙 ${target.number}](${relativeLink(context.page, target.page, target.anchor)})`
+		: `\`${reference}\``;
+};
+
+/**
+ * @helper 규칙 끝의 함께 보기 목록. 필수 관계와 재검토 관계를 사람에게는 한 목록으로
+ */
+const renderRelated = (rule: SkillRule, context: RuleRenderContext): string[] => {
+	const items = [...new Set([...rule.requiresSelected, ...rule.reviewWith])]
+		.map((reference) => resolveReference(reference, context))
+		.filter((target): target is RuleLocation => target !== undefined)
+		.map((target) => `- [${skillPrefix(target, context)}${target.heading}](${relativeLink(context.page, target.page, target.anchor)})`);
+
+	return items.length === 0 ? [] : ["", "**함께 보기**", "", ...items];
 };
 
 /**
@@ -236,45 +258,8 @@ const linkRuleReferences = (lines: string[], context: RuleRenderContext): string
 };
 
 /**
- * @helper 헤딩과 Impact 줄 아래에 끼우는 규칙 메타. 순번, ID, 관계, 적용 조건
- */
-const renderRuleMeta = (rule: SkillRule, context: RuleRenderContext): string[] => {
-	const ruleId = getRuleId(rule);
-	const ordinal = context.ordinalByRuleId.get(ruleId);
-
-	if (!ordinal) {
-		throw new Error(`Rule "${rule.title}" is missing its canonical routing ordinal.`);
-	}
-
-	const meta = [`- **Rule:** \`${ordinal}\` \`${ruleId}\` ${normalizeHeadingTitle(rule.title)}`];
-
-	if (rule.requiresSelected.length > 0) {
-		meta.push(`- **함께 적용:** ${rule.requiresSelected.map((target) => renderReference(target, context)).join(", ")}`);
-	}
-
-	if (rule.reviewWith.length > 0) {
-		meta.push(`- **함께 보기:** ${rule.reviewWith.map((target) => renderReference(target, context)).join(", ")}`);
-	}
-
-	if (rule.requiredOnCompletion) {
-		meta.push("- **마무리:** 작업을 끝낼 때 항상 적용합니다.");
-	}
-
-	const bullets = rule.appliesWhenBullets ?? [];
-
-	if (bullets.length === 0 && rule.appliesWhen !== undefined) {
-		bullets.push(rule.appliesWhen);
-	}
-
-	if (bullets.length === 0) {
-		return meta;
-	}
-
-	return [...meta, "", ":::note[언제 적용할까요?]", ...bullets.map((bullet) => `- ${escapeMarkdownProse(bullet)}`), ":::"];
-};
-
-/**
- * @helper 규칙 본문 하나를 섹션 페이지 조각으로. 헤딩 교체, 메타 삽입, 참조 링크
+ * @helper 규칙 본문 하나를 섹션 페이지 조각으로. 번호 헤딩, 등급 없는 요지, 사람용 링크, 함께 보기
+ * @description 등급, 순번, ID, 적용 조건은 에이전트의 인덱스와 계약에만 나감. 사람용 페이지에는 싣지 않음
  */
 const renderRule = (rule: SkillRule, context: RuleRenderContext): string => {
 	const location = context.locations.get(`${context.document.skillName}/${getRuleId(rule)}`);
@@ -293,13 +278,13 @@ const renderRule = (rule: SkillRule, context: RuleRenderContext): string => {
 	lines[headingIndex] = `## ${location.heading}`;
 
 	const impactIndex = lines.findIndex((line, index) => index > headingIndex && line.startsWith("**Impact:"));
-	const insertAt = (impactIndex < 0 ? headingIndex : impactIndex) + 1;
-	// 메타는 링크를 끝낸 뒤에 끼움. 먼저 끼우면 Rule 줄의 자기 ID가 자기 헤딩으로 가는 링크가 됨
-	const linked = linkRuleReferences(lines, context);
 
-	linked.splice(insertAt, 0, "", ...renderRuleMeta(rule, context));
+	if (impactIndex >= 0) {
+		// 등급은 빼고 괄호 안 설명만 요지로 남김
+		lines.splice(impactIndex, 1, ...(location.summary === "" ? [] : [location.summary]));
+	}
 
-	return linked.join("\n");
+	return [...linkRuleReferences(lines, context), ...renderRelated(rule, context)].join("\n");
 };
 
 /**
@@ -319,18 +304,16 @@ const renderSectionPage = (args: SectionPageArgs): string => {
 	const {document, section, rules, locations} = args;
 	const placement = getPlacement(document.skillName);
 	const page = sectionPagePath(document.skillName, section);
-	const context: RuleRenderContext = {document, page, locations, ordinalByRuleId: getCanonicalRoutingOrdinals(document)};
+	const context: RuleRenderContext = {document, page, locations};
 	const lines = [
 		"---",
 		`name: ${yamlScalar(`${section.order}. ${sectionDisplayTitle(section)}`)}`,
-		`label: ${yamlScalar(section.title)}`,
+		`label: ${yamlScalar(`규칙 ${rules.length}개`)}`,
 		`group: ${placement.group}`,
 		// 파일 위치 기준 참조. 생성 폴더가 어디에 끼워져도 같은 skill 개요를 가리킴
 		`parent: ../${document.skillName}`,
 		`order: ${section.order}`,
 		"---",
-		"",
-		`**Impact: ${section.impact}**`,
 		"",
 		section.description,
 		"",
@@ -344,21 +327,31 @@ const renderSectionPage = (args: SectionPageArgs): string => {
 };
 
 /**
- * @helper companion 한 줄. 어느 skill을 언제 함께 적용하는지
+ * @helper companion 한 줄. 어느 규칙집을 언제 같이 읽는지
  */
 const renderCompanion = (companion: SkillCompanion): string => {
 	const link = `[${getPlacement(companion.skill).name}](${companion.skill}.md)`;
 
 	if (companion.mode === "required") {
-		return `- ${link}: 항상 함께 적용합니다.`;
+		return `- ${link} 규칙은 항상 함께 봅니다.`;
 	}
 
 	if (companion.appliesWhen === undefined) {
-		return `- ${link}: 관련 변경이 있을 때 함께 적용합니다.`;
+		return `- ${link} 규칙은 관련 변경이 있을 때 함께 봅니다.`;
 	}
 
-	return `- ${link}: 다음 조건에서 함께 적용합니다. ${escapeMarkdownProse(companion.appliesWhen)}`;
+	return `- ${link} 규칙은 다음 변경이 있을 때 함께 봅니다. ${escapeMarkdownProse(companion.appliesWhen)}`;
 };
+
+/**
+ * 초록 끝의 정본 안내. 저장소를 고치는 사람의 정보라 사람용 사이트에서는 뺌
+ */
+const sourceNoteSentence = " 규칙 본문의 정본은 `rules/*.md`입니다.";
+
+/**
+ * @helper 표 칸에 넣을 글. 세로줄만 이스케이프
+ */
+const tableCell = (value: string): string => value.replace(/\|/g, "\\|");
 
 /**
  * @helper skill 개요 페이지. 초록, companion, 섹션별 규칙 표
@@ -374,13 +367,13 @@ const renderOverviewPage = (document: LoadedSkillDocument, locations: Map<string
 		`order: ${placement.order}`,
 		"---",
 		"",
-		document.metadata.abstract,
+		document.metadata.abstract.replace(sourceNoteSentence, ""),
 		"",
 	];
 	const companions = document.metadata.companions ?? [];
 
 	if (companions.length > 0) {
-		lines.push("## 함께 따르는 규칙", "", ...companions.map(renderCompanion), "");
+		lines.push("## 함께 보는 규칙", "", ...companions.map(renderCompanion), "");
 	}
 
 	lines.push("## 규칙", "");
@@ -395,8 +388,8 @@ const renderOverviewPage = (document: LoadedSkillDocument, locations: Map<string
 		const sectionPage = sectionPagePath(document.skillName, section);
 
 		lines.push(`### ${section.order}. ${sectionDisplayTitle(section)}`, "");
-		lines.push(`[${section.title}](${sectionPage}) **${section.impact}**`, "");
-		lines.push("| 규칙 | 영향도 |", "| --- | --- |");
+		lines.push(`${section.description} [섹션 페이지](${sectionPage})`, "");
+		lines.push("| 규칙 | 요지 |", "| --- | --- |");
 
 		for (const rule of rules) {
 			const location = locations.get(`${document.skillName}/${getRuleId(rule)}`);
@@ -405,7 +398,7 @@ const renderOverviewPage = (document: LoadedSkillDocument, locations: Map<string
 				throw new Error(`Rule "${rule.title}" has no site location.`);
 			}
 
-			lines.push(`| [${location.heading}](${relativeLink(page, location.page, location.anchor)}) | ${location.impact} |`);
+			lines.push(`| [${location.heading}](${relativeLink(page, location.page, location.anchor)}) | ${tableCell(location.summary)} |`);
 		}
 
 		lines.push("");
