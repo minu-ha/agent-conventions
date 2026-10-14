@@ -1,4 +1,4 @@
-const toRowClassNames = (row: Row): string[] => {
+const toRowClassNames = (row: OrderRow): string[] => {
 // [!code error]
 	const isOverdue = row.dueDate < today;
 

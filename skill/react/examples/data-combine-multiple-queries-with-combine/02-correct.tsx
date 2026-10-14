@@ -11,6 +11,7 @@ export const PgProductTableSection = () => {
 			return {
 				rows: productResult.data.products.map((product) => ({
 					id: product.id,
+					name: product.name,
 					categoryName: categoryById.get(product.categoryId)?.name,
 				})),
 			};

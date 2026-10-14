@@ -1,4 +1,4 @@
-const toRowAction = (row: Row): RowAction => {
+const toRowAction = (row: ProductRow): RowAction => {
 // [!code ++]
 	const isEditable = row.status === product_status.draft && !row.lockedAt && row.ownerId === session.userId;
 

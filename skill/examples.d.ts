@@ -67,6 +67,9 @@ declare const TableRow: typeof import("@mui/material").TableRow;
 declare const clsx: typeof import("clsx").clsx;
 declare const dayjs: typeof import("dayjs").default;
 type ReactNode = import("react").ReactNode;
+type ReactElement = import("react").ReactElement;
+type Context<T> = import("react").Context<T>;
+type ButtonHTMLAttributes<T> = import("react").ButtonHTMLAttributes<T>;
 type CSSProperties = import("react").CSSProperties;
 type ButtonProps = import("@mui/material").ButtonProps;
 type TableCellProps = import("@mui/material").TableCellProps;
@@ -94,11 +97,11 @@ type ProductRecord = Product;
 interface ProductRef {
 	id: string;
 }
-interface ProductRow {
-	id: string;
-	name: string;
+interface ProductRow extends Row {
 	status: ProductStatus;
 	stock: number;
+	lockedAt?: string;
+	ownerId: string;
 }
 interface ProductCategory {
 	id: string;
@@ -169,11 +172,11 @@ interface Order {
 	lines: OrderLine[];
 	overdueLineIds: string[];
 }
-interface OrderRow {
-	id: string;
+interface OrderRow extends Row {
 	status: OrderStatus;
 	total: number;
 	orderedAt: string;
+	dueDate: string;
 	isCancelled: boolean;
 	isDueSoon: boolean;
 }
@@ -242,9 +245,7 @@ interface User extends UserRecord {
 	avatarUrl: string;
 	nickname?: string;
 }
-interface UserRow {
-	id: string;
-	name: string;
+interface UserRow extends Row {
 	role: UserRole;
 	isActive: boolean;
 }
@@ -282,10 +283,6 @@ type Tone = "neutral" | "accent" | "positive" | "negative";
 interface Row {
 	id: string;
 	name: string;
-	status: string;
-	dueDate: string;
-	lockedAt?: string;
-	ownerId: string;
 }
 type RowAction = "edit" | "view";
 declare const row_action: {readonly edit: "edit"; readonly view: "view"};
@@ -349,148 +346,192 @@ declare const editable_order_statuses: readonly OrderStatus[];
 declare const product_list: Product[];
 declare const productColumns: TableColumn[];
 
+// 예제 세계관: 컴포넌트와 프롭. 레이어 접두사 ui, wg, pg
+type Theme = "light" | "dark";
+interface ErrorFallbackProps {
+	error: Error;
+	resetErrorBoundary: () => void;
+}
+interface TreeItem {
+	id: string;
+	name: string;
+	children: TreeItem[];
+}
+interface TableSort {
+	columnId: string;
+	direction: "asc" | "desc";
+}
+interface ChatMessage {
+	id: string;
+	text: string;
+	sentAt: string;
+}
+interface DailyCount {
+	date: string;
+	count: number;
+}
+type ChartOption = Record<string, unknown>;
+
+interface UiButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+	variant?: "primary" | "secondary";
+}
+declare const UiButton: (props: UiButtonProps) => ReactElement;
+declare const UiChart: {
+	Toolbar: (props: {variant: string}) => ReactElement;
+};
+interface UiCollapseProps {
+	className?: string;
+	variant?: "default" | "compact";
+	title?: string;
+	children?: ReactNode;
+}
+declare const UiCollapse: (props: UiCollapseProps) => ReactElement;
+declare const UiEmpty: (props: {description: string}) => ReactElement;
+interface UiErrorBoundaryProps {
+	fallback?: ReactNode;
+	fallbackRender?: (props: ErrorFallbackProps) => ReactNode;
+	onReset?: () => void;
+	children?: ReactNode;
+}
+declare const UiErrorBoundary: (props: UiErrorBoundaryProps) => ReactElement;
+declare const UiFilterIcon: () => ReactElement;
+declare const UiInlineErrorState: (props: {retryLabel?: string; onRetry?: () => void}) => ReactElement;
+interface UiLineChartProps {
+	points?: ChartPoint[];
+	children?: ReactNode;
+}
+declare const UiLineChart: (props: UiLineChartProps) => ReactElement;
+declare const UiLineChartSkeleton: () => ReactElement;
+declare const UiList: (props: {rows: readonly Row[]}) => ReactElement;
+declare const UiLoadingFallback: (props: {ariaLabel?: string}) => ReactElement;
+declare const UiPagination: () => ReactElement;
+declare const UiRecommendationSkeleton: () => ReactElement;
+declare const UiScreenErrorState: () => ReactElement;
+declare const UiScreenSkeleton: () => ReactElement;
+interface UiSearchInputProps {
+	value?: string;
+	label?: string;
+	onChange?: (value: string) => void;
+}
+declare const UiSearchInput: (props: UiSearchInputProps) => ReactElement;
+declare const UiShareLinkButton: (props: {href: string}) => ReactElement;
+declare const UiSpinner: () => ReactElement;
+interface UiTableProps<TRow extends Row = Row> {
+	rows: readonly TRow[];
+	columns?: TableColumn[];
+	onRowSelect?: (rows: TRow[]) => void;
+	onSave?: (formValues: ProductFormValues) => void;
+}
+declare const UiTable: <TRow extends Row>(props: UiTableProps<TRow>) => ReactElement;
+interface UiTabsProps {
+	children?: ReactNode;
+}
+declare const UiTabs: (props: UiTabsProps) => ReactElement;
+interface UiTreeProps {
+	items?: TreeItem[];
+	expandedItems?: string[];
+	onExpandedItemsChange?: (itemIds: string[]) => void;
+	selectedItems?: string | null;
+	onSelectedItemsChange?: (itemId: string | null) => void;
+}
+declare const UiTree: (props: UiTreeProps) => ReactElement;
+interface UiPanelPartProps {
+	children?: ReactNode;
+}
+
+declare const WgAppNavigation: () => ReactElement;
+interface WgAppShellProps {
+	children?: ReactNode;
+}
+interface WgChartCardProps {
+	className?: string;
+	variant?: "default" | "compact" | "muted";
+	option?: ChartOption;
+	dailyCounts?: DailyCount[];
+}
+declare const WgChartCard: (props: WgChartCardProps) => ReactElement;
+declare const WgChatComposer: (props: {onSubmit: (text: string) => void}) => ReactElement;
+declare const WgChatMessages: (props: {messages: ChatMessage[]}) => ReactElement;
+declare const WgOrderTableChildRow: (props: {row: OrderRow}) => ReactElement;
+declare const WgOrderTableHeader: (props: {sort: TableSort}) => ReactElement;
+declare const WgOrderTableRow: (props: {row: OrderRow}) => ReactElement;
+declare const WgProductBrowseActions: () => ReactElement;
+declare const WgProductEditActions: () => ReactElement;
+declare const WgProductSearchField: () => ReactElement;
+interface WgProductStatusBadgeProps {
+	children?: ReactNode;
+}
+interface WgProductTableProps {
+	children?: ReactNode;
+}
+interface WgProfileDialogPartProps {
+	children?: ReactNode;
+}
+interface WgProfileDialogContextValue {
+	isBodyOpen: boolean;
+	toggleBody: () => void;
+}
+declare const WgProfileDialogContext: Context<WgProfileDialogContextValue | null>;
+declare const WgProfileDialog: {
+	Root: (props: WgProfileDialogPartProps) => ReactElement;
+	Header: (props: WgProfileDialogPartProps) => ReactElement;
+	Body: (props: WgProfileDialogPartProps) => ReactElement;
+};
+declare const WgProfileSummary: (props: {profile: Profile}) => ReactElement;
+interface WgUserCardProps {
+	user: User;
+	theme?: Theme;
+	label?: string;
+	onSave?: () => void;
+}
+
+declare const LegacyDatePicker: (props: {value: string; onChange: (value: string) => void}) => ReactElement;
+interface PgMediaUploadPanelProps {
+	files: File[];
+}
+declare const PgOrderFilterFields: () => ReactElement;
+declare const PgOrderFilterPanel: () => ReactElement;
+declare const PgProductBulkActionBar: (props: {selectedRows?: ProductRow[]; label?: string}) => ReactElement;
+declare const PgProductCreateForm: () => ReactElement;
+declare const PgProductDetailChartSection: () => ReactElement;
+declare const PgProductFilterSection: (props: {keyword?: string}) => ReactElement;
+declare const PgProductList: () => ReactElement;
+declare const PgProductListSection: () => ReactElement;
+interface PgProductPanelProps {
+	isVisible: boolean;
+	children?: ReactNode;
+}
+declare const PgProductRecommendationSection: () => ReactElement;
+declare const PgProductRow: (props: {product: Product}) => ReactElement;
+declare const PgProductRowDivider: () => ReactElement;
+interface PgProductRowsProps {
+	products: Product[];
+}
+declare const PgProductSearchField: () => ReactElement;
+declare const PgProductSearchSection: () => ReactElement;
+interface PgProductTableProps {
+	rows: ProductRow[];
+	editHrefBase?: string;
+}
+declare const PgProductTable: (props: PgProductTableProps) => ReactElement;
+interface PgProductTableSectionProps {
+	heading?: ReactNode;
+	title?: string;
+	children?: ReactNode;
+}
+declare const PgProductTableSection: (props: PgProductTableSectionProps) => ReactElement;
+declare const PgProductTreeSection: () => ReactElement;
+
 // 예제 세계관: 아직 any 인 이름
 type ExampleQueryOptions<T = any> = {queryKey: readonly unknown[]; queryFn: () => Promise<T>};
 declare const useForm: <T>(...args: any[]) => any;
-declare const LegacyDatePicker: any;
-type LegacyDatePicker = any;
-declare const PgMediaUploadPanelProps: any;
-type PgMediaUploadPanelProps = any;
-declare const PgOrderFilterFields: any;
-type PgOrderFilterFields = any;
-declare const PgOrderFilterPanel: any;
-type PgOrderFilterPanel = any;
-declare const PgProductBulkActionBar: any;
-type PgProductBulkActionBar = any;
-declare const PgProductCreateForm: any;
-type PgProductCreateForm = any;
-declare const PgProductDetailChartSection: any;
-type PgProductDetailChartSection = any;
-declare const PgProductFilterSection: any;
-type PgProductFilterSection = any;
-declare const PgProductList: any;
-type PgProductList = any;
-declare const PgProductListSection: any;
-type PgProductListSection = any;
-declare const PgProductPanelProps: any;
-type PgProductPanelProps = any;
-declare const PgProductRecommendationSection: any;
-type PgProductRecommendationSection = any;
-declare const PgProductRow: any;
-type PgProductRow = any;
-declare const PgProductRowDivider: any;
-type PgProductRowDivider = any;
-declare const PgProductRowsProps: any;
-type PgProductRowsProps = any;
-declare const PgProductSearchField: any;
-type PgProductSearchField = any;
-declare const PgProductSearchSection: any;
-type PgProductSearchSection = any;
-declare const PgProductTable: any;
-type PgProductTable = any;
-declare const PgProductTableProps: any;
-type PgProductTableProps = any;
-declare const PgProductTableSection: any;
-type PgProductTableSection = any;
-declare const PgProductTableSectionProps: any;
-type PgProductTableSectionProps = any;
-declare const PgProductTreeSection: any;
-type PgProductTreeSection = any;
-declare const UiButton: any;
-type UiButton = any;
-declare const UiButtonProps: any;
-type UiButtonProps = any;
-declare const UiChart: any;
-type UiChart = any;
-declare const UiCollapse: any;
-type UiCollapse = any;
-declare const UiCollapseProps: any;
-type UiCollapseProps = any;
-declare const UiEmpty: any;
-type UiEmpty = any;
-declare const UiErrorBoundary: any;
-type UiErrorBoundary = any;
-declare const UiFilterIcon: any;
-type UiFilterIcon = any;
-declare const UiInlineErrorState: any;
-type UiInlineErrorState = any;
-declare const UiLineChartProps: any;
-type UiLineChartProps = any;
-declare const UiLineChartSkeleton: any;
-type UiLineChartSkeleton = any;
-declare const UiList: any;
-type UiList = any;
-declare const UiLoadingFallback: any;
-type UiLoadingFallback = any;
-declare const UiPagination: any;
-type UiPagination = any;
-declare const UiRecommendationSkeleton: any;
-type UiRecommendationSkeleton = any;
-declare const UiScreenErrorState: any;
-type UiScreenErrorState = any;
-declare const UiScreenSkeleton: any;
-type UiScreenSkeleton = any;
-declare const UiSearchInput: any;
-type UiSearchInput = any;
-declare const UiShareLinkButton: any;
-type UiShareLinkButton = any;
-declare const UiSpinner: any;
-type UiSpinner = any;
-declare const UiTable: any;
-type UiTable = any;
-declare const UiTableProps: any;
-type UiTableProps = any;
-declare const UiTabsProps: any;
-type UiTabsProps = any;
-declare const UiTree: any;
-type UiTree = any;
-declare const UiTreeProps: any;
-type UiTreeProps = any;
-declare const WgAppNavigation: any;
-type WgAppNavigation = any;
-declare const WgAppShellProps: any;
-type WgAppShellProps = any;
-declare const WgChartCard: any;
-type WgChartCard = any;
-declare const WgChartCardProps: any;
-type WgChartCardProps = any;
-declare const WgChatComposer: any;
-type WgChatComposer = any;
-declare const WgChatMessages: any;
-type WgChatMessages = any;
-declare const WgOrderTableChildRow: any;
-type WgOrderTableChildRow = any;
-declare const WgOrderTableHeader: any;
-type WgOrderTableHeader = any;
-declare const WgOrderTableRow: any;
-type WgOrderTableRow = any;
-declare const WgProductBrowseActions: any;
-type WgProductBrowseActions = any;
-declare const WgProductEditActions: any;
-type WgProductEditActions = any;
-declare const WgProductSearchField: any;
-type WgProductSearchField = any;
-declare const WgProductStatusBadgeProps: any;
-type WgProductStatusBadgeProps = any;
-declare const WgProductTableProps: any;
-type WgProductTableProps = any;
-declare const WgProfileDialog: any;
-type WgProfileDialog = any;
-declare const WgProfileDialogContext: any;
-type WgProfileDialogContext = any;
-declare const WgProfileDialogPartProps: any;
-type WgProfileDialogPartProps = any;
-declare const WgProfileSummary: any;
-type WgProfileSummary = any;
-declare const WgUserCardProps: any;
-type WgUserCardProps = any;
 declare const allowedProductIds: any;
 declare const amount: any;
 declare const approverId: any;
 declare const archivedProducts: any;
 declare const canInviteMembers: any;
 declare const canManageItems: any;
-declare const categoryListQueryOptions: () => ExampleQueryOptions<{categories: {id: string; name: string}[]}>;
+declare const categoryListQueryOptions: () => ExampleQueryOptions<{categories: ProductCategory[]}>;
 declare const client: any;
 declare const createClient: any;
 declare const deferredKeyword: any;
@@ -530,7 +571,7 @@ declare const product: any;
 declare const productDetailSummaryQueryOptions: (...args: any[]) => ExampleQueryOptions;
 declare const productId: any;
 declare const productListQueryKey: any;
-declare const productListQueryOptions: () => ExampleQueryOptions<{products: {id: string; categoryId: string}[]}>;
+declare const productListQueryOptions: () => ExampleQueryOptions<{products: Product[]}>;
 declare const productSummary: any;
 declare const productSummaryQueryKey: any;
 declare const productUrlParsers: any;
