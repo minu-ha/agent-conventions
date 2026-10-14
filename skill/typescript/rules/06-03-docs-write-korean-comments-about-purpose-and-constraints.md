@@ -22,7 +22,7 @@ tags: docs, comments
 | 항목 | 기준 |
 | --- | --- |
 | 끝맺음 | `~한다`, `~이다` 대신 명사나 명사형(`고정`, `불가`, `필요`, `덮어씀`)으로 끝냅니다. 줄 끝에는 마침표를 찍지 않습니다 |
-| 한 줄 | 사실 하나만 적습니다. 결론이 먼저이고 이유는 마침표 뒤나 다음 줄에 둡니다 |
+| 한 줄 | 사실 하나만 적습니다. 결론이 먼저이고 이유는 마침표 뒤에 둡니다 |
 | 군더더기 | 접속사, 꾸밈말, 경위를 뺍니다. 예전 동작과 바뀐 과정은 커밋 메시지에 둡니다 |
 | 나열 | 쉼표로 잇습니다. 가운뎃점과 대시는 쓰지 않습니다 |
 | 조사 | 영어 낱말과 식별자 뒤에도 붙여 씁니다(`MUI가`, `className을`) |
@@ -35,11 +35,32 @@ tags: docs, comments
 | 우리말이 없거나 어색한 기술 용어 | 한글 외래어. provider는 프로바이더, wrapper는 래퍼 |
 | 코드 이름, 제품 이름, 약어 | 원문 그대로. `QueryClientProvider`, MUI, API |
 
-### 여러 줄
+### 상자
 
-설명이 둘 이상이면 한 줄에 몰지 않고 줄을 나눕니다.
-첫 줄은 요약입니다.
-빈 줄 뒤에 이유와 조건을 한 줄씩 적고, 딸린 내용은 목록이나 들여쓰기로 묶습니다.
+문서 주석은 제목 한 줄이 기본입니다.
+본문이 있으면 빈 줄 뒤에 두 칸 들여쓴 목록 하나로 씁니다. 평문 줄은 쓰지 않습니다.
+
+| 자리 | 기준 |
+| --- | --- |
+| 제목 | 선언이 무엇인지 명사구 한 줄. 짧은 보충 하나는 마침표 뒤 같은 줄 |
+| 본문 | 빈 줄 하나 뒤, 줄마다 `  - `로 시작하는 목록. 사실 하나면 항목 하나 |
+| 항목 | 사실 하나. 결론이 먼저이고 이유는 마침표 뒤 |
+| `{@link}` | 마지막 줄, 목록 밖 |
+| `//` | 사실 하나. 둘이면 줄을 나누거나 헤더 블록의 목록으로 올립니다 |
+
+항목 앞에는 종류를 알리는 태그 셋만 씁니다. 그 밖의 사실은 태그 없이 적습니다.
+
+| 태그 | 뜻 |
+| --- | --- |
+| `제약:` | 바깥(API, 라이브러리, 명세, 기획)이 정해 코드가 따르는 조건 |
+| `예외:` | 규칙을 비껴간 자리와 확인할 수 있는 근거. `docs-justify-convention-exceptions-with-a-reason-comment`의 자리 |
+| `임시:` | 없어질 사실과 지울 조건. 예) 서버 작업이 끝나면 삭제 |
+
+괄호 꼬리는 출처 전용입니다.
+누가 정했는지와 그 날짜를 적습니다(`(백엔드 답변 10-14)`, `(기획 10-07)`, `(피그마 10-01)`, `(사용자 10-13)`).
+날짜만 있는 `(10-14)`는 출처가 아닙니다.
+바뀐 경위는 적지 않습니다. 언제 무엇이 바뀌었는지는 커밋이 답하고, 주석은 지금 참인 사실만 가집니다.
+코드가 이미 보여 주는 사실도 적지 않습니다.
 
 ### 내용과 태그
 
@@ -76,7 +97,7 @@ tags: docs, comments
 
 <<< ../examples/docs-write-korean-comments-about-purpose-and-constraints/03-incorrect.ts
 
-**Correct 2 (결론을 명사형으로 먼저 쓰고 이유는 다음 줄에 짧게 둡니다):**
+**Correct 2 (결론을 명사형으로 제목에 쓰고 이유는 목록 항목으로 둡니다):**
 
 <<< ../examples/docs-write-korean-comments-about-purpose-and-constraints/04-correct.ts
 
@@ -84,7 +105,7 @@ tags: docs, comments
 
 <<< ../examples/docs-write-korean-comments-about-purpose-and-constraints/05-incorrect.ts
 
-**Correct 3 (요약 한 줄 뒤에 제약을 한 줄씩 목록으로 나눕니다):**
+**Correct 3 (요약 한 줄 뒤에 제약을 항목 하나씩 들여쓴 목록으로 나눕니다):**
 
 <<< ../examples/docs-write-korean-comments-about-purpose-and-constraints/06-correct.ts
 
@@ -95,3 +116,11 @@ tags: docs, comments
 **Correct 4 (태그를 지우고 헤더 첫 줄에 선언이 하는 일을 적습니다):**
 
 <<< ../examples/docs-write-korean-comments-about-purpose-and-constraints/08-correct.ts
+
+**Incorrect 5 (바뀐 경위와 날짜만 있는 괄호를 적습니다):**
+
+<<< ../examples/docs-write-korean-comments-about-purpose-and-constraints/09-incorrect.ts
+
+**Correct 5 (지금 참인 사실에 출처를 붙이고 없어질 사실은 `임시:`로 표시합니다):**
+
+<<< ../examples/docs-write-korean-comments-about-purpose-and-constraints/10-correct.ts

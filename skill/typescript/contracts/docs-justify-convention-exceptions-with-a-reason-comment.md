@@ -21,11 +21,12 @@
 ```mermaid
 flowchart LR
 	q1{"헤더 문서 주석이<br>있는 선언인가?"} -- 아니요 --> q2{"JSX 자식인가?"} -- 아니요 --> r3("해당 줄 바로 위에 //")
-	q1 -- 예 --> r1("헤더 블록 안에 이유")
+	q1 -- 예 --> r1("헤더 블록의 예외: 항목")
 	q2 -- 예 --> r2("프레임워크 규칙이<br>정한 형태")
 ```
 
-어투와 내용은 `docs-write-korean-comments-about-purpose-and-constraints`를 따릅니다.
+헤더 블록에서는 `예외:` 태그를 단 목록 항목으로 적습니다.
+어투와 상자 꼴은 `docs-write-korean-comments-about-purpose-and-constraints`를 따릅니다.
 
 **Incorrect 1 (확인할 수 없는 말로 예외를 정당화합니다):**
 
