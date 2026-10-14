@@ -25,8 +25,7 @@ tags: selector, state, negation
 | 조상 수정자가 자손의 모습을 바꿈 | 자손 수정자로 옮깁니다. 선택 여부 각각에서 hover와 포커스 결과도 확인합니다 |
 
 앱 상태는 각 요소의 수정자로 표현하고 조상에서 다시 읽지 않습니다.
-각 수정자가 해당 요소의 모습을 모두 정의합니다.
-DOM 상태와 앱 상태의 구분은 `selector-use-pseudo-classes-for-dom-owned-states` 규칙을 따릅니다.
+DOM 상태와 앱 상태의 구분은 `selector-use-pseudo-classes-for-dom-owned-states`를 따릅니다.
 
 **Incorrect 1 (활성 버튼의 hover를 부정 조건으로 표현합니다):**
 

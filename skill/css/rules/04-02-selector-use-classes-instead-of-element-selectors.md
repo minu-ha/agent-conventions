@@ -19,8 +19,6 @@ tags: selector, element-selectors, markup
 우리가 렌더하는 마크업은 요소 선택자 대신 클래스로 선택합니다.
 태그를 `div`에서 `section`으로 바꿔도 스타일이 사라지지 않아야 합니다.
 
-우리가 렌더하는 마크업인지 먼저 보고, 아니면 렌더러가 클래스 지정 API를 제공하는지에 따라 선택 방법을 고릅니다.
-
 ```mermaid
 flowchart LR
 	q1{"우리가 렌더하는<br>마크업인가?"} -- 아니요 --> q2{"렌더러가 클래스 지정<br>API를 제공하는가?"} -- 아니요 --> r3("감싼 클래스 블록 안에서만<br>요소 선택자")
@@ -35,9 +33,8 @@ flowchart LR
 ### 예외 주석 형태
 
 `selector-disallowed-list`가 `&` 바로 뒤의 요소 선택자를 막으므로 예외에는 다음 주석을 남깁니다.
-예외 선택자가 하나면 `stylelint-disable-next-line`을 씁니다.
-둘 이상이면 블록을 `stylelint-disable`과 `stylelint-enable` 주석 쌍으로 감쌉니다.
-
+예외 선택자가 하나면 `stylelint-disable-next-line`을 쓰고,
+둘 이상이면 `stylelint-disable`과 `stylelint-enable` 쌍으로 감쌉니다.
 규칙 이름 뒤에 `-- <마크업 출처>`처럼 직접 작성하지 않는 마크업이라는 근거를 함께 적습니다.
 
 **Incorrect 1 (우리가 렌더하는 마크업을 요소 선택자로 잡습니다):**

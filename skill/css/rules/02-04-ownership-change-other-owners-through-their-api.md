@@ -34,9 +34,7 @@ flowchart LR
 화면 소유 여부는 사용 횟수가 아니라 활성화된 프레임워크 규약으로 판단합니다.
 세 방법이 모두 맞지 않으면 `ownership-use-foreign-classes-only-under-your-own-root`에 따라 내 최상위 블록 안에서
 선택자로 지정합니다.
-
-`className`을 최상위까지만 전달하는 경계는 `composition-inject-classes-only-at-the-entry-point` 규칙이 정합니다.
-이 규칙은 사용처가 어떤 방법을 고를지 정합니다.
+`className`을 최상위까지만 전달하는 경계는 `composition-inject-classes-only-at-the-entry-point`가 정합니다.
 
 **Incorrect 1 (최상위 배치를 `className`으로 바꿀 수 있는데도 다른 소유자의 클래스를 선택합니다):**
 

@@ -14,7 +14,6 @@ tags: naming, class-grammar, ownership
 **Impact: HIGH (클래스 이름에서 소유자와 역할을 확인할 수 있습니다)**
 
 클래스 이름은 `<scope>_<slug>__<element>[--<modifier>]` 문법을 씁니다.
-구분자 `_`, `__`, `--`를 고정하고 각 자리의 역할을 구분합니다.
 다른 규칙에서도 아래 한국어 이름을 씁니다.
 
 | 자리 | 읽는 이름 | 담는 것 |
@@ -25,9 +24,7 @@ tags: naming, class-grammar, ownership
 | `modifier` | 수정자 | 클래스 뒤에 `--`로 붙는 이름. camelCase로 씁니다 |
 
 수정자의 허용 범위는 `composition-do-not-build-structural-variants-with-modifiers`가 정합니다.
-수정자는 클래스의 `--이름`이고, 변형은 컴포넌트가 받는 `variant` 프롭입니다.
-식별자에는 접두사가 이미 드러낸 낱말을 반복하지 않습니다.
-`UiButton`은 `ui_button`으로 쓰고 `ui_uiButton`으로 쓰지 않습니다.
+식별자에는 접두사가 이미 드러낸 낱말을 반복하지 않으므로 `UiButton`은 `ui_button`입니다.
 기계 검사는 이 문법을 정규식으로 등록한 `selector-class-pattern`이 담당합니다.
 
 **Incorrect 1 (식별자, 요소, 수정자에 snake_case와 kebab-case가 섞입니다):**

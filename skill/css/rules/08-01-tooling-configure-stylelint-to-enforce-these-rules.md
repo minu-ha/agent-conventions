@@ -42,7 +42,6 @@ tags: tooling, stylelint, automation
 `no-duplicate-selectors`는 `css/selector-declare-each-class-in-one-block`과
 `css/selector-do-not-group-classes-with-commas`의 단독 재선언을 담당합니다.
 폴더별 접두사는 `selector-class-pattern`과 `selector-disallowed-list`의 `overrides`로 나눕니다.
-예제 정규식은 `&`로 시작하는 중첩 선택자와 최상위를 구분하지만 `&`의 소유자까지 검사하지는 않습니다.
 `selector-max-combinators`와 `selector-max-type`은 넣지 않습니다.
 개수만으로 우리 선택자와 라이브러리 경로를 구분할 수 없습니다.
 
@@ -56,8 +55,6 @@ tags: tooling, stylelint, automation
 | 중첩 `@media`와 데스크톱 퍼스트 방향 | at-rule의 최상위 배치를 강제하지 못합니다 | `css/layout-group-breakpoints-at-the-file-bottom`으로 판단합니다 |
 | 우리 마크업의 구조 선택자 | `:first-child`, `:nth-child()`는 클래스에도 붙습니다 | 표기만으로 구분하지 못해 리뷰에서 확인합니다 |
 | 역할 이름, 승격 판단, 변형 노출, 포커스 대비 | 기계가 뜻을 판단하지 못합니다 | 리뷰에서 확인합니다 |
-
-`@media` 방향은 `css/layout-write-breakpoints-desktop-first`가 함께 정합니다.
 
 **Correct (공통 규칙에 폴더별 접두사 `overrides`를 더합니다):**
 

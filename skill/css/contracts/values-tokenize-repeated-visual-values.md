@@ -2,8 +2,7 @@
 
 **Impact: MEDIUM (여러 파일이 쓰는 값은 전역 토큰으로 모으고 나머지는 선언 자리에 그대로 둡니다)**
 
-값을 둘 자리는 **파일 경계**로 판정하고 다음 예외를 함께 확인합니다.
-여러 파일에서 쓰는지부터 아래 순서로 따져 값을 둘 자리를 고릅니다.
+값을 둘 자리는 **파일 경계**로 판정하고 아래 예외를 함께 확인합니다.
 
 ```mermaid
 flowchart LR
@@ -23,10 +22,9 @@ flowchart LR
 
 그 밖의 **지역 변수는 만들지 않습니다.**
 공통 토큰이 아니면 대체값이 필요해 사용처의 값은 남고 참조만 늘어납니다.
-조상 상태는 변수 대신 결합자 하나로 자손에 전달합니다.
-결합자 범위는 `ownership-use-foreign-classes-only-under-your-own-root` 규칙을 따릅니다.
-`selector-do-not-group-classes-with-commas`에 따라 여러 클래스의 공통 선언도 묶지 않고 각 블록에 반복합니다.
-층 목록은 `values-declare-stacking-layers-as-tokens`, 새 토큰 이름은 `values-name-tokens-by-purpose` 규칙이 정합니다.
+조상 상태는 변수 대신 결합자 하나로 자손에 전달하며,
+결합자 범위는 `ownership-use-foreign-classes-only-under-your-own-root`를 따릅니다.
+층 목록은 `values-declare-stacking-layers-as-tokens`, 새 토큰 이름은 `values-name-tokens-by-purpose`가 정합니다.
 
 **Incorrect 1 (한 파일 안 반복을 조상에 선언한 지역 변수로 감쌉니다):**
 

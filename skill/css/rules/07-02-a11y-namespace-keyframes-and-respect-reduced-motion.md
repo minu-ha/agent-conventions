@@ -18,15 +18,13 @@ tags: values, motion
 
 ### 이름과 토큰
 
-일반 CSS의 클래스와 `@keyframes`는 파일로 격리되지 않으며,
-같은 캐스케이드 계층에 같은 키프레임 이름이 있으면 문서 순서상 뒤의 정의가 적용됩니다.
+일반 CSS의 `@keyframes`는 파일로 격리되지 않으며, 같은 이름이 있으면 문서 순서상 뒤의 정의가 적용됩니다.
 
 | 이름과 토큰 | 작성 기준 |
 | --- | --- |
 | `@keyframes` 이름 | `<범위>_<식별자>__<동작>`으로 씁니다. 예: `pg_products__fadeIn` |
 | 지속 시간과 이징 | 한 파일에서 한 번만 써도 토큰으로 둡니다. 예: `var(--app-motion-duration-fast)` |
 
-소유자 접두사는 `naming-use-scope-slug-element-modifier-syntax`와 같습니다.
 지속 시간과 이징 토큰은 `values-tokenize-repeated-visual-values`의 예외입니다.
 
 ### 도구 설정과 속성
@@ -36,11 +34,8 @@ tags: values, motion
 | 이름 검사 | `stylelint-config-standard`의 kebab-case 기본값을 `keyframes-name-pattern`으로 바꿉니다 |
 | 애니메이션 속성 | `transform`과 `opacity`를 씁니다. `width`나 `top`은 매 프레임 레이아웃을 다시 계산합니다 |
 
-`keyframes-name-pattern` 값은 `tooling-configure-stylelint-to-enforce-these-rules`가 정합니다.
-
 ### 움직임 감소 처리
 
-움직임은 어지럼증이나 전정 장애가 있는 사용자에게 접근성 문제입니다.
 **움직임 감소 요청이 오면 기본으로 전역에서 `animation`과 `transition`을 함께 차단합니다.**
 
 | 전역 처리 | 기준과 예외 |

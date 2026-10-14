@@ -21,8 +21,6 @@ tags: ownership, scope, third-party
 다른 소유자의 클래스는 **내 최상위 클래스 블록 안에서 `&`로 시작하는 선택자**로만 씁니다.
 내 `scope_slug`와 다르면 외부 라이브러리, 다른 화면, `widget` 모두 같은 기준을 적용합니다.
 
-내 `scope_slug` 클래스인지 먼저 보고, 아니면 내 최상위 블록 안에서 `&`로 시작하는지로 선택자를 판정합니다.
-
 ```mermaid
 flowchart LR
 	q1{"내 scope_slug<br>클래스인가?"} -- 아니요 --> q2{"내 최상위 블록 안에서<br>&로 시작하는가?"} -- 예 --> r2("허용")
@@ -39,9 +37,8 @@ flowchart LR
 | `.pg_products__sidebar .MuiTreeItem-label { }` | 금지. 최상위 블록 안에서 `&`로 시작해야 합니다 |
 | `.pg_products__sidebarToolbar .pg_products__sidebarTitle { }` | 같은 소유자의 클래스끼리라 이 규칙의 대상이 아닙니다 |
 
-이렇게 덮어쓰기를 한 블록에 모으면 라이브러리 버전을 올릴 때 확인할 곳도 한곳으로 정해집니다.
 다른 소유자의 DOM 경로는 우리가 정하지 않으므로 결합자 개수를 제한하지 않습니다.
-블록 중첩 깊이는 `selector-limit-nesting-block-depth` 규칙을 따릅니다.
+블록 중첩 깊이는 `selector-limit-nesting-block-depth`를 따릅니다.
 직접 수정할 수 있는 클래스라면 `ownership-change-other-owners-through-their-api`의 세 방법을 먼저 확인하고,
 모두 맞지 않을 때 이 규칙을 적용합니다.
 
@@ -49,7 +46,6 @@ flowchart LR
 
 `selector-disallowed-list`는 등록된 외부 접두사와 다른 레이어의 최상위 클래스를 검사합니다.
 같은 레이어의 다른 식별자와 미등록 라이브러리 클래스는 이 검사에 걸리지 않아 파일별 소유자를 대조해야 합니다.
-전체 설정은 `tooling-configure-stylelint-to-enforce-these-rules` 규칙에 있습니다.
 
 **Incorrect 1 (최상위 블록 없이 라이브러리 클래스를 바로 씁니다):**
 

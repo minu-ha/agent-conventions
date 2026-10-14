@@ -16,10 +16,8 @@ tags: components, wrappers, layout
 **Impact: HIGH (래퍼 요소는 부모 레이아웃 계산을 바꾸고 역할 없는 클래스를 늘립니다)**
 
 스타일을 주기 위해 래퍼 요소를 추가하지 않습니다.
-래퍼를 넣으면 부모의 `flex`나 `grid` 아이템이 바뀌어 내부의 `flex`, `grid-area`,
-정렬이 부모 레이아웃에 적용되지 않을 수 있습니다.
-
-우리가 만든 컴포넌트인지에 따라 여백이나 크기를 줄 방법을 고릅니다.
+래퍼를 넣으면 부모의 `flex`나 `grid` 아이템이 바뀌어
+내부의 `flex`, `grid-area`, 정렬이 부모 레이아웃에 적용되지 않습니다.
 
 ```mermaid
 flowchart LR

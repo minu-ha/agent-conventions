@@ -27,9 +27,7 @@ tags: clsx, className, modifiers
 | `ButtonProps["variant"]`처럼 라이브러리 타입을 그대로 받음 | 수정자를 만들지 않고 라이브러리에 넘깁니다. 라이브러리가 추가한 값을 우리 목록이 놓칠 수 있습니다 |
 | 라이브러리와 별개인 우리 모습이 필요함 | 우리 어휘로 정의한 프롭을 따로 받습니다 |
 
-어느 자리에서도 템플릿 리터럴로 이름을 조립하지 않습니다.
-수정자를 붙일 수 있는지는 `composition-do-not-build-structural-variants-with-modifiers` 규칙이 정합니다.
-이 규칙은 허용한 수정자의 작성 형식을 정합니다.
+수정자를 붙일 수 있는지는 `composition-do-not-build-structural-variants-with-modifiers`가 정합니다.
 
 **Incorrect 1 (클래스 이름을 값으로 조립합니다):**
 

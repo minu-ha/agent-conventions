@@ -18,9 +18,6 @@ tags: selector, responsive
 
 브레이크포인트 재선언은 파일 맨 아래 `@media` 블록에 모으고 클래스 블록 안에 중첩하지 않습니다.
 같은 폭에서 툴바, 패널, 사이드바가 어떻게 달라지는지 한 블록에서 읽도록 합니다.
-
-기본 선언과 조건 선언이 나뉘지만 화면 전체의 폭별 변화를 함께 확인하기 위해 이 배치를 택합니다.
-`selector-declare-each-class-in-one-block`은 이 배치를 위해 `@media` 재선언을 허용합니다.
 조건 방향과 값은 `layout-write-breakpoints-desktop-first`를 따릅니다.
 
 | 반복되거나 별도로 판단할 것 | 처리 |

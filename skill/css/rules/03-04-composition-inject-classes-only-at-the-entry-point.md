@@ -22,8 +22,6 @@ tags: components, entry-point, class-props
 
 ### 사용처가 바꾸는 자리
 
-최상위의 배치, 여백, 크기를 바꾸는지에 따라 방법을 고릅니다.
-
 ```mermaid
 flowchart LR
 	q1{"최상위의 배치, 여백,<br>크기를 바꾸는가?"} -- 예 --> r1("받은 className을<br>자기 최상위 클래스와 합침")
@@ -43,8 +41,8 @@ flowchart LR
 | 받은 `className`을 내부 노드에 전달함 | 클래스 주입은 최상위까지만 허용합니다 |
 | 최상위 수정자로 내부를 결합해 선택함 | 자손이 조상 구조에 의존합니다. 조상의 DOM 상태를 전달할 때만 `selector-nest-dom-state-in-the-owning-block`에 따라 결합자 하나를 씁니다 |
 
-사용처가 어떤 방법을 고를지는 `ownership-change-other-owners-through-their-api` 규칙이 정합니다.
-`className`을 받지 않는 컴포넌트는 `composition-do-not-add-wrapper-elements-for-styling` 규칙을 따릅니다.
+사용처가 어떤 방법을 고를지는 `ownership-change-other-owners-through-their-api`가 정합니다.
+`className`을 받지 않는 컴포넌트는 `composition-do-not-add-wrapper-elements-for-styling`을 따릅니다.
 
 **Incorrect 1 (내부 노드마다 클래스 프롭을 열어 주입 지점을 늘립니다):**
 
