@@ -23,7 +23,7 @@ const toMatchedProducts = (products: Product[], keyword: string) => {
 	// keyword를 소문자로 변환
 	const lowerKeyword = keyword.trim().toLowerCase();
 
-	return products.filter((product) => product.title.toLowerCase().includes(lowerKeyword));
+	return products.filter((product) => product.name.toLowerCase().includes(lowerKeyword));
 };
 ```
 
@@ -33,7 +33,7 @@ const toMatchedProducts = (products: Product[], keyword: string) => {
 const toMatchedProducts = (products: Product[], keyword: string) => {
 	const lowerKeyword = keyword.trim().toLowerCase();
 
-	return products.filter((product) => product.title.toLowerCase().includes(lowerKeyword));
+	return products.filter((product) => product.name.toLowerCase().includes(lowerKeyword));
 };
 ```
 

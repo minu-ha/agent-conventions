@@ -1,7 +1,7 @@
 /**
  * 예제가 import 없이 쓰는 이름
  *
- * 실제 스택의 이름은 설치된 패키지의 타입을 그대로 가리키고, 예제 세계관의 이름은 any 로 둡니다
+ * 실제 스택의 이름은 설치된 패키지의 타입을 그대로 가리키고, 예제 세계관의 이름은 여기서 선언합니다
  * tsc 가 Cannot find name 을 내면 그 이름을 알맞은 절에 더합니다
  */
 
@@ -76,53 +76,284 @@ type MouseEventHandler<T = Element> = import("react").MouseEventHandler<T>;
 type ChangeEventHandler<T = Element> = import("react").ChangeEventHandler<T>;
 type HTMLAttributes<T> = import("react").HTMLAttributes<T>;
 
-// 예제 세계관
+// 예제 세계관: 작은 상점 관리자 콘솔의 도메인
+type ProductStatus = "draft" | "active" | "hidden";
+declare const product_status: {readonly draft: "draft"; readonly active: "active"; readonly hidden: "hidden"};
+type ProductStatusFilter = ProductStatus | "all";
+interface Product {
+	id: string;
+	name: string;
+	price: number;
+	stock: number;
+	status: ProductStatus;
+	categoryId: string;
+	bodyHtml: string;
+	updatedAt: string;
+}
+type ProductRecord = Product;
+interface ProductRef {
+	id: string;
+}
+interface ProductRow {
+	id: string;
+	name: string;
+	status: ProductStatus;
+	stock: number;
+}
+interface ProductCategory {
+	id: string;
+	name: string;
+}
+interface ProductCategoryNode extends ProductCategory {
+	children: ProductCategoryNode[];
+}
+interface ProductChange {
+	productId: string;
+	stock: number;
+}
+interface ProductSummary {
+	changeRate: number | null;
+}
+interface ProductDraft {
+	name: string;
+	price: number;
+	tags: string[];
+	attachments: File[];
+}
+interface ProductFormValues {
+	name: string;
+	description: string;
+	categoryId: string;
+}
+type ProductEditorFormValues = ProductFormValues;
+interface ProductSaveRequest {
+	name: string;
+	description?: string;
+	categoryId?: string;
+	price?: number;
+	tags?: string[];
+	attachmentIds?: string[];
+}
+interface ProductCreateRequest extends ProductSaveRequest {}
+interface ProductListResponse {
+	items: Product[];
+	total: number;
+}
+type ProductListResponseDTO = ProductListResponse;
+type ProductPage = ProductListResponse;
+interface ProductTreeResponse {
+	nodes: ProductCategoryNode[];
+}
+
+type OrderStatus = "pending" | "paid" | "shipped" | "completed" | "cancelled";
+type OrderStatusCode = "P" | "C" | "D";
+interface OrderLine {
+	id: string;
+	label: string;
+	amount: number;
+}
+interface OrderLineInput {
+	product: Product;
+	quantity: number;
+}
+interface OrderTotal {
+	currency: string;
+	amount: number;
+}
+interface Order {
+	id: string;
+	status: OrderStatus;
+	total: number;
+	orderedAt: string;
+	ownerId: string;
+	lines: OrderLine[];
+	overdueLineIds: string[];
+}
+interface OrderRow {
+	id: string;
+	status: OrderStatus;
+	total: number;
+	orderedAt: string;
+	isCancelled: boolean;
+	isDueSoon: boolean;
+}
+type StatusLabel = "취소" | "임박" | "진행";
+interface OrderFilters {
+	status?: OrderStatus;
+	keyword?: string;
+}
+interface OrderDraft {
+	productId: string;
+	quantity: number;
+	memo: string;
+}
+interface OrderSaveRequest {
+	quantity: number;
+	memo: string;
+}
+interface OrderSummary {
+	orderAmount: Amount;
+	orderCount: number;
+	statusDescription: string;
+	totalAmount: Amount;
+}
+interface ToOrderSummaryParams {
+	orderSummary: OrderSummary;
+	stockCount?: number;
+}
+interface SummaryMetric {
+	id: string;
+	label: string;
+	value: string | number;
+}
+interface SummaryStatusGroup {
+	id: string;
+	title: string;
+	description: string;
+	total: string;
+	rows: SummaryMetric[];
+}
+interface OrderSummaryContent {
+	metrics: SummaryMetric[];
+	statusGroups: SummaryStatusGroup[];
+	stockCount?: number;
+}
+interface OrderSummaryItem {
+	id: string;
+	name: string;
+	code: string;
+}
+interface OrderSummaryResponse {
+	items: OrderSummaryItem[];
+}
+interface SummaryRow {
+	id: string;
+	label: string;
+}
+
+type UserRole = "admin" | "staff";
+interface UserRecord {
+	id: string;
+	name: string;
+	email: string;
+}
+interface User extends UserRecord {
+	role: UserRole;
+	avatarUrl: string;
+	nickname?: string;
+}
+interface UserRow {
+	id: string;
+	name: string;
+	role: UserRole;
+	isActive: boolean;
+}
+interface UserResponse {
+	items: User[];
+}
+interface UserFormValues {
+	name: string;
+	email: string;
+	role: UserRole;
+}
+interface Profile {
+	id: string;
+	displayName: string;
+	email: string;
+	avatarUrl: string;
+}
+interface ProfileFormValues {
+	displayName: string;
+}
+interface Session {
+	userId: string | null;
+}
+interface Settings {
+	theme: "light" | "dark";
+	locale: string;
+	supportEmail?: string;
+}
+
+interface Amount {
+	value: number;
+	currency: string;
+}
+type Tone = "neutral" | "accent" | "positive" | "negative";
+interface Row {
+	id: string;
+	name: string;
+	status: string;
+	dueDate: string;
+	lockedAt?: string;
+	ownerId: string;
+}
+type RowAction = "edit" | "view";
+declare const row_action: {readonly edit: "edit"; readonly view: "view"};
+interface Draft {
+	title: string;
+}
+interface PageRequest {
+	page: number;
+	size: number;
+}
+interface GeneratedExportRequest {
+	format: "csv" | "xlsx";
+	requestedAt: string;
+}
+interface ChartPoint {
+	x: number;
+	y: number;
+}
+interface ChartSeries {
+	id: string;
+	role: string;
+	points: ChartPoint[];
+	colorToken?: string;
+}
+interface ChartInstance {
+	resize(): void;
+	dispose(): void;
+	setOption(option: unknown): void;
+}
+interface TableColumn {
+	id: string;
+	label: string;
+}
+interface Capabilities {
+	capabilities: string[];
+}
+
+declare class MissingEnvironmentValueError extends Error {
+	constructor(name: string);
+}
+declare class NoActiveProductError extends Error {}
+declare class NotLoggedInError extends Error {}
+
+// 예제 세계관: constant/ 의 값
+declare const api_base_url: string;
+declare const pagination_default_page: number;
+declare const pagination_default_page_size: number;
+declare const date_format: string;
+declare const empty_display_text: string;
+declare const order_memo_limit: number;
+declare const product_tag_limit: number;
+declare const query_retry_count: number;
+declare const support_email_default: string;
+declare const tick_count: number;
+declare const token_expiry_hours: number;
+declare const pricing_default_currency: string;
+declare const locale_supported_values: readonly string[];
+declare const status_positive_values: readonly string[];
+declare const status_negative_values: readonly string[];
+declare const editable_order_statuses: readonly OrderStatus[];
+declare const product_list: Product[];
+declare const productColumns: TableColumn[];
+
+// 예제 세계관: 아직 any 인 이름
 type ExampleQueryOptions<T = any> = {queryKey: readonly unknown[]; queryFn: () => Promise<T>};
 declare const useForm: <T>(...args: any[]) => any;
-declare const Amount: any;
-type Amount = any;
-declare const ChartInstance: any;
-type ChartInstance = any;
-declare const ChartPoint: any;
-type ChartPoint = any;
-declare const Draft: any;
-type Draft = any;
-declare const GeneratedExportRequest: any;
-type GeneratedExportRequest = any;
 declare const LegacyDatePicker: any;
 type LegacyDatePicker = any;
-declare const MissingEnvironmentValueError: any;
-type MissingEnvironmentValueError = any;
-declare const NoActiveProductError: any;
-type NoActiveProductError = any;
-declare const NotLoggedInError: any;
-type NotLoggedInError = any;
-declare const Order: any;
-type Order = any;
-declare const OrderDraft: any;
-type OrderDraft = any;
-declare const OrderFilters: any;
-type OrderFilters = any;
-declare const OrderLine: any;
-type OrderLine = any;
-declare const OrderLineInput: any;
-type OrderLineInput = any;
-declare const OrderRow: any;
-type OrderRow = any;
-declare const OrderSaveRequest: any;
-type OrderSaveRequest = any;
-declare const OrderStatus: any;
-type OrderStatus = any;
-declare const OrderStatusCode: any;
-type OrderStatusCode = any;
-declare const OrderSummaryContent: any;
-type OrderSummaryContent = any;
-declare const OrderSummaryResponse: any;
-type OrderSummaryResponse = any;
-declare const OrderTotal: any;
-type OrderTotal = any;
-declare const PageRequest: any;
-type PageRequest = any;
 declare const PgMediaUploadPanelProps: any;
 type PgMediaUploadPanelProps = any;
 declare const PgOrderFilterFields: any;
@@ -165,50 +396,6 @@ declare const PgProductTableSectionProps: any;
 type PgProductTableSectionProps = any;
 declare const PgProductTreeSection: any;
 type PgProductTreeSection = any;
-declare const Product: any;
-type Product = any;
-declare const ProductCategoryNode: any;
-type ProductCategoryNode = any;
-declare const ProductChange: any;
-type ProductChange = any;
-declare const ProductDraft: any;
-type ProductDraft = any;
-declare const ProductEditorFormValues: any;
-type ProductEditorFormValues = any;
-declare const ProductFormValues: any;
-type ProductFormValues = any;
-declare const ProductListResponseDTO: any;
-type ProductListResponseDTO = any;
-declare const ProductPage: any;
-type ProductPage = any;
-declare const ProductRecord: any;
-type ProductRecord = any;
-declare const ProductRef: any;
-type ProductRef = any;
-declare const ProductRow: any;
-type ProductRow = any;
-declare const ProductSaveRequest: any;
-type ProductSaveRequest = any;
-declare const ProductStatusFilter: any;
-type ProductStatusFilter = any;
-declare const Profile: any;
-type Profile = any;
-declare const ProfileFormValues: any;
-type ProfileFormValues = any;
-declare const Row: any;
-type Row = any;
-declare const RowAction: any;
-type RowAction = any;
-declare const Session: any;
-type Session = any;
-declare const StatusLabel: any;
-type StatusLabel = any;
-declare const SummaryRow: any;
-type SummaryRow = any;
-declare const ToOrderSummaryParams: any;
-type ToOrderSummaryParams = any;
-declare const Tone: any;
-type Tone = any;
 declare const UiButton: any;
 type UiButton = any;
 declare const UiButtonProps: any;
@@ -259,16 +446,6 @@ declare const UiTree: any;
 type UiTree = any;
 declare const UiTreeProps: any;
 type UiTreeProps = any;
-declare const User: any;
-type User = any;
-declare const UserFormValues: any;
-type UserFormValues = any;
-declare const UserRecord: any;
-type UserRecord = any;
-declare const UserResponse: any;
-type UserResponse = any;
-declare const UserRow: any;
-type UserRow = any;
 declare const WgAppNavigation: any;
 type WgAppNavigation = any;
 declare const WgAppShellProps: any;
@@ -309,7 +486,6 @@ declare const WgUserCardProps: any;
 type WgUserCardProps = any;
 declare const allowedProductIds: any;
 declare const amount: any;
-declare const api_base_url: any;
 declare const approverId: any;
 declare const archivedProducts: any;
 declare const canInviteMembers: any;
@@ -317,11 +493,8 @@ declare const canManageItems: any;
 declare const categoryListQueryOptions: () => ExampleQueryOptions<{categories: {id: string; name: string}[]}>;
 declare const client: any;
 declare const createClient: any;
-declare const date_format: any;
 declare const deferredKeyword: any;
 declare const draftFiles: any;
-declare const editable_order_statuses: any;
-declare const empty_display_text: any;
 declare const expandedRows: any;
 declare const fetchFilteredRows: any;
 declare const fetchProducts: any;
@@ -339,7 +512,6 @@ declare const isProductFilter: any;
 declare const isSelected: any;
 declare const issuedAt: any;
 declare const keyword: any;
-declare const locale_supported_values: any;
 declare const matchRow: any;
 declare const mountChart: any;
 declare const mutationAttachmentUpload: any;
@@ -349,17 +521,12 @@ declare const mutationProductSave: any;
 declare const navigate: any;
 declare const notify: any;
 declare const order: any;
-declare const order_memo_limit: any;
 declare const ownerId: any;
 declare const ownerIds: any;
 declare const pageCount: any;
-declare const pagination_default_page: any;
-declare const pagination_default_page_size: any;
 declare const parseStoredProductFilter: any;
 declare const points: any;
-declare const pricing_default_currency: any;
 declare const product: any;
-declare const productColumns: any;
 declare const productDetailSummaryQueryOptions: (...args: any[]) => ExampleQueryOptions;
 declare const productId: any;
 declare const productListQueryKey: any;
@@ -367,14 +534,10 @@ declare const productListQueryOptions: () => ExampleQueryOptions<{products: {id:
 declare const productSummary: any;
 declare const productSummaryQueryKey: any;
 declare const productUrlParsers: any;
-declare const product_list: any;
-declare const product_status: any;
-declare const product_tag_limit: any;
 declare const products: any[];
 declare const props: any;
 declare const query: any;
 declare const queryClient: any;
-declare const query_retry_count: any;
 declare const rawKey: any;
 declare const reportEmptySearch: any;
 declare const requestUrl: any;
@@ -387,7 +550,6 @@ declare const responseProductSummarySuspense: any;
 declare const responseTableColumnsSuspense: any;
 declare const reviewerId: any;
 declare const rowOffset: any;
-declare const row_action: any;
 declare const rows: any;
 declare const saveProduct: any;
 declare const saveRecord: any;
@@ -405,14 +567,10 @@ declare const setSubmitErrorMessage: any;
 declare const setVisibleRowCount: any;
 declare const settings: any;
 declare const sort: any;
-declare const status_negative_values: any;
-declare const status_positive_values: any;
 declare const subscribeToProductChanges: any;
 declare const subscribeToUserJoined: any;
 declare const summary: any;
-declare const support_email_default: any;
 declare const target: any;
-declare const tick_count: any;
 declare const toChartPoints: any;
 declare const toProductCreateRequest: any;
 declare const toProductRows: any;
@@ -425,7 +583,6 @@ declare const toTickTime: any;
 declare const toTreeData: any;
 declare const today: any;
 declare const toggleSelection: any;
-declare const token_expiry_hours: any;
 declare const tone: any;
 declare const uploadAttachments: any;
 declare const urlParams: any;

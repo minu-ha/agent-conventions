@@ -1,10 +1,10 @@
 const submitProductDraft = async (draft: ProductDraft) => {
-	if (!draft.title.trim()) {
+	if (!draft.name.trim()) {
 		return;
 	}
 
 	const uploadedAttachments = await uploadAttachments(draft.attachments);
-	const savedProduct = await saveProduct({title: draft.title, attachments: uploadedAttachments});
+	const savedProduct = await saveProduct({name: draft.name, attachments: uploadedAttachments});
 
 	await queryClient.invalidateQueries({queryKey: ["products"]});
 

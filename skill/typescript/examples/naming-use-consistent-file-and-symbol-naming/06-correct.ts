@@ -4,8 +4,8 @@
 const toProductSaveBody = (values: ProductFormValues) => {
 	return {
 // [!code ++]
-		product_id: values.productId,
+		category_id: values.categoryId,
 // [!code ++]
-		display_name: values.displayName.trim(),
+		product_name: values.name.trim(),
 	};
 };

@@ -1,10 +1,10 @@
 // utils.ts
-export const toTrimmedTitle = (title: string) => {
-	return title.trim();
+export const toTrimmedName = (name: string) => {
+	return name.trim();
 };
 
 export const toProductPayload = (values: ProductFormValues) => {
-	return {title: toTrimmedTitle(values.title)};
+	return {name: toTrimmedName(values.name)};
 };
 
 export const toProductSaveRequest = (values: ProductFormValues) => {

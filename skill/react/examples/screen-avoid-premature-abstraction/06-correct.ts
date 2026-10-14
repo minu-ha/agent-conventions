@@ -3,9 +3,9 @@
  */
 export const toProductSaveRequest = (formValues: ProductFormValues) => {
 	// 1. 사용자가 넣은 앞뒤 공백을 서버로 보내기 전에 정리
-	const title = formValues.title.trim();
+	const name = formValues.name.trim();
 	const description = formValues.description.trim();
 
 	// 2. API가 받는 페이로드 형태로 조립
-	return {categoryId: formValues.categoryId, description, title};
+	return {categoryId: formValues.categoryId, description, name};
 };

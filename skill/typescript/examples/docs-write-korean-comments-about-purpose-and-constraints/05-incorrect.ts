@@ -4,7 +4,7 @@
  */
 export const toProductSaveRequest = (draft: ProductDraft): ProductSaveRequest => {
 	return {
-		title: draft.title.trim(),
+		name: draft.name.trim(),
 		price: Math.round(draft.price),
 		tags: draft.tags.slice(0, product_tag_limit),
 	};

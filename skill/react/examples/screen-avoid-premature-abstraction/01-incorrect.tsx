@@ -6,7 +6,7 @@ const toEditHref = ({editHrefBase, row}: {editHrefBase: string; row: ProductRow}
 // [!code error]
 const toProductRows = (response: ProductListResponse) =>
 // [!code error]
-	response.data.map((product) => ({id: product.id, title: product.title}));
+	response.data.map((product) => ({id: product.id, name: product.name}));
 
 export const PgProductTable = (props: PgProductTableProps) => {
 // [!code error]
@@ -15,7 +15,7 @@ export const PgProductTable = (props: PgProductTableProps) => {
 	return responseProductListSuspense.data.map((row) => (
 // [!code error]
 		<a href={toEditHref({editHrefBase: props.editHrefBase, row})} key={row.id}>
-			{row.title}
+			{row.name}
 		</a>
 	));
 };

@@ -1,7 +1,8 @@
 const toOrderLine = (input: OrderLineInput): OrderLine => {
 	return {
-		label: input.product.title,
-		amount: input.product.unitPrice * input.quantity,
+		id: input.product.id,
+		label: input.product.name,
+		amount: input.product.price * input.quantity,
 	};
 };
 
@@ -12,6 +13,6 @@ const toOrderTotal = (lines: OrderLine[]): OrderTotal => {
 	};
 };
 
-if (order.status === "archived") {
-	notify(order.owner);
+if (order.status === "cancelled") {
+	notify(order.ownerId);
 }

@@ -1,8 +1,8 @@
 const toOrderLine = ({product, quantity}: OrderLineInput): OrderLine => {
-	const {title, unitPrice} = product;
+	const {name, price} = product;
 
 	return {
-		label: title,
-		amount: unitPrice * quantity,
+		label: name,
+		amount: price * quantity,
 	};
 };

@@ -5,5 +5,5 @@ const toNextPage = (page: number): number => {
 
 const toRowLabel = (row: Row): string => {
 // [!code ++]
-	return `${row.title} (${row.id})`;
+	return `${row.name} (${row.id})`;
 };

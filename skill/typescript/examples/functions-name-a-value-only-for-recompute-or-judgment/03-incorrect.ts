@@ -8,7 +8,7 @@ const toNextPage = (page: number): number => {
 
 const toRowLabel = (row: Row): string => {
 // [!code error]
-	const rowLabel = `${row.title} (${row.id})`;
+	const rowLabel = `${row.name} (${row.id})`;
 
 // [!code error]
 	return rowLabel;
