@@ -62,6 +62,7 @@ tags: docs, comments
 | 본문 | 빈 줄 하나 뒤, 줄마다 `  - `로 시작하는 목록. 사실 하나면 항목 하나 |
 | 항목 | 사실 하나. 결론이 먼저이고 이유는 마침표 뒤 |
 | `{@link}` | 마지막 줄, 목록 밖 |
+| 조회, 뮤테이션 바인딩 | 제목은 `<응답> 조회, <결과> 가공` 또는 `<동작> 요청, <성공 뒤 처리>`. 마지막 줄에 부르는 엔드포인트를 `{@link /api/...}`로 적습니다. 여러 조회를 합치면 엔드포인트마다 한 줄 |
 | `//` | 사실 하나. 둘이면 줄을 나누거나 헤더 블록의 목록으로 올립니다 |
 
 항목 앞에는 종류를 알리는 태그 셋만 씁니다. 그 밖의 사실은 태그 없이 적습니다.
@@ -140,3 +141,11 @@ tags: docs, comments
 **Correct 5 (지금 참인 사실에 출처를 붙이고 없어질 사실은 `임시:`로 표시합니다):**
 
 <<< ../examples/docs-write-korean-comments-about-purpose-and-constraints/10-correct.ts
+
+**Incorrect 6 (조회 바인딩 설명이 토막 문장이고 부르는 API가 없습니다):**
+
+<<< ../examples/docs-write-korean-comments-about-purpose-and-constraints/11-incorrect.ts
+
+**Correct 6 (무엇을 조회해 무엇으로 가공하는지와 엔드포인트를 적습니다):**
+
+<<< ../examples/docs-write-korean-comments-about-purpose-and-constraints/12-correct.ts
