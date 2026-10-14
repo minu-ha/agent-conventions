@@ -248,28 +248,28 @@ export const WgChartCard = (props: WgChartCardProps) => {
 
 ### 레이어 접두사
 
-| 레이어 | 파일 | 심볼 | CSS 식별자 |
-| --- | --- | --- | --- |
-| `ui` | `ui-button.tsx` | `UiButton` | `ui_button` |
-| `widget` | `wg-chart.tsx` | `WgChart` | `wg_chart` |
-| `page` | `pg-detail.tsx` | `PgDetail` | `pg_detail` |
+| 레이어   | 파일            | 심볼       | CSS 식별자  |
+|----------|-----------------|------------|-------------|
+| `ui`     | `ui-button.tsx` | `UiButton` | `ui_button` |
+| `widget` | `wg-chart.tsx`  | `WgChart`  | `wg_chart`  |
+| `page`   | `pg-detail.tsx` | `PgDetail` | `pg_detail` |
 
-| 대상 | 표기 |
-| --- | --- |
-| 폴더 | 상위 폴더가 레이어를 나타내므로 접두사를 붙이지 않습니다 |
-| 진입 파일이 아닌 컴포넌트 | `_pg-unit-toggle.tsx`처럼 접두사 앞에 `_`를 붙입니다. 동반 `.css`도 같은 이름을 씁니다 |
-| 심볼 | 진입 파일 여부와 관계없이 `_`를 붙이지 않습니다 |
-| 접두사와 겹치는 이름 | `component/ui/button/ui-button.tsx`로 쓰고 `ui-button-button.tsx`처럼 반복하지 않습니다 |
+| 대상                      | 표기                                                                                    |
+|---------------------------|-----------------------------------------------------------------------------------------|
+| 폴더                      | 상위 폴더가 레이어를 나타내므로 접두사를 붙이지 않습니다                                |
+| 진입 파일이 아닌 컴포넌트 | `_pg-unit-toggle.tsx`처럼 접두사 앞에 `_`를 붙입니다. 동반 `.css`도 같은 이름을 씁니다  |
+| 심볼                      | 진입 파일 여부와 관계없이 `_`를 붙이지 않습니다                                         |
+| 접두사와 겹치는 이름      | `component/ui/button/ui-button.tsx`로 쓰고 `ui-button-button.tsx`처럼 반복하지 않습니다 |
 
 ### 부품 이름 짓기
 
 부품과 하위 소유자는 이름만 보고 무엇인지 알 수 있게 짓습니다.
 
-| 부품 이름 | 예 |
-| --- | --- |
-| 역할 낱말 하나만 | `header`, `item`, `panel`은 안 됨 |
+| 부품 이름          | 예                                                   |
+|--------------------|------------------------------------------------------|
+| 역할 낱말 하나만   | `header`, `item`, `panel`은 안 됨                    |
 | 무엇의 것인지 앞에 | `table-col`, `chat-message`, `disruptor-guide-modal` |
-| 소유자 이름 | 필수가 아니라 방법 하나 |
+| 소유자 이름        | 필수가 아니라 방법 하나                              |
 
 진입 파일의 기준은 `ownership-place-owner-files-in-role-folders`를 따릅니다.
 
@@ -346,14 +346,14 @@ component/widget/chatbot/
 
 ### 배치와 이름
 
-| 구분 | 배치와 이름 |
-| --- | --- |
-| 소유자 | 자기만 쓰는 파일이 있거나 여러 하위 소유자가 함께 쓰는 컴포넌트는 자기 이름의 폴더를 갖습니다 |
-| 진입 파일 | 레이어 접두사를 뺀 이름을 폴더와 맞춥니다. 한 폴더에 라우트가 여럿이면 첫 진입은 `pg-<folder>`, 나머지는 `pg-<folder>-<변형>`입니다 |
-| 부품 | 역할 폴더에 넣지 않고 소유자 폴더의 `_` 파일로 두며, `_` 파일은 같은 폴더에서만 가져옵니다. 동반 `.css`도 같은 이름을 씁니다 |
-| 하위 소유자 | 각 화면, `ui`, `widget` 소유자 안에 한 겹만 두고, 이름은 `panel`처럼 역할 낱말 하나로 짓지 않습니다 |
-| 역할 폴더 | 필요한 것만 만들고 파일이 하나여도 유지합니다. 아래 네 종류만 허용합니다 |
-| 함수의 보조 파일 | 전용 보조 파일이 있는 함수만 `_function` 아래 자기 이름 폴더를 갖습니다 |
+| 구분             | 배치와 이름                                                                                                                         |
+|------------------|-------------------------------------------------------------------------------------------------------------------------------------|
+| 소유자           | 자기만 쓰는 파일이 있거나 여러 하위 소유자가 함께 쓰는 컴포넌트는 자기 이름의 폴더를 갖습니다                                       |
+| 진입 파일        | 레이어 접두사를 뺀 이름을 폴더와 맞춥니다. 한 폴더에 라우트가 여럿이면 첫 진입은 `pg-<folder>`, 나머지는 `pg-<folder>-<변형>`입니다 |
+| 부품             | 역할 폴더에 넣지 않고 소유자 폴더의 `_` 파일로 두며, `_` 파일은 같은 폴더에서만 가져옵니다. 동반 `.css`도 같은 이름을 씁니다        |
+| 하위 소유자      | 각 화면, `ui`, `widget` 소유자 안에 한 겹만 두고, 이름은 `panel`처럼 역할 낱말 하나로 짓지 않습니다                                 |
+| 역할 폴더        | 필요한 것만 만들고 파일이 하나여도 유지합니다. 아래 네 종류만 허용합니다                                                            |
+| 함수의 보조 파일 | 전용 보조 파일이 있는 함수만 `_function` 아래 자기 이름 폴더를 갖습니다                                                             |
 
 부품 하나만 있어도 소유자 폴더를 만들고, 라우트는 항상 소유자입니다.
 전용 지원 코드가 없는 화면은 `page/pg-not-found.tsx`처럼 `page`나 라우트 그룹 바로 아래에 파일로 둘 수 있습니다.
@@ -366,12 +366,12 @@ component/widget/chatbot/
 
 ### 역할 폴더
 
-| 역할 폴더 | 담는 것 |
-| --- | --- |
-| `_constant` | 입력을 받지 않는 상수, 기본값, 기준값, 파서 묶음 등 선언형 계약 |
-| `_function` | 이름 붙여 내보낸 도메인 계산 |
-| `_hook` | 실제 상태, 이펙트, 컨텍스트를 소유한 커스텀 훅 |
-| `_type` | 여러 파일이 공유하는 계약. 개별 컴포넌트의 프롭스는 해당 TSX에 둡니다 |
+| 역할 폴더   | 담는 것                                                               |
+|-------------|-----------------------------------------------------------------------|
+| `_constant` | 입력을 받지 않는 상수, 기본값, 기준값, 파서 묶음 등 선언형 계약       |
+| `_function` | 이름 붙여 내보낸 도메인 계산                                          |
+| `_hook`     | 실제 상태, 이펙트, 컨텍스트를 소유한 커스텀 훅                        |
+| `_type`     | 여러 파일이 공유하는 계약. 개별 컴포넌트의 프롭스는 해당 TSX에 둡니다 |
 
 소유자 폴더에서 `_`가 없는 이름은 진입 파일과 하위 소유자 폴더뿐입니다.
 `_`는 둘에 해당하지 않는다는 표식이며, 정렬상 하위 소유자 폴더보다 앞에 놓입니다.
@@ -384,13 +384,13 @@ component/widget/chatbot/
 소유자 아래에 `component`, `util`, `helper`, `config`, `constants`, `common`, `shared` 폴더를 만들지 않습니다.
 루트의 `constant`, `type`, `hook`은 프로젝트가 소유하는 역할 폴더이므로 같은 규칙을 따르되 `_`를 붙이지 않습니다.
 
-| 함께 판단할 내용 | 기준 |
-| --- | --- |
-| 보조 함수 추출 | `typescript/functions-extract-helpers-only-when-the-boundary-is-real` |
-| 보조 함수의 파일 분리 | `typescript/functions-give-each-function-its-own-file` |
-| 파일 이름과 심볼의 접두사 | `ownership-prefix-layer-names-on-files-and-symbols` |
-| 루트에만 두는 `util` | `typescript/functions-promote-owner-free-functions-to-root-util` |
-| 루트에만 두는 `config` | `typescript/naming-read-environment-values-through-config-env` |
+| 함께 판단할 내용          | 기준                                                                  |
+|---------------------------|-----------------------------------------------------------------------|
+| 보조 함수 추출            | `typescript/functions-extract-helpers-only-when-the-boundary-is-real` |
+| 보조 함수의 파일 분리     | `typescript/functions-give-each-function-its-own-file`                |
+| 파일 이름과 심볼의 접두사 | `ownership-prefix-layer-names-on-files-and-symbols`                   |
+| 루트에만 두는 `util`      | `typescript/functions-promote-owner-free-functions-to-root-util`      |
+| 루트에만 두는 `config`    | `typescript/naming-read-environment-values-through-config-env`        |
 
 **Incorrect 1 (단순 컴포넌트에 역할 폴더를 미리 다 만듭니다):**
 
@@ -5252,7 +5252,7 @@ React 전용 검사는 `biome` 도메인 설정으로 지정하고, 도구가 �
 				"noRestrictedImports": {
 					"level": "error",
 					"options": {
-						"patterns": [{"group": ["../**", "./**", "!./*.css"], "message": "가져오기는 절대경로로 씁니다. 심볼 없이 파일만 불러오는 줄만 같은 폴더를 ./ 로 씁니다."}]
+						"patterns": [{"group": ["../**", "./**", "!./*.css"], "message": "Import with the absolute alias. Only a bare file import may use ./ for the same folder."}]
 					}
 				}
 			}
@@ -5270,11 +5270,11 @@ React 전용 검사는 `biome` 도메인 설정으로 지정하고, 도구가 �
 								"patterns": [
 									{
 										"group": ["../**", "./**", "!./*.css"],
-										"message": "가져오기는 절대경로로 씁니다. 심볼 없이 파일만 불러오는 줄만 같은 폴더를 ./ 로 씁니다."
+										"message": "Import with the absolute alias. Only a bare file import may use ./ for the same folder."
 									},
 									{
 										"group": ["@/component/widget/**", "@/page/**"],
-										"message": "`ui`는 `widget`과 `page`를 가져오지 않습니다."
+										"message": "ui must not import widget or page."
 									}
 								]
 							}
@@ -5294,9 +5294,9 @@ React 전용 검사는 `biome` 도메인 설정으로 지정하고, 도구가 �
 								"patterns": [
 									{
 										"group": ["../**", "./**", "!./*.css"],
-										"message": "가져오기는 절대경로로 씁니다. 심볼 없이 파일만 불러오는 줄만 같은 폴더를 ./ 로 씁니다."
+										"message": "Import with the absolute alias. Only a bare file import may use ./ for the same folder."
 									},
-									{"group": ["@/page/**"], "message": "`widget`은 `page`를 가져오지 않습니다."}
+									{"group": ["@/page/**"], "message": "widget must not import page."}
 								]
 							}
 						}
@@ -5315,9 +5315,9 @@ React 전용 검사는 `biome` 도메인 설정으로 지정하고, 도구가 �
 								"patterns": [
 									{
 										"group": ["../**", "./**", "!./*.css"],
-										"message": "가져오기는 절대경로로 씁니다. 심볼 없이 파일만 불러오는 줄만 같은 폴더를 ./ 로 씁니다."
+										"message": "Import with the absolute alias. Only a bare file import may use ./ for the same folder."
 									},
-									{"group": ["@/page/**", "!@/page/product-detail/**"], "message": "다른 라우트 안의 것은 가져오지 않습니다."}
+									{"group": ["@/page/**", "!@/page/product-detail/**"], "message": "Do not import the inside of another route."}
 								]
 							}
 						}

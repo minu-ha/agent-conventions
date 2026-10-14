@@ -7,28 +7,28 @@
 
 ### 레이어 접두사
 
-| 레이어 | 파일 | 심볼 | CSS 식별자 |
-| --- | --- | --- | --- |
-| `ui` | `ui-button.tsx` | `UiButton` | `ui_button` |
-| `widget` | `wg-chart.tsx` | `WgChart` | `wg_chart` |
-| `page` | `pg-detail.tsx` | `PgDetail` | `pg_detail` |
+| 레이어   | 파일            | 심볼       | CSS 식별자  |
+|----------|-----------------|------------|-------------|
+| `ui`     | `ui-button.tsx` | `UiButton` | `ui_button` |
+| `widget` | `wg-chart.tsx`  | `WgChart`  | `wg_chart`  |
+| `page`   | `pg-detail.tsx` | `PgDetail` | `pg_detail` |
 
-| 대상 | 표기 |
-| --- | --- |
-| 폴더 | 상위 폴더가 레이어를 나타내므로 접두사를 붙이지 않습니다 |
-| 진입 파일이 아닌 컴포넌트 | `_pg-unit-toggle.tsx`처럼 접두사 앞에 `_`를 붙입니다. 동반 `.css`도 같은 이름을 씁니다 |
-| 심볼 | 진입 파일 여부와 관계없이 `_`를 붙이지 않습니다 |
-| 접두사와 겹치는 이름 | `component/ui/button/ui-button.tsx`로 쓰고 `ui-button-button.tsx`처럼 반복하지 않습니다 |
+| 대상                      | 표기                                                                                    |
+|---------------------------|-----------------------------------------------------------------------------------------|
+| 폴더                      | 상위 폴더가 레이어를 나타내므로 접두사를 붙이지 않습니다                                |
+| 진입 파일이 아닌 컴포넌트 | `_pg-unit-toggle.tsx`처럼 접두사 앞에 `_`를 붙입니다. 동반 `.css`도 같은 이름을 씁니다  |
+| 심볼                      | 진입 파일 여부와 관계없이 `_`를 붙이지 않습니다                                         |
+| 접두사와 겹치는 이름      | `component/ui/button/ui-button.tsx`로 쓰고 `ui-button-button.tsx`처럼 반복하지 않습니다 |
 
 ### 부품 이름 짓기
 
 부품과 하위 소유자는 이름만 보고 무엇인지 알 수 있게 짓습니다.
 
-| 부품 이름 | 예 |
-| --- | --- |
-| 역할 낱말 하나만 | `header`, `item`, `panel`은 안 됨 |
+| 부품 이름          | 예                                                   |
+|--------------------|------------------------------------------------------|
+| 역할 낱말 하나만   | `header`, `item`, `panel`은 안 됨                    |
 | 무엇의 것인지 앞에 | `table-col`, `chat-message`, `disruptor-guide-modal` |
-| 소유자 이름 | 필수가 아니라 방법 하나 |
+| 소유자 이름        | 필수가 아니라 방법 하나                              |
 
 진입 파일의 기준은 `ownership-place-owner-files-in-role-folders`를 따릅니다.
 
