@@ -33,7 +33,7 @@ progressive rule frontmatter의 `reviewWith`는 조건부 재평가, `requiresSe
 | --- | --- |
 | `npm run validate` | source, metadata, companion closure, progressive index 입력, routing eval manifest, 규칙 문체를 검사합니다. `-- --skill=<name>`으로 하나만 봅니다. |
 | `npm run build` | 모든 buildable skill의 `HANDBOOK.md`, `RULES_INDEX.md`, `contracts/*.md`를 다시 쓰고 `docs/convention/`에 [for-humanity](https://github.com/minu-ha/for-humanity) Markdown을 생성합니다. 이 폴더는 커밋하지 않습니다. |
-| `npm run check` | `validate`, `check:generated`, `check:diagrams`, `typecheck`, `lint`, `lint:examples`, `test`를 차례로 실행합니다. 커밋 전 한 번에 돌리는 명령입니다. |
+| `npm run check` | `validate`, `check:generated`, `check:diagrams`, `typecheck`, `lint`, `lint:examples`, `typecheck:examples`, `test`를 차례로 실행합니다. 커밋 전 한 번에 돌리는 명령입니다. |
 | `npm run check:generated` | 파일을 수정하지 않고 `HANDBOOK.md`, progressive `RULES_INDEX.md`, `contracts/*.md`가 renderer 결과와 byte 단위로 같은지, missing, stale, orphan, symlink와 companion closure를 확인합니다. |
 | `npm run check:diagrams` | 규칙의 `mermaid` 흐름도가 격자 폭 125칸 안에 그려지는지 봅니다. |
 | `npm run dev` | `build` 후 for-humanity 개발 서버를 띄웁니다. 포트는 `docs/for-humanity.config.mjs`의 `port`입니다. |
@@ -42,6 +42,7 @@ progressive rule frontmatter의 `reviewWith`는 조건부 재평가, `requiresSe
 | `npm run lint`, `npm run lint:fix` | 도구 소스의 Biome 검사와 자동 수정입니다. |
 | `npm run lint:examples` | `Correct` 예제 파일을 규칙이 보여 주는 설정 그대로 검사합니다. `skill/examples.biome.json`은 typescript 07-01 의 예제 파일을 `extends`와 `plugins`로 그대로 읽고 미사용 변수 예외만 더한 것이고, `skill/stylelint.config.mjs`는 css 08-01 의 설정에서 레이어별 override 를 세 접두사 한 패턴으로 접은 것입니다. `Incorrect` 예제는 일부러 어기므로 검사하지 않습니다. |
 | `npm run typecheck` | `tsc --noEmit`입니다. |
+| `npm run typecheck:examples` | `Correct` 예제 파일을 `skill/examples.tsconfig.json`으로 타입 검사합니다. 예제가 import 없이 쓰는 이름은 `skill/examples.d.ts`가 선언합니다. React, es-toolkit, nuqs, react-router, TanStack Query, MUI, dayjs, clsx 는 설치된 패키지의 타입을 그대로 가리키므로 실제 스택에 없는 API 를 쓰면 실패하고, 예제 세계관의 컴포넌트와 훅은 `any`로 두어 파일 안의 타입만 봅니다. 새 이름을 쓰면 tsc 가 `Cannot find name`으로 알려 주니 그 이름을 `examples.d.ts`에 더합니다. |
 
 `build` 뒤의 `check:generated`는 generated file을 다시 쓰는 단계가 아니라 stale 여부를 검증하는 단계입니다. CI에서는 build로 dirty output을 숨기지 말고 `check`를 gate로 둡니다.
 

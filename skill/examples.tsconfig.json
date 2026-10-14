@@ -1,0 +1,40 @@
+{
+	"compilerOptions": {
+		"target": "ES2022",
+		"lib": [
+			"ES2023",
+			"DOM"
+		],
+		"module": "ESNext",
+		"moduleResolution": "Bundler",
+		"moduleDetection": "force",
+		"jsx": "react-jsx",
+		"strict": true,
+		"noEmit": true,
+		"skipLibCheck": true,
+		"types": [],
+		"noImplicitAny": false
+	},
+	"include": [
+		"examples.d.ts",
+		"*/examples/**/*-correct*.ts",
+		"*/examples/**/*-correct*.tsx"
+	],
+	"exclude": [
+		"*/examples/composition-render-one-branch-with-and/02-correct.tsx",
+		"*/examples/composition-render-one-branch-with-and/04-correct.tsx",
+		"*/examples/composition-render-one-branch-with-and/07-correct.tsx",
+		"*/examples/composition-use-activity-only-to-preserve-mounted-subtrees/02-correct.tsx",
+		"*/examples/composition-use-activity-only-to-preserve-mounted-subtrees/04-correct-2.tsx",
+		"*/examples/perf-defer-heavy-renders-with-measured-evidence/04-correct.tsx",
+		"*/examples/perf-defer-heavy-renders-with-measured-evidence/05-correct.tsx",
+		"*/examples/runtime-avoid-ad-hoc-loading-branches/02-correct.tsx",
+		"*/examples/runtime-avoid-ad-hoc-loading-branches/04-correct.tsx",
+		"*/examples/runtime-avoid-ad-hoc-loading-branches/05-correct.tsx",
+		"*/examples/runtime-place-error-boundaries-by-blast-radius/02-correct.tsx",
+		"*/examples/runtime-place-suspense-boundaries-at-the-section-owner/02-correct.tsx",
+		"*/examples/state-calculate-derived-values-during-render/02-correct.tsx",
+		"*/examples/absence-do-not-guard-what-types-guarantee/04-correct.ts",
+		"*/examples/absence-check-once-at-the-boundary/04-correct.tsx"
+	]
+}

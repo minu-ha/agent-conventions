@@ -76,8 +76,8 @@ skill/react/
 - 한 쌍은 한 변수만 바꾼다. `Incorrect`와 `Correct`는 그 규칙이 말하는 것 하나만 달라야 독자가 무엇이 규칙인지 짚는다.
   이름, 구조, 무관한 코드를 함께 바꾸지 않는다.
 - 예시 차례는 **짝 → 홀로 선 Incorrect → 홀로 선 Correct** 다. 짝은 `**Incorrect 1 (…):**` 바로 뒤에 `**Correct 1 (…):**`이 오고
-  번호는 1부터 차례로 붙는다. 블록 수와 블록마다의 언어가 같은 Incorrect, Correct 가 붙어 있으면 반드시 짝이다. `validate`가 이 차례를 검사한다.
-  Correct 에 딸린 블록이 더 많아 짝이 안 되면, 짝이 되는 블록만 `Correct n` 으로 떼고 나머지는 홀로 선 Correct 로 뒤에 둔다.
+  번호는 1부터 차례로 붙는다. 같은 번호의 Incorrect, Correct 가 짝이고, 같은 자리의 블록은 언어가 같다. `validate`가 이 차례를 검사한다.
+  Correct 가 파일 여럿으로 나뉘면 블록이 Incorrect 보다 많아도 된다. 파일마다 예제 파일을 두고 `<<<` 줄을 잇는다.
 - 판단 순서나 방향을 그림으로 보일 때는 첫 `Incorrect` 앞 산문에 `mermaid` 펜스를 둔다.
   사이트가 흐름도로 그리고 에이전트는 원문을 읽는다. 산문에 둘 수 있는 펜스는 이것뿐이다.
   도식은 두 종류만 쓴다. 판단, 방향, 자리 고르기는 `flowchart LR`, 호출, 데이터가 오가는 차례는 `sequenceDiagram`(참여자 4 이하, 메시지 6 이하).
@@ -92,6 +92,7 @@ skill/react/
 - `Correct`는 저장소 전체 규칙을 지킨다. 다른 스킬의 규칙도 포함한다.
   `rule-discipline.ts`가 잡는 교차 위반(`mutateAsync` 없는 `try`, `li onClick`, 리터럴 폴백, 손으로 쓴 `sort`, `reduce`, 한 줄 JSX 주석, 스택 밖 이름 등)은 `validate`가 막는다.
   `Correct` 예제 파일은 `npm run lint:examples`가 규칙이 보여 주는 biome, stylelint 설정 그대로 검사한다. 규칙이 lint 설정으로 표현된다는 증명이다.
+  `npm run typecheck:examples`는 같은 파일을 실제 스택 패키지의 타입으로 검사한다. import 없이 쓰는 이름은 `skill/examples.d.ts`에 선언하고, 예제 세계관의 이름은 `any`로 둔다. 파일 하나에 파일 여럿을 담지 않는다. 파일마다 예제 파일을 나누고 `<<<` 줄을 잇는다.
   JSX 자식 자리에서는 줄 표기를 `{/* [!code ++] */}` 로 쓴다. biome 이 `//` 글자를 JSX 텍스트로 본다.
 - 라벨 괄호 안 문장은 코드가 보여 주는 것만 말한다. 규칙 문장을 되풀이하지 않는다.
 - 라벨 괄호 안 문장은 규범 산문과 같은 합쇼체로 쓴다.

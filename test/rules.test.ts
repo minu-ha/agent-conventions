@@ -256,6 +256,17 @@ test("the example lint config extends the TypeScript tooling rule's own config a
 	assert.equal(used.linter, undefined, "rules live only in the example file");
 });
 
+test("the example tsconfig skips exactly the fragments the example lint config skips", async () => {
+	const skillDir = path.join(getSkillPaths("typescript").skillDir, "..");
+	const lint = JSON.parse(await readFile(path.join(skillDir, "examples.biome.json"), "utf8"));
+	const typecheck = JSON.parse(await readFile(path.join(skillDir, "examples.tsconfig.json"), "utf8"));
+	const skipped = lint.files.includes
+		.filter((pattern: string) => pattern.startsWith("!"))
+		.map((pattern: string) => pattern.replace("!**/", "*/examples/"));
+
+	assert.deepEqual(typecheck.exclude, skipped);
+});
+
 test("readSkillRules exposes titleKo and tolerates its absence", async () => {
 	const rules = await readSkillRules(getSkillPaths("react"));
 	const sample = rules.find((rule) => rule.fileName.endsWith("composition-named-handlers-over-inline.md"));
