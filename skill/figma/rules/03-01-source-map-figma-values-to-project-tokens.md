@@ -15,8 +15,8 @@ tags: source, tokens, variables
 **Impact: HIGH (디자인 파일의 변수 이름이 코드에 새지 않고 테마와 토큰 변경이 화면에 그대로 반영됩니다)**
 
 Figma 변수 이름은 디자인 파일의 이름이지 프로젝트의 토큰이 아닙니다.
-`--content\/text\/black` 같은 이름을 옮기면 선언되지 않은 변수라 대체값만 화면에 남고, 테마를 바꿔도 따라가지 않습니다.
-그래서 Figma가 준 값은 값과 용도가 같은 프로젝트 토큰으로 옮깁니다.
+그대로 옮기면 선언되지 않은 변수라 대체값만 화면에 남고 테마를 바꿔도 따라가지 않으므로,
+값과 용도가 같은 프로젝트 토큰으로 옮깁니다.
 
 | Figma에서 받은 것 | 처리 |
 | --- | --- |
@@ -28,7 +28,7 @@ Figma 변수 이름은 디자인 파일의 이름이지 프로젝트의 토큰�
 | 줄 높이, 자간 | 글꼴 크기와 짝을 이루는 타이포그래피 토큰으로 옮깁니다. 픽셀 값만 따로 옮기지 않습니다 |
 | 라이트, 다크 값이 갈린 변수 | `get_variable_defs`는 현재 모드 값 하나만 줍니다. 모드별 값은 프로젝트 토큰 정의를 따릅니다 |
 
-새 토큰을 만들지는 `css/values-tokenize-repeated-visual-values`가 정합니다.
+새 토큰을 만들지는 `css/values-tokenize-repeated-visual-values`,
 대체값을 붙일지는 `css/values-fall-back-only-outside-core-tokens`가 정합니다.
 대응표는 `get_variable_defs` 응답 하나로 만들고, 같은 값을 얻으려고 `get_design_context`를 부르지 않습니다.
 
