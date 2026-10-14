@@ -261,7 +261,7 @@ const collectRuleViolations = (rule: SkillRule): string[] => {
 	}
 
 	// 예시 차례는 짝(Incorrect n, Correct n이 붙어서) → 홀로 선 Incorrect → 홀로 선 Correct
-	// 사이트와 핸드북이 이 차례로 싣고 계약이 첫 짝을 실음. 모양이 같은 Incorrect, Correct가 붙어 있으면 반드시 짝
+	// 사이트가 이 차례로 싣고 계약이 첫 짝을 실음. 같은 번호의 Incorrect, Correct 가 짝
 	const exampleShape = (example: RuleExample): string => example.blocks.map((block) => block.lang).join("+");
 	let phase = 0;
 	let expectedPair = 1;

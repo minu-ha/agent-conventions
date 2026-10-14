@@ -15,7 +15,7 @@ const compareRoutingText = (left: string, right: string): number => {
 
 	return left > right ? 1 : 0;
 };
-const compareHandbookText = (left: string, right: string): number => left.localeCompare(right, "en-US");
+const compareEnglishText = (left: string, right: string): number => left.localeCompare(right, "en-US");
 const rulesIndexRendererVersion = 2;
 const contractRendererVersion = 4;
 const supportedImpactLevels = new Set(["CRITICAL", "HIGH", "MEDIUM"]);
@@ -104,8 +104,8 @@ export const getRulesForSection = (section: SkillSection, rules: SkillRule[]): S
 		.sort(
 			(left, right) =>
 				getRuleFileOrder(left) - getRuleFileOrder(right) ||
-				compareHandbookText(left.title, right.title) ||
-				compareHandbookText(getRuleId(left), getRuleId(right)),
+				compareEnglishText(left.title, right.title) ||
+				compareEnglishText(getRuleId(left), getRuleId(right)),
 		);
 };
 
@@ -495,7 +495,7 @@ export const getRoutingOrdinalPrefix = (skillName: string): string => {
 /**
  * @helper 규칙 파일명의 `NN-MM-` 번호로 local 순번 계산
  *
- * 핸드북 번호와 `rules/` 파일명 번호가 같아야 사람이 규칙을 바로 찾음
+ * 사이트 번호와 `rules/` 파일명 번호가 같아야 사람이 규칙을 바로 찾음
  * 파일명 번호는 validate에서 선택이라 번호가 없으면 예전처럼 순번
  */
 export const getRoutingOrdinal = (skillName: string, fileName: string, localOrdinal: number): string => {
@@ -509,20 +509,6 @@ export const getRoutingOrdinal = (skillName: string, fileName: string, localOrdi
 	const [, sectionNumber, ruleNumber] = numberMatch;
 
 	return `${ordinalPrefix}${sectionNumber}-${ruleNumber}`;
-};
-
-/**
- * @helper compact index와 같은 순서의 규칙 ID별 local 순번 계산
- */
-export const getCanonicalRoutingOrdinals = (document: LoadedSkillDocument): Map<string, string> => {
-	const canonicalRules = getOrderedSections(document.sections).flatMap((section) => getRoutingRulesForSection(section, document.rules));
-
-	return new Map(
-		canonicalRules.map((rule, index): [string, string] => [
-			getRuleId(rule),
-			getRoutingOrdinal(document.skillName, rule.fileName, index + 1),
-		]),
-	);
 };
 
 /**

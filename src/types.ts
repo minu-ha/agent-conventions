@@ -67,10 +67,6 @@ export interface SkillPaths {
 	 */
 	sectionsPath: string;
 	/**
-	 * @field 컴파일 HANDBOOK.md 출력 파일 경로
-	 */
-	outputPath: string;
-	/**
 	 * @field compact RULES_INDEX.md 출력 파일 경로
 	 */
 	rulesIndexPath: string;
@@ -167,36 +163,6 @@ export interface LoadedSkillDocument {
 	sections: SkillSection[];
 	/**
 	 * @field 로드한 skill의 개별 규칙 목록
-	 */
-	rules: SkillRule[];
-}
-
-/**
- * @summary build 단계에서 최종 markdown 순서대로 정렬된 section 단위 결과
- */
-export interface CompiledSkillSection {
-	/**
-	 * @field section을 제공한 원본 skill 디렉터리 이름
-	 */
-	sourceSkillName: string;
-	/**
-	 * @field section을 제공한 원본 skill 문서 제목
-	 */
-	sourceSkillTitle: string;
-	/**
-	 * @field 컴파일 가이드에 표시할 섹션 제목
-	 */
-	title: string;
-	/**
-	 * @field 컴파일 가이드에 표시할 섹션 중요도
-	 */
-	impact: string;
-	/**
-	 * @field 컴파일 가이드에 표시할 섹션 설명
-	 */
-	description: string;
-	/**
-	 * @field 섹션 안에 포함할 정렬된 규칙 목록
 	 */
 	rules: SkillRule[];
 }

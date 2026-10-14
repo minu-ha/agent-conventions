@@ -4,7 +4,7 @@
 
 - 규칙 정본은 `skill/` 한 곳
 - 프로젝트는 복사 없이 skill 이름만 참조
-- 사람은 생성된 사이트와 핸드북으로 읽음
+- 사람은 생성된 사이트로 읽음
 - 에이전트는 라우터 → 인덱스 → 걸린 규칙만
 
 ---
@@ -14,7 +14,7 @@
 1. [빠른 시작](#1-빠른-시작) — 설치부터 첫 작업까지
     - 1.1 [설치](#11-설치)
     - 1.2 [프로젝트 연결](#12-프로젝트-연결)
-    - 1.3 [담당 영역 핸드북](#13-담당-영역-핸드북)
+    - 1.3 [담당 영역 읽기](#13-담당-영역-읽기)
     - 1.4 [동작 확인](#14-동작-확인)
 2. [문서 구성](#2-문서-구성) — 문서별 역할과 독자
 3. [포함된 Skill](#3-포함된-skill) — react, typescript, css, figma
@@ -57,7 +57,7 @@ ln -s /absolute/path/to/agent-conventions/skill ~/.agents/skills/conventions
 스타일이 바뀔 때만 `convention-css`를 추가한다. 활성화 조건은 `metadata.json`이 선언한다.
 Figma 화면을 구현하는 프로젝트는 `convention-figma`도 적는다. TSX나 스타일이 바뀌면 react, css를 알아서 켠다.
 
-### 1.3 담당 영역 핸드북
+### 1.3 담당 영역 읽기
 
 사람이 규칙을 찾을 때는 생성 사이트를 먼저 연다.
 `npm run dev` 를 실행하고 터미널에 찍힌 주소를 연다.
@@ -67,23 +67,17 @@ Figma 화면을 구현하는 프로젝트는 `convention-figma`도 적는다. TS
 skill 이름을 누르면 개요와 전체 규칙 표가 나온다. 표의 요지 열로 훑는다.
 규칙마다 한 줄 요지, 판정 기준, Incorrect / Correct 코드, 함께 볼 규칙 링크가 있다.
 적용 조건, 등급, 규칙 ID 같은 에이전트용 메타는 사이트에 싣지 않는다.
-규칙 번호(`1.1`, `7.2`)는 `HANDBOOK.md` 헤딩 번호와 같아서 두 문서를 번호로 맞춰 볼 수 있다.
-
-`HANDBOOK.md`는 규칙 전문을 모은 생성물이다.
-사람이 통독하거나 에이전트가 전체 검토를 명시적으로 요청받았을 때 읽는다.
+규칙 번호(`1.1`, `7.2`)는 `rules/NN-MM-*.md` 파일 번호와 같아서 사이트와 원문을 번호로 맞춰 볼 수 있다.
 
 전체를 외울 필요 없다. 담당 영역만 한 번 훑으면 리뷰에서 덜 돌아온다.
 
-| 작업 영역 | 핸드북 |
+| 작업 영역 | 사이트에서 볼 skill |
 | --- | --- |
-| React 화면, 컴포넌트 | [react](./skill/react/HANDBOOK.md) + [typescript](./skill/typescript/HANDBOOK.md) |
-| React의 `className`, 스타일 | 위 둘 + [css](./skill/css/HANDBOOK.md) |
-| 순수 CSS 스타일시트 | [css](./skill/css/HANDBOOK.md) |
-| 프레임워크와 무관한 TypeScript | [typescript](./skill/typescript/HANDBOOK.md) |
-| Figma 화면 구현, 디자인 대조 | [figma](./skill/figma/HANDBOOK.md) + 바뀌는 쪽의 react, css |
-
-핸드북마다 번호 목차와 Impact 등급이 있다. `CRITICAL`부터 본다.
-규칙마다 Incorrect / Correct 예시가 붙어 있다.
+| React 화면, 컴포넌트 | react + typescript |
+| React의 `className`, 스타일 | 위 둘 + css |
+| 순수 CSS 스타일시트 | css |
+| 프레임워크와 무관한 TypeScript | typescript |
+| Figma 화면 구현, 디자인 대조 | figma + 바뀌는 쪽의 react, css |
 
 특정 규칙만 다시 찾을 때는 사이트의 skill 개요 표를 브라우저 찾기로 뒤진다.
 
@@ -111,7 +105,6 @@ TSX 파일 하나를 고쳐 달라고 시켜본다. 에이전트는 이 순서�
 | README.md | 이 문서. 설치와 적용 |
 | [CONTRIBUTING.md](./CONTRIBUTING.md) | 규칙 추가, 수정 절차 |
 | [docs/](./docs/README.md) | **규칙 조회.** `npm run dev` 로 띄우는 사이트. 네 skill의 규칙을 섹션 페이지와 목차로 찾는다 |
-| `skill/<name>/HANDBOOK.md` | 규칙 전문. 통독과 에이전트 전체 검토용 생성물 |
 | [docs/research/](./docs/research/) | 설계 배경, 측정, 검증, 한계. 사이트의 Research 묶음 |
 | [docs/tooling.md](./docs/tooling.md) | build, validate, test tooling |
 
@@ -133,10 +126,10 @@ TSX 파일 하나를 고쳐 달라고 시켜본다. 에이전트는 이 순서�
 
 | Skill | Loading | 담당 범위 |
 | --- | --- | --- |
-| [react](./skill/react/HANDBOOK.md) | progressive | 컴포넌트 경계, route-local, handler, state |
-| [typescript](./skill/typescript/HANDBOOK.md) | progressive | import, type, helper, JSDoc |
-| [css](./skill/css/HANDBOOK.md) | progressive | plain CSS, owner namespace, 토큰 |
-| [figma](./skill/figma/HANDBOOK.md) | progressive | Figma MCP 호출 순서와 토큰 예산, 디자인 파일 읽기, 렌더 값 실측 |
+| [react](./skill/react/SKILL.md) | progressive | 컴포넌트 경계, route-local, handler, state |
+| [typescript](./skill/typescript/SKILL.md) | progressive | import, type, helper, JSDoc |
+| [css](./skill/css/SKILL.md) | progressive | plain CSS, owner namespace, 토큰 |
+| [figma](./skill/figma/SKILL.md) | progressive | Figma MCP 호출 순서와 토큰 예산, 디자인 파일 읽기, 렌더 값 실측 |
 
 skill 이름은 `convention-<skill>`.
 
@@ -158,8 +151,7 @@ progressive skill 넷은 규칙 전체를 안 읽는다. 단계마다 좁힌다.
 | 3 | `contracts/<id>.md` | `MEDIUM`은 규범과 첫 `Incorrect`, `Correct` 짝. `CRITICAL`, `HIGH`는 원문 링크만 | 걸린 규칙만 |
 | 4 | `rules/NN-MM-<id>.md` | 원문 전부. 설명과 예제 | `CRITICAL`, `HIGH`는 항상, `MEDIUM`은 판단이 모호할 때 |
 
-`HANDBOOK.md`는 이 경로 밖이다. 사람이 통독할 때 쓰고,
-에이전트는 명시적 요청이 있을 때만 읽는다.
+사람이 통독할 때는 사이트를 쓴다. 에이전트는 전체 검토를 명시적으로 요청받았을 때만 `rules/*.md`를 차례로 읽는다.
 네 skill이 모두 progressive라 자동으로 통째로 읽는 단계는 없다.
 
 ### CRITICAL 마무리 재대조 훅
@@ -190,7 +182,7 @@ progressive skill 넷은 규칙 전체를 안 읽는다. 단계마다 좁힌다.
 | --- | --- |
 | 에이전트가 컨벤션을 모름 | symlink 미설치, 또는 재시작 안 함 |
 | 불필요한 규칙까지 적용 | `appliesWhen`의 제외 조건과 실제 변경 범위를 대조하고 `reviewWith`를 자동 적용하지 않았는지 확인 |
-| `HANDBOOK.md` 수정이 되돌아옴 | 생성물. `rules/*.md`를 고쳐야 함 |
+| `RULES_INDEX.md`, `contracts/` 수정이 되돌아옴 | 생성물. `rules/*.md`를 고쳐야 함 |
 | 규칙이 걸린 이유가 불분명 | 그 규칙 frontmatter의 `appliesWhen` 확인 |
 
 ---
@@ -199,7 +191,7 @@ progressive skill 넷은 규칙 전체를 안 읽는다. 단계마다 좁힌다.
 
 절차는 [CONTRIBUTING.md](./CONTRIBUTING.md). 착수 전 알 것 넷.
 
-1. 정본은 `rules/*.md`와 `examples/<규칙 ID>/*`. `HANDBOOK.md`, `RULES_INDEX.md`, `contracts/*.md`, `docs/convention/`은 생성물.
+1. 정본은 `rules/*.md`와 `examples/<규칙 ID>/*`. `RULES_INDEX.md`, `contracts/*.md`, `docs/convention/`은 생성물.
 2. 규범은 첫 `Incorrect` 앞에서 끝낸다. 생성기가 그 앞부분만 계약으로 뽑는다.
 3. `appliesWhen` 한 줄이 라우팅을 결정한다. 규칙의 결론이 아니라 관찰 가능한 변경 조건.
 4. 고친 뒤 `npm run check`. `build`가 `docs/convention/`도 다시 만든다.

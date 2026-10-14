@@ -11,8 +11,8 @@
 | 단계 | 대상 | 성격 |
 | --- | --- | --- |
 | 입력 | `rules/*.md` | 정본 |
-| build | `HANDBOOK.md` · `RULES_INDEX.md` · `contracts/*.md` | 생성물. 직접 편집 시 소실 |
-| 로드 | `SKILL.md`가 경로 결정 | progressive는 index부터, 전체 로드는 handbook 통째로 |
+| build | `RULES_INDEX.md` · `contracts/*.md` | 생성물. 직접 편집 시 소실 |
+| 로드 | `SKILL.md`가 경로 결정 | index부터 걸린 contract, 원문 순서 |
 
 ---
 
@@ -47,10 +47,10 @@ build tooling은 [docs/tooling.md](./docs/tooling.md).
 
 | Skill | Loading |
 | --- | --- |
-| [skill/react](./skill/react/HANDBOOK.md) | progressive |
-| [skill/typescript](./skill/typescript/HANDBOOK.md) | progressive |
-| [skill/css](./skill/css/HANDBOOK.md) | progressive |
-| [skill/figma](./skill/figma/HANDBOOK.md) | progressive |
+| [skill/react](./skill/react/SKILL.md) | progressive |
+| [skill/typescript](./skill/typescript/SKILL.md) | progressive |
+| [skill/css](./skill/css/SKILL.md) | progressive |
+| [skill/figma](./skill/figma/SKILL.md) | progressive |
 
 progressive는 `SKILL.md` → `RULES_INDEX.md` → 걸린 `contracts/*.md`로 좁힌다.
 넷 다 progressive다.
@@ -71,14 +71,13 @@ progressive는 `SKILL.md` → `RULES_INDEX.md` → 걸린 `contracts/*.md`로 �
 | `SKILL.md` | Editable activation/load router; compact for progressive skills. |
 | `RULES_INDEX.md` | Progressive-only generated compact index. |
 | `contracts/*.md` | Progressive-only generated selected-rule contract; never edit directly. |
-| `HANDBOOK.md` | Generated full handbook; progressive rules include `Applies when`. |
 | `routing-evals.json` | Progressive-only editable test oracle; never runtime context. |
 
 사람이 직접 수정하는 정본은
 `rules/_sections.md`, `rules/_template.md`, `rules/*.md`, `examples/<rule-id>/*`, `metadata.json`, `SKILL.md`,
 progressive `routing-evals.json`.
 
-`HANDBOOK.md`, progressive `RULES_INDEX.md`, progressive `contracts/*.md`는 생성물.
+progressive `RULES_INDEX.md`, progressive `contracts/*.md`는 생성물. 사람용 전체 보기는 `docs/` 사이트다.
 
 ---
 
@@ -113,7 +112,7 @@ progressive `routing-evals.json`.
 ```bash
 npm install            # 최초 1회
 npm run validate       # 정본 검사. 한 skill 만: -- --skill=react
-npm run build          # HANDBOOK, RULES_INDEX, contracts, docs/convention/ 생성
+npm run build          # RULES_INDEX, contracts, docs/convention/ 생성
 npm run check          # validate, 생성물 신선도, 흐름도 폭, typecheck, lint, test
 npm run dev            # build 후 사이트 dev 서버. 주소는 터미널에 찍힌다
 ```
@@ -128,7 +127,7 @@ buildable skill: `css` `figma` `react` `typescript`
 
 1. 생성물을 고치고 끝내지 않는다. 항상 `rules/*.md`부터.
 2. generic TypeScript 규칙은 `typescript` companion으로 보낸다. framework skill에는 overlay만 둔다.
-3. progressive 진입점은 router와 인덱스다. full handbook은 명시적 요청일 때만 읽는다.
+3. progressive 진입점은 router와 인덱스다. 전체 검토는 명시적 요청일 때만 `rules/*.md`를 차례로 읽는다.
 4. `reviewWith`는 자동으로 적용하지 않는다. 역방향으로 추론하지 않는다.
 5. 수정 전에 실제 디렉터리를 확인한다. 문서에 적힌 구조를 기억으로 대신하지 않는다.
 6. 외부 레퍼런스 문장을 그대로 옮기지 않는다. 이 저장소 구조에 맞게 다시 쓴다.

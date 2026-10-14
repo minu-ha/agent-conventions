@@ -67,5 +67,4 @@ React나 CSS 경계가 함께 바뀌면 이 skill이 그쪽을 켜는 것이 아
 변경 diff를 적용한 규칙에 비춰 다시 훑고, 위반이 있으면 file/line과 수정안으로 보고한다.
 lint, typecheck, build 통과는 컨벤션을 지켰다는 근거가 아니다.
 
-[HANDBOOK.md](./HANDBOOK.md)는 전체 handbook이다.
-전체 검토를 명시적으로 요청받거나 index, contract가 손상됐을 때만 읽는다.
+전체 검토를 명시적으로 요청받거나 index, contract가 손상됐을 때만 `rules/*.md`를 번호 순서로 읽는다.

@@ -81,5 +81,4 @@ conditional companion도 다시 판정한다.
 `completionGate` 규칙의 실측 판정과 보고 항목을 마무리 보고에 싣는다.
 lint, typecheck, build, 스크린샷을 눈으로 대조한 결과는 컨벤션을 지켰다는 근거가 아니다.
 
-[HANDBOOK.md](./HANDBOOK.md)는 전체 handbook이다.
-전체 검토를 명시적으로 요청받거나 index, contract가 손상됐을 때만 읽는다.
+전체 검토를 명시적으로 요청받거나 index, contract가 손상됐을 때만 `rules/*.md`를 번호 순서로 읽는다.

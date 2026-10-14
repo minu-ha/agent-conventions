@@ -72,7 +72,7 @@ export const toFenceBody = (source: string): string => {
 
 /**
  * @api 본문의 `<<<` 줄을 코드 펜스로 바꿈. 없는 파일은 오류. 코드 펜스 안은 건드리지 않음
- * @description 규칙 산출물(핸드북, 계약, 인덱스, 검사)은 전부 이 결과를 보므로 예제가 파일로 가도 아무것도 달라지지 않음
+ * @description 규칙 산출물(계약, 인덱스, 검사)은 전부 이 결과를 보므로 예제가 파일로 가도 아무것도 달라지지 않음
  */
 export const inlineSnippets = (body: string, baseDir: string): {body: string; snippets: Snippet[]} => {
 	const out: string[] = [];

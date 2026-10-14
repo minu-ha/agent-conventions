@@ -16,7 +16,7 @@ import type {LoadedSkillDocument} from "../src/types.js";
 const expectedRuleCount = 146;
 
 /**
- * @helper 사이트와 핸드북이 노출하는 progressive skill 문서 전부
+ * @helper 사이트가 노출하는 progressive skill 문서 전부
  */
 const readProgressiveDocuments = async (): Promise<LoadedSkillDocument[]> => {
 	const documents: LoadedSkillDocument[] = [];
@@ -345,15 +345,12 @@ test("every rule and section in the repository carries a Korean title", async ()
 	}
 });
 
-test("every rule carries a stable number that matches its HANDBOOK.md heading and the site heading", async () => {
+test("every rule carries a stable number that matches its file number and the site heading", async () => {
 	const documents = await readProgressiveDocuments();
 	const react = documents.find((document) => document.skillName === "react");
 
 	assert.ok(react, "expected react skill");
 
-	const handbook = await readFile(path.join(getSkillPaths("react").skillDir, "HANDBOOK.md"), "utf8");
-	// HANDBOOK 헤딩: `### 1.1 Avoid Barrel Exports and React Namespace Types`
-	const handbookNumberByTitle = new Map([...handbook.matchAll(/^### (\d+\.\d+) (.+)$/gm)].map((match) => [match[2].trim(), match[1]]));
 	const siteFiles = await generateSiteFiles();
 	const siteNumbers = new Set(
 		siteFiles
@@ -361,13 +358,12 @@ test("every rule carries a stable number that matches its HANDBOOK.md heading an
 			.flatMap((file) => [...file.content.matchAll(/^## (\d+\.\d+) /gm)].map((match) => match[1])),
 	);
 
-	assert.ok(handbookNumberByTitle.size > 0, "expected numbered headings in react HANDBOOK.md");
-
 	for (const section of react.sections) {
 		getRulesForSection(section, react.rules).forEach((rule, index) => {
 			const number = `${section.order}.${index + 1}`;
+			const fileNumber = rule.fileName.replace(/^(\d+)-(\d+)-.*$/, (_, major, minor) => `${Number(major)}.${Number(minor)}`);
 
-			assert.equal(handbookNumberByTitle.get(rule.title), number, `${rule.fileName} number should match its HANDBOOK heading`);
+			assert.equal(fileNumber, number, `${rule.fileName} number should match its file prefix`);
 			assert.ok(siteNumbers.has(number), `${rule.fileName} number ${number} is missing from the site`);
 		});
 	}

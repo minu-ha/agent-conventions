@@ -1,6 +1,5 @@
 import path from "node:path";
 
-import {generateCompiledSkillMarkdown} from "./build.js";
 import {getSkillPaths, isBuildableSkill} from "./config.js";
 import {parseDependencyDeclaration} from "./dependencies.js";
 import {readGeneratedDirectoryFileNames, readGeneratedRegularFile} from "./generated-files.js";
@@ -124,28 +123,6 @@ const checkGeneratedSkillTree = async (skillPaths: SkillPaths, visiting: Set<str
 	visiting.delete(skillPaths.skillName);
 	completed.add(skillPaths.skillName);
 	return true;
-};
-
-/**
- * @description 단일 skill의 컴파일 `HANDBOOK.md`가 현재 원본 렌더러와 일치하는지 쓰기 없이 확인
- */
-export const checkGeneratedHandbook = async (skillPaths: SkillPaths): Promise<void> => {
-	const expectedHandbook = await generateCompiledSkillMarkdown(skillPaths);
-	let actualHandbook: string;
-
-	try {
-		actualHandbook = await readGeneratedRegularFile(skillPaths.outputPath);
-	} catch (error) {
-		if ((error as NodeJS.ErrnoException).code === "ENOENT") {
-			throw new Error(`${skillPaths.skillName}: missing generated HANDBOOK.md at ${skillPaths.outputPath}. Run the skill build.`);
-		}
-
-		throw error;
-	}
-
-	if (actualHandbook !== expectedHandbook) {
-		throw new Error(`${skillPaths.skillName}: stale generated HANDBOOK.md at ${skillPaths.outputPath}. Run the skill build.`);
-	}
 };
 
 /**

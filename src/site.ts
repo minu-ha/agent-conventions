@@ -66,7 +66,7 @@ interface RuleLocation {
 	 */
 	anchor: string;
 	/**
-	 * @field 규칙 번호. `HANDBOOK.md`와 같은 `2.3`
+	 * @field 규칙 번호. `2.3` 꼴
 	 */
 	number: string;
 	/**

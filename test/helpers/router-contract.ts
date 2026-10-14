@@ -113,9 +113,6 @@ export const assertRouterProtocol = (body: string): void => {
 
 	assertMentions(finish, ["file/line"], "5절");
 	assert.equal(isNegated(blockContaining(finish, "통과")), true, "5절에 도구 통과 부정이 없다");
-
-	// 전체 핸드북은 opt-in 링크로만 노출
-	assertMentions(body, ["[HANDBOOK.md](./HANDBOOK.md)"], "router");
 };
 
 /**

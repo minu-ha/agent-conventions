@@ -193,17 +193,6 @@ export const parseSections = (source: string): SkillSection[] => {
 };
 
 /**
- * @helper Markdown 앵커용 제목 slug 정규화
- */
-export const slugify = (value: string): string => {
-	return value
-		.toLowerCase()
-		.replace(/[^a-z0-9\s-]/g, "")
-		.trim()
-		.replace(/\s+/g, "-");
-};
-
-/**
  * @helper 헤딩, 목차 표시용 제목에서 Markdown 장식 제거
  */
 export const normalizeHeadingTitle = (value: string): string => {
@@ -219,45 +208,6 @@ export const normalizeHeadingTitle = (value: string): string => {
 		.trim();
 
 	return normalized.replace(/@@CODE_SPAN_(\d+)@@/g, (_, rawIndex: string) => codeSpans[Number(rawIndex)] ?? "");
-};
-
-/**
- * @helper 헤딩 앵커용 제목에서 Markdown, 코드 토큰을 slug용 텍스트로 정리
- */
-const normalizeAnchorTitle = (value: string): string => {
-	return normalizeHeadingTitle(value)
-		.replace(/`/g, "")
-		.replace(/[_./]+/g, " ")
-		.replace(/\s+/g, " ")
-		.trim();
-};
-
-/**
- * @helper 섹션 헤딩 앵커 문자열 생성
- */
-export const buildSectionAnchor = (sectionOrder: number, title: string): string => {
-	return `#${slugify(`${sectionOrder}. ${normalizeAnchorTitle(title)}`)}`;
-};
-
-/**
- * @helper 개별 규칙 헤딩 앵커 문자열 생성
- */
-export const buildRuleAnchor = (sectionOrder: number, ruleOrder: number, title: string): string => {
-	return `#${slugify(`${sectionOrder}.${ruleOrder} ${normalizeAnchorTitle(title)}`)}`;
-};
-
-export interface ReplaceRuleHeadingArgs {
-	body: string;
-	sectionOrder: number;
-	ruleOrder: number;
-	title: string;
-}
-
-/**
- * @helper 규칙 본문의 제목을 컴파일 가이드 번호 제목으로 교체
- */
-export const replaceRuleHeading = (args: ReplaceRuleHeadingArgs): string => {
-	return args.body.replace(/^## .+$/m, `### ${args.sectionOrder}.${args.ruleOrder} ${normalizeHeadingTitle(args.title)}`);
 };
 
 /**

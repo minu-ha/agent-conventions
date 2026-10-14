@@ -22,13 +22,6 @@ import {
  * 에이전트가 읽는 생성물과 라우터의 계약. 규칙 산문은 핀하지 않고 구조만 본다
  */
 
-const conventionTitleBySkillName: Record<string, string> = {
-	css: "CSS Convention",
-	figma: "Figma Convention",
-	react: "React Convention",
-	typescript: "TypeScript Convention",
-};
-
 /**
  * @helper progressive skill 문서 전부
  */
@@ -43,11 +36,6 @@ const readProgressiveDocuments = async (): Promise<LoadedSkillDocument[]> => {
 
 	return documents.filter((document) => document.metadata.progressiveDisclosure === true);
 };
-
-/**
- * @helper 규칙 본문에서 헤딩을 뗀 부분. 핸드북에 그대로 실려야 하는 조각
- */
-const bodyWithoutHeading = (body: string): string => body.replace(/^## .+\n+/, "");
 
 test("every generated index lists exactly the local rules in canonical order with a contract each", async () => {
 	for (const document of await readProgressiveDocuments()) {
@@ -64,56 +52,6 @@ test("every generated index lists exactly the local rules in canonical order wit
 
 		for (const ruleId of entries) {
 			await access(path.join(skillPaths.ruleContractsDir, `${ruleId}.md`));
-		}
-	}
-});
-
-test("every handbook carries its own rule bodies verbatim and links companions instead of embedding them", async () => {
-	const documents = await readProgressiveDocuments();
-	const documentBySkillName = new Map(documents.map((document) => [document.skillName, document]));
-
-	for (const document of documents) {
-		const handbook = await readFile(getSkillPaths(document.skillName).outputPath, "utf8");
-
-		for (const rule of document.rules) {
-			assert.equal(
-				handbook.includes(bodyWithoutHeading(rule.body)),
-				true,
-				`${document.skillName}/${rule.fileName} body must stay verbatim in HANDBOOK.md`,
-			);
-		}
-
-		const companions = document.metadata.companions ?? [];
-
-		if (companions.length === 0) {
-			assert.doesNotMatch(handbook, /^## 함께 따르는 규칙$/m, `${document.skillName}: no companion section without companions`);
-			continue;
-		}
-
-		assert.match(handbook, /^## 함께 따르는 규칙$/m, `${document.skillName}: companion section missing`);
-
-		for (const companion of companions) {
-			const title = conventionTitleBySkillName[companion.skill] ?? companion.skill;
-			const link = new RegExp(`^- \\[${title}\\]\\(\\.\\./${companion.skill}/HANDBOOK\\.md\\) — `, "m");
-
-			assert.match(handbook, link, `${document.skillName}: companion ${companion.skill} must be linked once`);
-			assert.equal(
-				(handbook.match(new RegExp(title, "g")) ?? []).length,
-				1,
-				`${document.skillName}: companion ${companion.skill} listed once`,
-			);
-
-			const companionDocument = documentBySkillName.get(companion.skill);
-
-			assert.ok(companionDocument, `${document.skillName}: companion ${companion.skill} is not a progressive skill`);
-
-			for (const rule of companionDocument.rules) {
-				assert.equal(
-					handbook.includes(bodyWithoutHeading(rule.body)),
-					false,
-					`${companion.skill}/${rule.fileName} must not be embedded in ${document.skillName}`,
-				);
-			}
 		}
 	}
 });

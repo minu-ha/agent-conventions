@@ -15,7 +15,7 @@ const _repositoryAgentsPath = path.join(repoDir, "AGENTS.md");
 const templatePath = path.join(repoDir, "AGENTS.template.md");
 const _repositoryReadmePath = path.join(repoDir, "README.md");
 const _packageReadmePath = path.join(repoDir, "docs", "tooling.md");
-const reactAgentsPath = path.join(repoDir, "skill/react/HANDBOOK.md");
+const reactIndexPath = path.join(repoDir, "skill/react/RULES_INDEX.md");
 const npmCommand = process.platform === "win32" ? "npm.cmd" : "npm";
 const packageBinDir = path.join(packageDir, "node_modules/.bin");
 const nodeBinDir = path.dirname(process.execPath);
@@ -68,7 +68,7 @@ const writeCliSkillFixture = async (skillRootDir: string, skillName: string): Pr
 	await mkdir(rulesDir, {recursive: true});
 	await writeFile(
 		path.join(skillDir, "metadata.json"),
-		`${JSON.stringify({title: "CLI Fixture", version: "1.0.0", organization: "Fixture", abstract: "CLI fixture."}, null, 2)}\n`,
+		`${JSON.stringify({title: "CLI Fixture", version: "1.0.0", organization: "Fixture", abstract: "CLI fixture.", progressiveDisclosure: true}, null, 2)}\n`,
 		"utf8",
 	);
 	await writeFile(
@@ -78,9 +78,10 @@ const writeCliSkillFixture = async (skillRootDir: string, skillName: string): Pr
 	);
 	await writeFile(
 		path.join(rulesDir, "fixture-rule.md"),
-		"---\ntitle: Fixture Rule\nimpact: HIGH\nimpactDescription: Fixture impact.\ntags: fixture\n---\n## Fixture Rule\n\n**Incorrect**\n\nBad.\n\n**Correct**\n\nGood.\n",
+		"---\ntitle: Fixture Rule\nimpact: HIGH\nimpactDescription: Fixture impact.\nappliesWhen: Editing fixture code.\ntags: fixture\n---\n## Fixture Rule\n\n**Impact: HIGH (Fixture impact.)**\n\nFixture normative guidance.\n\n**Incorrect 1**\n\n```ts\nbad();\n```\n\n**Correct 1**\n\n```ts\ngood();\n```\n",
 		"utf8",
 	);
+	await writeFile(path.join(skillDir, "SKILL.md"), "# CLI Fixture\n", "utf8");
 };
 
 /**
@@ -392,38 +393,30 @@ test("validate script succeeds for the react skill", () => {
 	assert.match(result.stdout, /Validated react:/);
 });
 
-test("build script regenerates HANDBOOK.md for the react skill", async () => {
+test("build script regenerates RULES_INDEX.md for the react skill", async () => {
 	const result = runPackageCommand(["--prefix", packageDir, "run", "build", "--", "--skill=react"]);
 
 	assert.equal(result.status, 0, result.stderr);
-	await access(reactAgentsPath);
+	await access(reactIndexPath);
 
-	const agentsSource = await readFile(reactAgentsPath, "utf8");
-	assert.match(agentsSource, /^# React 컨벤션$/m);
-	assert.match(agentsSource, /^## 목차$/m);
-	assert.match(agentsSource, /^## 함께 따르는 규칙$/m);
-	assert.match(agentsSource, /metadata\.json\.companions/);
-	assert.doesNotMatch(agentsSource, /metadata\.json\.extends/);
-	assert.match(agentsSource, /^- \[TypeScript Convention\]\(\.\.\/typescript\/HANDBOOK\.md\) — 항상 함께 적용합니다\.$/m);
+	const indexSource = await readFile(reactIndexPath, "utf8");
+	assert.match(indexSource, /^# React 컨벤션 Rule Index$/m);
+	assert.match(indexSource, /^## Direct Companions$/m);
+	assert.match(indexSource, /^- `typescript` \(`required`\) · \[SKILL\.md\]\(\.\.\/typescript\/SKILL\.md\)/m);
 	assert.match(
-		agentsSource,
-		/^- \[CSS Convention\]\(\.\.\/css\/HANDBOOK\.md\) — 다음 조건에서 함께 적용합니다\. 클래스 계약, 스타일시트, 스타일 표면을 변경한다\.$/m,
+		indexSource,
+		/^- `css` \(`conditional`\) · Applies when: 클래스 계약, 스타일시트, 스타일 표면을 변경한다\. · \[SKILL\.md\]/m,
 	);
-	// 핸드북의 companion 목록은 사람이 읽는 경로라 상대 skill의 핸드북을 가리킴
-	assert.match(agentsSource, /\.\.\/typescript\/HANDBOOK\.md/);
-	assert.match(agentsSource, /\.\.\/css\/HANDBOOK\.md/);
-	assert.match(agentsSource, /^## 1\. Ownership and Boundaries$/m);
-	assert.doesNotMatch(agentsSource, /^## 1\. TypeScript Convention Base - Naming and Module Boundaries$/m);
-	assert.doesNotMatch(agentsSource, /TypeScript Convention Base - Naming and Module Boundaries/);
-	assert.match(agentsSource, /^ {4}- \d+\.\d+ \[Avoid Premature Abstraction in Screen Code\]/m);
-	assert.doesNotMatch(agentsSource, /^ {3}- \d+\.\d+ \[Avoid Premature Abstraction in Screen Code\]/m);
+	assert.match(indexSource, /^## Local Rules$/m);
+	assert.match(indexSource, /^- R01-01 \| ownership-layer-component-boundaries \| /m);
+	assert.doesNotMatch(indexSource, /TypeScript Convention Base/);
 });
 
 test("build script regenerates every buildable skill and the site", () => {
 	const result = runPackageCommand(["--prefix", packageDir, "run", "build"]);
 
 	assert.equal(result.status, 0, result.stderr);
-	assert.match(result.stdout, /Wrote HANDBOOK\.md/);
+	assert.match(result.stdout, /Wrote RULES_INDEX\.md/);
 });
 
 test("build CLI renders a fixture skill root without touching the repository site", async () => {
@@ -438,7 +431,8 @@ test("build CLI renders a fixture skill root without touching the repository sit
 		});
 
 		assert.equal(result.status, 0, result.stderr);
-		assert.equal((result.stdout.match(/Wrote HANDBOOK\.md/g) ?? []).length, 1, result.stdout);
+		assert.equal((result.stdout.match(/Wrote RULES_INDEX\.md/g) ?? []).length, 1, result.stdout);
+		assert.match(result.stdout, /Wrote contracts \(1\)/);
 		assert.doesNotMatch(result.stdout, /Wrote site/);
 	} finally {
 		await rm(temporaryDir, {recursive: true, force: true});

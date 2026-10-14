@@ -4,7 +4,7 @@
 컨벤션을 쓰기만 한다면 [README.md](./README.md).
 
 가장 흔한 사고는 생성물을 직접 고치는 것이다.
-규칙의 정본은 `rules/*.md`이고 `HANDBOOK.md`, `RULES_INDEX.md`, `contracts/*.md`는 build가 매번 다시 만든다.
+규칙의 정본은 `rules/*.md`이고 `RULES_INDEX.md`, `contracts/*.md`는 build가 매번 다시 만든다.
 라우터, 메타데이터, 라우팅 오라클도 직접 수정하는 입력이며 역할은 1절에 정리했다.
 
 ---
@@ -36,13 +36,12 @@ skill/react/
   routing-evals.json  시나리오별로 걸려야 할 규칙의 테스트 오라클
   RULES_INDEX.md      생성물
   contracts/*.md      생성물
-  HANDBOOK.md         생성물. 사람이 읽는 전체 핸드북
 ```
 
 정본은 `rules/*.md`, `examples/<규칙 ID>/*`, `rules/_sections.md`, `rules/_template.md`, `metadata.json`, 
 `SKILL.md`, `routing-evals.json` 여섯.
 
-생성물은 `HANDBOOK.md`, `RULES_INDEX.md`, `contracts/*.md` 셋.
+생성물은 `RULES_INDEX.md`, `contracts/*.md` 둘. 사람이 읽는 전체 보기는 `docs/` 사이트다.
 직접 고치면 다음 build에서 사라지고 `check:generated`가 실패한다.
 
 `react`, `typescript`, `css`, `figma` 넷이 전부이고 넷 다 progressive라 세 생성물을 모두 만든다.
@@ -130,7 +129,7 @@ tags: tag1, tag2
 
 | 키 | 필수 | 의미 |
 | --- | --- | --- |
-| `title` | 필수 | 영어. 핸드북 헤딩과 앵커 슬러그의 기반. 바꾸면 링크가 깨진다 |
+| `title` | 필수 | 영어. 사이트 헤딩과 앵커 슬러그의 기반. 바꾸면 링크가 깨진다 |
 | `titleKo` | 필수 | 한국어. 사이트의 규칙 헤딩과 목차에 노출된다 |
 | `impact` | 필수 | `CRITICAL`, `HIGH`, `MEDIUM`. 사람에게는 중요도, 에이전트에게는 읽는 범위다. `CRITICAL`, `HIGH`는 contract에 원문 링크만 실어 설명과 예제를 전부 읽게 하고(`CRITICAL`은 마무리 때 다시 대조), `MEDIUM`은 contract에 규범과 첫 `Incorrect`, `Correct` 짝을 싣는다 |
 | `impactDescription` | 필수 | 한국어 영향도 설명. 본문 `**Impact:**` 줄과 일치해야 하고 `contracts/*.md`로 나간다. 사이트에는 등급 없이 규칙 머리의 요지로 나간다 |
@@ -290,7 +289,7 @@ UI를 바꾸면 이벤트, 키보드 조작, 렌더링 조건을 함께 확인�
 npm install            # 최초 1회
 
 npm run validate       # 정본 검사. 한 skill 만: -- --skill=react
-npm run build          # HANDBOOK, RULES_INDEX, contracts, docs/convention/ 생성
+npm run build          # RULES_INDEX, contracts, docs/convention/ 생성
 npm run check          # validate, 생성물 신선도, 흐름도 폭, typecheck, lint, test
 npm run dev            # build 후 사이트 dev 서버. 주소는 터미널에 찍힌다
 npm run docs:build     # 배포용. docs/dist 에 정적 HTML

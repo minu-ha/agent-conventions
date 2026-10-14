@@ -9,7 +9,6 @@ import {fileURLToPath} from "node:url";
 import {assertMentions} from "./helpers/router-contract.js";
 
 import {buildSkill} from "../src/build.js";
-import {checkGeneratedHandbook} from "../src/check-generated.js";
 import {checkGeneratedSkill} from "../src/check-generated.js";
 import {getSkillPaths, isBuildableSkill, listSkillNames} from "../src/config.js";
 import {parseFrontmatter, parseSections, readResolvedSkillDocuments, readSkillRules} from "../src/parser.js";
@@ -726,7 +725,7 @@ test("routing digest covers every routing field and ignores unsorted input order
 	assert.equal(
 		readRoutingDigest(generateRulesIndexMarkdown(nonRoutingDocument, structuredClone(directCompanions))),
 		sourceDigest,
-		"non-routing handbook fields must not invalidate the routing digest",
+		"non-routing metadata fields must not invalidate the routing digest",
 	);
 });
 
@@ -899,50 +898,24 @@ test("temporary progressive build and stale check are deterministic without repo
 		});
 
 		assert.deepEqual(buildLogs, [
-			"Wrote HANDBOOK.md",
 			"Wrote RULES_INDEX.md",
 			"Wrote contracts (1)",
-			"Wrote HANDBOOK.md",
 			"Wrote RULES_INDEX.md",
 			"Wrote contracts (1)",
-			"Wrote HANDBOOK.md",
 			"Wrote RULES_INDEX.md",
 			"Wrote contracts (2)",
-			"Wrote HANDBOOK.md",
 		]);
-		await access(ownerPaths.outputPath);
 		await access(ownerPaths.rulesIndexPath);
 		assert.deepEqual((await readdir(ownerPaths.ruleContractsDir)).sort(), ["composition-owner.md", "state-watch.md"]);
 		const ownerContract = await readFile(path.join(ownerPaths.ruleContractsDir, "composition-owner.md"), "utf8");
 		assert.match(ownerContract, /COMPOSITION_BODY_MARKER/);
 		assert.match(ownerContract, /\*\*Incorrect[\s\S]*\*\*Correct/);
-		await access(legacyPaths.outputPath);
 		await assert.rejects(() => access(legacyPaths.rulesIndexPath), /ENOENT/);
 
 		const firstIndex = await readFile(ownerPaths.rulesIndexPath, "utf8");
-		const firstHandbook = await readFile(ownerPaths.outputPath, "utf8");
 		assert.match(firstIndex, /`dependency` \(`conditional`\)/);
 		assert.doesNotMatch(firstIndex, /`leaf` \(`/);
 		assert.doesNotMatch(firstIndex, /Fixture Rule|leaf\/rules|dependency\/rules/);
-		assert.match(firstHandbook, /^### 1\.1 Own Composition$/m);
-		assert.match(
-			firstHandbook,
-			/^### 1\.1 Own Composition\n\n\*\*Rule:\*\* `O01` · `composition-owner`\n\n\*\*Applies when:\*\* Changing fixture composition\.\n\n\*\*Review with:\*\* `state-watch`\n\n\*\*Impact:/m,
-			"the opt-in full handbook must expose canonical identity, applicability, and review routing next to each progressive rule",
-		);
-		assert.match(firstHandbook, /^### 2\.1 Watch State\n\n\*\*Rule:\*\* `O02` · `state-watch`$/m);
-		assert.match(firstHandbook, /metadata\.json\.companions/);
-		assert.doesNotMatch(firstHandbook, /metadata\.json\.extends/);
-		assert.match(firstHandbook, /다음 조건에서 함께 적용합니다\. Editing dependency-facing code\./);
-		assert.match(firstHandbook, /\.\.\/dependency\/HANDBOOK\.md/);
-		assert.doesNotMatch(firstHandbook, /\.\.\/leaf\/(?:SKILL|RULES_INDEX)\.md/);
-		assert.doesNotMatch(firstHandbook, /^### \d+\.\d+ Fixture Rule$/m);
-
-		for (const localMarker of ["STATE_BODY_MARKER", "COMPOSITION_BODY_MARKER"] as const) {
-			assert.equal((firstHandbook.match(new RegExp(localMarker, "g")) ?? []).length, 1, localMarker);
-		}
-
-		assert.doesNotMatch(firstHandbook, /LEAF_BODY_MARKER|DEPENDENCY_BODY_MARKER/);
 
 		const beforeCheckSnapshot = await readFileTreeSnapshot(skillRootDir);
 		await checkGeneratedSkill(ownerPaths);
@@ -965,14 +938,14 @@ test("temporary progressive build and stale check are deterministic without repo
 		const firstRebuildLogs = await captureConsoleLogs(async () => {
 			await buildSkill(ownerPaths);
 		});
-		assert.deepEqual(firstRebuildLogs, ["Wrote HANDBOOK.md", "Wrote RULES_INDEX.md", "Wrote contracts (2)"]);
+		assert.deepEqual(firstRebuildLogs, ["Wrote RULES_INDEX.md", "Wrote contracts (2)"]);
 		await checkGeneratedSkill(ownerPaths);
 		const rebuiltIndex = await readFile(ownerPaths.rulesIndexPath, "utf8");
 		assert.notEqual(rebuiltIndex, firstIndex);
 		const secondRebuildLogs = await captureConsoleLogs(async () => {
 			await buildSkill(ownerPaths);
 		});
-		assert.deepEqual(secondRebuildLogs, ["Wrote HANDBOOK.md", "Wrote RULES_INDEX.md", "Wrote contracts (2)"]);
+		assert.deepEqual(secondRebuildLogs, ["Wrote RULES_INDEX.md", "Wrote contracts (2)"]);
 		assert.equal(await readFile(ownerPaths.rulesIndexPath, "utf8"), rebuiltIndex);
 		assert.notDeepEqual(
 			await readFileTreeSnapshot(skillRootDir),
@@ -993,10 +966,6 @@ test("generated checks reject missing, stale, and unexpected compact contracts",
 		const ownerPaths = getSkillPaths("owner", skillRootDir);
 		await captureConsoleLogs(async () => buildSkill(ownerPaths));
 		const contractPath = path.join(ownerPaths.ruleContractsDir, "fixture-rule-1.md");
-		const handbook = await readFile(ownerPaths.outputPath, "utf8");
-		await writeFile(ownerPaths.outputPath, `${handbook}\nINFLATED DENOMINATOR\n`, "utf8");
-		await assert.rejects(() => checkGeneratedHandbook(ownerPaths), /owner.*stale generated HANDBOOK\.md/i);
-		await captureConsoleLogs(async () => buildSkill(ownerPaths));
 
 		await rm(contractPath);
 		await assert.rejects(() => checkGeneratedSkill(ownerPaths), /owner.*missing.*contract.*fixture-rule-1/i);
@@ -1047,78 +1016,6 @@ test("generated checks validate the progressive companion closure and reject com
 	});
 });
 
-test("non-progressive owners preserve companion modes and link each target to its available routing sources", async () => {
-	await withFixtureRoot(async (skillRootDir) => {
-		await writeSkillFixture(skillRootDir, "progressive-target", {
-			metadata: {progressiveDisclosure: true},
-			rules: [{appliesWhen: "Editing progressive target code."}],
-		});
-		await writeSkillFixture(skillRootDir, "legacy-target");
-		await writeSkillFixture(skillRootDir, "owner", {
-			metadata: {
-				companions: [
-					{skill: "progressive-target", mode: "conditional", appliesWhen: "Editing progressive target contracts."},
-					{skill: "legacy-target", mode: "required"},
-				],
-			},
-		});
-
-		const ownerPaths = getSkillPaths("owner", skillRootDir);
-		await captureConsoleLogs(async () => buildSkill(ownerPaths));
-		const handbook = await readFile(ownerPaths.outputPath, "utf8");
-
-		assert.match(handbook, /metadata\.json\.companions/);
-		assert.doesNotMatch(handbook, /metadata\.json\.extends/);
-		assert.match(handbook, /^## 함께 따르는 규칙$/m);
-		assert.match(handbook, /다음 조건에서 함께 적용합니다\./);
-		assert.match(handbook, /다음 조건에서 함께 적용합니다\. Editing progressive target contracts\./);
-		assert.match(handbook, /\.\.\/progressive-target\/HANDBOOK\.md/);
-		assert.match(handbook, /항상 함께 적용합니다\./);
-		assert.match(handbook, /\.\.\/legacy-target\/HANDBOOK\.md/);
-		assert.doesNotMatch(handbook, /\.\.\/legacy-target\/RULES_INDEX\.md/);
-	});
-});
-
-test("companion appliesWhen stays literal Markdown for progressive and non-progressive owners", async () => {
-	await withFixtureRoot(async (skillRootDir) => {
-		const hostileCondition = "[x](https://example.invalid) *strong* `code`";
-		await writeSkillFixture(skillRootDir, "target", {
-			metadata: {progressiveDisclosure: true},
-			rules: [{appliesWhen: "Editing target code."}],
-		});
-
-		for (const progressiveDisclosure of [true, false] as const) {
-			const owner = progressiveDisclosure ? "progressive-owner" : "non-progressive-owner";
-			await writeSkillFixture(skillRootDir, owner, {
-				metadata: {
-					...(progressiveDisclosure ? {progressiveDisclosure: true} : {}),
-					companions: [{skill: "target", mode: "conditional", appliesWhen: hostileCondition}],
-				},
-				rules: progressiveDisclosure ? [{appliesWhen: hostileCondition}] : undefined,
-			});
-			const ownerPaths = getSkillPaths(owner, skillRootDir);
-			await captureConsoleLogs(async () => buildSkill(ownerPaths));
-			const handbook = await readFile(ownerPaths.outputPath, "utf8");
-
-			// companion 줄은 전부 이스케이프. 목록 항목이라 코드 스팬까지 살릴 필요 없음
-			const companionLine = handbook.split("\n").find((line) => line.includes("다음 조건에서 함께 적용합니다.")) ?? "";
-			assert.match(companionLine, /다음 조건에서 함께 적용합니다\. \\\[x\\\]\\\(https:\/\/example\.invalid\\\) \\\*strong\\\* \\`code\\`/);
-			for (const live of [/\[x\]\(https:\/\/example\.invalid\)/, /\*strong\*/, /`code`/]) {
-				assert.doesNotMatch(companionLine, live);
-			}
-
-			// 링크와 강조는 어느 줄에서도 살아나면 안 됨
-			assert.doesNotMatch(handbook, /[^\\]\[x\]\(https:\/\/example\.invalid\)/);
-			assert.doesNotMatch(handbook, /[^\\]\*strong\*/);
-
-			if (progressiveDisclosure) {
-				// 링크와 강조는 무력화하고 코드 스팬은 그대로 유지
-				assert.match(handbook, /\*\*Applies when:\*\* \\\[x\\\]\\\(https:\/\/example\.invalid\\\) \\\*strong\\\* `code`/);
-			}
-		}
-	});
-});
-
 test("progressive owners require progressive companion sources and SKILL.md entrypoints", async () => {
 	await withFixtureRoot(async (skillRootDir) => {
 		await writeSkillFixture(skillRootDir, "dependency");
@@ -1151,11 +1048,9 @@ test("build renders and prepares every output before replacing existing generate
 			rules: [{appliesWhen: "Editing owner code.", body: EmptyExampleBody}],
 		});
 		const ownerPaths = getSkillPaths("owner", skillRootDir);
-		await writeFile(ownerPaths.outputPath, "ORIGINAL AGENTS\n", "utf8");
 		await writeFile(ownerPaths.rulesIndexPath, "ORIGINAL INDEX\n", "utf8");
 
 		await assert.rejects(() => buildSkill(ownerPaths), /Incorrect.*non-whitespace content/i);
-		assert.equal(await readFile(ownerPaths.outputPath, "utf8"), "ORIGINAL AGENTS\n");
 		assert.equal(await readFile(ownerPaths.rulesIndexPath, "utf8"), "ORIGINAL INDEX\n");
 	});
 
@@ -1165,11 +1060,9 @@ test("build renders and prepares every output before replacing existing generate
 			rules: [{appliesWhen: "Editing owner code."}],
 		});
 		const ownerPaths = getSkillPaths("owner", skillRootDir);
-		await writeFile(ownerPaths.outputPath, "ORIGINAL AGENTS\n", "utf8");
 		await mkdir(ownerPaths.rulesIndexPath);
 
 		await assert.rejects(() => buildSkill(ownerPaths), /(regular file|directory|EISDIR)/i);
-		assert.equal(await readFile(ownerPaths.outputPath, "utf8"), "ORIGINAL AGENTS\n");
 	});
 });
 
@@ -1182,7 +1075,7 @@ test("non-progressive checks reject stale indexes and build removes them deliber
 		await assert.rejects(() => checkGeneratedSkill(legacyPaths), /legacy.*unexpected.*RULES_INDEX\.md/i);
 		await writeSkillFixture(skillRootDir, "missing-dependency");
 		const logs = await captureConsoleLogs(async () => buildSkill(legacyPaths));
-		assert.deepEqual(logs, ["Wrote HANDBOOK.md", "Removed RULES_INDEX.md"]);
+		assert.deepEqual(logs, ["Removed RULES_INDEX.md"]);
 		await assert.rejects(() => access(legacyPaths.rulesIndexPath), /ENOENT/);
 		assert.equal(await checkGeneratedSkill(legacyPaths), false);
 	});
@@ -1211,7 +1104,7 @@ test("non-progressive checks reject stale contracts and build removes their gene
 
 		await assert.rejects(() => checkGeneratedSkill(legacyPaths), /legacy.*unexpected.*contract/i);
 		const logs = await captureConsoleLogs(async () => buildSkill(legacyPaths));
-		assert.deepEqual(logs, ["Wrote HANDBOOK.md", "Removed contracts (1)"]);
+		assert.deepEqual(logs, ["Removed contracts (1)"]);
 		assert.deepEqual(await readdir(legacyPaths.ruleContractsDir), []);
 		assert.equal(await checkGeneratedSkill(legacyPaths), false);
 	});
@@ -1353,7 +1246,6 @@ test("skill directory symlinks cannot escape the configured root or receive gene
 			await assert.rejects(() => buildSkill(escapedPaths), /skill.*real directory.*symlink/i);
 			await assert.rejects(() => checkGeneratedSkill(escapedPaths), /skill.*real directory.*symlink/i);
 			await assert.rejects(() => validateSkill(escapedPaths), /skill.*real directory.*symlink/i);
-			await assert.rejects(() => access(path.join(outsideSkillDir, "HANDBOOK.md")), /ENOENT/);
 			await assert.rejects(() => access(path.join(outsideSkillDir, "RULES_INDEX.md")), /ENOENT/);
 			await assert.rejects(() => access(path.join(outsideSkillDir, "contracts")), /ENOENT/);
 		} finally {
