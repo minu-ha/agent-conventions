@@ -9,5 +9,5 @@ const productStatus = {
 	draft: "draft",
 // [!code error]
 	waitingReview: "waiting_review",
-	published: "published",
+	active: "active",
 } as const;

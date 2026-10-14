@@ -25,7 +25,7 @@
 
 ```css
 .pg_products__badge--draft,
-.pg_products__badge--published,
+.pg_products__badge--active,
 .pg_products__badge--archived,
 .pg_products__badge--deleted {
 	width: 24px;
@@ -45,7 +45,7 @@
 	height: 24px;
 }
 
-.pg_products__badge--published {
+.pg_products__badge--active {
 	width: 24px;
 	height: 24px;
 }

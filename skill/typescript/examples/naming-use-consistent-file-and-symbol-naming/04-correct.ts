@@ -11,5 +11,5 @@ const retry_policy = {
 const product_status = {
 	draft: "draft",
 	waiting_review: "waiting_review",
-	published: "published",
+	active: "active",
 } as const;

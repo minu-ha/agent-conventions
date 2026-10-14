@@ -3,5 +3,5 @@
  */
 export const product_status = {
 	draft: "draft",
-	published: "published",
+	active: "active",
 } as const;
