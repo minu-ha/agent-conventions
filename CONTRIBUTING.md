@@ -44,7 +44,7 @@ skill/react/
 생성물은 `RULES_INDEX.md`, `contracts/*.md` 둘. 사람이 읽는 전체 보기는 `docs/` 사이트다.
 직접 고치면 다음 build에서 사라지고 `check:generated`가 실패한다.
 
-`react`, `typescript`, `css`, `figma` 넷이 전부이고 넷 다 progressive라 세 생성물을 모두 만든다.
+`react`, `typescript`, `css`, `figma` 넷이 전부다.
 
 ---
 
@@ -57,7 +57,7 @@ skill/react/
    react처럼 번호를 쓰는 skill은 섹션 안에서 1부터 연속해야 하고 `validate`가 검사한다.
 3. frontmatter를 채운다. `appliesWhen`은 관찰 가능한 변경으로 쓴다.
 4. 본문을 쓴다. 규범과 예외를 첫 예시 라벨 앞에서 끝낸다.
-5. progressive skill 이면 `routing-evals.json`에 걸리는 시나리오를 넣는다.
+5. `routing-evals.json`에 걸리는 시나리오를 넣는다.
 6. [5절](#5-명령) 명령으로 재생성하고 검증한다.
 
 주의할 것.

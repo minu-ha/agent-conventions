@@ -563,13 +563,7 @@ export const generateSiteFiles = async (): Promise<SiteFile[]> => {
 			continue;
 		}
 
-		const document = await readSkillDocument(getSkillPaths(skillName));
-
-		if (document.metadata.progressiveDisclosure !== true) {
-			continue;
-		}
-
-		documents.push(document);
+		documents.push(await readSkillDocument(getSkillPaths(skillName)));
 	}
 
 	documents.sort(comparePlacement);

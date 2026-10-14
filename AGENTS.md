@@ -45,15 +45,12 @@ build tooling은 [docs/tooling.md](./docs/tooling.md).
 
 모든 skill이 structured skill.
 
-| Skill | Loading |
-| --- | --- |
-| [skill/react](./skill/react/SKILL.md) | progressive |
-| [skill/typescript](./skill/typescript/SKILL.md) | progressive |
-| [skill/css](./skill/css/SKILL.md) | progressive |
-| [skill/figma](./skill/figma/SKILL.md) | progressive |
+- [skill/react](./skill/react/SKILL.md)
+- [skill/typescript](./skill/typescript/SKILL.md)
+- [skill/css](./skill/css/SKILL.md)
+- [skill/figma](./skill/figma/SKILL.md)
 
-progressive는 `SKILL.md` → `RULES_INDEX.md` → 걸린 `contracts/*.md`로 좁힌다.
-넷 다 progressive다.
+모든 skill은 `SKILL.md` → `RULES_INDEX.md` → 걸린 `contracts/*.md`로 좁힌다.
 
 `metadata.json.companions`가 `required`와 `conditional` 활성화를 선언한다.
 계층은 이 선언이 정한다. 나를 companion으로 켜는 skill이 위 계층이고,
@@ -68,16 +65,16 @@ progressive는 `SKILL.md` → `RULES_INDEX.md` → 걸린 `contracts/*.md`로 �
 | --- | --- |
 | `rules/_sections.md`, `rules/_template.md`, `rules/*.md`, `examples/<rule-id>/*` | Editable rule source of truth. 규칙은 `<<<` 줄로 예제 파일을 불러온다. |
 | `metadata.json` | Editable build and companion activation contract. |
-| `SKILL.md` | Editable activation/load router; compact for progressive skills. |
-| `RULES_INDEX.md` | Progressive-only generated compact index. |
-| `contracts/*.md` | Progressive-only generated selected-rule contract; never edit directly. |
-| `routing-evals.json` | Progressive-only editable test oracle; never runtime context. |
+| `SKILL.md` | Editable activation/load router. |
+| `RULES_INDEX.md` | Generated compact index. |
+| `contracts/*.md` | Generated selected-rule contract; never edit directly. |
+| `routing-evals.json` | Editable test oracle; never runtime context. |
 
 사람이 직접 수정하는 정본은
 `rules/_sections.md`, `rules/_template.md`, `rules/*.md`, `examples/<rule-id>/*`, `metadata.json`, `SKILL.md`,
-progressive `routing-evals.json`.
+`routing-evals.json`.
 
-progressive `RULES_INDEX.md`, progressive `contracts/*.md`는 생성물. 사람용 전체 보기는 `docs/` 사이트다.
+`RULES_INDEX.md`, `contracts/*.md`는 생성물. 사람용 전체 보기는 `docs/` 사이트다.
 
 ---
 
@@ -127,7 +124,7 @@ buildable skill: `css` `figma` `react` `typescript`
 
 1. 생성물을 고치고 끝내지 않는다. 항상 `rules/*.md`부터.
 2. generic TypeScript 규칙은 `typescript` companion으로 보낸다. framework skill에는 overlay만 둔다.
-3. progressive 진입점은 router와 인덱스다. 전체 검토는 명시적 요청일 때만 `rules/*.md`를 차례로 읽는다.
+3. 진입점은 router와 인덱스다. 전체 검토는 명시적 요청일 때만 `rules/*.md`를 차례로 읽는다.
 4. `reviewWith`는 자동으로 적용하지 않는다. 역방향으로 추론하지 않는다.
 5. 수정 전에 실제 디렉터리를 확인한다. 문서에 적힌 구조를 기억으로 대신하지 않는다.
 6. 외부 레퍼런스 문장을 그대로 옮기지 않는다. 이 저장소 구조에 맞게 다시 쓴다.

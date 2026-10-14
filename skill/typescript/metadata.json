@@ -4,7 +4,6 @@
 	"organization": "Agent Conventions",
 	"date": "2026년 4월",
 	"abstract": "에이전트 협업 팀을 위한 TypeScript 코딩 컨벤션입니다. 역할에 맞는 이름과 직접 가져오기, 기존 타입 계약의 재사용, 외부 입력 검증, 절제된 보조 함수 추출을 다룹니다. 배열 정렬과 반복 조회의 동작을 보존하고 날짜 단위와 타임존, 선택 값과 기본값, JSDoc의 경계를 정합니다. React와 CSS 같은 위 계층 스킬이 함께 따르는 공통 규칙입니다. 규칙 본문의 정본은 `rules/*.md`입니다.",
-	"progressiveDisclosure": true,
 	"references": [
 		"https://www.typescriptlang.org/docs/",
 		"https://jsdoc.app"

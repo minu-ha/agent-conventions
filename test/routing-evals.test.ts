@@ -15,21 +15,13 @@ import type {RoutingEvalManifest, RoutingScopeDrift, SkillCompanion} from "../sr
 const fixtureRuleIds = ["fixture-first", "fixture-second"] as const;
 
 /**
- * @summary progressive skill fixture source 구성 옵션
+ * @summary skill fixture source 구성 옵션
  */
 interface SkillFixtureOptions {
 	/**
 	 * @field fixture metadata에 선언할 direct companion 목록
 	 */
 	companions?: SkillCompanion[];
-	/**
-	 * @field non-progressive fixture metadata에 선언할 legacy extends 목록
-	 */
-	extends?: string[];
-	/**
-	 * @field progressiveDisclosure metadata 활성화 여부
-	 */
-	progressive?: boolean;
 	/**
 	 * @field fixture에 생성할 local rule stable ID 목록
 	 */
@@ -45,7 +37,7 @@ interface SkillFixtureOptions {
 }
 
 /**
- * @summary progressive skill fixture 파일 생성 인자
+ * @summary skill fixture 파일 생성 인자
  */
 interface WriteFixtureSkillArgs {
 	/**
@@ -94,27 +86,9 @@ const createValidManifest = (skill: string = "owner"): RoutingEvalManifest => ({
 	],
 });
 
-/**
- * @helper fixture metadata의 의존성 부분. progressive는 companions, 아니면 extends
- */
-const toDependencyMetadata = (progressive: boolean, companions: SkillCompanion[], extendedSkills: string[]): Record<string, unknown> => {
-	if (progressive) {
-		return {progressiveDisclosure: true, ...(companions.length > 0 ? {companions} : {})};
-	}
-
-	return extendedSkills.length > 0 ? {extends: extendedSkills} : {};
-};
-
 const writeFixtureSkill = async (args: WriteFixtureSkillArgs): Promise<void> => {
 	const {skillRootDir, skillName, options = {}} = args;
-	const {
-		companions = [],
-		extends: extendedSkills = [],
-		progressive = true,
-		ruleIds = [...fixtureRuleIds],
-		ruleRouting = {},
-		ruleTitles = {},
-	} = options;
+	const {companions = [], ruleIds = [...fixtureRuleIds], ruleRouting = {}, ruleTitles = {}} = options;
 	const skillDir = path.join(skillRootDir, skillName);
 	const rulesDir = path.join(skillDir, "rules");
 	await mkdir(rulesDir, {recursive: true});
@@ -126,7 +100,7 @@ const writeFixtureSkill = async (args: WriteFixtureSkillArgs): Promise<void> => 
 				version: "1.0.0",
 				organization: "Fixture Team",
 				abstract: "Fixture convention.",
-				...toDependencyMetadata(progressive, companions, extendedSkills),
+				...(companions.length > 0 ? {companions} : {}),
 			},
 			null,
 			2,
@@ -189,12 +163,10 @@ const withFixtureRoot = async (run: (skillRootDir: string) => Promise<void>): Pr
 	}
 };
 
-test("fixture manifests accept exact progressive partitions and non-progressive activation evidence", async () => {
+test("fixture manifests accept exact partitions", async () => {
 	await withFixtureRoot(async (skillRootDir) => {
 		await writeFixtureSkill({skillRootDir, skillName: "owner"});
-		await writeFixtureSkill({skillRootDir, skillName: "legacy", options: {progressive: false}});
 		const manifest = createValidManifest();
-		manifest.scenarios[0].expectedSkills.push("legacy");
 		await writeManifest({skillRootDir, skillName: "owner", manifest});
 
 		await validateRoutingEvalManifest(getSkillPaths("owner", skillRootDir));
@@ -301,12 +273,12 @@ test("manifest parser preserves hostile own partition keys for strict rejection"
 test("manifest validator rejects duplicate arrays, unknown skills/rules, overlap, and incomplete or unexpected partitions", async () => {
 	await withFixtureRoot(async (skillRootDir) => {
 		await writeFixtureSkill({skillRootDir, skillName: "owner"});
-		await writeFixtureSkill({skillRootDir, skillName: "legacy", options: {progressive: false}});
+		await writeFixtureSkill({skillRootDir, skillName: "other"});
 		const cases: [string, (manifest: RoutingEvalManifest) => void, RegExp][] = [
 			[
 				"owner activation missing",
 				(manifest) => {
-					manifest.scenarios[0].expectedSkills = ["legacy"];
+					manifest.scenarios[0].expectedSkills = ["other"];
 					manifest.scenarios[0].expectedSelected = {};
 				},
 				/must activate its owner skill.*owner/i,
@@ -315,21 +287,13 @@ test("manifest validator rejects duplicate arrays, unknown skills/rules, overlap
 			["unknown skill", (manifest) => manifest.scenarios[0].expectedSkills.push("missing"), /unknown skill.*missing/i],
 			["unknown rule", (manifest) => manifest.scenarios[0].expectedSelected.owner.push("missing-rule"), /unknown rule.*missing-rule/i],
 			["duplicate rule", (manifest) => manifest.scenarios[0].expectedSelected.owner.push("fixture-first"), /expectedSelected.*duplicate/i],
-			["missing progressive map key", (manifest) => delete manifest.scenarios[0].expectedSelected.owner, /expectedSelected.*owner/i],
+			["missing map key", (manifest) => delete manifest.scenarios[0].expectedSelected.owner, /expectedSelected.*owner/i],
 			[
 				"unexpected partition key",
 				(manifest) => {
 					manifest.scenarios[0].expectedSelected.other = [];
 				},
 				/unexpected partition.*other/i,
-			],
-			[
-				"non-progressive partition",
-				(manifest) => {
-					manifest.scenarios[0].expectedSkills.push("legacy");
-					manifest.scenarios[0].expectedSelected.legacy = [];
-				},
-				/unexpected partition skill.*legacy/i,
 			],
 		];
 
@@ -411,67 +375,11 @@ test("manifest validator enforces requiresSelected and requiredOnCompletion rule
 	});
 });
 
-test("manifest validator enforces recursive required closure for non-progressive legacy extends", async () => {
-	await withFixtureRoot(async (skillRootDir) => {
-		await writeFixtureSkill({skillRootDir, skillName: "owner"});
-		await writeFixtureSkill({skillRootDir, skillName: "typescript"});
-		await writeFixtureSkill({skillRootDir, skillName: "react", options: {progressive: false, extends: ["typescript"]}});
-		const manifest = createValidManifest();
-		manifest.scenarios[0].expectedSkills.push("react");
-		await writeManifest({skillRootDir, skillName: "owner", manifest});
-
-		await assert.rejects(
-			() => validateRoutingEvalManifest(getSkillPaths("owner", skillRootDir)),
-			/missing required dependency skill "typescript" for "react"/i,
-		);
-
-		manifest.scenarios[0].expectedSkills.push("typescript");
-		manifest.scenarios[0].expectedSelected.typescript = [...fixtureRuleIds];
-		await writeManifest({skillRootDir, skillName: "owner", manifest});
-		await validateRoutingEvalManifest(getSkillPaths("owner", skillRootDir));
-	});
-
-	await withFixtureRoot(async (skillRootDir) => {
-		await writeFixtureSkill({skillRootDir, skillName: "owner"});
-		await writeFixtureSkill({skillRootDir, skillName: "legacy-leaf", options: {progressive: false}});
-		await writeFixtureSkill({skillRootDir, skillName: "legacy-base", options: {progressive: false, extends: ["legacy-leaf"]}});
-		await writeFixtureSkill({skillRootDir, skillName: "react", options: {progressive: false, extends: ["legacy-base"]}});
-		const manifest = createValidManifest();
-		manifest.scenarios[0].expectedSkills.push("react", "legacy-base");
-		await writeManifest({skillRootDir, skillName: "owner", manifest});
-
-		await assert.rejects(
-			() => validateRoutingEvalManifest(getSkillPaths("owner", skillRootDir)),
-			/missing required dependency skill "legacy-leaf" for "legacy-base"/i,
-		);
-
-		manifest.scenarios[0].expectedSkills.push("legacy-leaf");
-		await writeManifest({skillRootDir, skillName: "owner", manifest});
-		await validateRoutingEvalManifest(getSkillPaths("owner", skillRootDir));
-	});
-});
-
-test("manifest validator rejects a legacy dependency cycle reached only through expectedSkills evidence", async () => {
-	await withFixtureRoot(async (skillRootDir) => {
-		await writeFixtureSkill({skillRootDir, skillName: "owner"});
-		await writeFixtureSkill({skillRootDir, skillName: "legacy-a", options: {progressive: false, extends: ["legacy-b"]}});
-		await writeFixtureSkill({skillRootDir, skillName: "legacy-b", options: {progressive: false, extends: ["legacy-a"]}});
-		const manifest = createValidManifest();
-		manifest.scenarios[0].expectedSkills.push("legacy-a");
-		await writeManifest({skillRootDir, skillName: "owner", manifest});
-
-		await assert.rejects(
-			() => validateRoutingEvalManifest(getSkillPaths("owner", skillRootDir)),
-			/Circular skill extends.*legacy-a -> legacy-b -> legacy-a/i,
-		);
-	});
-});
-
 test("manifest owner may activate first in drift but must stay active and fully partitioned", async () => {
 	await withFixtureRoot(async (skillRootDir) => {
 		await writeFixtureSkill({skillRootDir, skillName: "owner"});
 		await writeFixtureSkill({skillRootDir, skillName: "typescript"});
-		await writeFixtureSkill({skillRootDir, skillName: "react", options: {progressive: false}});
+		await writeFixtureSkill({skillRootDir, skillName: "react"});
 		const manifest: RoutingEvalManifest = {
 			version: 1,
 			skill: "owner",
@@ -481,18 +389,19 @@ test("manifest owner may activate first in drift but must stay active and fully 
 					prompt: "Change rendering with React and TypeScript only.",
 					files: ["src/view.tsx"],
 					expectedSkills: ["react", "typescript"],
-					expectedSelected: {typescript: [...fixtureRuleIds]},
+					expectedSelected: {react: [...fixtureRuleIds], typescript: [...fixtureRuleIds]},
 					scopeDrift: {
 						evidence: "Add the owner surface after scope drift.",
 						files: ["src/view.tsx", "src/view.css"],
 						expectedSkills: ["react", "typescript", "owner"],
-						expectedSelected: {typescript: [...fixtureRuleIds], owner: [...fixtureRuleIds]},
+						expectedSelected: {react: [...fixtureRuleIds], typescript: [...fixtureRuleIds], owner: [...fixtureRuleIds]},
 					},
 				},
 			],
 		};
 		await writeManifest({skillRootDir, skillName: "owner", manifest});
 		await writeManifest({skillRootDir, skillName: "typescript", manifest: createValidManifest("typescript")});
+		await writeManifest({skillRootDir, skillName: "react", manifest: createValidManifest("react")});
 		await validateRoutingEvalManifest(getSkillPaths("owner", skillRootDir));
 		await validateRoutingEvalManifests(skillRootDir);
 
@@ -510,7 +419,7 @@ test("manifest owner may activate first in drift but must stay active and fully 
 			evidence: "Remove the owner after drift.",
 			files: ["src/fixture.ts", "src/view.tsx"],
 			expectedSkills: ["react"],
-			expectedSelected: {},
+			expectedSelected: {react: [...fixtureRuleIds]},
 		};
 		await writeManifest({skillRootDir, skillName: "owner", manifest: ownerRemovedByDrift});
 		await assert.rejects(
@@ -528,21 +437,29 @@ test("manifest owner may activate first in drift but must stay active and fully 
 test("scope drift is monotonic for files, activated skills, and selected rules", async () => {
 	await withFixtureRoot(async (skillRootDir) => {
 		await writeFixtureSkill({skillRootDir, skillName: "owner"});
-		await writeFixtureSkill({skillRootDir, skillName: "legacy", options: {progressive: false}});
+		await writeFixtureSkill({skillRootDir, skillName: "other"});
 		const manifest = createValidManifest();
-		manifest.scenarios[0].expectedSkills.push("legacy");
+		manifest.scenarios[0].expectedSkills.push("other");
+		manifest.scenarios[0].expectedSelected.other = [...fixtureRuleIds];
 		manifest.scenarios[0].scopeDrift = {
 			evidence: "The scope expands.",
 			files: ["src/fixture.ts", "src/second.ts"],
-			expectedSkills: ["owner", "legacy"],
-			expectedSelected: {owner: [...fixtureRuleIds]},
+			expectedSkills: ["owner", "other"],
+			expectedSelected: {owner: [...fixtureRuleIds], other: [...fixtureRuleIds]},
 		};
 		await writeManifest({skillRootDir, skillName: "owner", manifest});
 		await validateRoutingEvalManifest(getSkillPaths("owner", skillRootDir));
 
 		const cases: [string, (candidate: RoutingEvalManifest) => void, RegExp][] = [
 			["file removal", (candidate) => toFirstScopeDrift(candidate).files.shift(), /scopeDrift.*file.*monotonic/i],
-			["skill removal", (candidate) => toFirstScopeDrift(candidate).expectedSkills.pop(), /scopeDrift.*skill.*monotonic/i],
+			[
+				"skill removal",
+				(candidate) => {
+					toFirstScopeDrift(candidate).expectedSkills.pop();
+					delete toFirstScopeDrift(candidate).expectedSelected.other;
+				},
+				/scopeDrift.*skill.*monotonic/i,
+			],
 			[
 				"selection removal",
 				(candidate) => {

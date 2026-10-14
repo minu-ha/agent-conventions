@@ -7,10 +7,6 @@ import type {SkillCompanion} from "./types.js";
  */
 export interface DependencyDeclaration {
 	/**
-	 * @field 의존성 선언 방식
-	 */
-	kind: "extends" | "companions";
-	/**
 	 * @field 검증된 직접 의존 skill 이름 목록
 	 */
 	skillNames: string[];
@@ -113,29 +109,6 @@ export const assertRoutingCondition = (value: unknown, owner: string): string =>
 };
 
 /**
- * @helper 옛 extends 목록 검증과 정규화
- */
-const parseExtends = (skillName: string, rawExtends: unknown): string[] => {
-	if (!Array.isArray(rawExtends)) {
-		throw new Error(`${skillName}: metadata.json field "extends" must be an array of skill names.`);
-	}
-
-	const dependencyNames = rawExtends.map((dependencyName) => {
-		if (typeof dependencyName !== "string" || dependencyName.trim().length === 0) {
-			throw new Error(`${skillName}: metadata.json field "extends" must contain non-empty skill names.`);
-		}
-
-		return assertValidSkillName(dependencyName, `${skillName}: metadata.json field "extends"`);
-	});
-
-	if (new Set(dependencyNames).size !== dependencyNames.length) {
-		throw new Error(`${skillName}: metadata.json field "extends" must not contain duplicates.`);
-	}
-
-	return dependencyNames;
-};
-
-/**
  * @helper companion 객체와 required, conditional 계약 검증과 정규화
  */
 const parseCompanions = (skillName: string, rawCompanions: unknown): SkillCompanion[] => {
@@ -187,39 +160,29 @@ const parseCompanions = (skillName: string, rawCompanions: unknown): SkillCompan
 };
 
 /**
- * @helper metadata의 옛 extends 또는 companion 의존성 계약 파싱
+ * @helper metadata의 companion 의존성 계약 파싱. 옛 extends 와 progressiveDisclosure 키는 거부
  */
 export const parseDependencyDeclaration = (skillName: string, metadata: unknown): DependencyDeclaration => {
 	const metadataObject = assertMetadataObject(metadata, skillName);
-	const progressiveDisclosure = metadataObject.progressiveDisclosure === true;
+	assertValidRoutingIdentifier(skillName, `${skillName}: skill name`);
 
-	if (progressiveDisclosure) {
-		assertValidRoutingIdentifier(skillName, `${skillName}: progressive skill name`);
-	}
-
-	if (metadataObject.extends !== undefined && metadataObject.companions !== undefined) {
-		throw new Error(`${skillName}: metadata.json cannot declare both "extends" and "companions".`);
-	}
-
-	if (metadataObject.extends !== undefined) {
-		if (metadataObject.progressiveDisclosure === true) {
-			throw new Error(`${skillName}: progressive skill must use "companions" instead of legacy "extends".`);
+	for (const retiredKey of ["extends", "progressiveDisclosure"] as const) {
+		if (metadataObject[retiredKey] !== undefined) {
+			throw new Error(
+				`${skillName}: metadata.json field "${retiredKey}" is no longer supported. Every skill is progressive and declares "companions".`,
+			);
 		}
-
-		return {kind: "extends", skillNames: parseExtends(skillName, metadataObject.extends), companions: []};
 	}
 
-	if (metadataObject.companions !== undefined) {
-		const companions = parseCompanions(skillName, metadataObject.companions);
-
-		if (progressiveDisclosure) {
-			for (const companion of companions) {
-				assertValidRoutingIdentifier(companion.skill, `${skillName}: companion "${companion.skill}"`);
-			}
-		}
-
-		return {kind: "companions", skillNames: companions.map((companion) => companion.skill), companions};
+	if (metadataObject.companions === undefined) {
+		return {skillNames: [], companions: []};
 	}
 
-	return {kind: "extends", skillNames: [], companions: []};
+	const companions = parseCompanions(skillName, metadataObject.companions);
+
+	for (const companion of companions) {
+		assertValidRoutingIdentifier(companion.skill, `${skillName}: companion "${companion.skill}"`);
+	}
+
+	return {skillNames: companions.map((companion) => companion.skill), companions};
 };

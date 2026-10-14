@@ -19,46 +19,26 @@ export const buildSkill = async (skillPaths: SkillPaths): Promise<void> => {
 	}
 
 	const dependencies = parseDependencyDeclaration(rootDocument.skillName, rootDocument.metadata);
-	const rulesIndexMarkdown =
-		rootDocument.metadata.progressiveDisclosure === true ? generateRulesIndexMarkdown(rootDocument, dependencies.companions) : undefined;
+	const rulesIndexMarkdown = generateRulesIndexMarkdown(rootDocument, dependencies.companions);
 	// contract 파일명은 번호 접두사 없는 stable ID 기준. 규칙 파일 번호가 바뀌어도 참조 유지
 	const contractMarkdownByFileName = new Map<string, string>(
-		rootDocument.metadata.progressiveDisclosure === true
-			? rootDocument.rules.map((rule) => [`${getRuleId(rule)}.md`, generateRuleContractMarkdown(rule)])
-			: [],
+		rootDocument.rules.map((rule) => [`${getRuleId(rule)}.md`, generateRuleContractMarkdown(rule)]),
 	);
+	// 지워진 규칙의 옛 contract 는 content 없이 넘겨 함께 지움
 	const existingContractFileNames = await readGeneratedDirectoryFileNames(skillPaths.ruleContractsDir);
 	const contractFileNames = Array.from(new Set([...existingContractFileNames, ...contractMarkdownByFileName.keys()])).sort((left, right) =>
 		left.localeCompare(right, "en-US"),
 	);
 
-	if (contractMarkdownByFileName.size > 0) {
-		await mkdir(skillPaths.ruleContractsDir, {recursive: true});
-	}
-
-	const generatedResult = await replaceGeneratedFiles([
-		{targetPath: skillPaths.rulesIndexPath, ...(rulesIndexMarkdown === undefined ? {} : {content: rulesIndexMarkdown})},
+	await mkdir(skillPaths.ruleContractsDir, {recursive: true});
+	await replaceGeneratedFiles([
+		{targetPath: skillPaths.rulesIndexPath, content: rulesIndexMarkdown},
 		...contractFileNames.map((fileName) => ({
 			targetPath: path.join(skillPaths.ruleContractsDir, fileName),
 			...(contractMarkdownByFileName.has(fileName) ? {content: contractMarkdownByFileName.get(fileName)} : {}),
 		})),
 	]);
 
-	if (rulesIndexMarkdown !== undefined) {
-		console.log(`Wrote ${path.relative(skillPaths.skillDir, skillPaths.rulesIndexPath)}`);
-	} else if (generatedResult.deletedPaths.includes(skillPaths.rulesIndexPath)) {
-		console.log(`Removed ${path.relative(skillPaths.skillDir, skillPaths.rulesIndexPath)}`);
-	}
-
-	if (contractMarkdownByFileName.size > 0) {
-		console.log(`Wrote contracts (${contractMarkdownByFileName.size})`);
-	} else {
-		const removedContractCount = generatedResult.deletedPaths.filter(
-			(targetPath) => path.dirname(targetPath) === skillPaths.ruleContractsDir,
-		).length;
-
-		if (removedContractCount > 0) {
-			console.log(`Removed contracts (${removedContractCount})`);
-		}
-	}
+	console.log(`Wrote ${path.relative(skillPaths.skillDir, skillPaths.rulesIndexPath)}`);
+	console.log(`Wrote contracts (${contractMarkdownByFileName.size})`);
 };

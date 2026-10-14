@@ -115,8 +115,8 @@ TSX 파일 하나를 고쳐 달라고 시켜본다. 에이전트는 이 순서�
 | [AGENTS.md](./AGENTS.md) | 이 저장소 작업 규칙 |
 | [AGENTS.template.md](./AGENTS.template.md) | 다른 프로젝트용 시작 템플릿 |
 | `skill/<name>/SKILL.md` | 활성화 라우터 |
-| `skill/<name>/RULES_INDEX.md` | 규칙 목록. progressive 전용 |
-| `skill/<name>/contracts/*.md` | 걸린 규칙의 계약. progressive 전용 |
+| `skill/<name>/RULES_INDEX.md` | 규칙 목록 |
+| `skill/<name>/contracts/*.md` | 걸린 규칙의 계약 |
 
 사이트는 `dev`가 띄우는 서버에서 본다. `docs/convention/`과 `docs/dist/`는 커밋하지 않는다.
 
@@ -124,12 +124,12 @@ TSX 파일 하나를 고쳐 달라고 시켜본다. 에이전트는 이 순서�
 
 ## 3. 포함된 Skill
 
-| Skill | Loading | 담당 범위 |
-| --- | --- | --- |
-| [react](./skill/react/SKILL.md) | progressive | 컴포넌트 경계, route-local, handler, state |
-| [typescript](./skill/typescript/SKILL.md) | progressive | import, type, helper, JSDoc |
-| [css](./skill/css/SKILL.md) | progressive | plain CSS, owner namespace, 토큰 |
-| [figma](./skill/figma/SKILL.md) | progressive | Figma MCP 호출 순서와 토큰 예산, 디자인 파일 읽기, 렌더 값 실측 |
+| Skill | 담당 범위 |
+| --- | --- |
+| [react](./skill/react/SKILL.md) | 컴포넌트 경계, route-local, handler, state |
+| [typescript](./skill/typescript/SKILL.md) | import, type, helper, JSDoc |
+| [css](./skill/css/SKILL.md) | plain CSS, owner namespace, 토큰 |
+| [figma](./skill/figma/SKILL.md) | Figma MCP 호출 순서와 토큰 예산, 디자인 파일 읽기, 렌더 값 실측 |
 
 skill 이름은 `convention-<skill>`.
 
@@ -142,7 +142,7 @@ companion은 `metadata.json`이 선언하고 자동으로 켜진다.
 
 ## 4. 동작 원리
 
-progressive skill 넷은 규칙 전체를 안 읽는다. 단계마다 좁힌다.
+skill 넷은 규칙 전체를 안 읽는다. 단계마다 좁힌다.
 
 | 순서 | 파일 | 읽는 범위 | 빈도 |
 | --- | --- | --- | --- |
@@ -152,7 +152,7 @@ progressive skill 넷은 규칙 전체를 안 읽는다. 단계마다 좁힌다.
 | 4 | `rules/NN-MM-<id>.md` | 원문 전부. 설명과 예제 | `CRITICAL`, `HIGH`는 항상, `MEDIUM`은 판단이 모호할 때 |
 
 사람이 통독할 때는 사이트를 쓴다. 에이전트는 전체 검토를 명시적으로 요청받았을 때만 `rules/*.md`를 차례로 읽는다.
-네 skill이 모두 progressive라 자동으로 통째로 읽는 단계는 없다.
+자동으로 통째로 읽는 단계는 없다.
 
 ### CRITICAL 마무리 재대조 훅
 

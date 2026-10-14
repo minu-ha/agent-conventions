@@ -10,7 +10,7 @@ import {
 } from "./dependencies.js";
 import type {DependencyDeclaration} from "./dependencies.js";
 import {readSkillDocument, readSkillRuleFileNames} from "./parser.js";
-import {assertProgressiveCompanionSource, assertProgressiveSkillEntrypoint} from "./progressive.js";
+import {assertProgressiveSkillEntrypoint} from "./progressive.js";
 import {assertRuleDiscipline} from "./rule-discipline.js";
 import {validateRoutingEvalManifest} from "./routing-evals.js";
 import {generateRuleContractMarkdown} from "./routing.js";
@@ -145,10 +145,6 @@ const validateMetadata = (skillName: string, metadata: SkillMetadata): Dependenc
 		}
 	}
 
-	if (rawMetadata.progressiveDisclosure !== undefined && typeof rawMetadata.progressiveDisclosure !== "boolean") {
-		throw new Error(`${skillName}: metadata.json field "progressiveDisclosure" must be a boolean.`);
-	}
-
 	return dependencies;
 };
 
@@ -173,10 +169,8 @@ const validateLocalSkill = async (skillPaths: SkillPaths): Promise<LocalValidati
 		}
 	}
 
-	if (metadata.progressiveDisclosure === true) {
-		for (const section of sections) {
-			assertValidRoutingIdentifier(section.prefix, `${skillPaths.skillName}: section prefix`);
-		}
+	for (const section of sections) {
+		assertValidRoutingIdentifier(section.prefix, `${skillPaths.skillName}: section prefix`);
 	}
 
 	const validPrefixes = new Set(sections.map((section) => section.prefix));
@@ -208,29 +202,23 @@ const validateLocalSkill = async (skillPaths: SkillPaths): Promise<LocalValidati
 			throw new Error(`${skillPaths.skillName}: ${rule.fileName} is missing frontmatter key "tags".`);
 		}
 
-		if (metadata.progressiveDisclosure === true) {
-			assertValidRoutingIdentifier(ruleId, `${skillPaths.skillName}: ${rule.fileName} stable ID`);
-			assertValidRoutingIdentifier(rule.prefix, `${skillPaths.skillName}: ${rule.fileName} section prefix`);
+		assertValidRoutingIdentifier(ruleId, `${skillPaths.skillName}: ${rule.fileName} stable ID`);
+		assertValidRoutingIdentifier(rule.prefix, `${skillPaths.skillName}: ${rule.fileName} section prefix`);
 
-			for (const tag of rule.tags) {
-				assertValidRoutingIdentifier(tag, `${skillPaths.skillName}: ${rule.fileName} tag`);
-			}
-
-			for (const reviewTarget of rule.reviewWith) {
-				assertValidRuleTarget(reviewTarget, `${skillPaths.skillName}: ${rule.fileName}`, "reviewWith");
-			}
-
-			for (const requiredTarget of rule.requiresSelected) {
-				assertValidRuleTarget(requiredTarget, `${skillPaths.skillName}: ${rule.fileName}`, "requiresSelected");
-			}
-
-			assertRoutingCondition(rule.appliesWhen, `${skillPaths.skillName}: ${rule.fileName} appliesWhen`);
-			generateRuleContractMarkdown(rule);
-		} else if (rule.requiresSelected.length > 0 || rule.requiredOnCompletion) {
-			throw new Error(
-				`${skillPaths.skillName}: ${rule.fileName} requiresSelected and requiredOnCompletion are progressive-only routing metadata.`,
-			);
+		for (const tag of rule.tags) {
+			assertValidRoutingIdentifier(tag, `${skillPaths.skillName}: ${rule.fileName} tag`);
 		}
+
+		for (const reviewTarget of rule.reviewWith) {
+			assertValidRuleTarget(reviewTarget, `${skillPaths.skillName}: ${rule.fileName}`, "reviewWith");
+		}
+
+		for (const requiredTarget of rule.requiresSelected) {
+			assertValidRuleTarget(requiredTarget, `${skillPaths.skillName}: ${rule.fileName}`, "requiresSelected");
+		}
+
+		assertRoutingCondition(rule.appliesWhen, `${skillPaths.skillName}: ${rule.fileName} appliesWhen`);
+		generateRuleContractMarkdown(rule);
 
 		if (new Set(rule.reviewWith).size !== rule.reviewWith.length) {
 			throw new Error(`${skillPaths.skillName}: ${rule.fileName} reviewWith must not contain duplicates.`);
@@ -330,22 +318,20 @@ const validateSkillTree = async (args: ValidateSkillTreeArgs): Promise<LocalVali
 
 	for (const dependencyName of localResult.dependencies.skillNames) {
 		if (nextLineage.includes(dependencyName)) {
-			throw new Error(`Circular skill ${localResult.dependencies.kind} detected: ${[...nextLineage, dependencyName].join(" -> ")}.`);
+			throw new Error(`Circular skill companions detected: ${[...nextLineage, dependencyName].join(" -> ")}.`);
 		}
 
 		if (!(await isBuildableSkill(dependencyName, targetSkillRootDir))) {
-			const dependencyLabel = localResult.dependencies.kind === "extends" ? "Extended" : "Companion";
-			throw new Error(`${dependencyLabel} skill "${dependencyName}" referenced by "${args.skillPaths.skillName}" is not buildable.`);
+			throw new Error(`Companion skill "${dependencyName}" referenced by "${args.skillPaths.skillName}" is not buildable.`);
 		}
 
-		const dependencyResult = await validateSkillTree({
+		await validateSkillTree({
 			skillPaths: getSkillPaths(dependencyName, targetSkillRootDir),
 			lineage: nextLineage,
 			validatedSkillNames: args.validatedSkillNames,
 			documents: args.documents,
 			dependenciesBySkill: args.dependenciesBySkill,
 		});
-		assertProgressiveCompanionSource(localResult.document, dependencyResult.document);
 	}
 
 	args.validatedSkillNames.add(args.skillPaths.skillName);
@@ -435,10 +421,6 @@ const validateRoutingTargets = (
 					if (!targetExists) {
 						throw new Error(`${skillName}: ${rule.fileName} has unknown ${fieldName} target "${target}".`);
 					}
-
-					if (fieldName === "requiresSelected" && targetDocument?.metadata.progressiveDisclosure !== true) {
-						throw new Error(`${skillName}: ${rule.fileName} requiresSelected target "${target}" must belong to a progressive skill.`);
-					}
 				}
 			}
 		}
@@ -461,9 +443,7 @@ export const validateSkill = async (skillPaths: SkillPaths): Promise<void> => {
 	assertProseRuleReferences({document: rootResult.document, knownIds: allRules.ids, knownPrefixes: allRules.prefixes, skillsAbove});
 	assertRuleDiscipline(rootResult.document);
 
-	if (rootResult.document.metadata.progressiveDisclosure === true) {
-		await validateRoutingEvalManifest(skillPaths);
-	}
+	await validateRoutingEvalManifest(skillPaths);
 
 	const dependencyCount = rootResult.dependencies.skillNames.length;
 	const dependencySummary = dependencyCount > 0 ? ` plus ${dependencyCount} companion skill(s)` : "";

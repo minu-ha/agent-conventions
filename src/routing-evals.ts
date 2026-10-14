@@ -353,33 +353,26 @@ const validateRulePartition = (args: ValidateRulePartitionArgs): void => {
 const validateExpectedPartition = async (args: ValidateExpectedPartitionArgs): Promise<void> => {
 	const {label, partition, skillRootDir, documents} = args;
 	const expectedSkillSet = new Set(partition.expectedSkills);
-	const progressiveSkillNames: string[] = [];
 
 	for (const skillName of partition.expectedSkills) {
-		const document = await readExpectedSkillDocument({skillName, skillRootDir, documents});
-
-		if (document.metadata.progressiveDisclosure === true) {
-			progressiveSkillNames.push(skillName);
-		}
+		await readExpectedSkillDocument({skillName, skillRootDir, documents});
 	}
-
-	const progressiveSkillSet = new Set(progressiveSkillNames);
 
 	for (const [recordName, record] of [["expectedSelected", partition.expectedSelected]] as const) {
 		for (const skillName of Object.keys(record)) {
-			if (!progressiveSkillSet.has(skillName)) {
+			if (!expectedSkillSet.has(skillName)) {
 				throw new Error(`${label}.${recordName} has unexpected partition skill "${skillName}".`);
 			}
 		}
 
-		for (const skillName of progressiveSkillNames) {
+		for (const skillName of partition.expectedSkills) {
 			if (!Object.hasOwn(record, skillName)) {
-				throw new Error(`${label}.${recordName} must include activated progressive skill "${skillName}".`);
+				throw new Error(`${label}.${recordName} must include activated skill "${skillName}".`);
 			}
 		}
 	}
 
-	for (const skillName of progressiveSkillNames) {
+	for (const skillName of partition.expectedSkills) {
 		const document = documents.get(skillName);
 
 		if (!document) {
@@ -406,11 +399,10 @@ const validateExpectedPartition = async (args: ValidateExpectedPartitionArgs): P
 				const separatorIndex = target.indexOf("/");
 				const targetSkillName = separatorIndex === -1 ? skillName : target.slice(0, separatorIndex);
 				const targetRuleId = separatorIndex === -1 ? target : target.slice(separatorIndex + 1);
-				const targetDocument = documents.get(targetSkillName);
 
-				if (!expectedSkillSet.has(targetSkillName) || targetDocument?.metadata.progressiveDisclosure !== true) {
+				if (!expectedSkillSet.has(targetSkillName)) {
 					throw new Error(
-						`${label} selected rule "${skillName}/${selectedRuleId}" requiresSelected target skill "${targetSkillName}" to be activated and progressive.`,
+						`${label} selected rule "${skillName}/${selectedRuleId}" requiresSelected target skill "${targetSkillName}" to be activated.`,
 					);
 				}
 
@@ -431,18 +423,16 @@ const validateExpectedPartition = async (args: ValidateExpectedPartitionArgs): P
 		}
 
 		const dependencyDeclaration = parseDependencyDeclaration(skillName, document.metadata);
-		const requiredDependencyNames =
-			dependencyDeclaration.kind === "extends"
-				? dependencyDeclaration.skillNames
-				: dependencyDeclaration.companions.filter((companion) => companion.mode === "required").map((companion) => companion.skill);
+		const requiredDependencyNames = dependencyDeclaration.companions
+			.filter((companion) => companion.mode === "required")
+			.map((companion) => companion.skill);
 
 		for (const dependencyName of requiredDependencyNames) {
 			if (expectedSkillSet.has(dependencyName)) {
 				continue;
 			}
 
-			const dependencyLabel = dependencyDeclaration.kind === "extends" ? "dependency" : "companion";
-			throw new Error(`${label} is missing required ${dependencyLabel} skill "${dependencyName}" for "${skillName}".`);
+			throw new Error(`${label} is missing required companion skill "${dependencyName}" for "${skillName}".`);
 		}
 	}
 };
@@ -478,11 +468,7 @@ const validateManifest = async (skillPaths: SkillPaths): Promise<ManifestValidat
 	const manifest = await readRoutingEvalManifest(skillPaths);
 	const skillRootDir = path.dirname(skillPaths.skillDir);
 	const documents = new Map<string, LoadedSkillDocument>();
-	const ownerDocument = await readExpectedSkillDocument({skillName: skillPaths.skillName, skillRootDir, documents});
-
-	if (ownerDocument.metadata.progressiveDisclosure !== true) {
-		throw new Error(`${skillPaths.skillName}: routing-evals.json is only valid for a progressive skill owner.`);
-	}
+	await readExpectedSkillDocument({skillName: skillPaths.skillName, skillRootDir, documents});
 
 	for (const scenario of manifest.scenarios) {
 		const label = `${skillPaths.skillName}: scenario "${scenario.id}"`;
@@ -512,27 +498,23 @@ export const validateRoutingEvalManifest = async (skillPaths: SkillPaths): Promi
 };
 
 /**
- * @api skill 루트의 모든 progressive 매니페스트와 매니페스트 간 적용 사례 커버리지 검증
+ * @api skill 루트의 모든 매니페스트와 매니페스트 간 적용 사례 커버리지 검증
  */
 export const validateRoutingEvalManifests = async (skillRootDir: string = packagePaths.skillRootDir): Promise<void> => {
-	const progressiveDocuments = new Map<string, LoadedSkillDocument>();
+	const skillDocuments = new Map<string, LoadedSkillDocument>();
 
 	for (const skillName of await listSkillNames(skillRootDir)) {
 		if (!(await isBuildableSkill(skillName, skillRootDir))) {
 			continue;
 		}
 
-		const document = await readSkillDocument(getSkillPaths(skillName, skillRootDir));
-
-		if (document.metadata.progressiveDisclosure === true) {
-			progressiveDocuments.set(skillName, document);
-		}
+		skillDocuments.set(skillName, await readSkillDocument(getSkillPaths(skillName, skillRootDir)));
 	}
 
 	const scenarioOwners = new Map<string, string>();
 	const selectedBySkill = new Map<string, Set<string>>();
 
-	for (const skillName of progressiveDocuments.keys()) {
+	for (const skillName of skillDocuments.keys()) {
 		const {manifest} = await validateManifest(getSkillPaths(skillName, skillRootDir));
 
 		for (const scenario of manifest.scenarios) {
@@ -563,7 +545,7 @@ export const validateRoutingEvalManifests = async (skillRootDir: string = packag
 		}
 	}
 
-	for (const [skillName, document] of progressiveDocuments) {
+	for (const [skillName, document] of skillDocuments) {
 		const selected = selectedBySkill.get(skillName) ?? new Set<string>();
 		const missingRuleIds = document.rules.map((rule) => getRuleId(rule)).filter((ruleId) => !selected.has(ruleId));
 

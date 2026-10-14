@@ -128,17 +128,9 @@ export interface SkillMetadata {
 	 */
 	abstract: string;
 	/**
-	 * @field 현재 skill이 함께 로드할 companion skill 디렉터리 이름 목록
-	 */
-	extends?: string[];
-	/**
 	 * @field 컴파일 가이드 마지막에 노출할 참고 링크 목록
 	 */
 	references?: string[];
-	/**
-	 * @field compact routing index를 사용하는 progressive skill 여부
-	 */
-	progressiveDisclosure?: boolean;
 	/**
 	 * @field 현재 skill이 직접 선언한 companion skill 관계 목록
 	 */

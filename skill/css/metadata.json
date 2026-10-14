@@ -4,7 +4,6 @@
 	"organization": "Agent Conventions",
 	"date": "2026년 4월",
 	"abstract": "에이전트 협업 팀을 위한 CSS 코딩 컨벤션입니다. 일반 CSS를 기본으로 한 전역 고유 이름, `pg_`, `wg_`, `ui_` 소유 범위, 예측 가능한 TSX 클래스 조합, 평평한 선택자, 다른 소유자의 클래스는 자기 루트 아래에서만 선택자로 잡는 경계, 토큰으로 모은 값, 눈에 보이는 포커스 표시, stylelint 설정을 다룹니다. TSX의 클래스 계약을 함께 바꿀 때는 React와 TypeScript 규칙도 함께 봅니다. 규칙 본문의 정본은 `rules/*.md`입니다.",
-	"progressiveDisclosure": true,
 	"companions": [
 		{
 			"skill": "typescript",

@@ -3,7 +3,7 @@ import path from "node:path";
 
 import {assertRealSkillDirectory, getSkillPaths, isBuildableSkill} from "./config.js";
 import {assertMetadataObject, getRuleStableId, parseDependencyDeclaration} from "./dependencies.js";
-import {assertProgressiveCompanionSource, assertProgressiveSkillEntrypoint} from "./progressive.js";
+import {assertProgressiveSkillEntrypoint} from "./progressive.js";
 import {inlineSnippets} from "./snippets.js";
 import type {LoadedSkillDocument, SkillMetadata, SkillPaths, SkillRule, SkillSection} from "./types.js";
 
@@ -372,14 +372,13 @@ const resolveSkillDocuments = async (skillPaths: SkillPaths, lineage: string[], 
 
 	for (const inheritedSkillName of dependencyDeclaration.skillNames) {
 		if (nextLineage.includes(inheritedSkillName)) {
-			throw new Error(`Circular skill ${dependencyDeclaration.kind} detected: ${[...nextLineage, inheritedSkillName].join(" -> ")}.`);
+			throw new Error(`Circular skill companions detected: ${[...nextLineage, inheritedSkillName].join(" -> ")}.`);
 		}
 
 		const buildable = await isBuildableSkill(inheritedSkillName, targetSkillRootDir);
 
 		if (!buildable) {
-			const dependencyLabel = dependencyDeclaration.kind === "extends" ? "Extended" : "Companion";
-			throw new Error(`${dependencyLabel} skill "${inheritedSkillName}" referenced by "${skillPaths.skillName}" is not buildable.`);
+			throw new Error(`Companion skill "${inheritedSkillName}" referenced by "${skillPaths.skillName}" is not buildable.`);
 		}
 
 		const inheritedSkillPaths = getSkillPaths(inheritedSkillName, targetSkillRootDir);
@@ -390,7 +389,6 @@ const resolveSkillDocuments = async (skillPaths: SkillPaths, lineage: string[], 
 			throw new Error(`Failed to resolve dependency skill document for "${inheritedSkillName}".`);
 		}
 
-		assertProgressiveCompanionSource(document, inheritedRootDocument);
 		inheritedDocuments.push(...resolvedInheritedDocuments);
 	}
 
@@ -401,7 +399,7 @@ const resolveSkillDocuments = async (skillPaths: SkillPaths, lineage: string[], 
 };
 
 /**
- * @description `extends`를 따라 companion skill까지 포함한 문서 집합 로드
+ * @description companion skill까지 포함한 문서 집합 로드
  */
 export const readResolvedSkillDocuments = async (skillPaths: SkillPaths, lineage: string[] = []): Promise<LoadedSkillDocument[]> => {
 	return await resolveSkillDocuments(skillPaths, lineage, {documentCache: new Map(), resolvedDocumentCache: new Map()});

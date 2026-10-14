@@ -16,7 +16,7 @@ import type {LoadedSkillDocument} from "../src/types.js";
 const expectedRuleCount = 146;
 
 /**
- * @helper 사이트가 노출하는 progressive skill 문서 전부
+ * @helper 사이트가 노출하는 skill 문서 전부
  */
 const readProgressiveDocuments = async (): Promise<LoadedSkillDocument[]> => {
 	const documents: LoadedSkillDocument[] = [];
@@ -29,7 +29,7 @@ const readProgressiveDocuments = async (): Promise<LoadedSkillDocument[]> => {
 		documents.push(await readSkillDocument(getSkillPaths(skillName)));
 	}
 
-	return documents.filter((document) => document.metadata.progressiveDisclosure === true);
+	return documents;
 };
 
 test("parseRuleBody splits prose from Incorrect and Correct examples", () => {

@@ -68,7 +68,7 @@ const writeCliSkillFixture = async (skillRootDir: string, skillName: string): Pr
 	await mkdir(rulesDir, {recursive: true});
 	await writeFile(
 		path.join(skillDir, "metadata.json"),
-		`${JSON.stringify({title: "CLI Fixture", version: "1.0.0", organization: "Fixture", abstract: "CLI fixture.", progressiveDisclosure: true}, null, 2)}\n`,
+		`${JSON.stringify({title: "CLI Fixture", version: "1.0.0", organization: "Fixture", abstract: "CLI fixture."}, null, 2)}\n`,
 		"utf8",
 	);
 	await writeFile(

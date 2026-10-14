@@ -23,7 +23,7 @@ import {
  */
 
 /**
- * @helper progressive skill 문서 전부
+ * @helper skill 문서 전부
  */
 const readProgressiveDocuments = async (): Promise<LoadedSkillDocument[]> => {
 	const documents: LoadedSkillDocument[] = [];
@@ -34,7 +34,7 @@ const readProgressiveDocuments = async (): Promise<LoadedSkillDocument[]> => {
 		}
 	}
 
-	return documents.filter((document) => document.metadata.progressiveDisclosure === true);
+	return documents;
 };
 
 test("every generated index lists exactly the local rules in canonical order with a contract each", async () => {
@@ -83,9 +83,7 @@ test("React SKILL.md is a compact router with required TypeScript and conditiona
 	assert.match(reactScope, /(때|경우)만/, "react 1절: `convention-css` 조건부 경계가 없다");
 	assert.equal(isNegated(blockContaining(reactScope, "`convention-css`")), true, "react 1절: css 미적용 조건이 없다");
 
-	// 현재 companion은 모두 progressive라 각 라우터와 인덱스를 읽음
 	assertMentions(extractSection(body, 2), ["SKILL.md", "RULES_INDEX.md"], "react 2절");
-	assert.doesNotMatch(extractSection(body, 2), /non-progressive/);
 });
 
 test("CSS SKILL.md is a compact router with companion boundaries", async () => {

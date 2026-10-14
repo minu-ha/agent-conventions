@@ -4,16 +4,16 @@ import {getSkillPaths, isBuildableSkill} from "./config.js";
 import {parseDependencyDeclaration} from "./dependencies.js";
 import {readGeneratedDirectoryFileNames, readGeneratedRegularFile} from "./generated-files.js";
 import {readSkillDocument} from "./parser.js";
-import {assertProgressiveCompanionSource, assertProgressiveSkillEntrypoint} from "./progressive.js";
+import {assertProgressiveSkillEntrypoint} from "./progressive.js";
 import {generateRuleContractMarkdown, generateRulesIndexMarkdown, getRuleId} from "./routing.js";
 import type {SkillPaths} from "./types.js";
 
 /**
- * @helper progressive companion 전체를 돌며 생성물 최신 상태 확인
+ * @helper companion 전체를 돌며 생성물 최신 상태 확인
  */
-const checkGeneratedSkillTree = async (skillPaths: SkillPaths, visiting: Set<string>, completed: Set<string>): Promise<boolean> => {
+const checkGeneratedSkillTree = async (skillPaths: SkillPaths, visiting: Set<string>, completed: Set<string>): Promise<void> => {
 	if (completed.has(skillPaths.skillName)) {
-		return true;
+		return;
 	}
 
 	if (visiting.has(skillPaths.skillName)) {
@@ -23,30 +23,6 @@ const checkGeneratedSkillTree = async (skillPaths: SkillPaths, visiting: Set<str
 	visiting.add(skillPaths.skillName);
 	const localDocument = await readSkillDocument(skillPaths);
 	const actualContractFileNames = await readGeneratedDirectoryFileNames(skillPaths.ruleContractsDir);
-
-	if (localDocument.metadata.progressiveDisclosure !== true) {
-		try {
-			await readGeneratedRegularFile(skillPaths.rulesIndexPath);
-		} catch (error) {
-			if ((error as NodeJS.ErrnoException).code === "ENOENT") {
-				if (actualContractFileNames.length > 0) {
-					throw new Error(
-						`${skillPaths.skillName}: unexpected generated contract files while progressiveDisclosure is disabled: ${actualContractFileNames.join(", ")}. Run the skill build to remove them.`,
-					);
-				}
-
-				visiting.delete(skillPaths.skillName);
-				completed.add(skillPaths.skillName);
-				return false;
-			}
-
-			throw error;
-		}
-
-		throw new Error(
-			`${skillPaths.skillName}: unexpected generated RULES_INDEX.md at ${skillPaths.rulesIndexPath} while progressiveDisclosure is disabled. Run the skill build to remove it.`,
-		);
-	}
 
 	await assertProgressiveSkillEntrypoint(skillPaths, localDocument);
 	const dependencies = parseDependencyDeclaration(localDocument.skillName, localDocument.metadata);
@@ -60,7 +36,6 @@ const checkGeneratedSkillTree = async (skillPaths: SkillPaths, visiting: Set<str
 
 		const companionPaths = getSkillPaths(companion.skill, targetSkillRootDir);
 		const companionDocument = await readSkillDocument(companionPaths);
-		assertProgressiveCompanionSource(localDocument, companionDocument);
 		await assertProgressiveSkillEntrypoint(companionPaths, companionDocument);
 		directCompanionPaths.push(companionPaths);
 	}
@@ -122,12 +97,11 @@ const checkGeneratedSkillTree = async (skillPaths: SkillPaths, visiting: Set<str
 
 	visiting.delete(skillPaths.skillName);
 	completed.add(skillPaths.skillName);
-	return true;
 };
 
 /**
- * @description 단일 skill과 progressive companion 전체의 라우팅 생성물 최신 상태 확인. 라우팅 생성물이 있으면 true
+ * @description 단일 skill과 companion 전체의 라우팅 생성물 최신 상태 확인
  */
-export const checkGeneratedSkill = async (skillPaths: SkillPaths): Promise<boolean> => {
-	return await checkGeneratedSkillTree(skillPaths, new Set(), new Set());
+export const checkGeneratedSkill = async (skillPaths: SkillPaths): Promise<void> => {
+	await checkGeneratedSkillTree(skillPaths, new Set(), new Set());
 };
