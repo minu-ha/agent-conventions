@@ -1,5 +1,5 @@
-const {status: orderStatus, owner: orderOwner} = order;
+const {status: orderStatus, ownerId: orderOwnerId} = order;
 
-if (orderStatus === "archived") {
-	notify(orderOwner);
+if (orderStatus === "cancelled") {
+	notify(orderOwnerId);
 }

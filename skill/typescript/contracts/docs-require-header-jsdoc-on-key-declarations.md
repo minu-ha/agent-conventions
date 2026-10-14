@@ -21,6 +21,8 @@
 export const toSortedUserIds = (userIds: string[]): string[] => {
 	return uniq(userIds).toSorted();
 };
+
+const responseProductList = useProductList();
 ```
 
 **Correct 1 (여러 줄 블록에 설명만 적습니다):**

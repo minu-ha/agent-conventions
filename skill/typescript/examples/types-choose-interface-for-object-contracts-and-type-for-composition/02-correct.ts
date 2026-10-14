@@ -18,11 +18,11 @@ interface ProductSummary {
 type ProductMode = "list" | "grid";
 
 /**
- * 자식 목록을 편집할 수 있는 행
+ * 자식 분류를 편집할 수 있는 노드
  */
-type MutableRow = Omit<Row, "children"> & {
+type EditableCategoryNode = Omit<ProductCategoryNode, "children"> & {
 	/**
-	 * 편집 중인 자식 행
+	 * 편집 중인 자식 분류
 	 */
-	children: Row[];
+	children: EditableCategoryNode[];
 };

@@ -4,19 +4,19 @@
  */
 interface UserFormatters {
 	/**
-	 * 상태 객체를 화면 문자열로
-	 */
-	toStateLabel: (state: Record<string, unknown>) => string;
-	/**
 	 * 권한 코드를 화면 문자열로
 	 */
-	toRoleLabel: (role: string) => string;
+	toRoleLabel: (role: UserRole) => string;
+	/**
+	 * 활성 여부를 화면 문자열로
+	 */
+	toActiveLabel: (isActive: boolean) => string;
 }
 
 /**
- * 상태 객체를 화면 문자열로 변환
+ * 권한 코드를 화면 문자열로 변환
  */
 // [!code error]
-const toStateLabel = (state: Record<string, unknown>): string => {
-	return JSON.stringify(state);
+const toRoleLabel = (role: UserRole): string => {
+	return role === "admin" ? "관리자" : "직원";
 };
