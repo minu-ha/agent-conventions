@@ -2,27 +2,11 @@
  * 예제가 import 없이 쓰는 이름
  *
  * 실제 스택의 이름은 설치된 패키지의 타입을 그대로 가리키고, 예제 세계관의 이름은 여기서 선언합니다
- * tsc 가 Cannot find name 을 내면 그 이름을 알맞은 절에 더합니다
+ * tsc 가 Cannot find name 이나 Cannot find module 을 내면 그 이름을 알맞은 절에 더합니다
  */
 
-declare module "@/*";
 declare module "*.css";
 declare module "*.svg";
-declare module "@/component/ui/button/ui-button" {
-	export type UiButtonProps = any;
-}
-declare module "@/component/ui/line-chart/_type/chart-series" {
-	export type ChartSeries = any;
-}
-declare module "@/component/ui/panel/_type/panel-part" {
-	export type UiPanelPartProps = any;
-}
-declare module "@/component/widget/profile-dialog/_type/profile-dialog-part" {
-	export type WgProfileDialogPartProps = any;
-}
-declare module "@/type/user-profile" {
-	export type UserProfile = any;
-}
 
 interface ImportMeta {
 	env: Record<string, string | undefined>;
@@ -651,7 +635,16 @@ declare const setVisibleRowCount: Dispatch<number>;
 
 // 조각 예제가 바깥에서 받는 변수. 조각은 컴포넌트 본문이나 함수 본문만 보여 주므로 이름만 선언
 interface FragmentProps {
-	[key: string]: any;
+	columns: TableColumn[];
+	formValues: ProductFormValues;
+	isSelected: boolean;
+	keyword: string;
+	onChange: (change: ProductChange) => void;
+	onKeywordChange: ChangeEventHandler<HTMLInputElement>;
+	productId: string;
+	products: Product[];
+	variant: "fill" | "outline" | "default";
+	view: "chart" | "table";
 }
 declare const props: FragmentProps;
 declare const amount: Amount;
@@ -727,3 +720,147 @@ declare const mutationMediaSave: UseMutationResult<void, {data: unknown}>;
 // 아직 남은 이름
 type ExampleQueryOptions<T> = {queryKey: readonly unknown[]; queryFn: () => Promise<T>};
 declare const products: Product[];
+
+// 예제 세계관: `@/` 모듈. 예제가 import 하는 것만 선언. 모듈 안에서 같은 이름을 다시 내보내려고 Shape, Component 별칭을 거침
+type UiButtonPropsShape = UiButtonProps;
+type ChartSeriesShape = ChartSeries;
+type UiPanelPartPropsShape = UiPanelPartProps;
+type WgProfileDialogPartPropsShape = WgProfileDialogPartProps;
+type UiPanelPartComponent = (props: UiPanelPartProps) => ReactElement;
+type WgProfileDialogPartComponent = (props: WgProfileDialogPartProps) => ReactElement;
+type UiLineChartComponent = (props: UiLineChartProps) => ReactElement;
+type UiTabsComponent = (props: UiTabsProps) => ReactElement;
+type PgProductTableSectionComponent = (props: PgProductTableSectionProps) => ReactElement;
+interface UiTabsContextValue {
+	selectedId: string;
+	onSelect: (id: string) => void;
+}
+declare module "@/component/ui/button/ui-button" {
+	export type UiButtonProps = UiButtonPropsShape;
+	export const UiButton: (props: UiButtonPropsShape) => ReactElement;
+}
+declare module "@/component/ui/line-chart/_constant/series" {
+	export const chart_series_line: {readonly id: "line"; readonly role: "line"};
+}
+declare module "@/component/ui/line-chart/_type/chart-series" {
+	export type ChartSeries = ChartSeriesShape;
+}
+declare module "@/component/ui/line-chart/ui-line-chart" {
+	export const UiLineChart: UiLineChartComponent;
+}
+declare module "@/component/ui/panel/_type/panel-part" {
+	export type UiPanelPartProps = UiPanelPartPropsShape;
+}
+declare module "@/component/ui/panel/_ui-panel-body" {
+	export const UiPanelBody: UiPanelPartComponent;
+}
+declare module "@/component/ui/panel/_ui-panel-footer" {
+	export const UiPanelFooter: UiPanelPartComponent;
+}
+declare module "@/component/ui/panel/_ui-panel-header" {
+	export const UiPanelHeader: UiPanelPartComponent;
+}
+declare module "@/component/ui/panel/_ui-panel-root" {
+	export const UiPanelRoot: UiPanelPartComponent;
+}
+declare module "@/component/ui/panel/ui-panel" {
+	export const UiPanel: {
+		Root: UiPanelPartComponent;
+		Header: UiPanelPartComponent;
+		Body: UiPanelPartComponent;
+		Footer: UiPanelPartComponent;
+	};
+}
+declare module "@/component/ui/tabs/_hook/use-tabs" {
+	export const UiTabsContext: Context<UiTabsContextValue | null>;
+}
+declare module "@/component/ui/tabs/ui-tabs" {
+	export const UiTabs: UiTabsComponent;
+}
+declare module "@/component/widget/product-table/wg-product-table" {
+	export const WgProductTable: (props: WgProductTableProps) => ReactElement;
+}
+declare module "@/component/widget/product-toolbar/_wg-product-toolbar-root" {
+	export const WgProductToolbarRoot: (props: {children?: ReactNode}) => ReactElement;
+}
+declare module "@/component/widget/product-toolbar/wg-product-toolbar" {
+	export const WgProductToolbar: {
+		Root: (props: {children?: ReactNode}) => ReactElement;
+	};
+}
+declare module "@/component/widget/profile-dialog/_type/profile-dialog-part" {
+	export type WgProfileDialogPartProps = WgProfileDialogPartPropsShape;
+}
+declare module "@/component/widget/profile-dialog/_wg-profile-dialog-body" {
+	export const WgProfileDialogBody: WgProfileDialogPartComponent;
+}
+declare module "@/component/widget/profile-dialog/_wg-profile-dialog-header" {
+	export const WgProfileDialogHeader: WgProfileDialogPartComponent;
+}
+declare module "@/component/widget/profile-dialog/_wg-profile-dialog-root" {
+	export const WgProfileDialogRoot: WgProfileDialogPartComponent;
+}
+declare module "@/component/widget/user-card/_wg-user-card-avatar" {
+	export const WgUserCardAvatar: (props: {src: string; alt: string; theme?: Theme}) => ReactElement;
+}
+declare module "@/config/env" {
+	export const env_api_base_url: string;
+}
+declare module "@/constant/api" {
+	export const api_request_timeout_ms: number;
+}
+declare module "@/constant/date" {
+	export const date_expiry_month_format: string;
+	export const date_input_format: string;
+}
+declare module "@/constant/pagination" {
+	export const pagination_default_page_size: number;
+}
+declare module "@/constant/preview" {
+	export const preview_row_count: number;
+}
+declare module "@/constant/retry" {
+	export const retry_max_attempts: number;
+}
+declare module "@/page/(main)/orders/pg-orders" {
+	export const PgOrders: () => ReactElement;
+}
+declare module "@/page/(main)/pg-main-outlet" {
+	export const PgMainOutlet: () => ReactElement;
+}
+declare module "@/page/(main)/products/pg-products" {
+	export const PgProducts: () => ReactElement;
+}
+declare module "@/page/pg-outlet" {
+	export const PgOutlet: () => ReactElement;
+}
+declare module "@/page/product-detail/_function/to-summary" {
+	export const toSummary: (response: ApiResponse<ProductSummary>) => ProductSummary;
+}
+declare module "@/page/product-detail/_pg-section-heading" {
+	export const PgSectionHeading: (props: {title: string}) => ReactElement;
+}
+declare module "@/page/product-detail/pg-product-detail" {
+	export const PgProductDetail: () => ReactElement;
+}
+declare module "@/page/product-detail/product-summary/pg-product-summary" {
+	export const PgProductSummary: (props: {heading?: ReactNode}) => ReactElement;
+}
+declare module "@/page/product-detail/product-table-section/_pg-review-section" {
+	export const PgReviewSection: () => ReactElement;
+}
+declare module "@/page/product-detail/product-table-section/pg-product-table-section" {
+	export const PgProductTableSection: PgProductTableSectionComponent;
+}
+declare module "@/page/products/_function/to-media-upload-payload" {
+	export const toMediaUploadPayload: (files: File[]) => FormData;
+}
+declare module "@/page/profile/_function/to-profile-save-request" {
+	export const toProfileSaveRequest: (values: ProfileFormValues) => {displayName: string};
+}
+declare module "@/type/user-profile" {
+	export type UserProfile = Profile;
+}
+declare module "@/util/date/to-display-date" {
+	export const toDisplayDate: (value: string) => string;
+}
