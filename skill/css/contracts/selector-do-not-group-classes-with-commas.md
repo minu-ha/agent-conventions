@@ -26,13 +26,12 @@
 ```css
 .pg_products__badge--draft,
 .pg_products__badge--active,
-.pg_products__badge--archived,
-.pg_products__badge--deleted {
+.pg_products__badge--hidden {
 	width: 24px;
 	height: 24px;
 }
 
-.pg_products__badge--deleted {
+.pg_products__badge--hidden {
 	background: rgb(140 152 160 / 12%);
 }
 ```
@@ -50,12 +49,7 @@
 	height: 24px;
 }
 
-.pg_products__badge--archived {
-	width: 24px;
-	height: 24px;
-}
-
-.pg_products__badge--deleted {
+.pg_products__badge--hidden {
 	width: 24px;
 	height: 24px;
 	background: rgb(140 152 160 / 12%);

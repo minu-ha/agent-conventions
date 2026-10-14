@@ -2,17 +2,20 @@
 	display: inline-flex;
 	min-height: 40px;
 	padding: 0 var(--app-space-control-inline);
+/* [!code error] */
 	width: 300px;
 }
 
 @media (width < 1024px) {
 	.ui_button__root {
+/* [!code error] */
 		width: 200px;
 	}
 }
 
 @media (width < 640px) {
 	.ui_button__root {
+/* [!code error] */
 		width: 100%;
 	}
 }

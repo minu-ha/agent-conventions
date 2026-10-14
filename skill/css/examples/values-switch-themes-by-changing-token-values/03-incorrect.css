@@ -1,4 +1,5 @@
 /* src/page/products/pg-products.css */
 .pg_products__panel {
+/* [!code error] */
 	box-shadow: 0 1px 3px rgb(0 0 0 / 12%);
 }

@@ -1,12 +1,15 @@
 .pg_products__toolbar {
+/* [!code error] */
 	& button {
 		height: 32px;
 	}
 
+/* [!code error] */
 	& > div {
 		flex: 1;
 	}
 
+/* [!code error] */
 	& > :first-child {
 		margin-inline-start: 0;
 	}

@@ -1,6 +1,8 @@
 .pg_products__sortButton {
 	&.MuiButtonBase-root {
+/* [!code error] */
 		&:hover {
+/* [!code error] */
 			.pg_products__sortBox {
 				border-color: #9fadc7;
 			}

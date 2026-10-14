@@ -1,4 +1,5 @@
 /* src/page/products/pg-products.css */
+/* [!code error] */
 @media (width < 1024px) {
 	.pg_products__filterBar {
 		flex-direction: column;
@@ -6,6 +7,7 @@
 }
 
 /* src/page/orders/pg-orders.css */
+/* [!code error] */
 @media (width < 1024px) {
 	.pg_orders__filterBar {
 		flex-direction: column;
