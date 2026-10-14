@@ -1,8 +1,9 @@
 /*
- * 예제 CSS 검사 · css 08-01 규칙이 보여 주는 설정의 공통 부분
+ * 예제 CSS 검사. css 08-01 규칙이 보여 주는 설정을 extends 로 그대로 읽음
  * 예제 한 파일에 여러 소유자(pg_, wg_, ui_)가 섞이므로 레이어별 override 대신 세 접두사를 한 패턴으로 받음
+ * 아래 helper 셋은 그 설정 파일의 것과 같아야 한다. rules.test.ts 가 override 패턴과 대조함
  */
-const ownClassPattern = (scope) =>
+export const ownClassPattern = (scope) =>
 	[
 		"^(?:",
 		// 우리 접두사로 시작하지 않는 클래스는 통과
@@ -21,16 +22,8 @@ const ownMarkupPatterns = [
 ];
 
 export default {
-	extends: ["stylelint-config-standard"],
+	extends: ["./css/examples/tooling-configure-stylelint-to-enforce-these-rules/01-correct.js"],
 	rules: {
-		"max-nesting-depth": [1, {ignoreAtRules: ["media", "supports", "container"]}],
-		"keyframes-name-pattern": "^(pg|wg|ui)_[a-z][a-zA-Z0-9]*__[a-z][a-zA-Z0-9]*$",
-		"no-duplicate-selectors": [true, {disallowInList: true}],
-		"declaration-no-important": true,
-		"property-disallowed-list": ["/^--/"],
-		"selector-attribute-name-disallowed-list": [/^aria-/, /^data-(pg|wg|ui)-/],
-		"selector-max-id": 0,
-		"selector-pseudo-class-disallowed-list": ["not"],
 		"selector-class-pattern": ownClassPattern("(?:pg|wg|ui)"),
 		"selector-disallowed-list": [[...libraryPrefixes, ...ownMarkupPatterns], {splitList: true}],
 		// 줄 표기 주석(`/* [!code ++] */`)이 표시할 줄 바로 위에 붙어야 해서 끔
