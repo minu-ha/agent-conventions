@@ -13,7 +13,7 @@
 		"check:diagrams": "tsx script/check-diagrams.ts",
 		"docs:build": "npm run build && for-humanity build docs",
 		"test": "tsx --test --test-concurrency=1 test/*.test.ts",
-		"lint:examples": "biome lint --config-path=skill/examples.biome.json skill && stylelint --config skill/stylelint.config.mjs \"skill/*/examples/**/*-correct*.css\"",
+		"lint:examples": "biome lint --config-path=skill/examples.biome.json skill && biome lint --config-path=skill/incorrect.biome.json skill && stylelint --config skill/stylelint.config.mjs \"skill/*/examples/**/*-correct*.css\" && stylelint --config skill/incorrect.stylelint.config.mjs \"skill/*/examples/**/*-incorrect*.css\"",
 		"lint": "biome check --files-ignore-unknown=true",
 		"lint:fix": "biome check --write --files-ignore-unknown=true",
 		"typecheck": "tsc --noEmit",

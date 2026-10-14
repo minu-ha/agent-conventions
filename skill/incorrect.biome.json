@@ -1,0 +1,28 @@
+{
+	"$schema": "https://biomejs.dev/schemas/2.5.7/schema.json",
+	"root": true,
+	"files": {
+		"includes": [
+			"**/examples/**/*-incorrect*.ts",
+			"**/examples/**/*-incorrect*.tsx",
+			"**/examples/**/*-incorrect*.js",
+			"**/examples/**/*-incorrect*.json",
+			"!**/composition-render-one-branch-with-and/01-incorrect.tsx",
+			"!**/composition-render-one-branch-with-and/03-incorrect.tsx",
+			"!**/composition-use-activity-only-to-preserve-mounted-subtrees/01-incorrect.tsx",
+			"!**/composition-use-activity-only-to-preserve-mounted-subtrees/03-incorrect-2.tsx",
+			"!**/perf-defer-heavy-renders-with-measured-evidence/01-incorrect.tsx",
+			"!**/runtime-avoid-ad-hoc-loading-branches/01-incorrect.tsx",
+			"!**/runtime-avoid-ad-hoc-loading-branches/03-incorrect.tsx",
+			"!**/runtime-place-error-boundaries-by-blast-radius/01-incorrect.tsx",
+			"!**/runtime-place-suspense-boundaries-at-the-section-owner/01-incorrect.tsx",
+			"!**/absence-do-not-guard-what-types-guarantee/03-incorrect.ts"
+		]
+	},
+	"linter": {
+		"enabled": true,
+		"rules": {
+			"recommended": false
+		}
+	}
+}

@@ -90,7 +90,7 @@ skill/react/
 - 규범이 두 주제 이상이면 `###` 소제목으로 가른다. 설명과 표만 이어지면 어디서 주제가 바뀌는지 읽는 사람이 놓친다.
 - `Correct`는 저장소 전체 규칙을 지킨다. 다른 스킬의 규칙도 포함한다.
   `rule-discipline.ts`가 잡는 교차 위반(`mutateAsync` 없는 `try`, `li onClick`, 리터럴 폴백, 손으로 쓴 `sort`, `reduce`, 한 줄 JSX 주석, 스택 밖 이름 등)은 `validate`가 막는다.
-  `Correct` 예제 파일은 `npm run lint:examples`가 규칙이 보여 주는 biome, stylelint 설정 그대로 검사한다. 규칙이 lint 설정으로 표현된다는 증명이다.
+  `Correct` 예제 파일은 `npm run lint:examples`가 규칙이 보여 주는 biome, stylelint 설정 그대로 검사한다. 규칙이 lint 설정으로 표현된다는 증명이다. `Incorrect` 예제는 규칙 없이 문법만 검사한다.
   `npm run typecheck:examples`는 같은 파일을 실제 스택 패키지의 타입으로 검사한다. import 없이 쓰는 이름과 `@/` 모듈은 `skill/examples.d.ts`에 실제 타입으로 선언한다. 이 파일이 예제 세계관의 스키마다. 새 예제는 거기 있는 이름과 필드를 쓰고, 없는 것은 거기에 더한다. 파일 하나에 파일 여럿을 담지 않는다. 파일마다 예제 파일을 나누고 `<<<` 줄을 잇는다.
   JSX 자식 자리에서는 줄 표기를 `{/* [!code ++] */}` 로 쓴다. biome 이 `//` 글자를 JSX 텍스트로 본다.
 - 라벨 괄호 안 문장은 코드가 보여 주는 것만 말한다. 규칙 문장을 되풀이하지 않는다.
@@ -291,6 +291,11 @@ npm install            # 최초 1회
 npm run validate       # 정본 검사. 한 skill 만: -- --skill=react
 npm run build          # RULES_INDEX, contracts, docs/convention/ 생성
 npm run check          # validate, 생성물 신선도, 흐름도 폭, typecheck, lint, test
+```
+
+`npm install`이 `.githooks`를 git 훅 경로로 등록한다. 커밋 전에 `check:generated`가 돌아 생성물이 정본과 어긋나면 커밋이 막힌다.
+
+```bash
 npm run dev            # build 후 사이트 dev 서버. 주소는 터미널에 찍힌다
 npm run docs:build     # 배포용. docs/dist 에 정적 HTML
 ```
