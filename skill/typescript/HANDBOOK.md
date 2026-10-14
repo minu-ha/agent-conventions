@@ -4157,7 +4157,7 @@ Biome 2.5.7의 `recommended`에는 `useConst`, `useImportType`, `noNonNullAssert
 					"level": "error",
 					"options": {
 						"patterns": [
-							{"group": ["../**", "./**", "!./*.css"], "message": "가져오기는 절대경로로 씁니다. 심볼 없이 파일만 불러오는 줄만 같은 폴더를 ./ 로 씁니다."}
+							{"group": ["../**", "./**", "!./*.css"], "message": "Import with the absolute alias. Only a bare file import may use ./ for the same folder."}
 						]
 					}
 				},
@@ -4206,7 +4206,7 @@ or {
 	`$left || $right`
 } where {
 	$right <: or { string(), number(), `true`, `false`, `[]`, `{}` },
-	register_diagnostic(span = $right, message = "??, || 오른쪽에 리터럴을 두지 않습니다. 선언된 이름을 참조합니다")
+	register_diagnostic(span = $right, message = "Do not put a literal on the right of ?? or ||. Reference a declared name.")
 }
 ```
 

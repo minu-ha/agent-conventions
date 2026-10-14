@@ -88,7 +88,7 @@ Biome 2.5.7의 `recommended`에는 `useConst`, `useImportType`, `noNonNullAssert
 					"level": "error",
 					"options": {
 						"patterns": [
-							{"group": ["../**", "./**", "!./*.css"], "message": "가져오기는 절대경로로 씁니다. 심볼 없이 파일만 불러오는 줄만 같은 폴더를 ./ 로 씁니다."}
+							{"group": ["../**", "./**", "!./*.css"], "message": "Import with the absolute alias. Only a bare file import may use ./ for the same folder."}
 						]
 					}
 				},
