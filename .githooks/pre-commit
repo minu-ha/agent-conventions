@@ -1,0 +1,6 @@
+#!/bin/sh
+# 생성물이 정본과 어긋난 채 커밋되는 것을 막음. 고치려면 npm run build
+npm run --silent check:generated || {
+	echo "generated files are stale. run: npm run build" >&2
+	exit 1
+}

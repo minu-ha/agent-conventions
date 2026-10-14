@@ -17,7 +17,8 @@
 		"lint": "biome check --files-ignore-unknown=true",
 		"lint:fix": "biome check --write --files-ignore-unknown=true",
 		"typecheck": "tsc --noEmit",
-		"typecheck:examples": "tsc -p skill/examples.tsconfig.json"
+		"typecheck:examples": "tsc -p skill/examples.tsconfig.json",
+		"prepare": "git config core.hooksPath .githooks"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "^2.5.7",
