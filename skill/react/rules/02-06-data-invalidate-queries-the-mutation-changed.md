@@ -20,8 +20,6 @@ tags: data, mutation
 
 ### 갱신 방법 고르기
 
-뮤테이션이 성공하면 관련 키를 무효화하고, 쿼리 캐시가 활성 쿼리를 다시 요청해 서버 상태를 맞춥니다.
-
 ```mermaid
 sequenceDiagram
 	participant S as 화면
@@ -42,10 +40,8 @@ sequenceDiagram
 | `setQueryData`로 응답을 목록에 직접 반영 | 쓰지 않습니다. 화면에서 대신 계산한 정렬, 집계가 서버와 어긋날 수 있습니다 |
 | 현재 키의 `refetch()` | 관련 키 전체를 맞추는 수단으로 쓰지 않습니다. 다른 필터, 페이지 키와 요약 쿼리는 남습니다 |
 
-같은 `QueryClient`의 같은 키를 구독하면 `refetch()` 결과도 함께 받습니다.
 무효화를 고르는 기준은 구독자 수가 아니라 관련 키의 범위입니다.
-`invalidateQueries`는 일치하는 쿼리를 오래된 상태로 표시하지만,
-비활성 쿼리까지 즉시 다시 요청한다고 가정하지 않습니다.
+`invalidateQueries`는 일치하는 쿼리를 오래된 상태로 표시하지만, 비활성 쿼리까지 즉시 다시 요청한다고 가정하지 않습니다.
 
 ### 무효화 호출 조건
 
@@ -54,9 +50,7 @@ sequenceDiagram
 | 쿼리 키 지정 | 문자열을 직접 적지 않고 쿼리 훅이 내보낸 키를 씁니다 |
 | 무효화 대상이 여럿임 | 성공 콜백에서 나란히 호출합니다 |
 | 다시 읽기를 마쳐야 저장 중 표시나 후속 동작을 끝낼 수 있음 | 성공 콜백에서 무효화 Promise를 반환하거나 `await`합니다 |
-| 호출 위치 | `data-handle-mutation-failure-where-it-is-called`를 따릅니다 |
-
-`events-run-user-actions-in-handlers-not-effects`에 따라 무효화를 이펙트로 옮기지 않습니다.
+| 호출 위치 | `data-handle-mutation-failure-where-it-is-called`를 따르고, 이펙트로 옮기지 않습니다 |
 
 **Incorrect 1 (현재 목록 키만 다시 읽어 다른 목록 조건과 요약 키를 놓칩니다):**
 

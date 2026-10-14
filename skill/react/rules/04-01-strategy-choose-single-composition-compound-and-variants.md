@@ -17,10 +17,7 @@ tags: strategy, composition, variants, components
 
 **Impact: MEDIUM (필요한 확장 범위에 맞춰 단순한 컴포넌트 구조를 선택합니다)**
 
-공용 컴포넌트는 프롭스보다 구조를 먼저 고릅니다.
-현재 필요한 단계까지만 적용합니다.
-
-부품 조립이 필요한지, 부품이 같은 상태를 읽는지, 같은 조합이 반복되는지 차례로 보고 구조를 고릅니다.
+공용 컴포넌트는 프롭스보다 구조를 먼저 고르고, 현재 필요한 단계까지만 적용합니다.
 
 ```mermaid
 flowchart LR
@@ -30,14 +27,9 @@ flowchart LR
 	q3 -- 아니요 --> r3("상태 있는 합성")
 ```
 
-부품 조립이 필요 없는 고정 UI를 화면 지역 JSX로 둘지는
-`screen-extract-local-section-components-for-runtime-boundaries`를 따릅니다.
-아래 예제는 같은 대화상자를 필요에 따라 확장합니다.
-합성에 상태를 추가해도 사용처의 공개 이름은 유지하고, 반복되는 조합은 변형으로 감쌉니다.
 합성 진입 파일은 부품을 `{Root, Header, Body} as const` 객체 하나로 내보냅니다.
-상태 있는 합성은 `Root`가 상태를 소유해 부품에 컨텍스트로 내립니다.
-렌더 프롭은 `strategy-prefer-children-over-render-props`를,
-공개 부품의 범위는 `strategy-expose-only-assembled-compound-parts`를 따릅니다.
+상태 있는 합성은 `Root`가 상태를 소유해 부품에 컨텍스트로 내리며, 상태를 추가해도 사용처의 공개 이름은 유지합니다.
+반복되는 조합은 변형으로 감쌉니다.
 
 **Incorrect 1 (단일, 합성, 변형을 구분하지 않고 한 컴포넌트에 모두 구현합니다):**
 

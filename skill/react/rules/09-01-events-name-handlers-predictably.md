@@ -22,10 +22,8 @@ tags: events, naming
 | DOM 이벤트 객체를 받음 | `handle + Target + Event` |
 | 이벤트 객체를 받지 않는 도메인 콜백 | `handle + DomainAction` |
 
-`on*`은 프롭 이름에만 씁니다.
-`onClick`을 처리하는 구현은 `handleRowClick`처럼 이름 짓습니다.
+`on*`은 프롭 이름에만 쓰고, `onClick`을 처리하는 구현은 `handleRowClick`처럼 이름 짓습니다.
 같은 컴포넌트에서 이름이 겹치지 않도록 대상이 다르면 대상 이름을 넣습니다.
-추가 인자 전달은 `events-curry-extra-handler-arguments`를 따릅니다.
 
 **Incorrect 1 (구현에 `on*`을 쓰고 대상이 이름에 없어 같은 이름이 겹칩니다):**
 

@@ -26,11 +26,8 @@ tags: composition, accessibility
 
 `div`, `span`에 `onClick`만 달면 키보드 조작과 접근 가능한 이름이 생기지 않습니다.
 같은 입력 컴포넌트를 여러 번 렌더하면 `useId`나 사용처의 고유 식별자로 `id` 중복을 막습니다.
-`aria-*`를 스타일 훅으로 쓰는 문제는 `css/selector-use-pseudo-classes-for-dom-owned-states`를 따릅니다.
-
-테스트에서는 `getByRole`의 `name` 조건이나 `getByLabelText`로 목적에 맞는 요소를 찾습니다.
-역할만으로 찾는 테스트가 통과해도 접근 가능한 이름이 있다는 뜻은 아닙니다.
-포커스 이동 위치는 이 규칙의 대상이 아닙니다.
+테스트에서는 `getByRole`의 `name` 조건이나 `getByLabelText`로 찾습니다.
+역할만으로 찾는 테스트가 통과해도 이름이 있다는 뜻은 아닙니다.
 
 **Incorrect 1 (클릭 가능한 `div`와 이름 없는 아이콘 버튼을 씁니다):**
 

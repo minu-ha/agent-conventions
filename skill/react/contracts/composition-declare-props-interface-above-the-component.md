@@ -3,7 +3,7 @@
 **Impact: MEDIUM (계약과 구현을 일정한 순서로 읽을 수 있습니다)**
 
 프롭스는 `<컴포넌트 이름>Props`라는 `interface`로 선언하고 해당 컴포넌트 바로 위에 둡니다.
-`UiButton`이면 `UiButtonProps`이며, 파일 상단에 프롭스 타입을 따로 모으지 않습니다.
+파일 상단에 프롭스 타입을 따로 모으지 않습니다.
 
 | 상황 | 선언과 공개 위치 |
 | --- | --- |
@@ -13,15 +13,8 @@
 | 공유하는 부품이 한 파일에 있음 | 공유 `interface`를 첫 부품 위에 둡니다 |
 | 공유하는 부품이 여러 파일에 나뉨 | 공유 `interface`를 소유자 `_type` 폴더에 둡니다 |
 
-문서 주석 → `interface` → 컴포넌트 순서로 붙여 계약을 먼저 읽게 합니다.
-합성 공개 부품도 같습니다.
+문서 주석, `interface`, 컴포넌트 순서로 붙여 계약을 먼저 읽게 하고, 합성 공개 부품도 같습니다.
 공유 `interface`를 쓰는 부품의 개별 설명은 각 컴포넌트 위에 둡니다.
-
-| 함께 판단할 내용 | 기준 |
-| --- | --- |
-| 같은 형태의 중복 선언 | `typescript/types-reuse-existing-contracts-before-new-types` |
-| 컴포넌트가 아닌 함수의 객체 매개변수 | `typescript/functions-use-named-object-params-for-complex-signatures` |
-| 문서 주석 내용 | `typescript/types-document-custom-types-and-shapes` |
 
 **Incorrect 1 (파일 위쪽에 타입을 모으고 내보내지 않습니다):**
 

@@ -24,10 +24,7 @@ tags: state, naming, url
 | 파싱 결과와 갱신 함수 | `urlParams`, `setUrlParams` |
 | 플랫폼 `URLSearchParams` 객체 | `searchParams`. 파싱 결과에는 쓰지 않습니다 |
 
-`query`가 들어간 이름은 서버 요청 바인딩에만 씁니다.
-해당 이름은 `data-name-query-and-mutation-bindings-consistently`를 따릅니다.
-파서 배치는 `typescript/naming-place-owner-constants-in-the-owner-constant-folder`를,
-파일 이름, 심볼 표기는 `typescript/naming-use-consistent-file-and-symbol-naming`을 따릅니다.
+`query`가 들어간 이름은 `data-name-query-and-mutation-bindings-consistently`에 따라 서버 요청 바인딩에만 씁니다.
 값을 주소에 둘지는 `state-choose-state-tools-by-source-of-truth`로 판단합니다.
 
 **Incorrect 1 (파서 묶음의 역할이 이름에 드러나지 않습니다):**

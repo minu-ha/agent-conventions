@@ -28,8 +28,6 @@ tags: screen
 | 작은 변환, `href` 조립, 기본값 처리 | 사용처 |
 
 한 컴포넌트, 핸들러, 쿼리 `select`만 쓰는 보조 함수를 별도 모듈에 쌓지 않습니다.
-한 대표 함수만 호출하는 보조도 `_function` 바로 아래에 공개하지 않습니다.
-그 배치는 `typescript/functions-give-each-function-its-own-file`을 따릅니다.
 이름을 붙이기 좋다는 이유만으로 흐름을 여러 파일에 나누지 않습니다.
 
 ### 추출 허용 경계

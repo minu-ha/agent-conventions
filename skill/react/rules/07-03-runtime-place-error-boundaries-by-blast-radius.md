@@ -20,8 +20,6 @@ tags: screen, errors
 
 ### 경계를 둘 층
 
-나머지 섹션만으로도 쓸모가 있는지, 내비게이션과 레이아웃 셸을 남겨야 하는지 차례로 보고 경계 층을 고릅니다.
-
 ```mermaid
 flowchart LR
 	q1{"나머지 섹션만으로도<br>쓸모가 있는가?"} -- 아니요 --> q2{"내비게이션과 레이아웃 셸은<br>남겨야 하는가?"} -- 아니요 --> r3("앱 경계")
@@ -47,21 +45,14 @@ flowchart LR
 | 일반 이벤트 핸들러, 비동기 콜백 오류 | 경계가 자동으로 받지 않습니다. 사용자 액션은 `data-handle-mutation-failure-where-it-is-called`를 따릅니다 |
 | 트랜지션 Action 오류, 라이브러리가 렌더에서 다시 던진 오류 | 일반 핸들러 오류와 구분합니다 |
 
-본문의 실패 분기는 `runtime-avoid-ad-hoc-loading-branches`를 따릅니다.
-
 ### 경계 구현과 재시도
 
-오류 포착 구현은 `ui`의 `UiErrorBoundary`에서 한 번만 제공합니다.
-직접 구현하면 클래스가 필요하지만, `react-error-boundary` 같은 라이브러리에 맡기고 함수형 래퍼를 둘 수 있습니다.
-데이터 라우터에서는 `errorElement`를 사용할 수 있고, 선언형 `Routes`나 Host 라우터 아래에서는
-`UiErrorBoundary`로 화면 또는 `Outlet`을 감쌉니다.
-같은 실패 범위에 두 방식을 겹치지 않습니다.
+오류 포착 구현은 `ui`의 `UiErrorBoundary`에서 한 번만 제공하며,
+`react-error-boundary` 같은 라이브러리에 맡길 수 있습니다.
+데이터 라우터의 `errorElement`와 `UiErrorBoundary`를 같은 실패 범위에 겹치지 않습니다.
 정상 화면은 유지하면서 오류 상태만 초기화하도록 URL 변경은 `resetKeys`에 연결하고, 경계의 `key`는 바꾸지 않습니다.
-
-재시도 버튼은 대체 화면에서 오류 경계의 재시도 함수를 호출합니다.
-경계의 `onReset`에는 `@tanstack/react-query`의 `useQueryErrorResetBoundary`가 주는 `reset`을 연결합니다.
-쿼리 오류만 초기화하면 대체 화면을 벗어나지 못합니다.
-재시도는 하위 트리를 새로 마운트하므로 상태도 되살리지 못합니다.
+재시도 버튼은 대체 화면에서 오류 경계의 재시도 함수를 호출하고,
+경계의 `onReset`에는 `useQueryErrorResetBoundary`의 `reset`을 연결합니다.
 
 **Incorrect 1 (캐시가 있는 재조회 실패도 자동으로 경계에 전달된다고 가정합니다):**
 

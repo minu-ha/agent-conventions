@@ -35,8 +35,7 @@ flowchart LR
 | DOM 속성을 `extends`로 열 수 있음 | `typing-open-dom-props-in-three-steps`의 1, 2단계입니다 |
 
 자기 프롭이 있으면 3단계처럼 전달할 DOM 프롭만 선언하고, 전부 이름으로 넘깁니다.
-스프레드는 초과 프롭을 검사하지 않으므로 리뷰에서 확인합니다.
-안쪽 라이브러리가 걸러 주지 않으면 `icon` 같은 자기 프롭이 DOM에 새거나 잘못된 값 경고가 날 수 있습니다.
+스프레드는 초과 프롭을 검사하지 않으므로 자기 프롭이 DOM에 새지 않는지 리뷰에서 확인합니다.
 
 ### 계약이 커질 때
 
@@ -45,9 +44,6 @@ flowchart LR
 | 라이브러리 API를 따라 프롭이 서른 개로 늘어날 것 같음 | 우리 어휘로 계약을 다시 쓰고 라이브러리 어휘는 구현 안에 둡니다 |
 | 그래도 프롭 수가 줄지 않음 | `strategy-choose-single-composition-compound-and-variants`에 따라 쓰임새별 변형으로 나눕니다 |
 | 안쪽 부품을 외부에서 조립해야 함 | `headerProps`, `buttonProps` 같은 내부 프롭 묶음을 만들지 않고 `strategy-prefer-children-over-render-props`에 따라 `children`으로 엽니다 |
-
-내부 프롭 묶음을 공개하면 사용처가 안쪽 구조에 의존해 내부 변경 때 함께 깨집니다.
-구조분해 기준은 `composition-read-props-without-destructuring`을 따릅니다.
 
 **Incorrect 1 (자기 프롭까지 스프레드로 전달합니다):**
 

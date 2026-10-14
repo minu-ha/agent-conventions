@@ -19,8 +19,6 @@ tags: composition, ownership
 
 ### 분리 근거가 되는 책임
 
-런타임 책임을 직접 소유하는지, 재사용하거나 조립에 공개하는지 차례로 보고 부품을 파일로 뗄지 정합니다.
-
 ```mermaid
 flowchart LR
 	q1{"런타임 책임을<br>직접 소유하는가?"} -- 아니요 --> q2{"재사용하거나<br>조립에 공개하는가?"} -- 아니요 --> r2("진입 파일에 유지")
@@ -35,8 +33,6 @@ flowchart LR
 | 상호작용 | 팝오버, 모달, 선택, 인라인 편집, 드래그, 펼치는 트리 |
 | 라이브러리와 성능 | 외부 라이브러리 생명주기 어댑터, 가상 스크롤, 트랜지션, 지연 값 |
 
-책임 표는 `screen-extract-local-section-components-for-runtime-boundaries`와 같습니다.
-
 ### `widget`, `ui` 전용 책임
 
 아래 두 책임은 `widget`, `ui`에만 적용합니다.
@@ -48,8 +44,6 @@ flowchart LR
 
 컨텍스트를 읽어 분기만 하는 부품은 진입 파일에 남깁니다.
 라우트 진입 파일의 섹션은 `screen-extract-local-section-components-for-runtime-boundaries`가 같은 기준으로 정합니다.
-뗀 파일의 이름은 `ownership-prefix-layer-names-on-files-and-symbols`를 따릅니다.
-자리는 `ownership-place-owner-files-in-role-folders`를 따릅니다.
 
 **Incorrect 1 (컨텍스트를 읽어 분기만 하는 래퍼를 파일로 뗍니다):**
 

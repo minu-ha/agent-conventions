@@ -3,7 +3,7 @@
 **Impact: MEDIUM (자동 검사 범위와 리뷰에서 판단할 범위를 구분합니다)**
 
 `biome` 2.x의 `linter.domains`에서 `react`를 켭니다.
-`package.json`에 `react@>=16`이 있을 때 React 검사가 적용됩니다.
+`package.json`에 `react@>=16`이 있을 때 React 검사가 적용되며,
 기본 설정은 `typescript/tooling-configure-biome-to-enforce-these-rules`를 따릅니다.
 
 ### 도메인 검사와 추가 설정
@@ -36,9 +36,7 @@
 
 라우트가 늘면 해당 `overrides`도 추가합니다.
 `overrides`는 규칙 옵션을 통째로 바꾸므로 기본 설정의 경로 패턴을 각 항목에 함께 적습니다.
-소유자 경계는 `import` 문자열만으로 판정하지 못합니다.
-`@/page/product-detail/_pg-product-summary`도 가져오는 파일의 위치에 따라 허용 여부가 달라지므로,
-위치를 비교하는 `eslint` 규칙이나 리뷰에서 확인합니다.
+소유자 경계는 가져오는 파일의 위치에 따라 달라지므로 `import` 문자열만으로 판정하지 못하고 리뷰에서 확인합니다.
 
 ### 켜지 않는 규칙
 

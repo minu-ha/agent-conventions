@@ -19,8 +19,6 @@ tags: state, react-query, zustand
 
 ### 도구 고르기
 
-링크를 공유해도 같은 화면이 열리는지, 서버가 소유하는지, 묶음 밖에서도 읽는지 차례로 보고 도구를 고릅니다.
-
 ```mermaid
 flowchart LR
 	q1{"링크를 공유해도<br>같은 화면이 열리는가?"} -- 아니요 --> q2{"서버가 소유하는가?"} -- 아니요 --> q3{"묶음 밖에서도<br>읽는가?"} -- 아니요 --> r4("useState, useReducer")
@@ -47,9 +45,7 @@ flowchart LR
 | 묶음 밖의 화면, 레이아웃에서도 읽거나 바꾸는 UI | `Context`를 위로 올리지 않고 전역 스토어로 옮깁니다. 파생값이 아닌 탭 `selectedId`도 같습니다 |
 
 서버 상태와 search 파라미터는 사용하는 컴포넌트가 같은 `key`로 직접 읽고 부모 프롭으로 전달하지 않습니다.
-소유 위치는 `screen-keep-route-flow-visible`을 따릅니다.
 `Context`는 전역 상태 도구가 아니라 묶음 안의 전달 수단입니다.
-`strategy-choose-single-composition-compound-and-variants`의 상태 있는 합성도 이 방식으로 상태를 공유합니다.
 
 **Incorrect 1 (전역 값과 서버 값까지 `useState`가 소유합니다):**
 

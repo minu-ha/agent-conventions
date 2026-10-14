@@ -20,7 +20,6 @@ tags: ownership
 가져오기는 아래 레이어 방향과 소유자 경계를 **모두** 지킵니다.
 모든 경로가 `@/`로 시작하므로 경로 모양이 아니라 가져오는 파일의 위치로 판정합니다.
 소유자, 진입 파일, 역할 폴더의 정의는 `ownership-place-owner-files-in-role-folders`를 따릅니다.
-라우트 그룹과 `Outlet` 프레임은 `ownership-group-route-frames-with-outlets`를 따릅니다.
 
 ### 레이어 방향
 
@@ -42,8 +41,8 @@ flowchart LR
 | `page` | 루트 레이어, `ui`, `widget` |
 | 라우터와 앱 진입 파일 | 전부 |
 
-루트 레이어는 `util`, `constant`, `type`, `hook`, `store`, `service`, `config`, `asset`입니다.
 같은 레이어의 공개 컴포넌트끼리 조립할 수 있지만 순환 가져오기는 만들지 않습니다.
+루트 레이어는 `util`, `constant`, `type`, `hook`, `store`, `service`, `config`, `asset`입니다.
 
 ### 소유자 경계
 
@@ -58,9 +57,6 @@ flowchart LR
 
 `_` 컴포넌트 파일의 프롭스 타입은 예외로, 어디서든 `import type`으로 가져옵니다.
 역할 폴더는 소유자의 공개 영역이므로 외부에서 쓴다는 이유만으로 루트로 옮기지 않습니다.
-배치는 `typescript/naming-place-project-constants-in-the-root-constant-folder`와
-`typescript/functions-promote-owner-free-functions-to-root-util`을 따릅니다.
-`_hook`도 `ownership-keep-lifecycle-in-the-owning-component`에 따라 여러 소유자가 공유하는 생명주기를 공개합니다.
 
 ### 여러 자식이 함께 쓰는 컴포넌트
 

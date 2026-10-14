@@ -23,7 +23,6 @@ tags: screen, routes
 | 상호작용 | 팝오버, 모달, 선택, 인라인 편집, 드래그, 펼치는 트리 |
 | 라이브러리와 성능 | 외부 라이브러리 생명주기 어댑터, 가상 스크롤, 트랜지션, 지연 값 |
 
-화면 흐름 제어는 `screen-keep-route-flow-visible`에 따라 라우트 진입에 남깁니다.
 추출한 파일의 배치는 `ownership-place-owner-files-in-role-folders`를 따릅니다.
 진입 파일의 JSX에 나타나지 않는 섹션을 다른 섹션 파일 안에서 렌더하면 과하게 나눈 것입니다.
 

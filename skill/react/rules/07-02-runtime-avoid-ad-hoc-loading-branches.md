@@ -27,9 +27,8 @@ tags: screen, loading, suspense
 | 뮤테이션의 `isPending` | 버튼 비활성화, 저장 중 배지 등에 씁니다 |
 
 캐시가 있는 재조회 실패는 `runtime-place-error-boundaries-by-blast-radius`를 따릅니다.
-화면을 가리지 않으면 외부 SDK나 폼이 잘못된 값으로 초기화될 때만 본문에 가림 분기를 둡니다.
-이 예외는 `typescript/docs-justify-convention-exceptions-with-a-reason-comment`에 따라 이유를 남깁니다.
-없는 값을 기본값으로 덮는 문제는 `typescript/absence-expose-optional-values-instead-of-silent-fallbacks`를 따릅니다.
+외부 SDK나 폼이 잘못된 값으로 초기화될 때만 본문에 가림 분기를 두고,
+`typescript/docs-justify-convention-exceptions-with-a-reason-comment`에 따라 이유를 남깁니다.
 
 **Incorrect 1 (`Suspense` 쿼리의 `isPending`을 다시 분기합니다. 타입이 `false`라 죽은 코드입니다):**
 

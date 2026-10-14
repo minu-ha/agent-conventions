@@ -21,8 +21,6 @@ tags: data, mutation, errors
 
 ### 호출 방식 고르기
 
-결과를 기다린 뒤 핸들러가 이어서 실행되는지 보고 호출 방식을 고릅니다.
-
 ```mermaid
 flowchart LR
 	q1{"결과를 기다린 뒤<br>핸들러가 이어 실행되는가?"} -- 아니요 --> r1("mutate 와<br>onError, onSuccess")
@@ -34,8 +32,7 @@ flowchart LR
 | 호출 뒤 핸들러가 더 할 일이 없음 | `mutate` + `onError`, `onSuccess` |
 | 결과를 기다린 뒤 핸들러가 계속 실행되어야 함 | `mutateAsync` + `try`/`catch` |
 
-거부된 `mutateAsync` Promise는 오류 경계가 자동으로 받지 않습니다.
-`await` 뒤의 코드는 실행되지 않으므로 반드시 `catch`에서 실패를 표시하거나 다시 던집니다.
+거부된 `mutateAsync` Promise는 오류 경계가 자동으로 받지 않으므로 `catch`에서 실패를 표시하거나 다시 던집니다.
 `throwOnError`로 렌더에서 오류를 다시 던지는 경우는 `runtime-place-error-boundaries-by-blast-radius`를 따릅니다.
 
 ### 실패와 중복 실행 처리

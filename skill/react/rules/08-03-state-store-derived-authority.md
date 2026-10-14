@@ -22,10 +22,7 @@ tags: state, zustand
 | 도메인 판별 | 초기화, 레이아웃 등 한 경계에 모으고 화면은 `permissionStore.canEditProduct` 같은 결과만 읽습니다 |
 | 스토어 채우기 | 쿼리에는 `onSuccess` 같은 성공 콜백이 없으므로 소유자가 분명한 경계의 `useEffect`에서 처리합니다 |
 | 이펙트 예외 근거 | `state-calculate-derived-values-during-render`의 예외이므로 `typescript/docs-justify-convention-exceptions-with-a-reason-comment`에 따라 공유 이유를 남깁니다 |
-| 이펙트의 스토어 접근 | 선택자로 `set` 함수만 꺼내고 값 의존성은 그대로 적습니다 |
-
-같은 판별을 화면마다 반복하지 않도록 한 곳에서 스토어를 채웁니다.
-이펙트가 스토어 객체 전체에 의존하면 `set`으로 참조가 바뀔 때 다시 실행되므로 이런 의존은 피합니다.
+| 이펙트의 스토어 접근 | 선택자로 `set` 함수만 꺼내고 값 의존성은 그대로 적습니다. 스토어 객체 전체에 의존하면 `set`마다 다시 실행됩니다 |
 
 **Incorrect 1 (개별 화면이 도메인을 판별하고 스토어에 저장합니다):**
 

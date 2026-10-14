@@ -24,9 +24,6 @@ tags: strategy, composition
 | 단순 `className` 래퍼와 그 밖의 내부 구조 | 공개하지 않습니다 |
 | 여백 보정용 DOM | `css/composition-do-not-add-wrapper-elements-for-styling`에 따라 만들지 않습니다 |
 
-상태 없는 합성에 상태를 추가할 때의 공개 이름은
-`strategy-choose-single-composition-compound-and-variants`를 따릅니다.
-
 **Incorrect 1 (내부 구조를 전부 공개해 계약으로 굳힙니다):**
 
 <<< ../examples/strategy-expose-only-assembled-compound-parts/01-incorrect.tsx
