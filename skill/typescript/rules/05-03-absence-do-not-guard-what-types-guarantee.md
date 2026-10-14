@@ -20,7 +20,6 @@ tags: absence
 ### 다시 검사하지 않을 것
 
 타입이 이미 보장하는 조건은 다시 검사하지 않습니다.
-불필요한 검사를 제거해 실제로 값이 없을 수 있는 경우를 드러냅니다.
 
 | 검사 대상 | 처리 |
 | --- | --- |
@@ -40,8 +39,6 @@ tags: absence
 | `in`, `Object.hasOwn`, 객체 병합, 패치 등에서 구분 | 조건부 스프레드를 유지하고 생략이 필요한 계약을 이유 주석에 적습니다 |
 | `exactOptionalPropertyTypes` 사용 | `value?: T`에 `undefined`를 쓸 수 있는지 확인합니다 |
 | `value?: T \| undefined`처럼 명시적으로 허용 | 조건부 스프레드로 바꾸지 않습니다 |
-
-없는 값을 무엇으로 대체할지는 `absence-expose-optional-values-instead-of-silent-fallbacks`가 정합니다.
 
 **Incorrect 1 (타입이 `string`으로 보장한 값을 다시 검사합니다):**
 

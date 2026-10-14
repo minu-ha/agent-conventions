@@ -16,7 +16,6 @@ tags: types
 **Impact: MEDIUM (호출 계약을 한곳에서 읽고 같은 시그니처를 반복 선언하지 않습니다)**
 
 기존 호출 계약이 있으면 매개변수와 반환 타입을 반복하지 않고 함수를 담는 변수에 붙입니다.
-예를 들어 `const handleClick: MouseEventHandler<HTMLButtonElement> = (event) => …`로 씁니다.
 
 | 상황 | 타입 표기 |
 | --- | --- |
@@ -25,10 +24,8 @@ tags: types
 | 같은 시그니처를 쓰는 구현이 둘 이상임 | 함수 타입 별칭을 선언합니다 |
 | 맞는 계약도 없고 구현도 하나뿐임 | 매개변수 타입을 직접 적습니다. 별칭을 새로 만들지 않습니다 |
 
-쓰지 않는 계약 매개변수는 `types-mark-unused-parameters-with-underscore`에 따라 남깁니다.
 문맥으로 추론되는 일회성 인라인 콜백은 대상이 아닙니다.
-`select: (response) => ({...})`를 밖으로 빼거나 새 함수 타입으로 고정하지 않습니다.
-커링 팩토리가 반환하는 React 핸들러는 프레임워크 규칙이 정합니다.
+쓰지 않는 계약 매개변수는 `types-mark-unused-parameters-with-underscore`에 따라 남깁니다.
 
 **Incorrect 1 (계약이 있는데 시그니처를 다시 적습니다):**
 

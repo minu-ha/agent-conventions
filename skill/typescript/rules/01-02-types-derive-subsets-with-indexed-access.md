@@ -40,10 +40,6 @@ tags: types
 | 원본이 비워 두는 필드를 필수로 받음 | `NonNullable<원본["필드"]>` | `align: NonNullable<TableCellProps["align"]>` |
 | 유니언 계약 중 한 갈래만 받음 | `Extract<원본, 판별 필드>` | `Extract<TextFieldProps, { variant?: "outlined" }>` |
 
-인덱스 접근은 필드 이름과 출처를 선언에 남겨 여러 계약의 필드를 모으고 각각 문서화하기 좋습니다.
-필드 주석은 `types-document-custom-types-and-shapes`를 따릅니다.
-원본 필드의 타입 변경과 삭제는 인덱스 접근과 `Pick` 모두 컴파일 검사에 반영됩니다.
-
 ### 선택, 읽기 전용 보존
 
 | 보존할 계약 | 적는 법 |

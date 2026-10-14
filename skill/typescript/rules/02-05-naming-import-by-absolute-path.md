@@ -21,8 +21,6 @@ tags: naming, imports
 편집기 자동 가져오기가 만드는 형식입니다.
 심볼 없이 같은 폴더의 파일만 불러올 때는 `./`를 허용하며, `../`는 쓰지 않습니다.
 
-심볼을 가져오는지 먼저 보고, 아니면 같은 폴더의 파일인지에 따라 경로 표기를 고릅니다.
-
 ```mermaid
 flowchart LR
 	q1{"심볼을<br>가져오는가?"} -- 아니요 --> q2{"같은 폴더의<br>파일인가?"} -- 예 --> r2("./ 로 파일만 불러옴")
@@ -30,12 +28,8 @@ flowchart LR
 	q2 -- 아니요 --> r1
 ```
 
-파일을 옮기거나 이름을 바꿀 때는 편집기의 경로 갱신을 씁니다.
 접근 가능한 소유 경계는 경로 표기가 아니라 가져오는 파일의 위치로 판단합니다.
 가져오기 방향은 프레임워크 규칙을 따릅니다.
-소유자 밖에서 쓴다는 이유로 루트에 올리지 않습니다.
-배치는 `naming-place-project-constants-in-the-root-constant-folder`와
-`functions-give-each-function-its-own-file`이 정합니다.
 
 ### `src` 아래 루트 폴더
 
@@ -54,6 +48,8 @@ flowchart LR
 | `asset` | 아이콘 등 정적 자원 |
 
 루트의 소유자는 프로젝트이며 `constant`, `util`, `type`, `hook`에도 소유자 아래 역할 폴더의 규칙을 적용합니다.
+배치는 `naming-place-project-constants-in-the-root-constant-folder`와
+`functions-give-each-function-its-own-file`이 정합니다.
 
 **Incorrect 1 (상대경로로 심볼을 가져옵니다):**
 

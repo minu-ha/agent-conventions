@@ -28,7 +28,6 @@ tags: absence, boundaries
 | 없음을 화면에 표시 | `number \| undefined` | 중간 함수는 그대로 전달하고 렌더링 위치에서 한 번 분기합니다 |
 
 없을 때 다른 화면을 렌더하는 분기는 필요한 표시 상태이므로 유지합니다.
-그 밖의 사용처가 없음 여부를 반복 판정한다면 경계에서 결과를 전달했는지 확인합니다.
 판정 결과를 전달하는 방법은 `values-decide-once-and-carry-the-result`가 정합니다.
 
 ### 다시 검사가 필요한 때
@@ -40,7 +39,6 @@ tags: absence, boundaries
 | 새 계산, 외부 호출로 만든 값, 검증 후 변경, 외부 값 혼합 | 기존 보장이 적용되지 않는 조건을 해당 경계에서 확인합니다 |
 | 여러 입력 경로가 각각 외부 값을 받음 | 각 경계에서 검증합니다 |
 
-경계 아래 여러 함수가 `number | null | undefined`나 `unknown`을 받으면 경계의 처리 책임을 확인합니다.
 `unknown`은 검증 책임이 있는 경계에서 받고, 공개 입력 계약을 내부 호출 하나에 맞춰 좁히지 않습니다.
 타입 좁히기는 `types-narrow-unknown-instead-of-asserting`을 따릅니다.
 

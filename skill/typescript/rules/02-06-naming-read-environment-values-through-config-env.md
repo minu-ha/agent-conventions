@@ -21,8 +21,6 @@ tags: naming, config
 환경 값은 루트 `config/env.ts`에서만 읽고 `env_` 상수로 내보냅니다.
 다른 파일은 그 이름을 쓰며 `import.meta.env`와 `process.env`를 직접 읽지 않습니다.
 
-값이 배포 환경마다 달라지는지 먼저 보고, 달라지면 기능을 켜고 끄는 플래그인지에 따라 자리와 이름을 고릅니다.
-
 ```mermaid
 flowchart LR
 	q1{"배포 환경마다<br>달라지는가?"} -- 예 --> q2{"기능을 켜고 끄는<br>플래그인가?"} -- 예 --> r2("config/feature.ts 의<br>feature_ 상수")
@@ -32,7 +30,6 @@ flowchart LR
 
 `feature_` 상수는 `env_` 값에서 파생합니다.
 배포 환경은 프로젝트 단위이므로 `config`는 루트에만 둡니다.
-상수 파일과 이름의 형식은 `naming-place-project-constants-in-the-root-constant-folder`를 따릅니다.
 
 ### 읽을 때 확인할 것
 

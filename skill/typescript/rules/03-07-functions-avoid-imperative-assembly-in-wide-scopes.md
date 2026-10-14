@@ -17,8 +17,6 @@ tags: functions
 모듈 최상위나 함수 본문 전체에 걸친 `let` 재할당, `push`, 조건부 누적으로 값을 조립하지 않습니다.
 `if`나 `for` 블록 안에서만 쓰는 누적은 대상이 아닙니다.
 
-넓은 스코프에서는 목록에 조건부 항목을 넣는지 먼저 보고, 아니면 값 하나가 두 분기로 갈리는지로 조립 방법을 고릅니다.
-
 ```mermaid
 flowchart LR
 	q1{"목록에 조건부<br>항목을 넣는가?"} -- 아니요 --> q2{"값 하나가 두 분기로<br>갈리는가?"} -- 예 --> r2("삼항 하나")
@@ -26,13 +24,8 @@ flowchart LR
 	q2 -- 아니요 --> r3("분기마다 return 으로<br>끝나는 함수로 추출")
 ```
 
-중첩 삼항과 기본값을 `let`에 넣은 뒤 덮어쓰는 방식은 사용하지 않습니다.
-분기별 결과가 그 자리에서 끝나야 읽는 사람이 이후 재할당까지 확인하지 않아도 됩니다.
-추출 전에 `absence-check-once-at-the-boundary`에 따라 값을 검사하면 분기가 줄어들 수 있습니다.
-
 추출 여부는 `functions-extract-helpers-only-when-the-boundary-is-real`,
 함수 이름은 `functions-name-functions-by-what-comes-out`을 따릅니다.
-중간값 이름 짓기는 `functions-name-a-value-only-for-recompute-or-judgment`가 정합니다.
 
 **Incorrect 1 (넓은 스코프에서 명령형으로 조립을 쌓습니다):**
 

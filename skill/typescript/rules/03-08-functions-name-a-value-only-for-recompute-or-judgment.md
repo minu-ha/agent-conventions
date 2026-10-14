@@ -14,8 +14,6 @@ tags: functions, origin
 
 **Impact: HIGH (사용 횟수보다 계산 비용과 판정의 복잡성을 기준으로 변수 선언 여부를 판단합니다)**
 
-### 변수로 받을 사유
-
 지역 변수는 재계산을 막거나 여러 항을 합친 판정에 이름을 붙일 때만 만듭니다.
 사용처 수만으로는 만들지 않으며, 아래 사유가 없으면 표현식을 쓰는 자리에 둡니다.
 
@@ -29,18 +27,8 @@ tags: functions, origin
 | 부정이 겹친 판정 | `!row.deletedAt && !row.archivedAt`은 `isVisible`처럼 뜻을 드러내는 이름으로 받습니다 |
 
 단일 비교인 `row.dueDate < today`는 반복해서 써도 그대로 둡니다.
-사용처가 하나 늘었다고 변수 필요성까지 달라지지 않도록 표현식의 성격으로 판단합니다.
-
-### 다른 규칙이 정하는 것
-
-| 이 규칙과 구분할 대상 | 적용 규칙 |
-| --- | --- |
-| 함수 값 | 계산 결과가 아닌 계약입니다. `functions-declare-functions-as-arrow-consts`를 따릅니다 |
-| 객체 필드의 별칭 | `values-read-objects-through-chains` |
-| `let` 재할당, `push` 누적 | `functions-avoid-imperative-assembly-in-wide-scopes` |
-| 표현식 안의 리터럴 | 지역 변수로 옮기지 않고 `types-replace-enum-with-as-const-objects`와 `naming-place-project-constants-in-the-root-constant-folder`로 선언합니다 |
-
-반복 조회 구조의 사용 기준은 `values-use-set-and-map-for-repeated-lookups`를 따릅니다.
+객체 필드의 별칭은 `values-read-objects-through-chains`,
+`let` 재할당과 `push`는 `functions-avoid-imperative-assembly-in-wide-scopes`가 정합니다.
 
 **Incorrect 1 (두 번 쓴다는 이유만으로 변수로 뺍니다):**
 

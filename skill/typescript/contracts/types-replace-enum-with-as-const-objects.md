@@ -3,8 +3,7 @@
 **Impact: MEDIUM (객체로 실행 값을 선언하고 같은 값에서 타입을 추출합니다)**
 
 직접 선언하는 값 집합은 `enum` 대신 객체와 `as const`로 실행 값과 타입을 함께 둡니다.
-`enum`은 타입만 지우는 번들러나 TypeScript 5.8의 `--erasableSyntaxOnly`와 호환되지 않으며,
-이 컨벤션의 `biome` 설정도 `style/noEnum`으로 선언을 막습니다.
+`enum` 선언은 `tooling-configure-biome-to-enforce-these-rules`의 `style/noEnum`이 막습니다.
 
 | 상황 | 처리 |
 | --- | --- |
@@ -12,9 +11,6 @@
 | 기존 `enum`을 객체로 옮김 | 직렬화 값과 공개 타입을 보존하고 숫자 `enum`의 역방향 조회 사용처를 확인합니다 |
 | 기존 계약에 맞는 값 집합인지도 검사함 | `as const satisfies 기존계약`을 씁니다 |
 | 리터럴 추론, 읽기 전용 속성이 필요 없음 | `as const`를 불필요하게 붙이지 않습니다 |
-
-객체에는 `Enum[value]` 역방향 조회가 자동으로 생기지 않습니다.
-`as const`는 실행 중 동결이나 다른 변수에서 가져온 배열의 변경까지 보장하지 않습니다.
 
 **Requires selected:** `naming-use-consistent-file-and-symbol-naming`, `types-document-custom-types-and-shapes` (함께 적용)
 

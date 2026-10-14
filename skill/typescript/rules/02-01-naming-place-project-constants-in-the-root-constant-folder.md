@@ -17,7 +17,7 @@ tags: naming, constant
 ### 상수 자리 고르기
 
 상수 위치는 사용처 수가 아니라 소유자로 정합니다.
-소유자를 지워도 값이 남는지 먼저 보고, 남으면 배포 환경마다 달라지는지에 따라 자리를 고릅니다.
+소유자 전용 배치는 `naming-place-owner-constants-in-the-owner-constant-folder`를 따릅니다.
 
 ```mermaid
 flowchart LR
@@ -31,10 +31,6 @@ flowchart LR
 | 프로젝트 전반 | `constant/<주제>.ts` | `<주제>_<이름>` |
 | 한 소유자 | `<owner>/_constant/<주제>.ts` | `<주제>_<이름>` |
 
-`chart_axis_tick_count`는 화면과 함께 사라지고, `api_request_timeout_ms`는 서버 통신에 남습니다.
-사용처가 늘거나 줄어도 이 기준은 바뀌지 않습니다.
-소유자 전용 배치는 `naming-place-owner-constants-in-the-owner-constant-folder`를 따릅니다.
-
 ### 선언과 내보내기
 
 | 선언 대상 | 규범 |
@@ -47,7 +43,6 @@ flowchart LR
 | 색상, 간격 등 디자인 토큰 | 스타일시트의 CSS 변수를 단일 출처로 둡니다 |
 
 파일, 심볼 표기는 `naming-use-consistent-file-and-symbol-naming`을 따릅니다.
-색인 객체는 수동 관리가 필요하고 번들러의 미사용 속성 제거도 어려워질 수 있습니다.
 `constant`에는 코드와 함께 바뀌는 값만 둡니다.
 
 **Incorrect 1 (프로젝트 전반의 값을 쓰는 자리에서 선언합니다):**

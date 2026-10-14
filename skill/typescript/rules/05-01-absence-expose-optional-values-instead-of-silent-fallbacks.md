@@ -39,12 +39,8 @@ tags: absence
 | `null`, `undefined`만 없음으로 취급 | `??` |
 | `0`, `false`, 빈 문자열까지 없음으로 취급하는 계약 | `\|\|` |
 
-선언된 이름이어도 기본값의 의미가 맞아야 합니다.
-`0`, `false`가 유효하면 `??`를 씁니다.
-상수는 소유자를 지워도 남으면 `naming-place-project-constants-in-the-root-constant-folder`,
-함께 사라지면 `naming-place-owner-constants-in-the-owner-constant-folder`에 따라 배치합니다.
+선언된 이름이어도 기본값의 의미가 맞아야 하며, `0`, `false`가 유효하면 `??`를 씁니다.
 채우는 위치는 `absence-resolve-defaults-at-the-boundary`가 정합니다.
-일반 숫자 리터럴은 `values-declare-meaningful-numbers`가 정하고, 여기서는 없는 값을 대체하는 자리만 봅니다.
 
 **Incorrect 1 (`??`, `||`, 기본 매개변수 자리에 리터럴을 적습니다):**
 

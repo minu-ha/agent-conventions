@@ -19,10 +19,7 @@ tags: functions, boundaries
 ### 이름을 붙이는 사유
 
 한 곳에서만 쓰는 단계는 호출부에 둡니다.
-다음 사유가 있을 때만 보조 함수에 이름을 붙입니다.
 추출한 함수는 바깥 변수, 훅, 컴포넌트 상태 없이도 뜻이 통해야 합니다.
-
-두 자리 이상이 부르는지 먼저 보고, 아니면 삼항 하나로 담기는지에 따라 이름을 붙일지 정합니다.
 
 ```mermaid
 flowchart LR
@@ -36,7 +33,6 @@ flowchart LR
 | 실제 재사용 | 변경 후 코드에서 두 자리 이상이 그 함수를 부름. 한 줄 함수여도 해당함 |
 | 함수 형태가 필수 | 삼항 하나로 표현할 수 없는 판정, `value is T` 타입 가드, 재귀 |
 
-
 ### 추출을 검토할 때
 
 | 추출을 검토하는 이유 | 처리 |
@@ -45,8 +41,8 @@ flowchart LR
 | 값이 두 분기로 갈림 | 호출부에서 삼항 하나로 씁니다 |
 | 값이 세 분기 이상으로 갈림 | 함수로 추출하고 분기마다 `return`으로 끝냅니다 |
 
-추출 전에 값 검사를 `absence-check-once-at-the-boundary`의 경계로 보내 분기를 줄일 수 있는지 확인합니다.
-같은 판정이 반복되면 `values-decide-once-and-carry-the-result`에 따라 결과를 전달할지도 먼저 봅니다.
+분기를 줄이려면 추출 전에 `absence-check-once-at-the-boundary`와
+`values-decide-once-and-carry-the-result`를 먼저 봅니다.
 함수 배치는 `functions-give-each-function-its-own-file`,
 루트 승격은 `functions-promote-owner-free-functions-to-root-util`이 정합니다.
 
