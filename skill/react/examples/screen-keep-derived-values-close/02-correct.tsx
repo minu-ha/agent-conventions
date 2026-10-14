@@ -11,7 +11,7 @@ export const PgProductTableSection = () => {
 
 	return (
 		<Fragment>
-			<UiTable rows={responseProductListSuspense.data.products} onRowSelect={handleTableRowSelect} />
+			<UiTable rows={responseProductListSuspense.data.items} onRowSelect={handleTableRowSelect} />
 
 {/* [!code ++] */}
 			{selectedRows.length > 0 && (

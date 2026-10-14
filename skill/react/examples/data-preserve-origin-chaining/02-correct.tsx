@@ -1,6 +1,6 @@
 <Fragment>
 {/* [!code ++] */}
-	<UiList rows={responseProductListSuspense.data.products} />
+	<UiList rows={responseProductListSuspense.data.items} />
 {/* [!code ++] */}
-	<UiTable rows={responseProductListSuspense.data.selectedProduct.fields} />
+	<p className={clsx("pg_products__count")}>총 {responseProductListSuspense.data.total}건</p>
 </Fragment>;

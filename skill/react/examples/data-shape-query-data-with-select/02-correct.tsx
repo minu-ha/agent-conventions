@@ -6,7 +6,7 @@ const responseProductListSuspense = useProductListSuspense(
 	{
 		query: {
 			select: (response) => ({
-				items: response.data.list.map((product) => ({id: product.id, label: product.title})),
+				items: response.data.items.map((product) => ({id: product.id, name: product.name})),
 			}),
 		},
 	},

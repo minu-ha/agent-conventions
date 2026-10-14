@@ -1,6 +1,6 @@
-const {products, selectedProduct} = responseProductListSuspense.data;
+const {items, total} = responseProductListSuspense.data;
 
 <Fragment>
-	<UiList rows={products} />
-	<UiTable rows={selectedProduct.fields} />
+	<UiList rows={items} />
+	<p className={clsx("pg_products__count")}>총 {total}건</p>
 </Fragment>;

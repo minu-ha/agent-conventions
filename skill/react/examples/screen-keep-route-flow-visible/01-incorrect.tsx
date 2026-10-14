@@ -9,7 +9,7 @@ export const PgProducts = () => {
 		<Fragment>
 			<PgProductFilterSection />
 // [!code error]
-			<PgProductListSection products={responseProductListSuspense.data.list} />
+			<PgProductListSection products={responseProductListSuspense.data.items} />
 		</Fragment>
 	);
 };

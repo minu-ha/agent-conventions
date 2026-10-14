@@ -1,1 +1,1 @@
-<WgChartCard />
+<WgChartCard dailyCounts={dailyCounts} />

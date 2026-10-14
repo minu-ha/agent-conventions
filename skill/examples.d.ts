@@ -90,6 +90,7 @@ interface Product {
 	stock: number;
 	status: ProductStatus;
 	categoryId: string;
+	ownerId: string;
 	bodyHtml: string;
 	updatedAt: string;
 }
@@ -142,10 +143,9 @@ interface ProductListResponse {
 	items: Product[];
 	total: number;
 }
-type ProductListResponseDTO = ProductListResponse;
 type ProductPage = ProductListResponse;
 interface ProductTreeResponse {
-	nodes: ProductCategoryNode[];
+	categoryNodes: ProductCategoryNode[];
 }
 
 type OrderStatus = "pending" | "paid" | "shipped" | "completed" | "cancelled";
@@ -447,7 +447,7 @@ interface WgChartCardProps {
 	className?: string;
 	variant?: "default" | "compact" | "muted";
 	option?: ChartOption;
-	dailyCounts?: DailyCount[];
+	dailyCounts: DailyCount[];
 }
 declare const WgChartCard: (props: WgChartCardProps) => ReactElement;
 declare const WgChatComposer: (props: {onSubmit: (text: string) => void}) => ReactElement;
@@ -522,126 +522,208 @@ interface PgProductTableSectionProps {
 declare const PgProductTableSection: (props: PgProductTableSectionProps) => ReactElement;
 declare const PgProductTreeSection: () => ReactElement;
 
-// 예제 세계관: 아직 any 인 이름
-type ExampleQueryOptions<T = any> = {queryKey: readonly unknown[]; queryFn: () => Promise<T>};
-declare const useForm: <T>(...args: any[]) => any;
-declare const allowedProductIds: any;
-declare const amount: any;
-declare const approverId: any;
-declare const archivedProducts: any;
-declare const canInviteMembers: any;
-declare const canManageItems: any;
+// 예제 세계관: API 클라이언트, 생성된 쿼리 훅, 뮤테이션, 스토어
+type UseSuspenseQueryResult<TData> = import("@tanstack/react-query").UseSuspenseQueryResult<TData>;
+type UseQueryResult<TData> = import("@tanstack/react-query").UseQueryResult<TData>;
+type UseMutationResult<TData, TVariables> = import("@tanstack/react-query").UseMutationResult<TData, Error, TVariables>;
+type NavigateFunction = import("react-router").NavigateFunction;
+type Dispatch<T> = import("react").Dispatch<import("react").SetStateAction<T>>;
+interface ApiResponse<T> {
+	data: T;
+}
+type ProductListResponseDTO = ApiResponse<ProductListResponse>;
+interface ApiQueryOptions<TResponse, TData> {
+	query?: {
+		select?: (response: ApiResponse<TResponse>) => TData;
+	};
+}
+interface ApiMutationOptions<TData, TVariables> {
+	mutation?: {
+		onSuccess?: (data: TData, variables: TVariables) => void;
+		onError?: (error: Error) => void;
+	};
+}
+interface ApiClient {
+	get<T = unknown>(url: string, config?: {params?: unknown}): Promise<T>;
+	post<T = unknown>(url: string, body?: unknown): Promise<T>;
+}
+declare const createClient: (options: {baseUrl?: string; timeoutMs?: number}) => ApiClient;
+declare const client: ApiClient;
+declare const queryClient: import("@tanstack/react-query").QueryClient;
+declare const productListQueryKey: () => readonly unknown[];
+declare const productSummaryQueryKey: () => readonly unknown[];
+declare const productListQueryOptions: () => ExampleQueryOptions<ProductListResponse>;
 declare const categoryListQueryOptions: () => ExampleQueryOptions<{categories: ProductCategory[]}>;
-declare const client: any;
-declare const createClient: any;
-declare const deferredKeyword: any;
-declare const draftFiles: any;
-declare const expandedRows: any;
-declare const fetchFilteredRows: any;
-declare const fetchProducts: any;
-declare const formValues: any;
-declare const formatAmount: any;
-declare const formatPercent: any;
-declare const handleChange: any;
-declare const handleFilterToggleClick: any;
-declare const handleListItemClick: any;
-declare const isActive: any;
-declare const isCritical: any;
-declare const isDense: any;
-declare const isDisabled: any;
-declare const isProductFilter: any;
-declare const isSelected: any;
-declare const issuedAt: any;
-declare const keyword: any;
-declare const matchRow: any;
-declare const mountChart: any;
-declare const mutationAttachmentUpload: any;
-declare const mutationMediaSave: any;
-declare const mutationProductRemove: any;
-declare const mutationProductSave: any;
-declare const navigate: any;
-declare const notify: any;
-declare const order: any;
-declare const ownerId: any;
-declare const ownerIds: any;
-declare const pageCount: any;
-declare const parseStoredProductFilter: any;
-declare const points: any;
-declare const product: any;
-declare const productDetailSummaryQueryOptions: (...args: any[]) => ExampleQueryOptions;
-declare const productId: any;
-declare const productListQueryKey: any;
-declare const productListQueryOptions: () => ExampleQueryOptions<{products: Product[]}>;
-declare const productSummary: any;
-declare const productSummaryQueryKey: any;
-declare const productUrlParsers: any;
-declare const products: any[];
-declare const props: any;
-declare const query: any;
-declare const queryClient: any;
-declare const rawKey: any;
-declare const reportEmptySearch: any;
-declare const requestUrl: any;
-declare const response: any;
-declare const responseAccessBootstrapSuspense: any;
-declare const responseDateTime: any;
-declare const responseProductListSuspense: any;
-declare const responseProductSearchSuspense: any;
-declare const responseProductSummarySuspense: any;
-declare const responseTableColumnsSuspense: any;
-declare const reviewerId: any;
-declare const rowOffset: any;
-declare const rows: any;
-declare const saveProduct: any;
-declare const saveRecord: any;
-declare const savedFilter: any;
-declare const selectedLocale: any;
-declare const selectedProduct: any;
-declare const seriesItems: any;
-declare const session: any;
-declare const setPage: any;
-declare const setRows: any;
-declare const setSelectedTagId: any;
-declare const setSelectedUserIds: any;
-declare const setStatusFilter: any;
-declare const setSubmitErrorMessage: any;
-declare const setVisibleRowCount: any;
-declare const settings: any;
-declare const sort: any;
-declare const subscribeToProductChanges: any;
-declare const subscribeToUserJoined: any;
-declare const summary: any;
-declare const target: any;
-declare const toChartPoints: any;
-declare const toProductCreateRequest: any;
-declare const toProductRows: any;
-declare const toProductSaveRequest: any;
-declare const toSearchIndex: any;
-declare const toSeriesColorToken: any;
-declare const toSubmitErrorMessage: any;
-declare const toTableColumns: any;
-declare const toTickTime: any;
-declare const toTreeData: any;
-declare const today: any;
-declare const toggleSelection: any;
-declare const tone: any;
-declare const uploadAttachments: any;
-declare const urlParams: any;
-declare const useChatContext: any;
-declare const useGetProductListSuspense: any;
-declare const useOrderQuery: any;
-declare const usePermissionStore: any;
-declare const useProductCreate: any;
-declare const useProductList: any;
-declare const useProductListSuspense: any;
-declare const useProductQuery: any;
-declare const useProductRemove: any;
-declare const useProductSave: any;
-declare const useProductTreeSuspense: any;
-declare const useThemeStore: any;
-declare const useUserGetItemSuspense: any;
-declare const user: any;
-declare const users: any;
-declare const value: any;
-declare const variant: any;
-declare const watchedProductIds: any;
+declare const productDetailSummaryQueryOptions: (productId: string) => ExampleQueryOptions<ProductSummary>;
+declare const useProductListSuspense: <TData = ProductListResponse>(
+	params?: {page?: number; keyword?: string},
+	options?: ApiQueryOptions<ProductListResponse, TData>,
+) => UseSuspenseQueryResult<TData>;
+declare const useGetProductListSuspense: typeof useProductListSuspense;
+declare const useProductTreeSuspense: <TData = ProductTreeResponse>(
+	params?: Record<string, never>,
+	options?: ApiQueryOptions<ProductTreeResponse, TData>,
+) => UseSuspenseQueryResult<TData>;
+declare const useUserGetItemSuspense: () => UseSuspenseQueryResult<User>;
+declare const useProductList: () => UseQueryResult<ProductListResponse>;
+declare const useProductQuery: (options: {client: ApiClient; pageSize: number}) => UseQueryResult<ProductListResponse>;
+declare const useOrderQuery: (options: {pageSize: number}) => UseQueryResult<OrderRow[]>;
+declare const useProductSave: (
+	options?: ApiMutationOptions<Product, {data: ProductSaveRequest}>,
+) => UseMutationResult<Product, {data: ProductSaveRequest}>;
+declare const useProductCreate: (
+	options?: ApiMutationOptions<Product, {data: ProductCreateRequest}>,
+) => UseMutationResult<Product, {data: ProductCreateRequest}>;
+declare const useProductRemove: () => UseMutationResult<void, {params: {productId: string}}>;
+interface PermissionStore {
+	canEditProduct: boolean;
+	setCanEditProduct: (value: boolean) => void;
+}
+declare const usePermissionStore: {
+	(): PermissionStore;
+	<T>(selector: (state: PermissionStore) => T): T;
+};
+interface ThemeStore {
+	theme: Theme;
+	setTheme: (theme: Theme) => void;
+}
+declare const useThemeStore: () => ThemeStore;
+interface ChatContextValue {
+	isEmpty: boolean;
+	emptyMessage: string;
+	messages: ChatMessage[];
+	send: (text: string) => void;
+}
+declare const useChatContext: () => ChatContextValue;
+interface FormHandle<T> {
+	values: T;
+}
+declare const useForm: <T>() => FormHandle<T>;
+declare const navigate: NavigateFunction;
+
+// 예제 세계관: 보조 함수
+interface ProductFilter {
+	status: ProductStatusFilter;
+	keyword: string;
+}
+interface SearchIndex {
+	search(keyword: string): Product[];
+}
+declare const fetchProducts: (params: {pageSize: number}) => Promise<ProductListResponse>;
+declare const fetchFilteredRows: (status: ProductStatusFilter) => Promise<ProductRow[]>;
+declare const isProductFilter: (value: unknown) => value is ProductFilter;
+declare const parseStoredProductFilter: (raw: string | null) => ProductFilter | undefined;
+declare const matchRow: (row: Row, keyword: string) => boolean;
+declare const mountChart: (container: HTMLElement) => ChartInstance;
+declare const notify: (userId: string) => void;
+declare const reportEmptySearch: (keyword: string) => void;
+declare const saveRecord: (draft: Draft) => Promise<Draft>;
+declare const saveProduct: (request: ProductSaveRequest & {attachments?: string[]}) => Promise<Product>;
+declare const uploadAttachments: (files: File[]) => Promise<string[]>;
+declare const subscribeToProductChanges: {
+	(productIds: string[]): () => void;
+	(productId: string, onChange: (change: ProductChange) => void): () => void;
+};
+declare const subscribeToUserJoined: (onJoined: (userId: string) => void) => () => void;
+declare const toChartPoints: (counts: DailyCount[]) => ChartPoint[];
+declare const toProductRows: (response: ProductListResponseDTO) => ProductRow[];
+declare const toSearchIndex: (products: Product[]) => SearchIndex;
+declare const toSubmitErrorMessage: (error: unknown) => string;
+declare const toTableColumns: (columns: TableColumn[]) => TableColumn[];
+declare const toTickTime: (index: number) => string;
+declare const toTreeData: (node: ProductCategoryNode) => TreeItem;
+declare const toggleSelection: (id?: string) => void;
+declare const toProductCreateRequest: (values: ProductFormValues) => ProductCreateRequest;
+declare const toProductSaveRequest: (values: ProductFormValues, attachmentIds?: string[]) => ProductSaveRequest;
+declare const toSeriesColorToken: (role: string, index: number) => string;
+declare const formatAmount: (amount: Amount) => string;
+declare const formatPercent: (rate: number | null) => string;
+declare const handleListItemClick: (productId: string) => MouseEventHandler<HTMLButtonElement>;
+declare const handleChange: (value: string) => void;
+declare const handleFilterToggleClick: MouseEventHandler<HTMLButtonElement>;
+declare const setPage: Dispatch<number>;
+declare const setRows: Dispatch<ProductRow[]>;
+declare const setSelectedTagId: Dispatch<string>;
+declare const setSelectedUserIds: Dispatch<string[]>;
+declare const setStatusFilter: Dispatch<ProductStatusFilter>;
+declare const setSubmitErrorMessage: Dispatch<string | null>;
+declare const setVisibleRowCount: Dispatch<number>;
+
+// 조각 예제가 바깥에서 받는 변수. 조각은 컴포넌트 본문이나 함수 본문만 보여 주므로 이름만 선언
+interface FragmentProps {
+	[key: string]: any;
+}
+declare const props: FragmentProps;
+declare const amount: Amount;
+declare const points: ChartPoint[];
+declare const seriesItems: ChartSeries[];
+declare const summary: ProductSummary;
+declare const summaryText: string;
+declare const dailyCounts: DailyCount[];
+declare const productRows: ProductRow[];
+declare const responseProductSearch: ApiResponse<{rows?: ProductRow[]}>;
+declare const productSummary: {averageRate: string};
+declare const product: Product;
+declare const archivedProducts: Product[];
+declare const selectedProduct: Product | null;
+declare const productId: string;
+declare const order: Order;
+declare const rows: OrderRow[];
+declare const expandedRows: OrderRow[];
+declare const sort: TableSort;
+declare const user: User;
+declare const users: User[];
+declare const session: Session;
+declare const settings: Settings;
+declare const formValues: ProductFormValues;
+declare const query: {pageSize?: number};
+declare const productUrlParsers: {
+	keyword: ReturnType<typeof parseAsString.withDefault>;
+	categoryId: ReturnType<typeof parseAsString.withDefault>;
+	page: ReturnType<typeof parseAsInteger.withDefault>;
+};
+declare const urlParams: {keyword: string; categoryId: string; page: number};
+declare const keyword: string;
+declare const deferredKeyword: string;
+declare const value: string;
+declare const tone: Tone;
+declare const variant: string;
+declare const target: URL;
+declare const requestUrl: URL;
+declare const issuedAt: string;
+declare const today: string;
+declare const rawKey: string;
+declare const savedFilter: ProductFilter;
+declare const selectedLocale: string;
+declare const rowOffset: number;
+declare const pageCount: number;
+declare const draftFiles: File[];
+declare const isActive: boolean;
+declare const isCritical: boolean;
+declare const isDense: boolean;
+declare const isDisabled: boolean;
+declare const isSelected: boolean;
+declare const ownerId: string;
+declare const approverId: string;
+declare const reviewerId: string;
+declare const ownerIds: string[];
+declare const allowedProductIds: string[];
+declare const watchedProductIds: string[];
+declare const canInviteMembers: boolean;
+declare const canManageItems: boolean;
+declare const response: ApiResponse<ProductListResponse>;
+declare const responseDateTime: string;
+declare const responseProductListSuspense: UseSuspenseQueryResult<ProductListResponse>;
+declare const responseProductSearchSuspense: UseSuspenseQueryResult<ProductListResponse>;
+declare const responseProductSummarySuspense: UseSuspenseQueryResult<ProductSummary>;
+declare const responseAccessBootstrapSuspense: UseSuspenseQueryResult<Capabilities>;
+declare const responseTableColumnsSuspense: UseSuspenseQueryResult<{columns: TableColumn[]}>;
+declare const responseOrderSummarySuspense: UseSuspenseQueryResult<{rows: OrderRow[]; filters: OrderFilters}>;
+declare const mutationProductSave: UseMutationResult<Product, {data: ProductSaveRequest}>;
+declare const mutationProductRemove: UseMutationResult<void, {params: {productId: string}}>;
+declare const mutationAttachmentUpload: UseMutationResult<{attachmentIds: string[]}, {files: File[]}>;
+declare const mutationMediaSave: UseMutationResult<void, {data: unknown}>;
+
+// 아직 남은 이름
+type ExampleQueryOptions<T> = {queryKey: readonly unknown[]; queryFn: () => Promise<T>};
+declare const products: Product[];

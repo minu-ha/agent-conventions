@@ -9,7 +9,7 @@ export const PgProductTableSection = () => {
 			const categoryById = new Map(categoryResult.data.categories.map((category) => [category.id, category]));
 
 			return {
-				rows: productResult.data.products.map((product) => ({
+				rows: productResult.data.items.map((product) => ({
 					id: product.id,
 					name: product.name,
 					categoryName: categoryById.get(product.categoryId)?.name,

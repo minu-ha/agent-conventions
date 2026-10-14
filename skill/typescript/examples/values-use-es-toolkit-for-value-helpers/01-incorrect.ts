@@ -1,7 +1,7 @@
 const uniqueOwnerIds = ownerIds.filter((ownerId, index) => ownerIds.indexOf(ownerId) === index);
 const uniqueCategories = [...new Set(points.map((point) => point.x))];
 const productsByCategory = products.reduce<Record<string, Product[]>>((grouped, product) => {
-	grouped[product.category] = [...(grouped[product.category] ?? []), product];
+	grouped[product.categoryId] = [...(grouped[product.categoryId] ?? []), product];
 	return grouped;
 }, {});
 const draftFilter = JSON.parse(JSON.stringify(savedFilter)) as ProductFilter;

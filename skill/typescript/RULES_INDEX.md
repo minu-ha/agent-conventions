@@ -1,7 +1,7 @@
 # TypeScript 컨벤션 Rule Index
 
 - Skill: `typescript`
-- Routing digest: `sha256:16466ccc4d2eec5b01ebc3412f0cec4194794323e1cfccc1dac7eeff6080ee0b`
+- Routing digest: `sha256:5232c26da04706860c89fd692c54a22869c47f32cdf3a8d938c7df288da297ff`
 
 ## Local Rules
 

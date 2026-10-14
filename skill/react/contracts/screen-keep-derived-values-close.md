@@ -35,7 +35,7 @@ export const PgProductTableSection = () => {
 
 	return (
 		<Fragment>
-			<UiTable rows={responseProductListSuspense.data.products} onRowSelect={handleTableRowSelect} />
+			<UiTable rows={responseProductListSuspense.data.items} onRowSelect={handleTableRowSelect} />
 
 			{hasSelectedRows && <PgProductBulkActionBar label={bulkActionLabel} />}
 		</Fragment>
@@ -59,7 +59,7 @@ export const PgProductTableSection = () => {
 
 	return (
 		<Fragment>
-			<UiTable rows={responseProductListSuspense.data.products} onRowSelect={handleTableRowSelect} />
+			<UiTable rows={responseProductListSuspense.data.items} onRowSelect={handleTableRowSelect} />
 
 			{selectedRows.length > 0 && (
 				<PgProductBulkActionBar label={`${selectedRows.length}건 삭제`} />

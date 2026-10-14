@@ -8,7 +8,7 @@ export const PgProductTreeSection = () => {
 	 */
 	const responseProductTreeSuspense = useProductTreeSuspense(
 		{},
-		{query: {select: (response) => ({categoryNodes: response.data.nodes.map(toTreeData)})}},
+		{query: {select: (response) => ({categoryNodes: response.data.categoryNodes.map(toTreeData)})}},
 	);
 
 	/**

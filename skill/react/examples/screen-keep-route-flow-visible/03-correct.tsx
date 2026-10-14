@@ -7,7 +7,7 @@ export const PgProductListSection = () => {
 	 */
 	const responseProductListSuspense = useProductListSuspense(
 		{page: urlParams.page},
-		{query: {select: (response) => ({products: response.data.list})}},
+		{query: {select: (response) => ({items: response.data.items})}},
 	);
 
 	const queryClient = useQueryClient();
@@ -31,5 +31,5 @@ export const PgProductListSection = () => {
 		mutationProductSave.mutate({data: toProductSaveRequest(formValues)});
 	};
 
-	return <UiTable rows={responseProductListSuspense.data.products} onSave={handleProductSave} />;
+	return <UiTable rows={responseProductListSuspense.data.items} onSave={handleProductSave} />;
 };

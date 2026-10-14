@@ -50,7 +50,7 @@ Suspense의 불필요한 대기 분기는 `runtime-avoid-ad-hoc-loading-branches
 const responseProductListSuspense = useProductListSuspense();
 const responseCategoryListSuspense = useCategoryListSuspense();
 
-const rows = responseProductListSuspense.data.products.map((product) => ({
+const rows = responseProductListSuspense.data.items.map((product) => ({
 	id: product.id,
 	categoryName: responseCategoryListSuspense.data.categories.find(
 		(category) => category.id === product.categoryId,
@@ -72,7 +72,7 @@ export const PgProductTableSection = () => {
 			const categoryById = new Map(categoryResult.data.categories.map((category) => [category.id, category]));
 
 			return {
-				rows: productResult.data.products.map((product) => ({
+				rows: productResult.data.items.map((product) => ({
 					id: product.id,
 					name: product.name,
 					categoryName: categoryById.get(product.categoryId)?.name,

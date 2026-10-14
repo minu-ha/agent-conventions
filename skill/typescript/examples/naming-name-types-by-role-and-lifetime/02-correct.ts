@@ -16,4 +16,4 @@ interface SummarySnapshot {
 }
 
 // [!code ++]
-const summarySnapshot: SummarySnapshot = response.data;
+const summarySnapshot: SummarySnapshot = responseOrderSummarySuspense.data;

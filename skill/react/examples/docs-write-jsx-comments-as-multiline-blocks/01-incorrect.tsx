@@ -4,5 +4,5 @@
 	<PgProductSearchSection />
 // [!code error]
 	{/* PgProductTable */}
-	<PgProductTable rows={rows} />
+	<PgProductTable rows={productRows} />
 </div>;

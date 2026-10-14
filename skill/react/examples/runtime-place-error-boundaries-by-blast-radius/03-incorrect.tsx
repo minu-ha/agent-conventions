@@ -8,5 +8,5 @@ export const PgProducts = () => {
 // [!code error]
 	}
 
-	return <UiTable rows={responseProductListSuspense.data.products} />;
+	return <UiTable rows={responseProductListSuspense.data.items} />;
 };

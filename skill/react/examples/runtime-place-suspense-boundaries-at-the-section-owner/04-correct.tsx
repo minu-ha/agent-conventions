@@ -2,5 +2,5 @@
 export const PgProducts = () => {
 	const responseProductListSuspense = useProductListSuspense();
 
-	return <UiTable rows={responseProductListSuspense.data.products} />;
+	return <UiTable rows={responseProductListSuspense.data.items} />;
 };

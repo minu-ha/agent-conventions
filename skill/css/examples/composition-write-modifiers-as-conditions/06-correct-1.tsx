@@ -5,5 +5,5 @@
 		tone === "negative" && "pg_products__changeRate--negative",
 	)}
 >
-	{amount}
+	{formatAmount(amount)}
 </span>;

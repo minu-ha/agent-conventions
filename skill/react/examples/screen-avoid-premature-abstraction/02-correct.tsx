@@ -4,12 +4,12 @@ export const PgProductTable = (props: PgProductTableProps) => {
 	 */
 	const responseProductListSuspense = useProductListSuspense(
 		{},
-		{query: {select: (response) => response.data.map((product) => ({id: product.id, title: product.title}))}},
+		{query: {select: (response) => response.data.items.map((product) => ({id: product.id, name: product.name}))}},
 	);
 
 	return responseProductListSuspense.data.map((row) => (
 		<a href={`${props.editHrefBase}${row.id}/`} key={row.id}>
-			{row.title}
+			{row.name}
 		</a>
 	));
 };

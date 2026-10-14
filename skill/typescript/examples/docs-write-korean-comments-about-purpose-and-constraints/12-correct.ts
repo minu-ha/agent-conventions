@@ -4,6 +4,6 @@
  * {@link /api/product}
  */
 const responseProductListSuspense = useGetProductListSuspense(
-	{ query: { page: urlParams.page } },
+	{page: urlParams.page},
 	{ query: { select: (response: ProductListResponseDTO) => toProductRows(response) } },
 );
