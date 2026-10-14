@@ -1,6 +1,6 @@
 // [!code error]
-export type UiTableCellProps = TableCellProps;
+export type UiButtonProps = ButtonProps;
 
-export const UiTableCell = (props: UiTableCellProps) => {
-	return <TableCell {...props} />;
+export const UiButton = (props: UiButtonProps) => {
+	return <Button {...props} />;
 };

@@ -38,23 +38,23 @@ flowchart LR
 **Incorrect 1 (행 20개 목록을 다시 렌더하는 갱신까지 트랜지션으로 감쌉니다):**
 
 ```tsx
-const [selectedTagId, setSelectedTagId] = useState("all");
-const tagRows = responseTagListSuspense.data.tags.slice(0, 20);
+const [selectedCategoryId, setSelectedCategoryId] = useState("all");
+const categoryRows = responseCategoryListSuspense.data.categories.slice(0, 20);
 
-const handleTagClick = (nextTagId: string) => {
+const handleCategoryClick = (nextCategoryId: string) => {
 	startTransition(() => {
-		setSelectedTagId(nextTagId);
+		setSelectedCategoryId(nextCategoryId);
 	});
 };
 
-return <UiTagRows rows={tagRows} selectedTagId={selectedTagId} />;
+return <UiCategoryRows rows={categoryRows} selectedCategoryId={selectedCategoryId} />;
 ```
 
 **Correct 1 (측정 근거가 있는 갱신만 트랜지션으로 감싸고 행 20개 목록은 그대로 둡니다):**
 
 ```tsx
-const handleTagClick = (nextTagId: string) => {
-	setSelectedTagId(nextTagId);
+const handleCategoryClick = (nextCategoryId: string) => {
+	setSelectedCategoryId(nextCategoryId);
 };
 
 const handleStatusFilterChange = (nextStatus: ProductStatusFilter) => {

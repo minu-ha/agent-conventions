@@ -1,10 +1,11 @@
-const [selectedTagId, setSelectedTagId] = useState("all");
-const tagRows = responseTagListSuspense.data.tags.slice(0, 20);
+const [selectedCategoryId, setSelectedCategoryId] = useState("all");
+const categoryRows = responseCategoryListSuspense.data.categories.slice(0, 20);
 
-const handleTagClick = (nextTagId: string) => {
+const handleCategoryClick = (nextCategoryId: string) => {
+// [!code error]
 	startTransition(() => {
-		setSelectedTagId(nextTagId);
+		setSelectedCategoryId(nextCategoryId);
 	});
 };
 
-return <UiTagRows rows={tagRows} selectedTagId={selectedTagId} />;
+return <UiCategoryRows rows={categoryRows} selectedCategoryId={selectedCategoryId} />;

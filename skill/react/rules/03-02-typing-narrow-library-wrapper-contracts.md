@@ -54,6 +54,6 @@ flowchart LR
 
 <<< ../examples/typing-narrow-library-wrapper-contracts/01-incorrect.tsx
 
-**Correct 1 (표시 프롭은 인덱스 접근으로 열고 DOM 속성은 세 단계 기준을 따릅니다):**
+**Correct 1 (표시 프롭은 인덱스 접근으로 열고 자기 프롭은 직접 적습니다):**
 
 <<< ../examples/typing-narrow-library-wrapper-contracts/02-correct.tsx

@@ -381,8 +381,8 @@ declare const UiErrorBoundary: (props: UiErrorBoundaryProps) => ReactElement;
 declare const UiFilterIcon: () => ReactElement;
 declare const UiInlineErrorState: (props: {retryLabel?: string; onRetry?: () => void}) => ReactElement;
 interface UiLineChartProps {
-	points?: ChartPoint[];
-	children?: ReactNode;
+	title: string;
+	points: ChartPoint[];
 }
 declare const UiLineChart: (props: UiLineChartProps) => ReactElement;
 declare const UiLineChartSkeleton: () => ReactElement;
@@ -478,7 +478,12 @@ declare const PgOrderFilterPanel: () => ReactElement;
 declare const PgProductBulkActionBar: (props: {selectedRows?: ProductRow[]; label?: string}) => ReactElement;
 declare const PgProductCreateForm: () => ReactElement;
 declare const PgProductDetailChartSection: () => ReactElement;
-declare const PgProductFilterSection: (props: {keyword?: string}) => ReactElement;
+declare const PgProductFilterSection: (props: {
+	keyword?: string;
+	categoryId?: string;
+	onKeywordChange?: Dispatch<string>;
+	onCategoryIdChange?: Dispatch<string | undefined>;
+}) => ReactElement;
 declare const PgProductList: () => ReactElement;
 declare const PgProductListSection: () => ReactElement;
 interface PgProductPanelProps {
@@ -627,7 +632,7 @@ declare const handleChange: (value: string) => void;
 declare const handleFilterToggleClick: MouseEventHandler<HTMLButtonElement>;
 declare const setPage: Dispatch<number>;
 declare const setRows: Dispatch<ProductRow[]>;
-declare const setSelectedTagId: Dispatch<string>;
+declare const setSelectedCategoryId: Dispatch<string>;
 declare const setSelectedUserIds: Dispatch<string[]>;
 declare const setStatusFilter: Dispatch<ProductStatusFilter>;
 declare const setSubmitErrorMessage: Dispatch<string | null>;

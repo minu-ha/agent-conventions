@@ -5,6 +5,12 @@ export const PgProducts = () => {
 // [!code ++]
 	const [categoryId, setCategoryId] = useState<string>();
 
-// [!code ++]
-	return <PgProductFilterSection keyword={keyword} />;
+	return (
+		<PgProductFilterSection
+			keyword={keyword}
+			categoryId={categoryId}
+			onKeywordChange={setKeyword}
+			onCategoryIdChange={setCategoryId}
+		/>
+	);
 };

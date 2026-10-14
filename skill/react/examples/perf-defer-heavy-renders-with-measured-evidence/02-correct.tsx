@@ -1,5 +1,5 @@
-const handleTagClick = (nextTagId: string) => {
-	setSelectedTagId(nextTagId);
+const handleCategoryClick = (nextCategoryId: string) => {
+	setSelectedCategoryId(nextCategoryId);
 };
 
 const handleStatusFilterChange = (nextStatus: ProductStatusFilter) => {

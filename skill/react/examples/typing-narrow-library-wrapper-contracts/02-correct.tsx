@@ -1,23 +1,33 @@
-import type {TdHTMLAttributes} from "react";
-import type {TableCellProps} from "@mui/material";
+import {Button} from "@mui/material";
+import type {ButtonProps} from "@mui/material";
+import type {MouseEventHandler, ReactNode} from "react";
 
 /**
- * 표 셀에서 정렬과 여백만 여는 계약
+ * 버튼 래퍼 계약
  *
- * 라이브러리 셀의 나머지 표시 프롭은 표 소유자가 정하므로 열지 않음
- * align의 inherit은 DOM td 타입에 없어 그 이름만 빼고 다시 선언
+ * sx, classes, component 같은 스타일 주입 지점은 열지 않음
  */
-export interface UiTableCellProps extends Omit<TdHTMLAttributes<HTMLTableCellElement>, "align"> {
+export interface UiButtonProps {
+	children: ReactNode;
 	/**
-	 * 내용 가로 정렬
+	 * 강조 수준
 	 */
-	align?: TableCellProps["align"];
+	variant?: ButtonProps["variant"];
 	/**
-	 * 셀 여백
+	 * 크기
 	 */
-	padding?: TableCellProps["padding"];
+	size?: ButtonProps["size"];
+	/**
+	 * 요청이 끝날 때까지 눌리지 않음
+	 */
+	isLoading?: boolean;
+	onClick?: MouseEventHandler<HTMLButtonElement>;
 }
 
-export const UiTableCell = (props: UiTableCellProps) => {
-	return <TableCell {...props} />;
+export const UiButton = (props: UiButtonProps) => {
+	return (
+		<Button variant={props.variant} size={props.size} disabled={props.isLoading} onClick={props.onClick}>
+			{props.children}
+		</Button>
+	);
 };

@@ -1,6 +1,9 @@
-const permissionStore = usePermissionStore();
-const canEditProduct = responseProductGetItemSuspense.data.ownerId === currentUserId;
+// page/product-detail/pg-product-detail.tsx
+const setCanEditProduct = usePermissionStore((state) => state.setCanEditProduct);
+// [!code error]
+const canEditProduct = responseProductGetItemSuspense.data.ownerId === session.userId;
 
 useEffect(() => {
-	permissionStore.setCanEditProduct(canEditProduct);
-}, [permissionStore, canEditProduct]);
+// [!code error]
+	setCanEditProduct(canEditProduct);
+}, [setCanEditProduct, canEditProduct]);
