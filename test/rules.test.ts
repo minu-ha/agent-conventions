@@ -246,23 +246,14 @@ test("every rule loads its examples from files and no rule keeps an example fenc
 	}
 });
 
-test("the example lint config is the biome config that the TypeScript tooling rule shows", async () => {
-	const exampleDir = getSkillPaths("typescript").skillDir;
-	const shown = JSON.parse(
-		await readFile(path.join(exampleDir, "examples", "tooling-configure-biome-to-enforce-these-rules", "01-correct.json"), "utf8"),
-	);
-	const plugin = JSON.parse(
-		await readFile(path.join(exampleDir, "examples", "tooling-configure-biome-to-enforce-these-rules", "02-correct-1.json"), "utf8"),
-	);
-	const used = JSON.parse(await readFile(path.join(exampleDir, "..", "examples.biome.json"), "utf8"));
+test("the example lint config extends the TypeScript tooling rule's own config and plugin files", async () => {
+	const skillDir = getSkillPaths("typescript").skillDir;
+	const used = JSON.parse(await readFile(path.join(skillDir, "..", "examples.biome.json"), "utf8"));
+	const exampleDir = "./typescript/examples/tooling-configure-biome-to-enforce-these-rules";
 
-	assert.deepEqual(used.linter, shown.linter, "linter rules must match the rule's example");
-	assert.deepEqual(used.overrides.slice(0, shown.overrides.length), shown.overrides, "the shown overrides come first");
-	assert.deepEqual(used.plugins, plugin.plugins, "the GritQL plugin must match the rule's example");
-	assert.equal(
-		await readFile(path.join(exampleDir, "..", "no-literal-fallback.grit"), "utf8"),
-		await readFile(path.join(exampleDir, "examples", "tooling-configure-biome-to-enforce-these-rules", "02-correct-2.grit"), "utf8"),
-	);
+	assert.deepEqual(used.extends, [`${exampleDir}/01-correct.json`]);
+	assert.deepEqual(used.plugins, [`${exampleDir}/02-correct-2.grit`]);
+	assert.equal(used.linter, undefined, "rules live only in the example file");
 });
 
 test("readSkillRules exposes titleKo and tolerates its absence", async () => {

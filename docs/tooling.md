@@ -40,7 +40,7 @@ progressive rule frontmatter의 `reviewWith`는 조건부 재평가, `requiresSe
 | `npm run docs:build` | `build` 후 `docs/dist`에 배포용 정적 사이트를 만듭니다. |
 | `npm run test` | 라우터와 생성물 계약, 매니페스트 검증기, build, validate fixture, 규칙 문체, 사이트 생성 테스트를 실행합니다. 규칙 산문은 핀하지 않습니다. |
 | `npm run lint`, `npm run lint:fix` | 도구 소스의 Biome 검사와 자동 수정입니다. |
-| `npm run lint:examples` | `Correct` 예제 파일을 규칙이 보여 주는 설정 그대로 검사합니다. `skill/examples.biome.json`은 typescript 07-01 의 설정에 미사용 변수 예외만 더한 것이고, `skill/stylelint.config.mjs`는 css 08-01 의 설정에서 레이어별 override 를 세 접두사 한 패턴으로 접은 것입니다. `Incorrect` 예제는 일부러 어기므로 검사하지 않습니다. |
+| `npm run lint:examples` | `Correct` 예제 파일을 규칙이 보여 주는 설정 그대로 검사합니다. `skill/examples.biome.json`은 typescript 07-01 의 예제 파일을 `extends`와 `plugins`로 그대로 읽고 미사용 변수 예외만 더한 것이고, `skill/stylelint.config.mjs`는 css 08-01 의 설정에서 레이어별 override 를 세 접두사 한 패턴으로 접은 것입니다. `Incorrect` 예제는 일부러 어기므로 검사하지 않습니다. |
 | `npm run typecheck` | `tsc --noEmit`입니다. |
 
 `build` 뒤의 `check:generated`는 generated file을 다시 쓰는 단계가 아니라 stale 여부를 검증하는 단계입니다. CI에서는 build로 dirty output을 숨기지 말고 `check`를 gate로 둡니다.
