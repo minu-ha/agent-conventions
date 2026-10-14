@@ -3631,27 +3631,43 @@ const responseProductList = useProductList();
 
 **Impact: HIGH (몇 해 뒤에 코드를 여는 사람도 주석을 한눈에 읽고 고칠 수 있습니다)**
 
-주석에는 이름과 시그니처에 없는 목적, 제약, 부수효과만 짧은 한국어 명사형으로 적습니다.
-긴 문장과 경위는 읽는 데 오래 걸리고, 코드가 바뀌면 틀린 설명으로 남습니다.
+주석에는 이름과 시그니처에 없는 목적, 제약, 부수효과만 스펙 문서의 한국어로 적습니다.
+긴 문장, 비유, 경위는 읽는 데 오래 걸리고, 코드가 바뀌면 틀린 설명으로 남습니다.
 적을 정보가 없으면 주석을 지웁니다.
 
 ### 문장
 
 | 항목 | 기준 |
 | --- | --- |
-| 끝맺음 | `~한다`, `~이다` 대신 명사나 명사형(`고정`, `불가`, `필요`, `덮어씀`)으로 끝냅니다. 줄 끝에는 마침표를 찍지 않습니다 |
-| 한 줄 | 사실 하나만 적습니다. 결론이 먼저이고 이유는 마침표 뒤에 둡니다 |
-| 군더더기 | 접속사, 꾸밈말, 경위를 뺍니다. 예전 동작과 바뀐 과정은 커밋 메시지에 둡니다 |
-| 나열 | 쉼표로 잇습니다. 가운뎃점과 대시는 쓰지 않습니다 |
-| 조사 | 영어 낱말과 식별자 뒤에도 붙여 씁니다(`MUI가`, `className을`) |
+| 끝맺음 | 한자어 명사로 끝냅니다(`조회`, `병합`, `미포함`, `필요`, `불가`, `고정`). 용언을 명사형으로 바꾼 `읽음`, `둠`, `넘김`, `합쳐짐`은 쓰지 않습니다. 상태를 말하는 `없음`, `있음`, `않음`, `열림`, `닫힘`은 허용합니다. 줄 끝에는 마침표를 찍지 않습니다 |
+| 한 줄 | 사실 하나만 적습니다. 결론이 먼저이고 조건과 결과는 쉼표 뒤에 둡니다(`오류 경계 미포함, 그래프 오류 시 뒤로가기 유지`) |
+| 조사 | 주제 조사는 항목에 하나까지(`패턴 ID는 영역별 URL 직접 조회`), 목적격 조사는 생략합니다. 쓸 때는 영어 낱말 뒤에도 붙여 씁니다(`MUI가`) |
+| 접속 | `그래서`, `때문에`, `위해`, `~라서`, `덕분`을 쓰지 않습니다. 인과는 쉼표 뒤 결과로 적습니다 |
+| 비유 | `몫`, `껍데기`, `무너짐`, `길이 남음`, `갈아 끼움`, `흔들림` 같은 비유와 의인화를 쓰지 않습니다. `담당`, `래퍼`, `실패`, `복귀 경로`, `교체`, `변동`으로 적습니다 |
+| 군더더기 | 꾸밈말, 경위를 뺍니다. 예전 동작과 바뀐 과정은 커밋 메시지에 둡니다 |
+| 나열 | 쉼표로 잇습니다. 가운뎃점, 대시, 화살표는 쓰지 않습니다 |
 
 ### 낱말
 
 | 낱말 | 주석 표기 |
 | --- | --- |
-| 우리말로 통하는 일반 낱말 | 우리말. request는 요청, product는 상품 |
-| 우리말이 없거나 어색한 기술 용어 | 한글 외래어. provider는 프로바이더, wrapper는 래퍼 |
+| 우리말로 통하는 일반 낱말 | 우리말이나 흔한 음차. request는 요청, product는 상품, back 버튼은 뒤로가기 또는 백 버튼, reset은 리셋 |
+| 우리말이 없거나 어색한 기술 용어 | 한글 음차. provider는 프로바이더, wrapper는 래퍼, render는 렌더 |
 | 코드 이름, 제품 이름, 약어 | 원문 그대로. `QueryClientProvider`, MUI, API |
+
+자주 바꿔 쓰는 낱말입니다.
+
+| 용언 명사형, 비유 | 스펙 낱말 |
+| --- | --- |
+| 읽음, 가져옴 | 조회, 수신 |
+| 받음, 넘김, 줌 | 수신, 전달, 반환 |
+| 씀, 둠, 놓음 | 사용, 배치, 보관 |
+| 그림, 보임, 표시됨 | 렌더, 표시 |
+| 붙음, 뺌, 비움, 채움 | 추가, 제외, 초기화, 입력 |
+| 나눔, 묶음, 합쳐짐, 맞춤 | 분리, 병합, 일치 |
+| 남음, 바뀜, 겹침 | 유지, 변경, 중첩 |
+| 정함, 고름, 잡음, 좁힘 | 결정, 선택, 계산, 제한 |
+| 몫, 자리 | 담당, 구간 |
 
 ### 상자
 
@@ -3727,7 +3743,7 @@ export interface PgProductTreeSectionProps {
 }
 ```
 
-**Correct 1 (이름에 없는 정보를 명사형으로 더합니다):**
+**Correct 1 (이름에 없는 정보를 스펙 낱말로 더합니다):**
 
 ```ts
 // util/array/to-sorted-product-refs.ts
@@ -3742,10 +3758,10 @@ export const toSortedProductRefs = (refs: ProductRef[]): ProductRef[] => {
 ```ts
 // util/array/to-products-newest-first.ts
 /**
- * 저장 응답 순서 대신 최신순으로 다시 정렬
+ * 저장 응답 순서 대신 최신순 재정렬
  *
- *   - 제약: 서버가 같은 updatedAt 항목의 순서를 보장하지 않음
- *   - 응답 순서 그대로면 새로고침마다 목록이 흔들림
+ *   - 제약: 동일 updatedAt 항목 순서는 서버 미보장
+ *   - 응답 순서 사용 시 새로고침마다 목록 순서 변동
  */
 export const toProductsNewestFirst = (products: Product[]): Product[] => {
 	return orderBy(products, ["updatedAt", "id"], ["desc", "asc"]);
@@ -3759,7 +3775,7 @@ export const toProductsNewestFirst = (products: Product[]): Product[] => {
  */
 export interface PgProductTreeSectionProps {
 	/**
-	 * 사이드바에 그릴 분류 노드 목록
+	 * 사이드바 표시용 분류 노드 목록
 	 */
 	categoryNodes: ProductCategoryNode[];
 }
@@ -3775,12 +3791,12 @@ export interface PgProductTreeSectionProps {
 export const queryClient = new QueryClient({defaultOptions: {queries: {retry: query_retry_count}}});
 ```
 
-**Correct 2 (결론을 명사형으로 제목에 쓰고 이유는 목록 항목으로 둡니다):**
+**Correct 2 (결론을 제목에 쓰고 조건과 결과는 목록 항목으로 둡니다):**
 
 ```ts
 // app/query-client.ts
 /**
- * 호스트 앱, 단독 실행, 테스트가 함께 쓰는 쿼리 클라이언트
+ * 호스트 앱, 단독 실행, 테스트 공용 쿼리 클라이언트
  *
  *   - 재시도 횟수는 이 한 곳에서만 설정
  */
@@ -3808,11 +3824,11 @@ export const toProductSaveRequest = (draft: ProductDraft): ProductSaveRequest =>
 ```ts
 // service/product/to-product-save-request.ts
 /**
- * 상품 저장 요청. 서버 검증에 맞춰 미리 정리
+ * 상품 저장 요청. 서버 검증 기준 사전 정리
  *
- *   - 제약: title은 앞뒤 공백 거부
- *   - 제약: price는 원 단위 정수만 허용
- *   - 제약: tags는 한도를 넘기면 저장 실패
+ *   - 제약: title 앞뒤 공백 불가
+ *   - 제약: price 원 단위 정수만 허용
+ *   - 제약: tags 한도 초과 시 저장 실패
  */
 export const toProductSaveRequest = (draft: ProductDraft): ProductSaveRequest => {
 	return {
@@ -3838,7 +3854,7 @@ export const fetchProductList = async (): Promise<Product[]> => {
 
 ```ts
 /**
- * 상품 목록. 조회 실패는 호출부에서 처리
+ * 상품 목록. 조회 실패 처리는 호출부 담당
  */
 export const fetchProductList = async (): Promise<Product[]> => {
 	return await client.get("/products");
@@ -3868,10 +3884,10 @@ export const toOrderSaveRequest = (draft: OrderDraft): OrderSaveRequest => {
 ```ts
 // service/order/to-order-save-request.ts
 /**
- * 주문 저장 요청. 서버 검증에 맞춰 미리 정리
+ * 주문 저장 요청. 서버 검증 기준 사전 정리
  *
  *   - 제약: 수량은 정수만 허용 (백엔드 답변 10-07)
- *   - 임시: 배송 메모 200자 자르기. 서버가 한도를 늘리면 삭제 (기획 10-14)
+ *   - 임시: 배송 메모 200자 절단, 서버 한도 확장 시 삭제 (기획 10-14)
  */
 export const toOrderSaveRequest = (draft: OrderDraft): OrderSaveRequest => {
 	return {

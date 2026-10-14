@@ -1,10 +1,10 @@
 // service/product/to-product-save-request.ts
 /**
- * 상품 저장 요청. 서버 검증에 맞춰 미리 정리
+ * 상품 저장 요청. 서버 검증 기준 사전 정리
  *
- *   - 제약: title은 앞뒤 공백 거부
- *   - 제약: price는 원 단위 정수만 허용
- *   - 제약: tags는 한도를 넘기면 저장 실패
+ *   - 제약: title 앞뒤 공백 불가
+ *   - 제약: price 원 단위 정수만 허용
+ *   - 제약: tags 한도 초과 시 저장 실패
  */
 export const toProductSaveRequest = (draft: ProductDraft): ProductSaveRequest => {
 	return {

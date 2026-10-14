@@ -5,7 +5,7 @@
 export interface PgProductTreeSectionProps {
 // [!code ++]
 	/**
-	 * 사이드바에 그릴 분류 노드 목록
+	 * 사이드바 표시용 분류 노드 목록
 	 */
 	categoryNodes: ProductCategoryNode[];
 }
