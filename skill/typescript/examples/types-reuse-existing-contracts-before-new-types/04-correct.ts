@@ -16,4 +16,6 @@ interface InviteDraft {
 /**
  * 초대 한 건 발송
  */
-export const sendInvite = (draft: InviteDraft): Promise<void> => { /* … */ };
+export const sendInvite = (draft: InviteDraft): Promise<void> => {
+	return client.post("/invites", draft);
+};

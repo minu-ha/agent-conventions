@@ -83,7 +83,8 @@ flowchart LR
 
 **Correct 2 (두 라우트가 공유하는 화면 독립 컴포넌트는 공용 레이어에 둡니다):**
 
-<<< ../examples/ownership-keep-component-imports-flowing-downward/04-correct.tsx
+<<< ../examples/ownership-keep-component-imports-flowing-downward/04-correct-1.tsx
+<<< ../examples/ownership-keep-component-imports-flowing-downward/04-correct-2.tsx
 
 **Incorrect 3 (`ui`가 `widget`을 가져옵니다):**
 

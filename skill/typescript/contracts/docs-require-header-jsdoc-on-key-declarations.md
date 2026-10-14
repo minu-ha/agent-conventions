@@ -22,7 +22,7 @@
 
 ```ts
 export const toSortedUserIds = (userIds: string[]): string[] => {
-	return sortBy(uniq(userIds), [(userId) => userId]);
+	return uniq(userIds).toSorted();
 };
 ```
 
@@ -33,7 +33,7 @@ export const toSortedUserIds = (userIds: string[]): string[] => {
  * 요청 순서 고정. 선택 목록의 중복 ID 제거 후 오름차순 정렬
  */
 export const toSortedUserIds = (userIds: string[]): string[] => {
-	return sortBy(uniq(userIds), [(userId) => userId]);
+	return uniq(userIds).toSorted();
 };
 
 /**

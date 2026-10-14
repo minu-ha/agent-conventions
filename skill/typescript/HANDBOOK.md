@@ -143,7 +143,9 @@ export const sendInvites = (recipients: InviteRecipient[]): Promise<void> => { /
 /**
  * 초대 대상은 사용자 레코드 그대로. 필드가 같아 따로 선언 안 함
  */
-export const sendInvites = (recipients: UserRecord[]): Promise<void> => { /* … */ };
+export const sendInvites = (recipients: UserRecord[]): Promise<void> => {
+	return client.post("/invites", recipients);
+};
 ```
 
 **Incorrect 2 (선택 여부가 다른데 기존 계약을 그대로 써서 없는 값을 빈 문자열로 채웁니다):**
@@ -177,7 +179,9 @@ interface InviteDraft {
 /**
  * 초대 한 건 발송
  */
-export const sendInvite = (draft: InviteDraft): Promise<void> => { /* … */ };
+export const sendInvite = (draft: InviteDraft): Promise<void> => {
+	return client.post("/invites", draft);
+};
 ```
 
 ### 1.2 Derive Subsets With Indexed Access Instead of `Pick`
@@ -1580,7 +1584,7 @@ interface ProductPageRequest {
 }
 
 const fetchProductPage = (request: ProductPageRequest): Promise<ProductPage> => {
-	/* … */
+	return client.get(`${request.baseUrl}/products`, {params: request});
 };
 
 fetchProductPage({baseUrl: api_base_url, page: urlParams.page, pageSize: pagination_default_page_size});
@@ -2750,13 +2754,15 @@ const toPreviewRows = (rows: Row[]): Row[] => {
  * 이 횟수를 넘으면 사용자에게 실패 표시
  */
 export const retry_max_attempts = 42;
-
+```
+```ts
 // constant/preview.ts
 /**
  * 미리보기에 그릴 행 수. 서버가 한 번에 주는 최대치와 같음
  */
 export const preview_row_count = 37;
-
+```
+```ts
 // page/products/pg-products.tsx
 import {preview_row_count} from "@/constant/preview";
 import {retry_max_attempts} from "@/constant/retry";
@@ -3604,7 +3610,7 @@ const submitProductDraft = async (draft: ProductDraft) => {
 
 ```ts
 export const toSortedUserIds = (userIds: string[]): string[] => {
-	return sortBy(uniq(userIds), [(userId) => userId]);
+	return uniq(userIds).toSorted();
 };
 ```
 
@@ -3615,7 +3621,7 @@ export const toSortedUserIds = (userIds: string[]): string[] => {
  * 요청 순서 고정. 선택 목록의 중복 ID 제거 후 오름차순 정렬
  */
 export const toSortedUserIds = (userIds: string[]): string[] => {
-	return sortBy(uniq(userIds), [(userId) => userId]);
+	return uniq(userIds).toSorted();
 };
 
 /**

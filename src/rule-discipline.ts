@@ -250,11 +250,7 @@ const collectRuleViolations = (rule: SkillRule): string[] => {
 			continue;
 		}
 
-		if (incorrect.blocks.length !== correct.blocks.length) {
-			violations.push(`짝 번호 ${pairNumber}의 코드 블록 수가 다르다(${incorrect.blocks.length}:${correct.blocks.length})`);
-			continue;
-		}
-
+		// 블록 수는 달라도 됨. Correct 가 파일 여럿으로 나뉘는 짝이 있음. 겹치는 자리의 언어만 맞춤
 		incorrect.blocks.forEach((block, index) => {
 			const counterpart = correct.blocks[index];
 

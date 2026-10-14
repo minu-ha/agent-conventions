@@ -42,7 +42,9 @@ tags: values, config
 
 **Correct 1 (`constant` 폴더에 선언하고 쓰는 자리에서 이름을 가리킵니다):**
 
-<<< ../examples/values-declare-meaningful-numbers/02-correct.ts
+<<< ../examples/values-declare-meaningful-numbers/02-correct-1.ts
+<<< ../examples/values-declare-meaningful-numbers/02-correct-2.ts
+<<< ../examples/values-declare-meaningful-numbers/02-correct-3.ts
 
 **Incorrect 2 (뜻이 없는 숫자에까지 이름을 붙입니다):**
 

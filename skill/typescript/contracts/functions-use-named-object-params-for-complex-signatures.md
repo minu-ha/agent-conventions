@@ -56,7 +56,7 @@ interface ProductPageRequest {
 }
 
 const fetchProductPage = (request: ProductPageRequest): Promise<ProductPage> => {
-	/* … */
+	return client.get(`${request.baseUrl}/products`, {params: request});
 };
 
 fetchProductPage({baseUrl: api_base_url, page: urlParams.page, pageSize: pagination_default_page_size});
