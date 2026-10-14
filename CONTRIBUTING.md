@@ -91,7 +91,7 @@ skill/react/
 - `Correct`는 저장소 전체 규칙을 지킨다. 다른 스킬의 규칙도 포함한다.
   `rule-discipline.ts`가 잡는 교차 위반(`mutateAsync` 없는 `try`, `li onClick`, 리터럴 폴백, 손으로 쓴 `sort`, `reduce`, 한 줄 JSX 주석, 스택 밖 이름 등)은 `validate`가 막는다.
   `Correct` 예제 파일은 `npm run lint:examples`가 규칙이 보여 주는 biome, stylelint 설정 그대로 검사한다. 규칙이 lint 설정으로 표현된다는 증명이다.
-  `npm run typecheck:examples`는 같은 파일을 실제 스택 패키지의 타입으로 검사한다. import 없이 쓰는 이름은 `skill/examples.d.ts`에 선언하고, 예제 세계관의 이름은 `any`로 둔다. 파일 하나에 파일 여럿을 담지 않는다. 파일마다 예제 파일을 나누고 `<<<` 줄을 잇는다.
+  `npm run typecheck:examples`는 같은 파일을 실제 스택 패키지의 타입으로 검사한다. import 없이 쓰는 이름과 `@/` 모듈은 `skill/examples.d.ts`에 실제 타입으로 선언한다. 이 파일이 예제 세계관의 스키마다. 새 예제는 거기 있는 이름과 필드를 쓰고, 없는 것은 거기에 더한다. 파일 하나에 파일 여럿을 담지 않는다. 파일마다 예제 파일을 나누고 `<<<` 줄을 잇는다.
   JSX 자식 자리에서는 줄 표기를 `{/* [!code ++] */}` 로 쓴다. biome 이 `//` 글자를 JSX 텍스트로 본다.
 - 라벨 괄호 안 문장은 코드가 보여 주는 것만 말한다. 규칙 문장을 되풀이하지 않는다.
 - 라벨 괄호 안 문장은 규범 산문과 같은 합쇼체로 쓴다.
