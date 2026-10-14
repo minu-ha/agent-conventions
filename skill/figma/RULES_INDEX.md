@@ -1,7 +1,7 @@
 # Figma 구현 컨벤션 Rule Index
 
 - Skill: `figma`
-- Routing digest: `sha256:8df3e5972f47817612433d860a15d154b8cae641138b2ec000800df535ac0447`
+- Routing digest: `sha256:392b698a0d3fda09e3da714ae85d6965a7cbb224ab80f13767b0af4fe615add8`
 
 ## Direct Companions
 

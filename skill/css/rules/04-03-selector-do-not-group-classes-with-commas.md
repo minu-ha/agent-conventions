@@ -26,6 +26,7 @@ tags: selector, duplication, maintainability
 | 한 대상에 진입 조건이 여럿임 | 조건마다 블록을 엽니다. `,`나 `:is()`로 묶지 않습니다 |
 | 값을 지역 변수로 빼서 공유함 | `values-tokenize-repeated-visual-values` 규칙에 따라 금지합니다 |
 | `@media`나 `@supports` 안에서 같은 클래스를 재선언함 | 이 규칙의 대상이 아닙니다 |
+| 전역 스타일시트의 `*`, `*::before`, `*::after` 묶음 | 클래스가 아니므로 이 규칙의 대상이 아닙니다 |
 
 ### 기계 검사 범위
 

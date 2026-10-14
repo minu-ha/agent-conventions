@@ -23,7 +23,7 @@ tags: transcription, icons, assets
 | 같은 글리프가 없음 | 그 노드에 `download_assets`를 불러 `svgAssets` 항목을 받아 저장소에 커밋합니다. `defaultFormat`은 넘기지 않습니다 |
 | 사진, 상품 이미지처럼 데이터가 주는 그림 | 에셋으로 두지 않고 응답의 URL을 씁니다 |
 
-아이콘 하나가 필요할 때는 `get_design_context` 대신 `download_assets`를 부르면 코드 없이 에셋만 옵니다.
+아이콘 하나가 필요할 때 `get_design_context` 대신 `download_assets`를 부르면 코드 없이 에셋만 옵니다.
 모양을 보고 SVG `path`를 손으로 그리지 않고, 내려받은 SVG의 `width`, `height`는 지우지 않습니다.
 
 **Incorrect 1 (MCP 에셋 URL을 그대로 코드에 둡니다):**

@@ -49,7 +49,7 @@ flowchart LR
 
 오류 포착 구현은 `ui`의 `UiErrorBoundary`에서 한 번만 제공하며,
 `react-error-boundary` 같은 라이브러리에 맡길 수 있습니다.
-데이터 라우터의 `errorElement`와 `UiErrorBoundary`를 같은 실패 범위에 겹치지 않습니다.
+데이터 라우터의 `errorElement`와 `UiErrorBoundary`를 같은 실패 범위에 겹쳐 쓰지 않습니다.
 정상 화면은 유지하면서 오류 상태만 초기화하도록 URL 변경은 `resetKeys`에 연결하고, 경계의 `key`는 바꾸지 않습니다.
 재시도 버튼은 대체 화면에서 오류 경계의 재시도 함수를 호출하고,
 경계의 `onReset`에는 `useQueryErrorResetBoundary`의 `reset`을 연결합니다.
