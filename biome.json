@@ -1,7 +1,10 @@
 {
 	"$schema": "https://biomejs.dev/schemas/2.5.7/schema.json",
 	"vcs": {"enabled": false, "clientKind": "git", "useIgnoreFile": true},
-	"files": {"ignoreUnknown": false, "includes": ["script/**/*.ts", "src/**/*.ts", "test/**/*.ts", "*.json", "*.md"]},
+	"files": {
+		"ignoreUnknown": false,
+		"includes": ["script/**/*.ts", "src/**/*.ts", "test/**/*.ts", "docs/for-humanity.config.ts", "*.json", "*.md"]
+	},
 	"linter": {
 		"enabled": true,
 		"rules": {

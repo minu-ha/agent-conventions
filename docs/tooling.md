@@ -26,6 +26,16 @@ rule frontmatter의 `reviewWith`는 조건부 재평가, `requiresSelected`는 s
 
 공통 rule은 companion skill이 소유하고 framework/project 전용 규칙은 local overlay에 남깁니다. build 결과를 직접 편집해 overlay를 우회하지 않습니다.
 
+## Document site
+
+Node.js 22.12.0 이상에서 for-humanity `0.13.0`을 사용합니다. 버전은 `package.json`과 `package-lock.json`에 고정합니다. `docs/for-humanity.config.ts`는 패키지의 `SiteConfig` 타입을 사용하며 저장소의 타입 검사·린트에 포함합니다.
+
+`npm run dev`는 Vite 개발 서버와 Hono 문서 앱을 포트 4322에서 실행합니다. `npm run docs:build`는 정적 결과를 `docs/dist`에 생성하고, `npx for-humanity preview docs`는 그 결과만 확인하는 로컬 미리보기입니다. 설정 변경은 개발 서버 재시작이 필요합니다.
+
+CLI 사용법은 `npx for-humanity --help`, 설치 버전은 `npx for-humanity --version`으로 확인합니다. 빌드 결과·문서 경고는 Consola로 표시하고, Mermaid는 필요한 페이지에서 자체 호스팅 모듈을 불러옵니다.
+
+사이트의 SVG 렌더링은 Mermaid 12가 담당합니다. `check:diagrams`는 beautiful-mermaid의 문자 격자로 규칙 도식의 작성 폭과 라벨을 검사합니다.
+
 ## Scripts
 
 | Script | Does |
@@ -35,7 +45,7 @@ rule frontmatter의 `reviewWith`는 조건부 재평가, `requiresSelected`는 s
 | `npm run check` | `validate`, `check:generated`, `check:diagrams`, `typecheck`, `lint`, `lint:examples`, `typecheck:examples`, `test`를 차례로 실행합니다. 커밋 전 한 번에 돌리는 명령입니다. |
 | `npm run check:generated` | 파일을 수정하지 않고 `RULES_INDEX.md`, `contracts/*.md`가 renderer 결과와 byte 단위로 같은지, missing, stale, orphan, symlink와 companion closure를 확인합니다. |
 | `npm run check:diagrams` | 규칙의 `mermaid` 흐름도가 격자 폭 125칸 안에 그려지는지 봅니다. |
-| `npm run dev` | `build` 후 for-humanity 개발 서버를 띄웁니다. 포트는 `docs/for-humanity.config.mjs`의 `port`입니다. |
+| `npm run dev` | `build` 후 for-humanity 개발 서버를 띄웁니다. 포트는 `docs/for-humanity.config.ts`의 `port`입니다. |
 | `npm run docs:build` | `build` 후 `docs/dist`에 배포용 정적 사이트를 만듭니다. |
 | `npm run test` | 라우터와 생성물 계약, 매니페스트 검증기, build, validate fixture, 규칙 문체, 사이트 생성 테스트를 실행합니다. 규칙 산문은 핀하지 않습니다. |
 | `npm run lint`, `npm run lint:fix` | 도구 소스의 Biome 검사와 자동 수정입니다. |

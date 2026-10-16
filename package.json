@@ -4,6 +4,7 @@
 	"private": true,
 	"description": "Convention skills under skill/ and the tooling that validates, builds and publishes them",
 	"type": "module",
+	"engines": {"node": ">=22.12.0"},
 	"scripts": {
 		"dev": "npm run build && for-humanity dev docs",
 		"build": "tsx script/build.ts",
@@ -30,7 +31,7 @@
 		"clsx": "^2.1.1",
 		"dayjs": "^1.11.23",
 		"es-toolkit": "^1.52.0",
-		"for-humanity": "0.12.0",
+		"for-humanity": "0.13.0",
 		"github-slugger": "2.0.0",
 		"nuqs": "^2.10.2",
 		"react": "^19.3.0",

@@ -60,8 +60,9 @@ Figma 화면을 구현하는 프로젝트는 `convention-figma`도 적는다. TS
 ### 1.3 담당 영역 읽기
 
 사람이 규칙을 찾을 때는 생성 사이트를 먼저 연다.
-`npm run dev` 를 실행하고 터미널에 찍힌 주소를 연다.
-[for-humanity](https://github.com/minu-ha/for-humanity) 가 `docs/` 를 사이트로 만든다. 규칙 페이지는 `docs/convention/` 에 생성한다.
+Node.js 22.12.0 이상에서 `npm install`, `npm run dev`를 실행하고 터미널에 찍힌 주소를 연다.
+[for-humanity](https://github.com/minu-ha/for-humanity) `0.13.0`이 `docs/`를 사이트로 만든다. 규칙 페이지는 `docs/convention/`에 생성한다.
+사이트 설정은 `docs/for-humanity.config.ts`이며 공개 `SiteConfig` 타입으로 검사한다.
 
 왼쪽에 skill 넷이 있고 skill 아래에 섹션이 한 장씩 있다. 오른쪽 목차가 그 섹션의 규칙이다.
 skill 이름을 누르면 개요와 전체 규칙 표가 나온다. 표의 요지 열로 훑는다.

@@ -1,11 +1,14 @@
-/*
- * 문서 사이트 설정. for-humanity 가 읽음
+import type {SiteConfig} from "for-humanity";
+
+/**
+ * 문서 사이트 이름과 탐색 순서
  */
 export default {
 	title: "agent conventions",
 	description: "Team coding conventions for React, CSS, TypeScript and Figma, with the research behind them.",
 	navigation: ["Coding", "Tool", "Research", "Development"],
-	// for-humanity 저장소 자체의 dev 서버(4321)와 나란히 띄우려고 다른 값. for-humanity 0.8.0 이상
+
+	// for-humanity 저장소 개발 서버 4321과 동시 실행
 	port: 4322,
 	status: [],
-};
+} satisfies SiteConfig;
