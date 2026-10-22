@@ -17,7 +17,7 @@ import type {LoadedSkillDocument, SkillCompanion, SkillRule, SkillSection} from 
 const sectionNumberWidth = 2;
 
 /**
- * 사이드바 묶음. `docs/for-humanity.config.ts`의 `navigation`과 같은 순서
+ * 사이드바 묶음. 루트 `for-humanity.config.ts`의 `navigation`과 순서 일치
  */
 const navigationGroups = ["Coding", "Tool"] as const;
 

@@ -57,7 +57,7 @@ const isOverviewPage = (file: SiteFile): boolean => !file.path.includes("/") && 
 test("generateSiteFiles emits one overview per skill and one page per section, nothing else", async () => {
 	const files = await generateSiteFiles();
 
-	// 홈과 사이트 설정은 docs/ 에 손으로 쓴 파일이라 생성하지 않음. Markdown 밖의 파일은 예제 복사본뿐
+	// content/README.md와 루트 사이트 설정은 수동 관리, 생성 대상에서 제외
 	assert.equal(
 		files.some((file) => !file.path.endsWith(".md") && !isExampleCopy(file)),
 		false,

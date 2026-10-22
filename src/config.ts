@@ -18,9 +18,9 @@ const skillRootDir = path.join(repoDir, "skill");
 export const packagePaths: PackagePaths = {currentDir, packageDir, repoDir, skillRootDir};
 
 /**
- * @summary 규칙 페이지를 생성하는 폴더. `docs/` 는 for-humanity 가 읽는 문서 루트이고 이 하위 폴더만 커밋하지 않음
+ * 공개 규칙 페이지 생성 경로. 생성물은 커밋 대상에서 제외
  */
-export const siteOutputDir = path.join(repoDir, "docs", "convention");
+export const siteOutputDir = path.join(repoDir, "content", "public", "convention");
 
 /**
  * @helper 설정된 skill 루트가 심볼릭 링크가 아닌 실제 디렉터리인지 검증

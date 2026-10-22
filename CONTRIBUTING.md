@@ -41,7 +41,7 @@ skill/react/
 정본은 `rules/*.md`, `examples/<규칙 ID>/*`, `rules/_sections.md`, `rules/_template.md`, `metadata.json`, 
 `SKILL.md`, `routing-evals.json` 여섯.
 
-생성물은 `RULES_INDEX.md`, `contracts/*.md` 둘. 사람이 읽는 전체 보기는 `docs/` 사이트다.
+생성물은 `RULES_INDEX.md`, `contracts/*.md` 둘. 사람이 읽는 전체 보기는 `content/` 사이트다.
 직접 고치면 다음 build에서 사라지고 `check:generated`가 실패한다.
 
 `react`, `typescript`, `css`, `figma` 넷이 전부다.
@@ -290,23 +290,26 @@ UI를 바꾸면 이벤트, 키보드 조작, 렌더링 조건을 함께 확인�
 npm install            # 최초 1회
 
 npm run validate       # 정본 검사. 한 skill 만: -- --skill=react
-npm run build          # RULES_INDEX, contracts, docs/convention/ 생성
+npm run build          # RULES_INDEX, contracts, content/public/convention/ 생성
 npm run check          # validate, 생성물 신선도, 흐름도 폭, typecheck, lint, test
 ```
 
 `npm install`이 `.githooks`를 git 훅 경로로 등록한다. 커밋 전에 `check:generated`가 돌아 생성물이 정본과 어긋나면 커밋이 막힌다.
 
 ```bash
-npm run dev            # build 후 사이트 dev 서버. 주소는 터미널에 찍힌다
-npm run docs:build     # 배포용. docs/dist 에 정적 HTML
+npm run dev              # build 후 사이트 dev 서버. 주소는 터미널에 찍힌다
+npm run content:build    # 배포용. content/dist 에 정적 HTML
+npm run content:preview  # content/dist 의 공개 사이트 미리보기
 ```
 
-`docs/`는 [for-humanity](https://github.com/minu-ha/for-humanity)가 읽는 사람용 문서 루트다. 홈, 설정, `research/`, `tooling.md`는 손으로 쓴다.
-규칙 페이지는 `docs/convention/`에 생성하고 커밋하지 않는다. skill 하나가 개요 한 장, 섹션 하나가 한 장이고 규칙은 그 페이지의 `##` 헤딩이다.
-`build`가 `docs/convention/`도 다시 쓰므로 `dev` 서버를 켜 두면 고친 규칙이 바로 보인다.
+`content/`는 [for-humanity](https://github.com/minu-ha/for-humanity)가 읽는 사람용 문서 루트다.
+홈은 `content/README.md`, 공개 문서는 `content/public/`, 설정은 루트 `for-humanity.config.ts`에 둔다.
+홈, 설정, `content/public/research/`, `content/public/tooling.md`는 손으로 쓴다.
+규칙 페이지는 `content/public/convention/`에 생성하고 커밋하지 않는다. skill 하나가 개요 한 장, 섹션 하나가 한 장이고 규칙은 그 페이지의 `##` 헤딩이다.
+`build`가 `content/public/convention/`도 다시 쓰므로 `dev` 서버를 켜 두면 고친 규칙이 바로 보인다.
 
 `skill/<name>` 안에서 작업하면 `npm --prefix ../..`로 바꾼다.
-자세한 script 설명은 [docs/tooling.md](./docs/tooling.md).
+자세한 script 설명은 [content/public/tooling.md](./content/public/tooling.md).
 
 ---
 
@@ -316,6 +319,6 @@ npm run docs:build     # 배포용. docs/dist 에 정적 HTML
 | --- | --- |
 | skill 추가, 제거 | [README.md](./README.md) 의 skill 표, [AGENTS.md](./AGENTS.md) 의 목록 |
 | 로딩, companion 계약 변경 | [AGENTS.md](./AGENTS.md) |
-| 문서 인벤토리, 명령 변경 | [docs/tooling.md](./docs/tooling.md) |
+| 문서 인벤토리, 명령 변경 | [content/public/tooling.md](./content/public/tooling.md) |
 
 이 저장소에서 AI 에이전트로 작업할 때의 규칙은 [AGENTS.md](./AGENTS.md).

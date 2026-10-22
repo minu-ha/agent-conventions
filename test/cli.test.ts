@@ -14,7 +14,7 @@ const packageDir = repoDir;
 const _repositoryAgentsPath = path.join(repoDir, "AGENTS.md");
 const templatePath = path.join(repoDir, "AGENTS.template.md");
 const _repositoryReadmePath = path.join(repoDir, "README.md");
-const _packageReadmePath = path.join(repoDir, "docs", "tooling.md");
+const _packageReadmePath = path.join(repoDir, "content", "public", "tooling.md");
 const reactIndexPath = path.join(repoDir, "skill/react/RULES_INDEX.md");
 const npmCommand = process.platform === "win32" ? "npm.cmd" : "npm";
 const packageBinDir = path.join(packageDir, "node_modules/.bin");

@@ -3,5 +3,5 @@
 node_modules/
 reference/
 temp/
-docs/convention/
-docs/dist/
+content/public/convention/
+content/dist/

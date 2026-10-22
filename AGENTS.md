@@ -28,7 +28,7 @@
 
 사람용 문서는 [README.md](./README.md) 와 [CONTRIBUTING.md](./CONTRIBUTING.md).
 규칙 산문의 문체 · 낱말 · `appliesWhen` 형태는 [CONTRIBUTING.md](./CONTRIBUTING.md) 3절을 따른다. `validate` 가 막는다.
-build tooling은 [docs/tooling.md](./docs/tooling.md).
+build tooling은 [content/public/tooling.md](./content/public/tooling.md).
 
 ---
 
@@ -74,7 +74,7 @@ build tooling은 [docs/tooling.md](./docs/tooling.md).
 `rules/_sections.md`, `rules/_template.md`, `rules/*.md`, `examples/<rule-id>/*`, `metadata.json`, `SKILL.md`,
 `routing-evals.json`.
 
-`RULES_INDEX.md`, `contracts/*.md`는 생성물. 사람용 전체 보기는 `docs/` 사이트다.
+`RULES_INDEX.md`, `contracts/*.md`는 생성물. 사람용 전체 보기는 `content/` 사이트다.
 
 ---
 
@@ -89,7 +89,7 @@ build tooling은 [docs/tooling.md](./docs/tooling.md).
 5. 생성물은 직접 편집 금지.
 6. `validate` → `build` → `check` 순서로 검증.
 7. skill 인벤토리나 artifact 역할이 바뀌면 [README.md](./README.md),
-   [CONTRIBUTING.md](./CONTRIBUTING.md), [docs/tooling.md](./docs/tooling.md) 도 갱신.
+   [CONTRIBUTING.md](./CONTRIBUTING.md), [content/public/tooling.md](./content/public/tooling.md) 도 갱신.
 
 새 skill은 이미 정리된 `react`, `typescript`, `css`, `figma`를 템플릿으로 삼는다.
 
@@ -109,12 +109,15 @@ build tooling은 [docs/tooling.md](./docs/tooling.md).
 ```bash
 npm install            # 최초 1회
 npm run validate       # 정본 검사. 한 skill 만: -- --skill=react
-npm run build          # RULES_INDEX, contracts, docs/convention/ 생성
+npm run build          # RULES_INDEX, contracts, content/public/convention/ 생성
 npm run check          # validate, 생성물 신선도, 흐름도 폭, typecheck, lint, test
-npm run dev            # build 후 사이트 dev 서버. 주소는 터미널에 찍힌다
+npm run dev              # build 후 사이트 dev 서버. 주소는 터미널에 찍힌다
+npm run content:build    # 배포용. content/dist 에 정적 HTML
+npm run content:preview  # content/dist 의 공개 사이트 미리보기
 ```
 
-`docs/` 는 for-humanity 가 읽는 사람용 문서 루트다. 그 아래 `convention/` 만 생성 폴더라 커밋하지 않는다.
+`content/`는 for-humanity가 읽는 사람용 문서 루트다. 홈은 `content/README.md`, 공개 문서는 `content/public/`, 설정은 루트 `for-humanity.config.ts`에 둔다.
+`content/public/convention/`과 정적 출력 `content/dist/`는 생성 폴더라 커밋하지 않는다.
 
 buildable skill: `css` `figma` `react` `typescript`
 

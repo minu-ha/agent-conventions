@@ -12,6 +12,6 @@
 		"rootDir": ".",
 		"types": ["node"]
 	},
-	"include": ["script/**/*.ts", "src/**/*.ts", "test/**/*.ts", "docs/for-humanity.config.ts"],
+	"include": ["script/**/*.ts", "src/**/*.ts", "test/**/*.ts", "for-humanity.config.ts"],
 	"exclude": ["node_modules"]
 }

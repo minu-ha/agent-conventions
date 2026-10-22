@@ -3,7 +3,7 @@
 	"vcs": {"enabled": false, "clientKind": "git", "useIgnoreFile": true},
 	"files": {
 		"ignoreUnknown": false,
-		"includes": ["script/**/*.ts", "src/**/*.ts", "test/**/*.ts", "docs/for-humanity.config.ts", "*.json", "*.md"]
+		"includes": ["script/**/*.ts", "src/**/*.ts", "test/**/*.ts", "for-humanity.config.ts", "*.json", "*.md"]
 	},
 	"linter": {
 		"enabled": true,
