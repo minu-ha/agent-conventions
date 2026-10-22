@@ -111,7 +111,7 @@ skill은 `SKILL.md` → activated `RULES_INDEX.md` 전체 scan과 completion gat
 
 ## GitHub Pages
 
-사이트 로고는 `content/asset/mark.png`, 같은 그림의 작은 탭 아이콘은 `content/asset/favicon.svg`입니다.
+사이트 로고와 탭 아이콘은 `content/asset/favicon.svg`를 함께 사용합니다. 회색 픽셀 얼굴의 왼쪽 눈 한 칸은 금색(`#FFD700`)입니다.
 파비콘 준비는 설치 패키지의 자원 파일만 교체합니다. `npm ci`로 초기화되면 다음 `dev`나 `content:build`에서 다시 적용합니다.
 
 공개 주소는 [minu-ha.github.io/agent-conventions](https://minu-ha.github.io/agent-conventions/).
