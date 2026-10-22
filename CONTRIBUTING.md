@@ -152,7 +152,8 @@ titleKo: JSX 안 로직은 이름 붙인 핸들러로 뺍니다
 한국어 문장은 yoonmoon 플러그인의 `proofread`로 맞춤법을, `humanize`로 어색한 표현을, `restyle`로 문체를 점검한다.
 제안은 기술적 의미와 아래 파일별 문체를 유지하는 범위에서 적용한다.
 규칙 본문과 `_sections.md`, `metadata.json`의 `abstract`는 합쇼체로 쓴다.
-`SKILL.md`, `AGENTS.md`, `AGENTS.template.md`, `README.md`, 이 문서는 한다체로 쓴다.
+`SKILL.md`, `AGENTS.md`, `AGENTS.template.md`, 이 문서는 한다체로 쓴다.
+루트 `README.md`와 여기서 생성하는 사이트 홈은 영어로 프로젝트의 목적과 구성을 설명한다. 설치와 적용 절차는 [Usage](./content/public/usage.md)에 둔다.
 코드 주석은 typescript `docs-write-korean-comments-about-purpose-and-constraints`대로 짧은 명사형으로 쓴다.
 수정할 때는 파일의 역할에 맞는 문체를 유지한다.
 `appliesWhen`의 `~할 때`, `~경우`만 예외다. 그건 문체가 아니라 라우팅 문장을 만드는 규칙이라

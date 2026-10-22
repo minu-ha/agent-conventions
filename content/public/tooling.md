@@ -37,6 +37,7 @@ Node.js 22.12.0 이상에서 for-humanity `0.17.0`을 사용합니다. 버전은
 명령은 프로젝트 루트에서 실행합니다. 설정 파일은 루트 `for-humanity.config.ts`, 홈은 `content/README.md`, 공개 문서는 `content/public/`에 둡니다.
 홈의 정본은 루트 `README.md`입니다. `npm run sync:readme`가 본문은 유지하고 링크와 이미지 경로만 변환해 사이트 홈을 생성합니다.
 `dev`와 `content:build`에서도 동기화하므로 `content/README.md`는 직접 편집하지 않습니다.
+홈은 영어, 규칙과 상세 문서는 한국어로 유지합니다. 배포 HTML에서 홈의 언어만 `en`으로 지정하고 나머지는 사이트 설정의 `ko`를 사용합니다.
 규칙 페이지와 예제 복사본은 `content/public/convention/`에 생성합니다. 연구 문서와 도구 설명도 기존 공개 범위를 유지해 `content/public/`에 둡니다.
 로컬 전용 문서가 필요하면 `content/private/`에 추가합니다. `dev`에서는 함께 읽고 `build`와 `preview`에서는 제외합니다.
 
@@ -53,11 +54,12 @@ CLI 사용법은 `npx for-humanity --help`, 설치 버전은 `npx for-humanity -
 | `npm run validate` | source, metadata, companion closure, index 입력, routing eval manifest, 규칙 문체를 검사합니다. `-- --skill=<name>`으로 하나만 봅니다. |
 | `npm run build` | 모든 buildable skill의 `RULES_INDEX.md`, `contracts/*.md`를 다시 쓰고 `content/public/convention/`에 [for-humanity](https://github.com/minu-ha/for-humanity) Markdown을 생성합니다. 이 폴더는 커밋하지 않습니다. |
 | `npm run sync:readme` | 루트 `README.md`에서 사이트 홈 `content/README.md`를 생성합니다. 문서 링크와 이미지 경로만 사이트 기준으로 변환합니다. |
+| `npm run sync:favicon` | `content/asset/favicon.svg`를 설치된 for-humanity의 내장 파비콘에 복사합니다. 0.17.0의 설정 항목 미지원을 보완하며 `dev`와 `content:build`에서 자동 실행합니다. |
 | `npm run check` | `validate`, `check:generated`, `check:diagrams`, `typecheck`, `lint`, `lint:examples`, `typecheck:examples`, `test`를 차례로 실행합니다. 커밋 전 한 번에 돌리는 명령입니다. |
 | `npm run check:generated` | 파일을 수정하지 않고 `RULES_INDEX.md`, `contracts/*.md`가 renderer 결과와 byte 단위로 같은지, missing, stale, orphan, symlink와 companion closure를 확인합니다. |
 | `npm run check:diagrams` | 규칙의 `mermaid` 흐름도가 격자 폭 125칸 안에 그려지는지 봅니다. |
-| `npm run dev` | `build`와 `sync:readme` 후 for-humanity 개발 서버를 띄웁니다. 포트는 `for-humanity.config.ts`의 `port`입니다. |
-| `npm run content:build` | `build`와 `sync:readme` 후 `content/dist`에 배포용 정적 사이트를 만듭니다. |
+| `npm run dev` | `build`, `sync:readme`, `sync:favicon` 후 for-humanity 개발 서버를 띄웁니다. 포트는 `for-humanity.config.ts`의 `port`입니다. |
+| `npm run content:build` | 규칙, 홈, 파비콘을 준비해 `content/dist`에 정적 사이트를 만듭니다. 파비콘 URL에 내용 해시를 붙여 배포 후 캐시를 갱신하고 홈의 언어를 지정합니다. |
 | `npm run content:preview` | `content/dist`의 공개 사이트를 포트 4322에서 미리 봅니다. 빌드 결과가 필요합니다. |
 | `npm run test` | 라우터와 생성물 계약, 매니페스트 검증기, build, validate fixture, 규칙 문체, 사이트 생성 테스트를 실행합니다. 규칙 산문은 핀하지 않습니다. |
 | `npm run lint`, `npm run lint:fix` | 도구 소스의 Biome 검사와 자동 수정입니다. |
@@ -108,6 +110,9 @@ skill은 `SKILL.md` → activated `RULES_INDEX.md` 전체 scan과 completion gat
 응답 필드 이름 변경처럼 문자열 검사로 판단할 수 없는 규칙은 에이전트가 직접 대조합니다.
 
 ## GitHub Pages
+
+사이트 로고는 `content/asset/mark.png`, 같은 그림의 작은 탭 아이콘은 `content/asset/favicon.svg`입니다.
+파비콘 준비는 설치 패키지의 자원 파일만 교체합니다. `npm ci`로 초기화되면 다음 `dev`나 `content:build`에서 다시 적용합니다.
 
 공개 주소는 [minu-ha.github.io/agent-conventions](https://minu-ha.github.io/agent-conventions/).
 `for-humanity.config.ts`의 `url`은 도메인, `basePath`는 `/agent-conventions/`으로 지정합니다.

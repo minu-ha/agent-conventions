@@ -1,35 +1,99 @@
+<div lang="en">
+
 <div align="center">
 
-<img src="content/asset/mark.png" width="96" height="96" alt="agent conventions">
+<img src="content/asset/mark.png" width="112" height="112" alt="agent conventions pixel icon">
 
 # agent conventions
 
-**AI 에이전트와 작업하며 정리하는 개인 코딩 컨벤션.**
+**Coding conventions for AI-assisted development.**
 
-[문서 사이트](https://minu-ha.github.io/agent-conventions/) | [GitHub](https://github.com/minu-ha/agent-conventions)
+Rules, examples and the reasoning behind everyday decisions in React, TypeScript, CSS and Figma.
+
+[![MIT](https://img.shields.io/badge/license-MIT-1111aa?style=flat-square)](LICENSE)
+[![Documentation](https://img.shields.io/github/actions/workflow/status/minu-ha/agent-conventions/docs.yml?branch=main&label=docs&style=flat-square)](https://github.com/minu-ha/agent-conventions/actions/workflows/docs.yml)
+![Node.js 22.12.0+](https://img.shields.io/badge/node-22.12.0%2B-444444?style=flat-square)
+
+[Documentation](https://minu-ha.github.io/agent-conventions/) | [Usage](content/public/usage.md) | [Rule authoring](CONTRIBUTING.md) | [Research](content/public/research/progressive-loading.md)
 
 </div>
 
-## 목적
+agent-conventions is a personal collection of the coding decisions I return to when building and reviewing software with AI agents.
+It covers how components own their state and data, where modules begin and end, how styles are scoped, and how designs become code.
 
-코드를 작성하고 검토할 때 반복해서 확인하는 기준을 기록한다.
-모듈의 경계, 타입과 데이터 흐름, 이름과 스타일, 디자인을 코드로 옮기는 방식을 다룬다.
+The repository keeps those decisions in two forms: structured skills that agents can apply to a task, and a documentation site for reading the explanations, examples and related rules.
+The conventions grow from actual project work, with changes to the rules and the reasoning behind them kept together.
 
-## 다루는 범위
+## Four connected areas
 
-| 영역 | 내용 |
+| Skill | What it covers |
 | --- | --- |
-| [React](https://minu-ha.github.io/agent-conventions/convention/react/) | 컴포넌트 경계, 서버 데이터, 상태와 이벤트 |
-| [TypeScript](https://minu-ha.github.io/agent-conventions/convention/typescript/) | 타입과 계약, 가져오기, 함수 경계, 값과 주석 |
-| [CSS](https://minu-ha.github.io/agent-conventions/convention/css/) | 클래스 이름, 소유 경계, 선택자, 토큰과 레이아웃 |
-| [Figma](https://minu-ha.github.io/agent-conventions/convention/figma/) | 디자인 의도, 값과 문구의 출처, 구현 대조 |
+| [React](https://minu-ha.github.io/agent-conventions/convention/react/) | Component ownership, server data, state, composition, events, runtime boundaries and accessibility |
+| [TypeScript](https://minu-ha.github.io/agent-conventions/convention/typescript/) | Types and contracts, imports, naming, function boundaries, values, fallbacks and comments |
+| [CSS](https://minu-ha.github.io/agent-conventions/convention/css/) | Class names, ownership, selectors, design tokens, layout, responsive behavior and motion |
+| [Figma](https://minu-ha.github.io/agent-conventions/convention/figma/) | Reading designs, identifying intent, tracing values and copy, implementing and comparing the result |
 
-## 정리 방식
+The skills declare their dependencies explicitly.
+React always activates the shared TypeScript conventions and adds CSS when styling changes.
+Figma activates React and CSS according to the implementation work involved.
+This keeps common rules in one place while each area owns its specific decisions.
 
-각 규칙은 적용 조건과 판단 기준, 잘못된 예와 올바른 예를 함께 둔다.
-실제 작업에서 확인한 내용을 반영하며 기준과 예제를 다듬는다.
+## From a task to the relevant rules
 
-같은 규칙을 에이전트가 읽는 스킬과 사람이 읽는 문서 사이트로 제공한다.
-에이전트는 작업 범위에 해당하는 규칙을 선택하고, 사람은 설명과 예제로 기준을 확인한다.
+An agent starts with the skill router, identifies the scope of the change and scans the complete rule index.
+It then reads the contracts for the rules that apply, following links to the full explanations and examples where required.
 
-[적용 방법](content/public/usage.md) · [규칙 작성](CONTRIBUTING.md) · [도구와 배포](content/public/tooling.md)
+| Document | Role |
+| --- | --- |
+| `SKILL.md` | Defines the skill's scope, companion activation and reading process |
+| `RULES_INDEX.md` | Gives each rule's application conditions in a compact index |
+| `contracts/<id>.md` | Provides the selected rule's guidance or directs the agent to the full source |
+| `rules/*.md` | Contains the full rule, its rationale and code examples |
+
+Critical and high-impact rules require the full source; medium-impact contracts include the core guidance and the first example pair.
+When the task's scope changes, the agent revisits the selection.
+Related rules and required companions are declared as part of the same structure.
+
+## Explain the decision, show the difference
+
+Each rule records when it applies, what to check and why the decision matters.
+Incorrect and correct examples make the distinction concrete, including file paths, code changes and related rules where they help explain the boundary.
+
+Examples live in separate source files and are referenced by the rules.
+The correct examples are linted and type-checked with the repository's dependencies, so changes to the conventions can be checked against the code that demonstrates them.
+Rule validation also checks metadata, references and declared routing relationships.
+
+## One source for skills and documentation
+
+The build derives agent-facing indexes and contracts, and human-facing documentation pages, from the same rule sources and example files.
+A revised rule or example carries through to both views when they are rebuilt.
+
+On the site, each skill has an overview and a page for each section.
+Rule numbers follow the source file numbers, making it possible to move between a rule in the browser and its original file.
+The site is built with [for-humanity](https://github.com/minu-ha/for-humanity).
+
+## Keep the reasoning with the rules
+
+Research notes record why the loading structure exists, how rule selection has been evaluated and what the observations do and do not establish.
+Dated audits track wording, examples and gaps found during review.
+
+Keeping these records alongside the conventions makes later changes easier to assess: the current rule has examples, and the history has the decisions and evidence behind it.
+
+## Documentation
+
+| Topic | Reference |
+| --- | --- |
+| Connect the skills and apply them to a project | [Usage](content/public/usage.md) |
+| Write or revise a convention | [Rule authoring](CONTRIBUTING.md) |
+| Build, validate and deploy the documentation | [Tooling](content/public/tooling.md) |
+| Understand the loading design and evaluations | [Progressive loading](content/public/research/progressive-loading.md), [Design notes](content/public/research/progressive-loading-design.md) |
+| Review the recorded rule audit | [Rule audit](content/public/research/rule-audit-2026-10-14.md) |
+| Start a project's agent instructions | [AGENTS template](AGENTS.template.md) |
+
+The detailed guides and rule explanations are currently written in Korean.
+
+## License
+
+[MIT](LICENSE) © 2026 [Minu Ha](https://github.com/minu-ha)
+
+</div>
