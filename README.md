@@ -121,6 +121,7 @@ TSX 파일 하나를 고쳐 달라고 시켜본다. 에이전트는 이 순서�
 
 사이트는 `dev`가 띄우는 서버에서 본다. `content/public/convention/`과 `content/dist/`는 커밋하지 않는다.
 배포용 정적 사이트는 `npm run content:build`로 만들고 `npm run content:preview`로 확인한다.
+공개 [문서 사이트](https://minu-ha.github.io/agent-conventions/). 자동 배포 설정은 [Tooling](content/public/tooling.md#github-pages) 참고.
 
 ---
 

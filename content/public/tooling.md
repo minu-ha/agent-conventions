@@ -76,3 +76,13 @@ skill은 `SKILL.md` → activated `RULES_INDEX.md` 전체 scan과 completion gat
 `routing-evals.json`과 회귀 테스트는 예상 선택 목록, 필수 규칙 관계, 전체 규칙의 적용 사례 유무를 검사합니다.
 이 검사를 통과해도 실제 에이전트의 선택 정확도가 인증되는 것은 아닙니다.
 적용 조건을 바꿀 때는 비적용 사례도 검토하고, 행동 평가를 했다면 사용한 모델, 입력, 결과를 별도로 기록합니다.
+
+## GitHub Pages
+
+공개 주소는 [minu-ha.github.io/agent-conventions](https://minu-ha.github.io/agent-conventions/).
+`for-humanity.config.ts`의 `url`은 도메인, `basePath`는 `/agent-conventions/`으로 지정합니다.
+개발과 미리보기 주소는 `http://localhost:4322/agent-conventions/`입니다.
+
+GitHub 저장소의 Pages 소스는 `GitHub Actions`로 설정합니다.
+`main`에 push하거나 `Documentation` 워크플로를 직접 실행하면 `.github/workflows/docs.yml`이 의존성을 설치하고 `npm run content:build`로 생성한 `content/dist` 전체를 배포합니다.
+정적 출력은 Git에 커밋하지 않습니다.
