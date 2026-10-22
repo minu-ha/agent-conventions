@@ -57,7 +57,7 @@ const isOverviewPage = (file: SiteFile): boolean => !file.path.includes("/") && 
 test("generateSiteFiles emits one overview per skill and one page per section, nothing else", async () => {
 	const files = await generateSiteFiles();
 
-	// content/README.md와 루트 사이트 설정은 수동 관리, 생성 대상에서 제외
+	// 홈은 sync:readme 담당, 루트 사이트 설정은 수동 관리
 	assert.equal(
 		files.some((file) => !file.path.endsWith(".md") && !isExampleCopy(file)),
 		false,

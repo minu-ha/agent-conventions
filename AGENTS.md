@@ -116,7 +116,9 @@ npm run content:build    # 배포용. content/dist 에 정적 HTML
 npm run content:preview  # content/dist 의 공개 사이트 미리보기
 ```
 
-`content/`는 for-humanity가 읽는 사람용 문서 루트다. 홈은 `content/README.md`, 공개 문서는 `content/public/`, 설정은 루트 `for-humanity.config.ts`에 둔다.
+`content/`는 for-humanity가 읽는 사람용 문서 루트다. 공개 문서는 `content/public/`, 설정은 루트 `for-humanity.config.ts`에 둔다.
+홈의 정본은 루트 `README.md`다. `npm run sync:readme`가 사이트용 링크를 변환해 `content/README.md`를 생성한다.
+`dev`와 `content:build`에서도 자동 실행하므로 홈은 직접 편집하지 않는다.
 `content/public/convention/`과 정적 출력 `content/dist/`는 생성 폴더라 커밋하지 않는다.
 
 buildable skill: `css` `figma` `react` `typescript`

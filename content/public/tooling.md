@@ -28,11 +28,15 @@ rule frontmatter의 `reviewWith`는 조건부 재평가, `requiresSelected`는 s
 
 ## Document site
 
-Node.js 22.12.0 이상에서 for-humanity `0.16.0`을 사용합니다. 버전은 `package.json`과 `package-lock.json`에 고정합니다. `for-humanity.config.ts`는 패키지의 `SiteConfig` 타입을 사용하며 저장소의 타입 검사·린트에 포함합니다.
+스킬 연결과 프로젝트 적용 방법은 [Usage](usage.md)에서 확인합니다.
+
+Node.js 22.12.0 이상에서 for-humanity `0.17.0`을 사용합니다. 버전은 `package.json`과 `package-lock.json`에 고정합니다. `for-humanity.config.ts`는 패키지의 `SiteConfig` 타입을 사용하며 저장소의 타입 검사·린트에 포함합니다.
 
 `npm run dev`는 Vite 개발 서버와 Hono 문서 앱을 포트 4322에서 실행합니다. `npm run content:build`는 정적 결과를 `content/dist`에 생성하고, `npm run content:preview`는 그 결과를 확인하는 로컬 미리보기입니다. 설정 변경은 개발 서버 재시작이 필요합니다.
 
 명령은 프로젝트 루트에서 실행합니다. 설정 파일은 루트 `for-humanity.config.ts`, 홈은 `content/README.md`, 공개 문서는 `content/public/`에 둡니다.
+홈의 정본은 루트 `README.md`입니다. `npm run sync:readme`가 본문은 유지하고 링크와 이미지 경로만 변환해 사이트 홈을 생성합니다.
+`dev`와 `content:build`에서도 동기화하므로 `content/README.md`는 직접 편집하지 않습니다.
 규칙 페이지와 예제 복사본은 `content/public/convention/`에 생성합니다. 연구 문서와 도구 설명도 기존 공개 범위를 유지해 `content/public/`에 둡니다.
 로컬 전용 문서가 필요하면 `content/private/`에 추가합니다. `dev`에서는 함께 읽고 `build`와 `preview`에서는 제외합니다.
 
@@ -48,11 +52,12 @@ CLI 사용법은 `npx for-humanity --help`, 설치 버전은 `npx for-humanity -
 | --- | --- |
 | `npm run validate` | source, metadata, companion closure, index 입력, routing eval manifest, 규칙 문체를 검사합니다. `-- --skill=<name>`으로 하나만 봅니다. |
 | `npm run build` | 모든 buildable skill의 `RULES_INDEX.md`, `contracts/*.md`를 다시 쓰고 `content/public/convention/`에 [for-humanity](https://github.com/minu-ha/for-humanity) Markdown을 생성합니다. 이 폴더는 커밋하지 않습니다. |
+| `npm run sync:readme` | 루트 `README.md`에서 사이트 홈 `content/README.md`를 생성합니다. 문서 링크와 이미지 경로만 사이트 기준으로 변환합니다. |
 | `npm run check` | `validate`, `check:generated`, `check:diagrams`, `typecheck`, `lint`, `lint:examples`, `typecheck:examples`, `test`를 차례로 실행합니다. 커밋 전 한 번에 돌리는 명령입니다. |
 | `npm run check:generated` | 파일을 수정하지 않고 `RULES_INDEX.md`, `contracts/*.md`가 renderer 결과와 byte 단위로 같은지, missing, stale, orphan, symlink와 companion closure를 확인합니다. |
 | `npm run check:diagrams` | 규칙의 `mermaid` 흐름도가 격자 폭 125칸 안에 그려지는지 봅니다. |
-| `npm run dev` | `build` 후 for-humanity 개발 서버를 띄웁니다. 포트는 `for-humanity.config.ts`의 `port`입니다. |
-| `npm run content:build` | `build` 후 `content/dist`에 배포용 정적 사이트를 만듭니다. |
+| `npm run dev` | `build`와 `sync:readme` 후 for-humanity 개발 서버를 띄웁니다. 포트는 `for-humanity.config.ts`의 `port`입니다. |
+| `npm run content:build` | `build`와 `sync:readme` 후 `content/dist`에 배포용 정적 사이트를 만듭니다. |
 | `npm run content:preview` | `content/dist`의 공개 사이트를 포트 4322에서 미리 봅니다. 빌드 결과가 필요합니다. |
 | `npm run test` | 라우터와 생성물 계약, 매니페스트 검증기, build, validate fixture, 규칙 문체, 사이트 생성 테스트를 실행합니다. 규칙 산문은 핀하지 않습니다. |
 | `npm run lint`, `npm run lint:fix` | 도구 소스의 Biome 검사와 자동 수정입니다. |
@@ -76,6 +81,31 @@ skill은 `SKILL.md` → activated `RULES_INDEX.md` 전체 scan과 completion gat
 `routing-evals.json`과 회귀 테스트는 예상 선택 목록, 필수 규칙 관계, 전체 규칙의 적용 사례 유무를 검사합니다.
 이 검사를 통과해도 실제 에이전트의 선택 정확도가 인증되는 것은 아닙니다.
 적용 조건을 바꿀 때는 비적용 사례도 검토하고, 행동 평가를 했다면 사용한 모델, 입력, 결과를 별도로 기록합니다.
+
+## CRITICAL Stop hook
+
+`CRITICAL` 규칙은 작업 마무리에 결과 코드와 다시 대조합니다.
+`hooks/check-critical-rules.sh`는 HEAD 대비 추가된 줄에서 기계로 검사할 수 있는 네 항목을 확인하고, 위반이 있으면 목록을 반환하며 마무리를 한 번 막습니다.
+
+| 항목 | 규칙 |
+| --- | --- |
+| 리터럴 폴백 | TypeScript 05-01 |
+| `../`와 같은 폴더 심볼 가져오기 | TypeScript 02-05 |
+| 레이어 역방향 가져오기 | React 01-04 |
+| 소유자 접두 없는 `@keyframes` | CSS 07-02 |
+
+사용할 프로젝트의 `.claude/settings.local.json`에 Stop 훅을 추가합니다.
+
+```json
+{
+  "hooks": {
+    "Stop": [{"hooks": [{"type": "command", "command": "bash <이 저장소를 받은 경로>/hooks/check-critical-rules.sh", "timeout": 30}]}]
+  }
+}
+```
+
+`settings.local.json`은 기계마다 다른 파일이므로 절대경로를 사용할 수 있습니다.
+응답 필드 이름 변경처럼 문자열 검사로 판단할 수 없는 규칙은 에이전트가 직접 대조합니다.
 
 ## GitHub Pages
 

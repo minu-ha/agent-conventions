@@ -8,7 +8,7 @@ export default {
 	basePath: "/agent-conventions/",
 	content: {root: "content", public: "public", private: "private"},
 	title: "agent conventions",
-	description: "Team coding conventions for React, CSS, TypeScript and Figma, with the research behind them.",
+	description: "AI 에이전트와 작업하며 정리하는 개인 코딩 컨벤션. React, TypeScript, CSS, Figma 규칙과 예제.",
 	lang: "ko",
 	navigation: ["Coding", "Tool", "Research", "Development"],
 

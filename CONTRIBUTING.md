@@ -1,7 +1,7 @@
 # 규칙 고치기
 
 `skill/` 아래 컨벤션 규칙을 수정, 추가하는 기여자용.
-컨벤션을 쓰기만 한다면 [README.md](./README.md).
+컨벤션을 쓰기만 한다면 [적용 방법](./content/public/usage.md).
 
 가장 흔한 사고는 생성물을 직접 고치는 것이다.
 규칙의 정본은 `rules/*.md`이고 `RULES_INDEX.md`, `contracts/*.md`는 build가 매번 다시 만든다.
@@ -304,7 +304,9 @@ npm run content:preview  # content/dist 의 공개 사이트 미리보기
 
 `content/`는 [for-humanity](https://github.com/minu-ha/for-humanity)가 읽는 사람용 문서 루트다.
 홈은 `content/README.md`, 공개 문서는 `content/public/`, 설정은 루트 `for-humanity.config.ts`에 둔다.
-홈, 설정, `content/public/research/`, `content/public/tooling.md`는 손으로 쓴다.
+홈의 정본은 루트 `README.md`다. `npm run sync:readme`가 본문을 유지하고 링크와 이미지 경로를 사이트 기준으로 변환해 `content/README.md`를 생성한다.
+`dev`와 `content:build`에서도 동기화한다. `content/README.md`는 직접 편집하지 않는다.
+설정, `content/public/research/`, `content/public/tooling.md`는 손으로 쓴다.
 규칙 페이지는 `content/public/convention/`에 생성하고 커밋하지 않는다. skill 하나가 개요 한 장, 섹션 하나가 한 장이고 규칙은 그 페이지의 `##` 헤딩이다.
 `build`가 `content/public/convention/`도 다시 쓰므로 `dev` 서버를 켜 두면 고친 규칙이 바로 보인다.
 

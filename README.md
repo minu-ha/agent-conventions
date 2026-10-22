@@ -1,205 +1,35 @@
-# agent-conventions
+<div align="center">
 
-팀 코딩 컨벤션을 AI agent skill로 관리하는 저장소.
+<img src="content/asset/mark.png" width="96" height="96" alt="agent conventions">
 
-- 규칙 정본은 `skill/` 한 곳
-- 프로젝트는 복사 없이 skill 이름만 참조
-- 사람은 생성된 사이트로 읽음
-- 에이전트는 라우터 → 인덱스 → 걸린 규칙만
+# agent conventions
 
----
+**AI 에이전트와 작업하며 정리하는 개인 코딩 컨벤션.**
 
-## 목차
+[문서 사이트](https://minu-ha.github.io/agent-conventions/) | [GitHub](https://github.com/minu-ha/agent-conventions)
 
-1. [빠른 시작](#1-빠른-시작) — 설치부터 첫 작업까지
-    - 1.1 [설치](#11-설치)
-    - 1.2 [프로젝트 연결](#12-프로젝트-연결)
-    - 1.3 [담당 영역 읽기](#13-담당-영역-읽기)
-    - 1.4 [동작 확인](#14-동작-확인)
-2. [문서 구성](#2-문서-구성) — 문서별 역할과 독자
-3. [포함된 Skill](#3-포함된-skill) — react, typescript, css, figma
-4. [동작 원리](#4-동작-원리) — 규칙이 선택되는 경로
-5. [문제 해결](#5-문제-해결) — 증상별 원인
-6. [규칙 수정](#6-규칙-수정) — 기여자 문서로
+</div>
 
----
+## 목적
 
-## 1. 빠른 시작
+코드를 작성하고 검토할 때 반복해서 확인하는 기준을 기록한다.
+모듈의 경계, 타입과 데이터 흐름, 이름과 스타일, 디자인을 코드로 옮기는 방식을 다룬다.
 
-컨벤션을 쓰기만 한다면 이 절로 충분하다.
-규칙 자체를 고치려면 [CONTRIBUTING.md](./CONTRIBUTING.md).
+## 다루는 범위
 
-### 1.1 설치
-
-에이전트가 `~/.agents/skills/`를 스캔하면 symlink 하나로 끝.
-
-```bash
-mkdir -p ~/.agents/skills
-ln -s /absolute/path/to/agent-conventions/skill ~/.agents/skills/conventions
-```
-
-기존 링크가 있으면 백업하고 교체한다. 그다음 에이전트를 재시작한다.
-
-```bash
-mv ~/.agents/skills/conventions ~/.agents/skills/conventions.backup
-ln -s /absolute/path/to/agent-conventions/skill ~/.agents/skills/conventions
-```
-
-### 1.2 프로젝트 연결
-
-프로젝트 `AGENTS.md`에 쓸 skill 이름만 적는다. 규칙 본문은 복사하지 않는다.
-
-새 프로젝트면 [AGENTS.template.md](./AGENTS.template.md) 를 복사해서 시작.
-이미 `AGENTS.md`가 있으면 컨벤션 항목에 skill 이름만 추가.
-
-프로젝트에는 owner skill만 적는다.
-`convention-react`는 `convention-typescript`를 항상 함께 켜고,
-스타일이 바뀔 때만 `convention-css`를 추가한다. 활성화 조건은 `metadata.json`이 선언한다.
-Figma 화면을 구현하는 프로젝트는 `convention-figma`도 적는다. TSX나 스타일이 바뀌면 react, css를 알아서 켠다.
-
-### 1.3 담당 영역 읽기
-
-사람이 규칙을 찾을 때는 생성 사이트를 먼저 연다.
-Node.js 22.12.0 이상에서 `npm install`, `npm run dev`를 실행하고 터미널에 찍힌 주소를 연다.
-[for-humanity](https://github.com/minu-ha/for-humanity) `0.16.0`이 `content/README.md`와 `content/public/`을 사이트로 만든다.
-규칙 페이지는 `content/public/convention/`에 생성한다. 사이트 설정은 루트 `for-humanity.config.ts`이며 공개 `SiteConfig` 타입으로 검사한다.
-
-왼쪽에 skill 넷이 있고 skill 아래에 섹션이 한 장씩 있다. 오른쪽 목차가 그 섹션의 규칙이다.
-skill 이름을 누르면 개요와 전체 규칙 표가 나온다. 표의 요지 열로 훑는다.
-규칙마다 한 줄 요지, 판정 기준, Incorrect / Correct 코드, 함께 볼 규칙 링크가 있다.
-적용 조건, 등급, 규칙 ID 같은 에이전트용 메타는 사이트에 싣지 않는다.
-규칙 번호(`1.1`, `7.2`)는 `rules/NN-MM-*.md` 파일 번호와 같아서 사이트와 원문을 번호로 맞춰 볼 수 있다.
-
-전체를 외울 필요 없다. 담당 영역만 한 번 훑으면 리뷰에서 덜 돌아온다.
-
-| 작업 영역 | 사이트에서 볼 skill |
+| 영역 | 내용 |
 | --- | --- |
-| React 화면, 컴포넌트 | react + typescript |
-| React의 `className`, 스타일 | 위 둘 + css |
-| 순수 CSS 스타일시트 | css |
-| 프레임워크와 무관한 TypeScript | typescript |
-| Figma 화면 구현, 디자인 대조 | figma + 바뀌는 쪽의 react, css |
+| [React](https://minu-ha.github.io/agent-conventions/convention/react/) | 컴포넌트 경계, 서버 데이터, 상태와 이벤트 |
+| [TypeScript](https://minu-ha.github.io/agent-conventions/convention/typescript/) | 타입과 계약, 가져오기, 함수 경계, 값과 주석 |
+| [CSS](https://minu-ha.github.io/agent-conventions/convention/css/) | 클래스 이름, 소유 경계, 선택자, 토큰과 레이아웃 |
+| [Figma](https://minu-ha.github.io/agent-conventions/convention/figma/) | 디자인 의도, 값과 문구의 출처, 구현 대조 |
 
-특정 규칙만 다시 찾을 때는 사이트의 skill 개요 표를 브라우저 찾기로 뒤진다.
+## 정리 방식
 
-### 1.4 동작 확인
+각 규칙은 적용 조건과 판단 기준, 잘못된 예와 올바른 예를 함께 둔다.
+실제 작업에서 확인한 내용을 반영하며 기준과 예제를 다듬는다.
 
-TSX 파일 하나를 고쳐 달라고 시켜본다. 에이전트는 이 순서로 움직인다.
+같은 규칙을 에이전트가 읽는 스킬과 사람이 읽는 문서 사이트로 제공한다.
+에이전트는 작업 범위에 해당하는 규칙을 선택하고, 사람은 설명과 예제로 기준을 확인한다.
 
-1. 변경 판정
-2. `convention-react` + `convention-typescript` 활성화
-3. `RULES_INDEX`를 끝까지 훑어 걸리는 규칙 선별
-4. 걸린 `contracts`를 읽고 구현
-5. 마무리로 diff를 다시 훑어 위반 보고
-
-`className`이나 stylesheet를 건드리면 `convention-css` 추가.
-순수 CSS만 고치면 TypeScript는 안 켜진다.
-
----
-
-## 2. 문서 구성
-
-사람이 읽는 것.
-
-| 문서 | 내용 |
-| --- | --- |
-| README.md | 이 문서. 설치와 적용 |
-| [CONTRIBUTING.md](./CONTRIBUTING.md) | 규칙 추가, 수정 절차 |
-| [content/](./content/README.md) | **규칙 조회.** `npm run dev` 로 띄우는 사이트. 네 skill의 규칙을 섹션 페이지와 목차로 찾는다 |
-| [content/public/research/](./content/public/research/) | 설계 배경, 측정, 검증, 한계. 사이트의 Research 묶음 |
-| [content/public/tooling.md](./content/public/tooling.md) | build, validate, test tooling |
-
-에이전트가 읽는 것.
-
-| 문서 | 내용 |
-| --- | --- |
-| [AGENTS.md](./AGENTS.md) | 이 저장소 작업 규칙 |
-| [AGENTS.template.md](./AGENTS.template.md) | 다른 프로젝트용 시작 템플릿 |
-| `skill/<name>/SKILL.md` | 활성화 라우터 |
-| `skill/<name>/RULES_INDEX.md` | 규칙 목록 |
-| `skill/<name>/contracts/*.md` | 걸린 규칙의 계약 |
-
-사이트는 `dev`가 띄우는 서버에서 본다. `content/public/convention/`과 `content/dist/`는 커밋하지 않는다.
-배포용 정적 사이트는 `npm run content:build`로 만들고 `npm run content:preview`로 확인한다.
-공개 [문서 사이트](https://minu-ha.github.io/agent-conventions/). 자동 배포 설정은 [Tooling](content/public/tooling.md#github-pages) 참고.
-
----
-
-## 3. 포함된 Skill
-
-| Skill | 담당 범위 |
-| --- | --- |
-| [react](./skill/react/SKILL.md) | 컴포넌트 경계, route-local, handler, state |
-| [typescript](./skill/typescript/SKILL.md) | import, type, helper, JSDoc |
-| [css](./skill/css/SKILL.md) | plain CSS, owner namespace, 토큰 |
-| [figma](./skill/figma/SKILL.md) | Figma MCP 호출 순서와 토큰 예산, 디자인 파일 읽기, 렌더 값 실측 |
-
-skill 이름은 `convention-<skill>`.
-
-companion은 `metadata.json`이 선언하고 자동으로 켜진다.
-프로젝트에는 owner skill만 적으면 된다.
-`react`는 `typescript`를 항상, `css`를 스타일 표면 변경 시에만 켠다.
-`figma`는 TSX가 바뀌면 `react`를, 스타일이 바뀌면 `css`를 켠다.
-
----
-
-## 4. 동작 원리
-
-skill 넷은 규칙 전체를 안 읽는다. 단계마다 좁힌다.
-
-| 순서 | 파일 | 읽는 범위 | 빈도 |
-| --- | --- | --- | --- |
-| 1 | `SKILL.md` | 라우터. 무엇이 바뀌었는지 판정 | 항상 |
-| 2 | `RULES_INDEX.md` | 규칙당 한 줄. 끝까지 훑음 | 항상 |
-| 3 | `contracts/<id>.md` | `MEDIUM`은 규범과 첫 `Incorrect`, `Correct` 짝. `CRITICAL`, `HIGH`는 원문 링크만 | 걸린 규칙만 |
-| 4 | `rules/NN-MM-<id>.md` | 원문 전부. 설명과 예제 | `CRITICAL`, `HIGH`는 항상, `MEDIUM`은 판단이 모호할 때 |
-
-사람이 통독할 때는 사이트를 쓴다. 에이전트는 전체 검토를 명시적으로 요청받았을 때만 `rules/*.md`를 차례로 읽는다.
-자동으로 통째로 읽는 단계는 없다.
-
-### CRITICAL 마무리 재대조 훅
-
-`CRITICAL` 규칙은 마무리 전에 결과 코드를 다시 대조하게 되어 있다. grep 으로 잡히는 넷은 `hooks/check-critical-rules.sh` 가 기계로 본다.
-리터럴 폴백(ts 05-01), `../` 와 같은 폴더 심볼 가져오기(ts 02-05), 레이어 역방향 가져오기(react 01-04), 소유자 접두 없는 `@keyframes`(css 07-02)다.
-작업 트리에서 HEAD 대비 추가된 줄만 보고, 위반이 있으면 목록을 돌려주며 마무리를 한 번 막는다.
-
-사용하는 프로젝트의 `.claude/settings.local.json` 에 Stop 훅으로 건다.
-
-```json
-{
-  "hooks": {
-    "Stop": [{"hooks": [{"type": "command", "command": "bash <이 저장소를 받은 경로>/hooks/check-critical-rules.sh", "timeout": 30}]}]
-  }
-}
-```
-
-`settings.local.json` 은 기계마다 다른 파일이라 절대경로를 그대로 적어도 된다. 응답 필드 이름 바꿔치기(react 02-04)처럼 grep 으로 못 잡는 CRITICAL 은 여전히 문장으로만 남는다.
-
-측정 결과와 근거는 [content/public/research/](./content/public/research/).
-
----
-
-## 5. 문제 해결
-
-| 증상 | 원인 |
-| --- | --- |
-| 에이전트가 컨벤션을 모름 | symlink 미설치, 또는 재시작 안 함 |
-| 불필요한 규칙까지 적용 | `appliesWhen`의 제외 조건과 실제 변경 범위를 대조하고 `reviewWith`를 자동 적용하지 않았는지 확인 |
-| `RULES_INDEX.md`, `contracts/` 수정이 되돌아옴 | 생성물. `rules/*.md`를 고쳐야 함 |
-| 규칙이 걸린 이유가 불분명 | 그 규칙 frontmatter의 `appliesWhen` 확인 |
-
----
-
-## 6. 규칙 수정
-
-절차는 [CONTRIBUTING.md](./CONTRIBUTING.md). 착수 전 알 것 넷.
-
-1. 정본은 `rules/*.md`와 `examples/<규칙 ID>/*`. `RULES_INDEX.md`, `contracts/*.md`, `content/public/convention/`은 생성물.
-2. 규범은 첫 `Incorrect` 앞에서 끝낸다. 생성기가 그 앞부분만 계약으로 뽑는다.
-3. `appliesWhen` 한 줄이 라우팅을 결정한다. 규칙의 결론이 아니라 관찰 가능한 변경 조건.
-4. 고친 뒤 `npm run check`. `build`가 `content/public/convention/`도 다시 만든다.
-
-이 저장소에서 AI 에이전트로 작업하면 [AGENTS.md](./AGENTS.md) 가 작업 규칙.
-
-버전은 `SKILL.md`의 `name` 변경이 breaking, skill 추가와 호환 확장이 minor,
-문구 수정이 patch.
+[적용 방법](content/public/usage.md) · [규칙 작성](CONTRIBUTING.md) · [도구와 배포](content/public/tooling.md)
