@@ -2,7 +2,7 @@
 
 <div align="center">
 
-<img src="content/asset/favicon.svg" width="112" height="112" alt="agent conventions gray pixel face with a gold eye">
+<img src="content/asset/favicon.svg" width="112" height="112" alt="agent conventions gray pixel face">
 
 # agent conventions
 

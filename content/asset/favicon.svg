@@ -1,8 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="2 2 12 12" width="64" height="64" shape-rendering="crispEdges">
   <title>agent conventions</title>
   <path d="M4 3H12V4H13V11H12V12H4V11H3V4H4Z" fill="#bebebe"/>
-  <path d="M12 4H13V11H12V12H4V11H12Z" fill="#a0a0a0"/>
-  <path d="M3 8H5V10H4V9H3Z" fill="#858585"/>
   <path d="M5 5H7V7H5ZM10 5H12V7H10ZM7 9H8V10H7ZM10 9H11V10H10ZM8 10H10V11H8Z" fill="#292929"/>
-  <path d="M5 5H6V6H5Z" fill="#ffd700"/>
 </svg>
