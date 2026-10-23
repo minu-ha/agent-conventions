@@ -10,9 +10,24 @@ afterEach(() => {
 });
 
 test("빈 기간의 종료일은 오늘이다", () => {
+	/**
+	 * GIVEN
+	 * 빈 기간과 고정된 서울 기준 날짜
+	 */
 	// [!code ++]
 	vi.useFakeTimers({ toFake: ["Date"] });
 	vi.setSystemTime(dayjs("2026-03-01T12:00:00+09:00").toDate());
-	const range = normalizeDateRange({ startDate: "", endDate: "" });
+	const input = { startDate: "", endDate: "" };
+
+	/**
+	 * WHEN
+	 * 기간 보정
+	 */
+	const range = normalizeDateRange(input);
+
+	/**
+	 * THEN
+	 * 고정된 기준 날짜의 종료일
+	 */
 	expect(range.endDate).toBe("2026-03-01");
 });

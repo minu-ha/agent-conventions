@@ -1,9 +1,9 @@
 ---
 name: convention-testing
-description: Use when planning, writing, modifying, or explicitly reviewing unit, integration, E2E, golden, or visual tests, test fixtures, stories, and test-runner configuration.
+description: Use when planning, writing, modifying, or explicitly reviewing unit, integration, E2E, smoke, sanity, golden, or visual tests, generated API mocks, fixtures, stories, and test-runner configuration.
 metadata:
   author: agent-conventions
-  version: "1.0.0"
+  version: "1.1.0"
 ---
 
 # Testing Convention Router
@@ -14,8 +14,8 @@ metadata:
 
 **범위에 드는 것**
 
-- 단위, 화면 통합, E2E의 설계와 테스트 코드
-- fixture, story, page object, API mock, 골든과 이미지 기준값
+- 단위, 화면 통합, E2E의 설계, smoke와 sanity 선별, 테스트 코드의 시나리오 구간
+- fixture, story, page object, 생성 API mock의 조립, 골든과 이미지 기준값
 - 테스트 러너 설정과 실행 결과, 결과서의 검증 범위
 
 **범위에 들지 않는 것**

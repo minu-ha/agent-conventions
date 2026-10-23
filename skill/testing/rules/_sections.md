@@ -11,7 +11,7 @@
 ## 2. Scenarios and Expectations (case)
 **TitleKo:** 시나리오와 기대값
 **Impact:** HIGH
-**Description:** 조건과 결과로 테스트를 설명하고 관련 상태와 경계값을 선택합니다.
+**Description:** GIVEN, WHEN, THEN으로 조건, 행동, 결과를 드러내고 상태와 경계값을 선택합니다.
 기대값은 검증 대상 구현과 독립된 계약에서 정합니다.
 
 ## 3. Test Data and Isolation (data)
@@ -36,7 +36,7 @@
 **TitleKo:** 네트워크 경계
 **Impact:** HIGH
 **Description:** 실제 화면 처리와 provider는 유지하며 응답 경계에서 필요한 상태를 만듭니다.
-미처리 요청을 검출하고 실제 서버와 mock의 검증 범위를 구분합니다.
+생성 계약과 소유 mock을 조립해 브라우저와 Node가 함께 쓰고 미처리 요청을 검출합니다.
 
 ## 7. Golden and Visual Baselines (baseline)
 **TitleKo:** 골든과 시각 비교
@@ -49,3 +49,9 @@
 **Impact:** HIGH
 **Description:** 회귀 테스트가 원래 결함을 검출하는지 확인하고 실행 범위를 기록합니다.
 실패, 재시도 통과, 미실행과 커버리지의 측정 경계를 보존합니다.
+
+## 9. Stories and Harnesses (story)
+**TitleKo:** Story와 harness
+**Impact:** HIGH
+**Description:** 실제 화면과 provider로 재현 가능한 상태를 만들고 story를 테스트에서 소비합니다.
+브라우저 경계의 props, 콜백, 정리와 자동 단언의 책임을 구분합니다.

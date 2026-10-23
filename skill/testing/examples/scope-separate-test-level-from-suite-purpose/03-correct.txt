@@ -1,0 +1,10 @@
+# test/README.md: 프로젝트가 정한 선택 규약
+# smoke: 배포 산출물의 읽기 전용 대표 진입. 태그가 있는 기존 사례만 실행
+npx playwright test --project=e2e --grep @smoke --list
+npx playwright test --project=e2e --grep @smoke
+
+# sanity: 이번 수정의 사례 ID와 인접 흐름을 선택. 별도 테스트 파일을 복사하지 않음
+npx playwright test --project=integration --grep 'ORD-014|ORD-015' --list
+npx playwright test --project=integration --grep 'ORD-014|ORD-015'
+
+# 수집 0건은 통과가 아님. grep, project, 실제 실행 환경을 결과에 함께 기록

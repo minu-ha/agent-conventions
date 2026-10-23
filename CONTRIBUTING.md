@@ -74,6 +74,9 @@ skill/react/
   짝을 처음 만들 때는 서로 다른 줄에 표기를 두고, 뜻이 없는 줄은 뺀다.
 - 한 쌍은 한 변수만 바꾼다. `Incorrect`와 `Correct`는 그 규칙이 말하는 것 하나만 달라야 독자가 무엇이 규칙인지 짚는다.
   이름, 구조, 무관한 코드를 함께 바꾸지 않는다.
+- Testing의 실행 예제는 GIVEN, WHEN, THEN 블록과 사례별 설명으로 조건, 행동, 결과를 드러낸다.
+  handler, story, 러너 설정 선언에는 실행 사례용 빈 구간을 붙이지 않는다.
+  생성 API 예제는 Kubb 계약과 소유 mock, handler, 소비 fixture의 파일을 나눠 보여 준다.
 - 예시 차례는 **짝 → 홀로 선 Incorrect → 홀로 선 Correct** 다. 짝은 `**Incorrect 1 (…):**` 바로 뒤에 `**Correct 1 (…):**`이 오고
   번호는 1부터 차례로 붙는다. 같은 번호의 Incorrect, Correct 가 짝이고, 같은 자리의 블록은 언어가 같다. `validate`가 이 차례를 검사한다.
   Correct 가 파일 여럿으로 나뉘면 블록이 Incorrect 보다 많아도 된다. 파일마다 예제 파일을 두고 `<<<` 줄을 잇는다.

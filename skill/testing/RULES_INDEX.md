@@ -1,7 +1,7 @@
 # Testing 컨벤션 Rule Index
 
 - Skill: `testing`
-- Routing digest: `sha256:6a51f57dd8941eaf0fa442e9c97df44827d09a4c1a188f2e20bd4147830f9abd`
+- Routing digest: `sha256:adfca2926ab420e1b88267d2628a52eff7f42b7e155202a344d70b53d08da70d`
 
 ## Direct Companions
 
@@ -14,7 +14,8 @@
 - T01-01 | scope-choose-the-smallest-reliable-boundary | 새 테스트의 실행 환경이나 단위, 통합, E2E 범위를 정할 때. 제외: 기존 테스트의 기대 문구만 고치는 경우.
 - T01-02 | scope-assign-a-primary-layer-and-check-wiring | 같은 기능의 단위, 통합, E2E 테스트 책임을 나누거나 중복을 정리할 때.
 - T01-03 | scope-place-tests-by-owner-and-separate-runner-globs | 테스트 파일, fixture, story의 위치나 이름을 정하거나 러너의 수집 패턴을 바꿀 때.
-- T02-01 | case-describe-one-observable-behavior | 테스트 제목, describe, step을 추가하거나 한 테스트의 시나리오를 나눌 때.
+- T01-04 | scope-separate-test-level-from-suite-purpose | smoke, sanity, regression의 선정 기준, 태그, 실행 명령을 정하거나 바꿀 때.
+- T02-01 | case-describe-one-observable-behavior | 테스트 제목, 본문 구간, describe, step을 추가하거나 시나리오를 나눌 때.
 - T02-02 | case-cover-relevant-states-and-boundaries | 새 기능의 테스트 사례를 고르거나 입력 범위, 비동기 상태, 오류 처리를 변경할 때.
 - T02-03 | case-derive-expectations-from-independent-contracts | 기대값을 추가, 변경하거나 테스트 안에서 기대 결과를 계산할 때.
 - T03-01 | data-build-small-valid-typed-fixtures | 테스트 데이터, 응답 생성기, fixture 타입과 덮어쓰기 값을 추가하거나 바꿀 때.
@@ -29,7 +30,11 @@
 - T06-01 | network-override-transport-and-keep-owned-logic-real | 화면 테스트의 API mock, 응답 덮어쓰기, 요청 본문 단언을 추가하거나 바꿀 때.
 - T06-02 | network-detect-unhandled-api-requests | mock 서버의 미처리 요청 정책, route fallback, handler 우선순위를 추가하거나 바꿀 때.
 - T06-03 | network-state-real-and-mocked-system-boundaries | 테스트의 실제 서버와 mock 경계를 정하거나 E2E, 인증, 저장 검증 범위를 설명할 때.
+- T06-04 | network-compose-generated-contracts-through-owned-builders | API 생성기의 DTO, faker, MSW 산출물을 연결하거나 그 위의 소유 mock을 조립할 때.
+- T06-05 | network-share-handlers-across-browser-and-node | MSW worker, Node bridge, mockApi fixture의 handler 공유와 우선순위를 만들거나 바꿀 때.
 - T07-01 | baseline-keep-snapshots-stable-small-and-reviewed | JSON 골든, snapshot, serializer, 기준값 갱신을 추가하거나 바꿀 때.
 - T07-02 | baseline-align-visual-environment-and-matcher-options | 이미지 기준값, 캡처 대상, 렌더 안정화, 비교 허용치나 matcher 설정을 바꿀 때.
 - T08-01 | verification-prove-regressions-detect-the-original-failure | 버그 재현 테스트를 추가하거나 기존 실패 테스트와 기준값을 수정할 때.
 - T08-02 | verification-report-failures-flakes-and-executed-scope | 테스트 실행 결과, 커버리지, skip, retry, 결과서와 CI 종료 코드를 추가하거나 바꿀 때.
+- T09-01 | story-compose-owned-state-with-real-providers | story export, harness의 provider, 초기 라우트, props와 콜백 구성을 만들거나 바꿀 때.
+- T09-02 | story-verify-states-through-consuming-tests | story를 mount하는 통합 spec, gallery 실행 설정, 상태별 자동 단언을 만들거나 바꿀 때. | reviewWith: story-compose-owned-state-with-real-providers

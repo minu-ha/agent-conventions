@@ -68,6 +68,24 @@ npm run dev
 테스트 규칙은 [Testing](convention/testing.md)에서 읽는다.
 테스트 추가 여부와 IA 번호, 케이스 ID, 제목 언어, 결과서 형식은 프로젝트 계약을 따른다.
 
+## 테스트를 작성하는 흐름
+
+1. [범위와 배치](convention/testing/01-scope.md)에서 unit, integration, 앱 E2E의 실행 경계를 정한다.
+   smoke는 배포한 산출물의 대표 진입, sanity는 변경점과 인접 흐름의 선별이며 테스트 층과 구분한다.
+2. [시나리오와 기대값](convention/testing/02-case.md)에서 GIVEN, WHEN, THEN의 조건, 행동, 결과를 먼저 적는다.
+   실행되는 예제도 같은 블록 주석을 사용하며 설정, handler, story 선언에 빈 구간을 만들지 않는다.
+3. [데이터와 격리](convention/testing/03-data.md)에서 화면이 읽는 값, 참조 관계, 날짜를 명시한다.
+   Kubb faker를 써도 관찰되는 값은 직접 덮고 seed를 기본 작성 절차로 요구하지 않는다.
+4. [네트워크 경계](convention/testing/06-network.md)의 생성 DTO와 faker → 소유 builder → endpoint handler 순서로 조립한다.
+   공유 registry를 브라우저 worker와 Node bridge에 연결하고 spec에는 사례의 차이만 둔다.
+5. [Story와 harness](convention/testing/09-story.md)에서 실제 화면, provider와 라우트를 조립한다.
+   소비 spec이 story를 mount하고 상태와 행동을 단언해야 자동화 integration 검증이 된다.
+6. 구역의 상태 조합은 integration에, 실제 앱 진입과 화면 연결은 E2E에 둔다.
+   수집 목록과 실제 실행을 구분하고 [검증과 결과 보고](convention/testing/08-verification.md)에 실행 범위를 남긴다.
+
+생성 파일의 이름, gallery 구현, 결과서 파서는 프로젝트 계약을 사용한다.
+네트워크 예제의 소유 builder, registry와 fixture는 같은 주문 계약으로 연결되며 실제 앱 경계는 소비 프로젝트가 제공한다.
+
 ## 규칙을 읽는 순서
 
 스킬은 변경 범위를 판정하고, 인덱스를 끝까지 훑은 뒤 해당하는 규칙을 읽는다.

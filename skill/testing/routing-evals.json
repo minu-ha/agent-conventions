@@ -433,7 +433,9 @@
 				"react"
 			],
 			"expectedSelected": {
-				"testing": [],
+				"testing": [
+					"story-compose-owned-state-with-real-providers"
+				],
 				"typescript": [],
 				"react": [
 					"composition-render-one-branch-with-and"
@@ -527,6 +529,138 @@
 					],
 					"typescript": []
 				}
+			}
+		},
+		{
+			"id": "describe-gwt-sections-only",
+			"prompt": "기존 unit과 Playwright spec의 실행 코드는 그대로 두고 실제 존재하는 준비, 호출과 단언 앞에 GIVEN, WHEN, THEN 블록과 한국어 시나리오 설명만 넣는다. 함수, 변수, 입력, 타입, import와 결과서는 바꾸지 않는다.",
+			"files": [
+				"src/util/number/format-quantity.test.ts",
+				"test/orders/orders.e2e.spec.ts"
+			],
+			"expectedSkills": [
+				"testing",
+				"typescript"
+			],
+			"expectedSelected": {
+				"testing": [
+					"case-describe-one-observable-behavior"
+				],
+				"typescript": []
+			}
+		},
+		{
+			"id": "select-smoke-and-focused-sanity",
+			"prompt": "테스트 선정 문서만 쓴다. 배포 산출물의 읽기 전용 대표 진입을 smoke로, 이번 결함 사례와 인접 흐름을 sanity로 선별하고 기존 태그와 케이스 ID의 grep 명령을 적는다. 이미 결정된 unit, integration, E2E의 실행 환경, 코드와 결과서는 바꾸지 않는다.",
+			"files": [
+				"test/README.md"
+			],
+			"expectedSkills": [
+				"testing",
+				"typescript"
+			],
+			"expectedSelected": {
+				"testing": [
+					"scope-separate-test-level-from-suite-purpose"
+				],
+				"typescript": []
+			}
+		},
+		{
+			"id": "compose-generated-normal-response",
+			"prompt": "이미 있는 Kubb DTO factory와 status200 factory를 연결해 정상 응답 builder의 본문과 handler 호출만 고친다. 화면이 읽는 ID, 수량, 상태, 건수와 날짜를 명시하고 기존 registry와 테스트 fixture는 유지한다. 새 타입, 이름, import, 제목과 시간 제어는 추가하지 않는다.",
+			"files": [
+				"src/service/mock/mock-orders.ts",
+				"src/service/msw/orders/get-orders.ts"
+			],
+			"expectedSkills": [
+				"testing",
+				"typescript"
+			],
+			"expectedSelected": {
+				"testing": [
+					"data-build-small-valid-typed-fixtures",
+					"network-override-transport-and-keep-owned-logic-real",
+					"network-compose-generated-contracts-through-owned-builders"
+				],
+				"typescript": []
+			}
+		},
+		{
+			"id": "share-registry-in-browser-and-node",
+			"prompt": "기존 browser worker와 Node mockApi fixture가 각각 만든 handler 배열 대신 이미 import한 공유 registry를 쓰도록 고친다. 기존 getResponse bridge, 타입, 이름, 등록 전후 초기화 코드는 그대로다. 실제 호출 허용 목록과 API 누락 실패 정책도 보존한다.",
+			"files": [
+				"src/service/msw/worker.ts",
+				"test/_fixture/test.ts"
+			],
+			"expectedSkills": [
+				"testing",
+				"typescript"
+			],
+			"expectedSelected": {
+				"testing": [
+					"data-isolate-and-restore-test-state",
+					"playwright-share-fixtures-and-page-objects-at-real-boundaries",
+					"network-detect-unhandled-api-requests",
+					"network-share-handlers-across-browser-and-node"
+				],
+				"typescript": []
+			}
+		},
+		{
+			"id": "mount-existing-story-and-assert-state",
+			"prompt": "기존 integration spec에서 이미 등록된 빈 응답과 실제 provider story를 mount한 view의 toBeVisible 단언만 getByRole status의 빈 목록 문구 단언으로 고친다. 직접 확인한 문구를 사용한다. gallery 설정, JSX, 상태, 제목, GWT, 입력, 이름, 타입과 import는 그대로다.",
+			"files": [
+				"test/orders/orders.integration.spec.ts"
+			],
+			"expectedSkills": [
+				"testing",
+				"typescript"
+			],
+			"expectedSelected": {
+				"testing": [
+					"case-derive-expectations-from-independent-contracts",
+					"playwright-use-semantic-and-scoped-locators",
+					"playwright-wait-for-state-and-register-events-before-actions",
+					"story-verify-states-through-consuming-tests"
+				],
+				"typescript": []
+			}
+		},
+		{
+			"id": "compose-story-with-real-provider",
+			"prompt": "기존 story Default의 테스트 전용 가짜 provider 컴포넌트를 이미 import한 실제 AppProviders로 교체한다. 화면, route, props, export 이름, 주석, 타입, import, 조건부 JSX와 CSS는 그대로다. spec과 mock은 바꾸지 않는다.",
+			"files": [
+				"test/orders/orders.story.tsx"
+			],
+			"expectedSkills": [
+				"react",
+				"testing",
+				"typescript"
+			],
+			"expectedSelected": {
+				"react": [],
+				"testing": [
+					"story-compose-owned-state-with-real-providers"
+				],
+				"typescript": []
+			}
+		},
+		{
+			"id": "keep-simple-fixture-independent-of-kubb",
+			"prompt": "기존 순수 함수 unit의 유효한 주문 입력에서 수량 필드 값만 2에서 3으로 바꾼다. 기존 matcher와 기대값도 이미 3에 맞춰져 있고 이름, 타입, import와 제목은 그대로다. 생성 API, network handler, story와 실행 선별을 변경하지 않는다.",
+			"files": [
+				"src/page/orders/_function/to-order-rows.test.ts"
+			],
+			"expectedSkills": [
+				"testing",
+				"typescript"
+			],
+			"expectedSelected": {
+				"testing": [
+					"data-build-small-valid-typed-fixtures"
+				],
+				"typescript": []
 			}
 		}
 	]

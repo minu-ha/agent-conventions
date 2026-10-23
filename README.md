@@ -31,7 +31,7 @@ The conventions grow from actual project work, with changes to the rules and the
 | [React](https://minu-ha.github.io/agent-conventions/convention/react/) | Component ownership, server data, state, composition, events, runtime boundaries and accessibility |
 | [TypeScript](https://minu-ha.github.io/agent-conventions/convention/typescript/) | Types and contracts, imports, naming, function boundaries, values, fallbacks and comments |
 | [CSS](https://minu-ha.github.io/agent-conventions/convention/css/) | Class names, ownership, selectors, design tokens, layout, responsive behavior and motion |
-| [Testing](https://minu-ha.github.io/agent-conventions/convention/testing/) | Test boundaries, scenarios, data and isolation, Vitest, Playwright, network mocking, golden and visual baselines, and verification |
+| [Testing](https://minu-ha.github.io/agent-conventions/convention/testing/) | Test levels and suite selection, Given/When/Then, generated API mocks, stories, Vitest, Playwright, baselines, and verification |
 | [Figma](https://minu-ha.github.io/agent-conventions/convention/figma/) | Reading designs, identifying intent, tracing values and copy, implementing and comparing the result |
 
 The skills declare their dependencies explicitly.

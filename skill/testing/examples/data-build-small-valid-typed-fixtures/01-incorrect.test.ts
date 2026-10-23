@@ -5,9 +5,23 @@ import type { OrderDto } from "@/service/orders";
 
 import { toOrderRows } from "@/page/orders/_function/to-order-rows";
 
-// [!code error]
-const order = { quantity: 2 } as OrderDto;
-
 test("수량을 행에 표시한다", () => {
-	expect(toOrderRows([order])[0].quantityLabel).toBe("2.00");
+	/**
+	 * GIVEN
+	 * 표에 표시할 주문 입력
+	 */
+	// [!code error]
+	const order = { quantity: 2 } as OrderDto;
+
+	/**
+	 * WHEN
+	 * 실제 주문 행 변환
+	 */
+	const rows = toOrderRows([order]);
+
+	/**
+	 * THEN
+	 * 입력 수량의 표시 문자열
+	 */
+	expect(rows[0].quantityLabel).toBe("2.00");
 });

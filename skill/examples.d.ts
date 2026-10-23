@@ -926,3 +926,83 @@ declare module "@/page/orders/_function/to-order-rows" {
 	}
 	export const toOrderRows: (orders: import("@/service/orders").OrderDto[]) => OrderRow[];
 }
+
+// 생성 API 예제 계약. 실제 프로젝트에서는 Kubb 산출물의 이름과 signature를 확인합니다
+declare module "@/service/__kubb/type/order-dto" {
+	export type OrderDto = import("@/service/orders").OrderDto;
+}
+declare module "@/service/__kubb/type/orders/get-orders" {
+	/**
+	 * 주문 목록 API의 성공 본문
+	 */
+	export interface GetOrdersStatus200 {
+		/**
+		 * 해당 페이지의 주문
+		 */
+		items: import("@/service/__kubb/type/order-dto").OrderDto[];
+		/**
+		 * 전체 주문 수
+		 */
+		total: number;
+		/**
+		 * 조회한 페이지
+		 */
+		page: number;
+		/**
+		 * 목록 기준 시각
+		 */
+		updatedAt: string;
+	}
+	/**
+	 * 주문 조회의 서버 오류 본문
+	 */
+	export interface GetOrdersStatus500 {
+		/**
+		 * 사용자에게 전달할 오류 메시지
+		 */
+		message: string;
+	}
+}
+declare module "@/service/__kubb/mock/order-dto" {
+	export const createOrderDto: (data?: Partial<import("@/service/__kubb/type/order-dto").OrderDto>) => import("@/service/__kubb/type/order-dto").OrderDto;
+}
+declare module "@/service/__kubb/mock/orders/get-orders" {
+	export const createGetOrdersStatus200: (data?: Partial<import("@/service/__kubb/type/orders/get-orders").GetOrdersStatus200>) => import("@/service/__kubb/type/orders/get-orders").GetOrdersStatus200;
+	export const createGetOrdersStatus500: (data?: Partial<import("@/service/__kubb/type/orders/get-orders").GetOrdersStatus500>) => import("@/service/__kubb/type/orders/get-orders").GetOrdersStatus500;
+}
+declare module "@/service/__kubb/msw/orders/get-orders-handler" {
+	export const getOrdersHandler: (data?: import("@/service/__kubb/type/orders/get-orders").GetOrdersStatus200 | import("msw").HttpResponseResolver) => import("msw").RequestHandler;
+	export const getOrdersHandlerResponse200: (data: import("@/service/__kubb/type/orders/get-orders").GetOrdersStatus200) => Response;
+	export const getOrdersHandlerResponse500: (data: import("@/service/__kubb/type/orders/get-orders").GetOrdersStatus500) => Response;
+}
+declare module "@/service/__kubb/msw/handlers" {
+	export const handlers: import("msw").RequestHandler[];
+}
+declare module "@/service/mock/mock-orders" {
+	export const mockOrders: typeof import("./testing/examples/network-compose-generated-contracts-through-owned-builders/02-correct").mockOrders;
+}
+declare module "@/service/msw/orders/get-orders" {
+	export const get_orders_handler: typeof import("./testing/examples/network-compose-generated-contracts-through-owned-builders/03-correct").get_orders_handler;
+}
+declare module "@/service/msw/handlers" {
+	export const mock_handlers: typeof import("./testing/examples/network-compose-generated-contracts-through-owned-builders/04-correct").mock_handlers;
+}
+declare module "@/service/msw/_constant/mock" {
+	export const mock_unhandled_api_prefix: typeof import("./testing/examples/network-share-handlers-across-browser-and-node/05-correct").mock_unhandled_api_prefix;
+}
+declare module "@test/_fixture/to-mock-route" {
+	export const toMockRoute: typeof import("./testing/examples/network-share-handlers-across-browser-and-node/03-correct").toMockRoute;
+}
+declare module "@test/_fixture/test" {
+	export const test: typeof import("./testing/examples/network-share-handlers-across-browser-and-node/04-correct").test;
+	export const expect: typeof import("@playwright/test").expect;
+}
+declare module "@/app-providers" {
+	export const AppProviders: (props: {children: ReactNode}) => ReactElement;
+}
+declare module "@test/_gallery/story-route" {
+	export const StoryRoute: (props: {entry: string; path: string; children: ReactNode}) => ReactElement;
+}
+declare module "@/component/widget/order-dialog/wg-order-dialog" {
+	export const WgOrderDialog: (props: {orderId: string; onSave: (orderId: string) => void}) => ReactElement;
+}

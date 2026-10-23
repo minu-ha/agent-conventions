@@ -21,6 +21,21 @@ afterAll(() => {
 });
 
 test("주문 목록 응답을 받는다", async () => {
-	const response = await fetch("https://app.example.test/api/orders");
+	/**
+	 * GIVEN
+	 * 모듈 fixture의 주문 목록 handler
+	 */
+	const url = "https://app.example.test/api/orders";
+
+	/**
+	 * WHEN
+	 * 주문 API 요청
+	 */
+	const response = await fetch(url);
+
+	/**
+	 * THEN
+	 * fixture에서 정한 빈 목록과 건수
+	 */
 	expect(await response.json()).toStrictEqual({ items: [], total: 0 });
 });
