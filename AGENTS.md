@@ -48,13 +48,15 @@ build tooling은 [content/public/tooling.md](./content/public/tooling.md).
 - [skill/react](./skill/react/SKILL.md)
 - [skill/typescript](./skill/typescript/SKILL.md)
 - [skill/css](./skill/css/SKILL.md)
+- [skill/testing](./skill/testing/SKILL.md)
 - [skill/figma](./skill/figma/SKILL.md)
 
 모든 skill은 `SKILL.md` → `RULES_INDEX.md` → 걸린 `contracts/*.md`로 좁힌다.
 
 `metadata.json.companions`가 `required`와 `conditional` 활성화를 선언한다.
 계층은 이 선언이 정한다. 나를 companion으로 켜는 skill이 위 계층이고,
-`typescript`는 아무 skill도 켜지 않으므로 가장 아래다. `figma`는 `react`, `css`를 켜는 가장 위다.
+`typescript`는 아무 skill도 켜지 않으므로 가장 아래다.
+`figma`, `testing`은 변경 범위에 따라 `react`, `css`를 켜는 위 계층이다.
 아래에서 위를 가리키지 않는다.
 
 ---
@@ -91,7 +93,7 @@ build tooling은 [content/public/tooling.md](./content/public/tooling.md).
 7. skill 인벤토리나 artifact 역할이 바뀌면 [README.md](./README.md),
    [CONTRIBUTING.md](./CONTRIBUTING.md), [content/public/tooling.md](./content/public/tooling.md) 도 갱신.
 
-새 skill은 이미 정리된 `react`, `typescript`, `css`, `figma`를 템플릿으로 삼는다.
+새 skill은 이미 정리된 `react`, `typescript`, `css`, `testing`, `figma`를 템플릿으로 삼는다.
 
 ### 4.1 routing 키
 
@@ -121,7 +123,7 @@ npm run content:preview  # content/dist 의 공개 사이트 미리보기
 `dev`와 `content:build`에서도 자동 실행하므로 홈은 직접 편집하지 않는다.
 `content/public/convention/`과 정적 출력 `content/dist/`는 생성 폴더라 커밋하지 않는다.
 
-buildable skill: `css` `figma` `react` `typescript`
+buildable skill: `css` `figma` `react` `testing` `typescript`
 
 ---
 

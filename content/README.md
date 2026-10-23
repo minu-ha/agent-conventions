@@ -21,24 +21,29 @@ Rules, examples and the reasoning behind everyday decisions in React, TypeScript
 </div>
 
 agent-conventions is a personal collection of the coding decisions I return to when building and reviewing software with AI agents.
-It covers how components own their state and data, where modules begin and end, how styles are scoped, and how designs become code.
+It covers how components own their state and data, where modules begin and end, how styles are scoped, how behavior is tested, and how designs become code.
 
 The repository keeps those decisions in two forms: structured skills that agents can apply to a task, and a documentation site for reading the explanations, examples and related rules.
 The conventions grow from actual project work, with changes to the rules and the reasoning behind them kept together.
 
-## Four connected areas
+## Five connected areas
 
 | Skill | What it covers |
 | --- | --- |
 | [React](public/convention/react.md) | Component ownership, server data, state, composition, events, runtime boundaries and accessibility |
 | [TypeScript](public/convention/typescript.md) | Types and contracts, imports, naming, function boundaries, values, fallbacks and comments |
 | [CSS](public/convention/css.md) | Class names, ownership, selectors, design tokens, layout, responsive behavior and motion |
+| [Testing](public/convention/testing.md) | Test boundaries, scenarios, data and isolation, Vitest, Playwright, network mocking, golden and visual baselines, and verification |
 | [Figma](public/convention/figma.md) | Reading designs, identifying intent, tracing values and copy, implementing and comparing the result |
 
 The skills declare their dependencies explicitly.
 React always activates the shared TypeScript conventions and adds CSS when styling changes.
 Figma activates React and CSS according to the implementation work involved.
+Testing activates TypeScript and adds React or CSS when a test harness or the implementation changes those areas.
 This keeps common rules in one place while each area owns its specific decisions.
+
+Testing conventions live under Coding. Vitest and Playwright guidance shares the same rules for scenarios, expectations and isolation.
+Project-specific case IDs, folder numbering and report formats stay with the project.
 
 ## From a task to the relevant rules
 

@@ -14,7 +14,7 @@ await writeFile(
 		.replaceAll("](CONTRIBUTING.md)", "](https://github.com/minu-ha/agent-conventions/blob/main/CONTRIBUTING.md)")
 		.replaceAll("](LICENSE)", "](https://github.com/minu-ha/agent-conventions/blob/main/LICENSE)")
 		.replace(
-			/\]\(https:\/\/minu-ha\.github\.io\/agent-conventions\/convention\/(react|typescript|css|figma)\/\)/g,
+			/\]\(https:\/\/minu-ha\.github\.io\/agent-conventions\/convention\/(react|typescript|css|testing|figma)\/\)/g,
 			"](public/convention/$1.md)",
 		)}`,
 );

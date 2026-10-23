@@ -1,7 +1,7 @@
 # TypeScript 컨벤션 Rule Index
 
 - Skill: `typescript`
-- Routing digest: `sha256:4cb32937a01e236e159d333be9065d5d7960bcc2fcff58b024aee64ffccc9aa0`
+- Routing digest: `sha256:ae749d0e000c47f3f8d6eaa1fa3662661e956305cbd5a0b5369cbc6d618097e9`
 
 ## Local Rules
 
@@ -31,8 +31,8 @@
 - T03-09 | functions-name-functions-by-what-comes-out | 이름을 붙인 함수를 새로 만들거나 이름을 바꿀 때. 제외: 생성기, 프레임워크, 외부 계약이 정한 이름을 그대로 쓰는 경우.
 - T04-01 | values-prefer-immutable-array-sorting | 프롭스, 상태, 매개변수, 모듈 상수에서 온 배열을 정렬할 때. 기존 \`.sort\(\)\` 호출을 추가, 변경할 때. | reviewWith: values-use-es-toolkit-for-value-helpers
 - T04-02 | values-use-set-and-map-for-repeated-lookups | 같은 목록의 \`includes\`나 \`find\`를 루프, 배열 콜백 안에서 호출하도록 추가, 변경할 때. 같은 목록의 키 조회를 서로 다른 세 지점 이상에서 하도록 추가, 변경할 때. 제외: 조회하는 목록이 짧고 길이가 정해져 있는 경우.
-- T04-03 | values-read-objects-through-chains | 구조분해로 객체에서 값을 꺼내는 줄을 추가, 변경할 때. 객체 필드를 별칭 \`const\`에 담아 그 이름으로 쓰려 할 때. 제외: 배열이나 튜플을 자리로 푸는 경우. | reviewWith: functions-name-a-value-only-for-recompute-or-judgment
-- T04-04 | values-declare-meaningful-numbers | 비교, 계산, 호출 인자에 숫자 리터럴을 새로 적을 때. 제외: 관용값이나 배열 인덱스처럼 뜻이 없는 숫자를 쓰는 경우. | reviewWith: absence-expose-optional-values-instead-of-silent-fallbacks, naming-place-project-constants-in-the-root-constant-folder
+- T04-03 | values-read-objects-through-chains | 구조분해로 객체에서 값을 꺼내는 줄을 추가, 변경할 때. 객체 필드를 별칭 \`const\`에 담아 그 이름으로 쓰려 할 때. 제외: 배열이나 튜플을 자리로 푸는 경우. 제외: 외부 러너가 콜백 매개변수의 구조분해로 fixture 의존성을 해석하는 경우. | reviewWith: functions-name-a-value-only-for-recompute-or-judgment
+- T04-04 | values-declare-meaningful-numbers | 비교, 계산, 호출 인자에 숫자 리터럴을 새로 적을 때. 제외: 관용값, 배열 인덱스, 테스트 표본값과 기대값을 쓰는 경우. | reviewWith: absence-expose-optional-values-instead-of-silent-fallbacks, naming-place-project-constants-in-the-root-constant-folder
 - T04-05 | values-avoid-lookup-tables-for-simple-choices | 상태나 \`variant\`에 따라 쓸 값 하나를 고르는 객체, Map을 추가, 변경할 때. 조회표의 키로 프롭이나 상태를 읽어 값을 넘기는 코드를 추가, 변경할 때.
 - T04-06 | values-use-es-toolkit-for-value-helpers | 배열, 객체, 문자열, 숫자를 다루는 보조 코드를 추가, 변경할 때. \`reduce\`, \`Object.entries\`, \`Array.from\`, 정규식으로 값을 다시 짜는 코드를 쓸 때. 제외: 표준 메서드 하나로 끝나는 경우. | reviewWith: values-handle-dates-with-dayjs, values-prefer-immutable-array-sorting
 - T04-07 | values-handle-dates-with-dayjs | 날짜를 파싱하거나 형식을 맞추거나 더하고 뺄 때. \`new Date\`, \`getTime\(\)\`, \`setDate\(\)\`, \`toLocaleDateString\(\)\`을 쓸 때. 제외: 서버가 준 시각 문자열을 파싱 없이 그대로 보여 주는 경우. | reviewWith: naming-place-project-constants-in-the-root-constant-folder, values-use-es-toolkit-for-value-helpers

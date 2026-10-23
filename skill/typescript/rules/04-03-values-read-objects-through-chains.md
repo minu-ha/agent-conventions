@@ -7,6 +7,7 @@ appliesWhen:
   - 구조분해로 객체에서 값을 꺼내는 줄을 추가, 변경할 때
   - 객체 필드를 별칭 `const`에 담아 그 이름으로 쓰려 할 때
   - 제외: 배열이나 튜플을 자리로 푸는 경우
+  - 제외: 외부 러너가 콜백 매개변수의 구조분해로 fixture 의존성을 해석하는 경우
 reviewWith: functions-name-a-value-only-for-recompute-or-judgment
 tags: values, origin, destructuring
 ---
@@ -24,6 +25,7 @@ tags: values, origin, destructuring
 | 같은 필드에 이름만 붙인 지역 `const` | 제거합니다. 필드를 그대로 읽는 것은 계산이 아니며, 계산 결과의 이름은 `functions-name-a-value-only-for-recompute-or-judgment`가 정합니다 |
 | 짧은 함수, 좁은 스코프 | 예외를 두지 않습니다 |
 | 배열, 튜플 구조분해 | 유지합니다. `useState`와 `Object.entries`처럼 위치로 꺼내는 값에는 지워질 필드 이름이 없습니다 |
+| 외부 러너가 콜백 매개변수로 fixture 의존성을 해석 | 그 매개변수만 구조분해를 유지합니다. 일반 객체와 콜백 본문까지 예외를 넓히지 않습니다 |
 | 깊어서 읽기 어려운 체인 | 값을 꺼내는 곳에서 별칭으로 끊지 않고, 그 형태를 만드는 곳을 검토합니다 |
 
 **Incorrect 1 (이름을 바꿔 꺼내 출처와 원래 이름이 함께 사라집니다):**
@@ -49,3 +51,7 @@ tags: values, origin, destructuring
 **Correct 3 (필드 읽기가 아니라 계산한 결과라 이름을 붙입니다):**
 
 <<< ../examples/values-read-objects-through-chains/06-correct.ts
+
+**Correct (외부 러너의 fixture 의존성 해석에 필요한 매개변수만 구조분해합니다):**
+
+<<< ../examples/values-read-objects-through-chains/07-correct.test.ts

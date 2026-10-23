@@ -1,0 +1,7 @@
+src/util/number/format-quantity.test.ts
+test/reports/reports.integration.spec.ts
+test/reports/reports.e2e.spec.ts
+test/_fixture/reports-page.ts
+
+Vitest include: src/**/*.test.ts
+Playwright testMatch: test/**/*.integration.spec.ts, test/**/*.e2e.spec.ts

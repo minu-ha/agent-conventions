@@ -1,0 +1,7 @@
+test/
+  format-quantity.spec.ts
+  reports.spec.ts
+  helpers.spec.ts
+
+Vitest include: test/**/*.spec.ts
+Playwright testMatch: test/**/*.spec.ts

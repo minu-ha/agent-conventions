@@ -9,7 +9,7 @@ export default {
 	content: {root: "content", public: "public", private: "private"},
 	title: "agent conventions",
 	description:
-		"Personal coding conventions for AI-assisted development, with structured skills, examples and research for React, TypeScript, CSS and Figma.",
+		"Personal coding conventions for AI-assisted development, with structured skills, examples and research for React, TypeScript, CSS, Testing and Figma.",
 	lang: "ko",
 	cursorFace: true,
 	navigation: ["Coding", "Tool", "Research", "Development"],

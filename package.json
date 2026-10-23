@@ -3,7 +3,7 @@
 	"version": "1.0.0",
 	"private": true,
 	"license": "MIT",
-	"description": "Personal coding conventions, agent skills and documentation for React, TypeScript, CSS and Figma",
+	"description": "Personal coding conventions, agent skills and documentation for React, TypeScript, CSS, Testing and Figma",
 	"type": "module",
 	"engines": {"node": ">=22.12.0"},
 	"scripts": {
@@ -28,6 +28,7 @@
 	"devDependencies": {
 		"@biomejs/biome": "^2.5.7",
 		"@mui/material": "^9.5.0",
+		"@playwright/test": "1.63.0",
 		"@tanstack/react-query": "^5.104.2",
 		"@types/node": "^26.1.2",
 		"@types/react": "^19.3.0",
@@ -37,12 +38,14 @@
 		"es-toolkit": "^1.52.0",
 		"for-humanity": "0.18.0",
 		"github-slugger": "2.0.0",
+		"msw": "2.14.6",
 		"nuqs": "^2.10.2",
 		"react": "^19.3.0",
 		"react-router": "^8.4.0",
 		"stylelint": "16.26.1",
 		"stylelint-config-standard": "39.0.1",
 		"tsx": "^4.23.9",
-		"typescript": "^7.0.2"
+		"typescript": "^7.0.2",
+		"vitest": "5.0.5"
 	}
 }

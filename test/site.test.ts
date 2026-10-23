@@ -7,9 +7,9 @@ import Slugger from "github-slugger";
 import {generateSiteFiles} from "../src/site.js";
 import type {SiteFile} from "../src/site.js";
 
-const expectedRuleCount = 146;
-const expectedSectionCount = 33;
-const expectedSkillCount = 4;
+const expectedRuleCount = 168;
+const expectedSectionCount = 41;
+const expectedSkillCount = 5;
 
 /**
  * @helper frontmatter 키 하나의 값. 따옴표 scalar는 JSON으로 풀어 읽음
@@ -200,7 +200,7 @@ test("examples render as a sentence above a toned, numbered snippet whose copy e
 			snippets += 1;
 
 			const match =
-				/^<<< (\.\.\/examples\/[a-z]+\/[a-z0-9-]+\/\d{2}-(?:incorrect|correct)(?:-\d+)?\.[a-z]+) (bad|good) line-numbers(?: \[([^\]]+)\])?$/.exec(
+				/^<<< (\.\.\/examples\/[a-z]+\/[a-z0-9-]+\/\d{2}-(?:incorrect|correct)(?:-\d+)?(?:\.[a-z]+)+) (bad|good) line-numbers(?: \[([^\]]+)\])?$/.exec(
 					line,
 				);
 

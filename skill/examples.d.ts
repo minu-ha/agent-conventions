@@ -869,3 +869,60 @@ declare module "@/type/user-profile" {
 declare module "@/util/date/to-display-date" {
 	export const toDisplayDate: (value: string) => string;
 }
+
+// 테스트 예제가 사용하는 앱 계약. 러너 API는 설치된 패키지의 실제 타입을 사용합니다
+declare module "@/util/number/format-quantity" {
+	export const formatQuantity: (value: number | null) => string;
+}
+declare module "@/util/date/normalize-date-range" {
+	/**
+	 * 기간 보정의 입력과 출력
+	 */
+	export interface DateRange {
+		/**
+		 * 시작 날짜, 입력에서 빈 문자열 허용
+		 */
+		startDate: string;
+		/**
+		 * 종료 날짜, 입력에서 빈 문자열 허용
+		 */
+		endDate: string;
+	}
+	export const normalizeDateRange: (range: DateRange) => DateRange;
+}
+declare module "@/service/orders" {
+	/**
+	 * 서버가 반환하는 주문
+	 */
+	export interface OrderDto {
+		/**
+		 * 주문 식별자
+		 */
+		id: string;
+		/**
+		 * 주문 수량
+		 */
+		quantity: number;
+		/**
+		 * 주문 처리 상태
+		 */
+		status: "open" | "closed";
+	}
+	export const getOrder: (id: string) => Promise<OrderDto>;
+}
+declare module "@/page/orders/_function/to-order-rows" {
+	/**
+	 * 목록이 표시하는 주문 행
+	 */
+	export interface OrderRow {
+		/**
+		 * 주문 식별자
+		 */
+		id: string;
+		/**
+		 * 형식이 적용된 수량
+		 */
+		quantityLabel: string;
+	}
+	export const toOrderRows: (orders: import("@/service/orders").OrderDto[]) => OrderRow[];
+}

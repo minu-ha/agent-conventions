@@ -1,0 +1,533 @@
+{
+	"version": 1,
+	"skill": "testing",
+	"scenarios": [
+		{
+			"id": "plan-test-boundaries",
+			"prompt": "설계만 요청받았다. 수량 포맷의 입력 조합, URL 기간이 입력란에 반영되는 연결, 목록에서 상세로 이동하는 여정의 책임과 파일 위치를 정한다. 테스트 코드를 쓰거나 이름, 타입, 가져오기, 실행 결과를 바꾸지는 않는다.",
+			"files": [
+				"src/util/number/format-quantity.test.ts",
+				"test/reports/reports.integration.spec.ts",
+				"test/orders/orders.e2e.spec.ts"
+			],
+			"expectedSkills": [
+				"testing",
+				"typescript"
+			],
+			"expectedSelected": {
+				"testing": [
+					"scope-choose-the-smallest-reliable-boundary",
+					"scope-assign-a-primary-layer-and-check-wiring",
+					"scope-place-tests-by-owner-and-separate-runner-globs"
+				],
+				"typescript": []
+			}
+		},
+		{
+			"id": "keep-unit-matrix-and-ui-wiring",
+			"prompt": "기존 날짜 보정 unit의 전체 입력 표는 유지하고, browser integration이 같은 표를 모두 반복하던 부분을 뒤집힌 URL 날짜가 실제 입력란에 반영되는 대표 사례로 줄인다. 가져오기, 선언 이름, 타입, 대기 방식은 그대로다.",
+			"files": [
+				"test/reports/reports.integration.spec.ts"
+			],
+			"expectedSkills": [
+				"testing",
+				"typescript"
+			],
+			"expectedSelected": {
+				"testing": [
+					"scope-assign-a-primary-layer-and-check-wiring",
+					"case-describe-one-observable-behavior",
+					"case-cover-relevant-states-and-boundaries"
+				],
+				"typescript": []
+			}
+		},
+		{
+			"id": "name-a-single-contract",
+			"prompt": "기존 테스트의 제목 '잘된다'만 '수량이 없으면 빈 값 표시를 반환한다'로 고친다. 코드, 입력, 기대값, 함수와 파일 이름은 바꾸지 않는다.",
+			"files": [
+				"src/util/number/format-quantity.test.ts"
+			],
+			"expectedSkills": [
+				"testing",
+				"typescript"
+			],
+			"expectedSelected": {
+				"testing": [
+					"case-describe-one-observable-behavior"
+				],
+				"typescript": []
+			}
+		},
+		{
+			"id": "add-zero-and-absence-rows",
+			"prompt": "기존 test.each의 입력 표에 0과 null 사례, 직접 확인한 '0.00'과 '-' 기대값을 추가한다. 기존 factory 타입과 matcher, import, 식별자는 그대로다. 테스트 표본과 기대값은 제품 상수와 독립된 리터럴이다.",
+			"files": [
+				"src/util/number/format-quantity.test.ts"
+			],
+			"expectedSkills": [
+				"testing",
+				"typescript"
+			],
+			"expectedSelected": {
+				"testing": [
+					"case-cover-relevant-states-and-boundaries",
+					"case-derive-expectations-from-independent-contracts",
+					"data-build-small-valid-typed-fixtures"
+				],
+				"typescript": []
+			}
+		},
+		{
+			"id": "replace-self-derived-expectation",
+			"prompt": "기존 expect(formatQuantity(1234)).toBe(formatQuantity(1234))의 오른쪽만 직접 확인한 '1,234.00'으로 교체한다. 입력과 타입, 이름, 가져오기는 바꾸지 않는다.",
+			"files": [
+				"src/util/number/format-quantity.test.ts"
+			],
+			"expectedSkills": [
+				"testing",
+				"typescript"
+			],
+			"expectedSelected": {
+				"testing": [
+					"case-derive-expectations-from-independent-contracts",
+					"vitest-assert-values-errors-and-async-completion"
+				],
+				"typescript": []
+			}
+		},
+		{
+			"id": "replace-cast-fixture-with-valid-input",
+			"prompt": "기존 order 변수의 {quantity:2} as OrderDto를 같은 이름의 유효한 id, quantity, status 입력과 satisfies OrderDto로 바꾼다. 타입과 가져오기는 이미 있으며 matcher는 그대로다.",
+			"files": [
+				"src/page/orders/_function/to-order-rows.test.ts"
+			],
+			"expectedSkills": [
+				"testing",
+				"typescript"
+			],
+			"expectedSelected": {
+				"testing": [
+					"data-build-small-valid-typed-fixtures"
+				],
+				"typescript": [
+					"types-narrow-unknown-instead-of-asserting"
+				]
+			}
+		},
+		{
+			"id": "control-clock-in-both-processes",
+			"prompt": "기존 테스트의 wall clock 의존을 없앤다. 이미 선언된 fixed_date를 vi.setSystemTime에 넘기고 Date만 대체한 뒤 복구한다. browser clock에는 같은 기준 시각, Node 응답 factory에는 같은 고정 날짜를 전달한다. 시간대는 러너 시작 시 이미 고정돼 있다. 파싱, 이름, 타입, 가져오기는 그대로다.",
+			"files": [
+				"test/reports/reports.integration.spec.ts",
+				"src/util/date/normalize-date-range.test.ts"
+			],
+			"expectedSkills": [
+				"testing",
+				"typescript"
+			],
+			"expectedSelected": {
+				"testing": [
+					"data-build-small-valid-typed-fixtures",
+					"data-control-time-randomness-and-environment",
+					"data-isolate-and-restore-test-state"
+				],
+				"typescript": []
+			}
+		},
+		{
+			"id": "close-owned-context-on-failure",
+			"prompt": "기존 browser.newContext와 page 선언은 유지하고 실패 시에도 context.close가 실행되도록 test 본문에 try/finally만 추가한다. 세션과 검증 여정, locator, matcher, 이름과 타입은 그대로다.",
+			"files": [
+				"test/session/session.e2e.spec.ts"
+			],
+			"expectedSkills": [
+				"testing",
+				"typescript"
+			],
+			"expectedSelected": {
+				"testing": [
+					"data-isolate-and-restore-test-state"
+				],
+				"typescript": []
+			}
+		},
+		{
+			"id": "await-promise-rejection",
+			"prompt": "기존 getOrder('missing').catch 내부의 존재 확인을 await expect(getOrder('missing')).rejects.toThrow('주문이 없습니다')로 교체한다. 제목과 입력, import, 선언은 그대로다.",
+			"files": [
+				"src/service/orders.test.ts"
+			],
+			"expectedSkills": [
+				"testing",
+				"typescript"
+			],
+			"expectedSelected": {
+				"testing": [
+					"case-derive-expectations-from-independent-contracts",
+					"vitest-assert-values-errors-and-async-completion"
+				],
+				"typescript": []
+			}
+		},
+		{
+			"id": "remove-subject-module-mock",
+			"prompt": "검증 대상 toOrderRows 자체를 vi.mock으로 바꿨던 설정만 제거하고 실제 함수를 실행한다. 기존 input과 expect는 유지하며 이제 쓰지 않는 vi import를 지운다.",
+			"files": [
+				"src/page/orders/_function/to-order-rows.test.ts"
+			],
+			"expectedSkills": [
+				"testing",
+				"typescript"
+			],
+			"expectedSelected": {
+				"testing": [
+					"vitest-mock-dependencies-without-replacing-the-subject"
+				],
+				"typescript": [
+					"naming-use-direct-imports-and-public-entry-points"
+				]
+			}
+		},
+		{
+			"id": "scope-ambiguous-button",
+			"prompt": "기존 page.locator('.MuiDialog-root button').last() 클릭 대상만 이름이 '주문 등록'인 dialog 안의 exact '저장' button으로 바꾼다. CSS와 DOM, 기대값, 여정은 그대로다.",
+			"files": [
+				"test/orders/orders.integration.spec.ts"
+			],
+			"expectedSkills": [
+				"testing",
+				"typescript"
+			],
+			"expectedSelected": {
+				"testing": [
+					"playwright-use-semantic-and-scoped-locators"
+				],
+				"typescript": []
+			}
+		},
+		{
+			"id": "replace-sleep-with-retrying-state",
+			"prompt": "기존 고정 sleep 뒤 textContent를 한 번 읽는 검증을 await expect(status).toHaveText('조회했습니다')로 바꾼다. 입력과 제목, fixture, import, 선언 이름은 유지한다.",
+			"files": [
+				"test/orders/orders.integration.spec.ts"
+			],
+			"expectedSkills": [
+				"testing",
+				"typescript"
+			],
+			"expectedSelected": {
+				"testing": [
+					"playwright-wait-for-state-and-register-events-before-actions"
+				],
+				"typescript": []
+			}
+		},
+		{
+			"id": "register-download-before-action",
+			"prompt": "기존 다운로드 테스트에서 클릭 뒤 등록하던 page.waitForEvent('download')를 클릭 전으로 옮긴다. Promise와 download 변수 이름, 기대 파일명, 나머지 코드는 유지한다.",
+			"files": [
+				"test/reports/reports.e2e.spec.ts"
+			],
+			"expectedSkills": [
+				"testing",
+				"typescript"
+			],
+			"expectedSelected": {
+				"testing": [
+					"playwright-wait-for-state-and-register-events-before-actions"
+				],
+				"typescript": []
+			}
+		},
+		{
+			"id": "fixture-scope-and-runner-binding",
+			"prompt": "기존 Playwright page object fixture의 scope만 worker에서 test로 낮추고 기존 종료 구간에서 자원을 닫는다. 의존성 해석에 필요한 callback의 {page} 구조분해는 그대로 둔다. 새 타입, 이름, import는 없으며 React 렌더와 CSS는 바꾸지 않는다.",
+			"files": [
+				"test/_fixture/test.ts"
+			],
+			"expectedSkills": [
+				"testing",
+				"typescript"
+			],
+			"expectedSelected": {
+				"testing": [
+					"data-isolate-and-restore-test-state",
+					"playwright-share-fixtures-and-page-objects-at-real-boundaries"
+				],
+				"typescript": []
+			}
+		},
+		{
+			"id": "exercise-the-link-under-test",
+			"prompt": "목록 링크를 검증한다는 기존 테스트가 상세 URL로 바로 가던 부분만 목록 딥링크 진입 후 실제 주문 링크 클릭으로 고친다. 기존 세션 fixture, 제목, 기대값, 가져오기를 유지한다.",
+			"files": [
+				"test/orders/orders.e2e.spec.ts"
+			],
+			"expectedSkills": [
+				"testing",
+				"typescript"
+			],
+			"expectedSelected": {
+				"testing": [
+					"playwright-use-semantic-and-scoped-locators",
+					"playwright-prepare-state-and-exercise-the-target-journey"
+				],
+				"typescript": []
+			}
+		},
+		{
+			"id": "override-response-not-dom",
+			"prompt": "기존 빈 목록 테스트가 main.innerHTML에 안내를 직접 쓰던 코드를 없애고, page.goto 전에 /api/orders 응답을 {items:[],total:0}으로 route.fulfill한다. 같은 실제 화면의 기존 상태 단언은 유지한다. provider와 hook은 바꾸지 않는다.",
+			"files": [
+				"test/orders/orders.integration.spec.ts"
+			],
+			"expectedSkills": [
+				"testing",
+				"typescript"
+			],
+			"expectedSelected": {
+				"testing": [
+					"data-build-small-valid-typed-fixtures",
+					"network-override-transport-and-keep-owned-logic-real"
+				],
+				"typescript": []
+			}
+		},
+		{
+			"id": "unhandled-api-policy-only",
+			"prompt": "이미 있는 MSW server와 afterEach resetHandlers, afterAll close는 유지하고 server.listen의 onUnhandledRequest만 bypass에서 error로 바꾼다. 새 handler, 입력, 이름, 타입, 가져오기는 없다.",
+			"files": [
+				"test/_fixture/server.ts"
+			],
+			"expectedSkills": [
+				"testing",
+				"typescript"
+			],
+			"expectedSelected": {
+				"testing": [
+					"network-detect-unhandled-api-requests"
+				],
+				"typescript": []
+			}
+		},
+		{
+			"id": "mock-boundary-report",
+			"prompt": "테스트 결과 설명을 고친다. 실제 앱과 브라우저를 실행했지만 API는 전부 mock이었다. '백엔드 인증과 DB 저장 확인'이라는 문구를 실제 확인한 화면, 요청 계약, 미확인 서버 경계와 실행 상태로 고친다. 코드나 타입은 바꾸지 않는다.",
+			"files": [
+				"docs/test-report.md"
+			],
+			"expectedSkills": [
+				"testing",
+				"typescript"
+			],
+			"expectedSelected": {
+				"testing": [
+					"network-state-real-and-mocked-system-boundaries",
+					"verification-report-failures-flakes-and-executed-scope"
+				],
+				"typescript": []
+			}
+		},
+		{
+			"id": "snapshot-retains-meaning",
+			"prompt": "기존 mapper 골든의 received를 JSON 문자열 길이에서 작고 안정된 전체 행 구조로 바꾸고 직접 검토한 snapshot을 갱신한다. 입력과 serializer 외 코드, 타입, 이름, 가져오기는 유지한다.",
+			"files": [
+				"test/_golden/order-rows.test.ts"
+			],
+			"expectedSkills": [
+				"testing",
+				"typescript"
+			],
+			"expectedSelected": {
+				"testing": [
+					"case-derive-expectations-from-independent-contracts",
+					"vitest-assert-values-errors-and-async-completion",
+					"baseline-keep-snapshots-stable-small-and-reviewed"
+				],
+				"typescript": []
+			}
+		},
+		{
+			"id": "buffer-matcher-config",
+			"prompt": "기존 이미지 Buffer.toMatchSnapshot 비교의 1% 설정이 expect.toHaveScreenshot에 있다. 허용치와 viewport, 시간대는 그대로 두고 옵션을 expect.toMatchSnapshot으로 옮긴다. spec과 CSS, 실제 앱 렌더는 바꾸지 않는다.",
+			"files": [
+				"playwright.config.ts"
+			],
+			"expectedSkills": [
+				"testing",
+				"typescript"
+			],
+			"expectedSelected": {
+				"testing": [
+					"baseline-align-visual-environment-and-matcher-options"
+				],
+				"typescript": []
+			}
+		},
+		{
+			"id": "prove-zero-regression",
+			"prompt": "기존 0 수량 테스트의 not.toThrow 단언만 '0.00'이라는 구체적인 기대값으로 바꾼다. 원래 결함에서 의도한 실패, 수정 후 통과를 확인하고 실행 결과를 보고한다. 입력, 제목, 선언 이름, import는 그대로다.",
+			"files": [
+				"src/util/number/format-quantity.test.ts"
+			],
+			"expectedSkills": [
+				"testing",
+				"typescript"
+			],
+			"expectedSelected": {
+				"testing": [
+					"case-derive-expectations-from-independent-contracts",
+					"vitest-assert-values-errors-and-async-completion",
+					"verification-prove-regressions-detect-the-original-failure",
+					"verification-report-failures-flakes-and-executed-scope"
+				],
+				"typescript": []
+			}
+		},
+		{
+			"id": "report-runner-and-coverage-boundaries",
+			"prompt": "이번 테스트의 실패, 재시도 통과, skip을 구분하고 source 범위가 다른 커버리지 비율은 합치지 않는다. 준비 단계가 실패했을 때 과거 JSON을 읽던 결과서 생성 흐름과 종료 코드도 고친다. 테스트 본문과 타입, 이름, import는 바꾸지 않는다.",
+			"files": [
+				"docs/test-report.md",
+				"script/test-report/run.sh"
+			],
+			"expectedSkills": [
+				"testing",
+				"typescript"
+			],
+			"expectedSelected": {
+				"testing": [
+					"verification-report-failures-flakes-and-executed-scope"
+				],
+				"typescript": []
+			}
+		},
+		{
+			"id": "css-assertion-does-not-activate-css",
+			"prompt": "기존 브라우저 테스트에서 computed CSS를 읽는 toHaveCSS 단언의 기대 opacity만 요구사항에서 확인한 값으로 바꾼다. 실제 스타일, className, 토큰, React 렌더는 바꾸지 않는다.",
+			"files": [
+				"test/orders/orders.integration.spec.ts"
+			],
+			"expectedSkills": [
+				"testing",
+				"typescript"
+			],
+			"expectedSelected": {
+				"testing": [
+					"case-derive-expectations-from-independent-contracts",
+					"playwright-wait-for-state-and-register-events-before-actions"
+				],
+				"typescript": []
+			}
+		},
+		{
+			"id": "story-render-activates-react",
+			"prompt": "기존 .story.tsx의 JSX 조건만 수정한다. 이미 존재하는 props.isLoading과 두 컴포넌트를 써서 JSX 삼항을 두 && 분기로 바꾼다. 입력, props 타입, 이름, import, provider와 CSS는 그대로다.",
+			"files": [
+				"test/orders/orders.story.tsx"
+			],
+			"expectedSkills": [
+				"testing",
+				"typescript",
+				"react"
+			],
+			"expectedSelected": {
+				"testing": [],
+				"typescript": [],
+				"react": [
+					"composition-render-one-branch-with-and"
+				]
+			}
+		},
+		{
+			"id": "harness-token-activates-css",
+			"prompt": "테스트 harness의 기존 CSS 한 곳에서 padding의 var(--app-gap-2)를 var(--app-gap-3)로 바꾼다. 선택자, 클래스 계약, 토큰 정의, JSX, 레이아웃 책임은 유지한다.",
+			"files": [
+				"test/_gallery/gallery.css"
+			],
+			"expectedSkills": [
+				"testing",
+				"typescript",
+				"css"
+			],
+			"expectedSelected": {
+				"testing": [],
+				"typescript": [],
+				"css": [
+					"values-fall-back-only-outside-core-tokens"
+				]
+			}
+		},
+		{
+			"id": "production-only-does-not-add-testing",
+			"prompt": "프로덕션 TypeScript 함수의 기존 비교 연산자만 >=에서 >로 고친다. 기존 식별자, 타입, 숫자와 import는 그대로이며 테스트 작업이나 계획은 요청하지 않았다.",
+			"files": [
+				"src/util/number/is-positive.ts"
+			],
+			"expectedSkills": [
+				"typescript"
+			],
+			"expectedSelected": {
+				"typescript": []
+			},
+			"scopeDrift": {
+				"evidence": "이후 사용자가 기존 0 수량 회귀 테스트를 구체적인 기대값으로 고치고 결함 검출과 수정 후 통과를 확인해 보고하라고 요청했다. 기존 이름과 입력, import는 유지한다.",
+				"files": [
+					"src/util/number/is-positive.ts",
+					"src/util/number/format-quantity.test.ts"
+				],
+				"expectedSkills": [
+					"typescript",
+					"testing"
+				],
+				"expectedSelected": {
+					"typescript": [],
+					"testing": [
+						"case-derive-expectations-from-independent-contracts",
+						"vitest-assert-values-errors-and-async-completion",
+						"verification-prove-regressions-detect-the-original-failure",
+						"verification-report-failures-flakes-and-executed-scope"
+					]
+				}
+			}
+		},
+		{
+			"id": "style-only-does-not-add-testing",
+			"prompt": "프로덕션 CSS의 기존 padding var 참조를 다른 기존 토큰으로 변경한다. 테스트, TSX, 클래스 이름, 토큰 선언은 바꾸지 않는다.",
+			"files": [
+				"src/component/ui/panel/ui-panel.css"
+			],
+			"expectedSkills": [
+				"css"
+			],
+			"expectedSelected": {
+				"css": [
+					"values-fall-back-only-outside-core-tokens"
+				]
+			},
+			"scopeDrift": {
+				"evidence": "이후 사용자가 기존 브라우저 테스트의 CSS 기대값도 변경된 요구사항에 맞춰 고치도록 요청했다. 테스트가 실제 스타일 파일과 함께 바뀌지만 React 렌더는 바뀌지 않는다.",
+				"files": [
+					"src/component/ui/panel/ui-panel.css",
+					"test/orders/orders.integration.spec.ts"
+				],
+				"expectedSkills": [
+					"css",
+					"testing",
+					"typescript"
+				],
+				"expectedSelected": {
+					"css": [
+						"values-fall-back-only-outside-core-tokens"
+					],
+					"testing": [
+						"case-derive-expectations-from-independent-contracts",
+						"playwright-wait-for-state-and-register-events-before-actions"
+					],
+					"typescript": []
+				}
+			}
+		}
+	]
+}

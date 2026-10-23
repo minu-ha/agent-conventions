@@ -34,6 +34,7 @@ ln -s "$PWD/skill" ~/.agents/skills/conventions
 - React와 TSX 작업은 `convention-react`를 사용한다.
 - TypeScript 작업은 `convention-typescript`를 사용한다.
 - CSS 작업은 `convention-css`를 사용한다.
+- 테스트 설계, 작성, 검토는 `convention-testing`을 사용한다.
 - Figma 디자인 구현은 `convention-figma`를 사용한다.
 ```
 
@@ -61,6 +62,11 @@ npm run dev
 - React 작업은 TypeScript를 항상 함께 읽고, 스타일을 바꾸면 CSS도 읽는다.
 - Figma 작업은 바뀌는 범위에 따라 React와 CSS를 함께 활성화한다.
 - 순수 CSS 작업에서는 TypeScript를 자동으로 켜지 않는다.
+- Testing은 TypeScript를 함께 읽고, React 렌더나 실제 스타일을 바꿀 때만 해당 companion을 켠다.
+- 테스트에서 CSS를 단언하거나 locator를 쓰는 것만으로 React, CSS를 활성화하지 않는다.
+
+테스트 규칙은 [Testing](convention/testing.md)에서 읽는다.
+테스트 추가 여부와 IA 번호, 케이스 ID, 제목 언어, 결과서 형식은 프로젝트 계약을 따른다.
 
 ## 규칙을 읽는 순서
 

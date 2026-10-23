@@ -45,6 +45,7 @@ const placementBySkillName: Record<string, SitePlacement> = {
 	react: {name: "React", group: "Coding", order: 1},
 	css: {name: "CSS", group: "Coding", order: 2},
 	typescript: {name: "TypeScript", group: "Coding", order: 3},
+	testing: {name: "Testing", group: "Coding", order: 4},
 	figma: {name: "Figma", group: "Tool", order: 1},
 };
 

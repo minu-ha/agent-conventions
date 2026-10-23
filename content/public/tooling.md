@@ -30,7 +30,7 @@ rule frontmatter의 `reviewWith`는 조건부 재평가, `requiresSelected`는 s
 
 스킬 연결과 프로젝트 적용 방법은 [Usage](usage.md)에서 확인합니다.
 
-Node.js 22.12.0 이상에서 for-humanity `0.17.0`을 사용합니다. 버전은 `package.json`과 `package-lock.json`에 고정합니다. `for-humanity.config.ts`는 패키지의 `SiteConfig` 타입을 사용하며 저장소의 타입 검사·린트에 포함합니다.
+Node.js 22.12.0 이상에서 for-humanity `0.18.0`을 사용합니다. 버전은 `package.json`과 `package-lock.json`에 고정합니다. `for-humanity.config.ts`는 패키지의 `SiteConfig` 타입을 사용하며 저장소의 타입 검사·린트에 포함합니다.
 
 `npm run dev`는 Vite 개발 서버와 Hono 문서 앱을 포트 4322에서 실행합니다. `npm run content:build`는 정적 결과를 `content/dist`에 생성하고, `npm run content:preview`는 그 결과를 확인하는 로컬 미리보기입니다. 설정 변경은 개발 서버 재시작이 필요합니다.
 
@@ -77,8 +77,16 @@ CLI 사용법은 `npx for-humanity --help`, 설치 버전은 `npx for-humanity -
 | `css` | conditional `typescript` |
 | `typescript` | none |
 | `figma` | conditional `react`, `css` |
+| `testing` | required `typescript`; conditional `react`, `css` |
 
-skill은 `SKILL.md` → activated `RULES_INDEX.md` 전체 scan과 completion gate → Selected/Unknown `contracts/*.md` → CRITICAL 또는 판정 근거가 필요한 `rules/*.md` full expansion → Unknown 해소 → final Selected의 `requiresSelected` closure 순서로 소비합니다. 형태를 정하는 규칙은 원문의 `Correct` 예제도 읽습니다. 새 selection이나 companion이 생기면 고정점까지 반복합니다. 현재 제공하는 skill은 위 표의 네 가지입니다.
+skill은 `SKILL.md` → activated `RULES_INDEX.md` 전체 scan과 completion gate → Selected/Unknown `contracts/*.md` → CRITICAL 또는 판정 근거가 필요한 `rules/*.md` full expansion → Unknown 해소 → final Selected의 `requiresSelected` closure 순서로 소비합니다. 형태를 정하는 규칙은 원문의 `Correct` 예제도 읽습니다. 새 selection이나 companion이 생기면 고정점까지 반복합니다. 현재 제공하는 skill은 위 표의 다섯 가지입니다.
+
+Testing은 Coding에 배치합니다. 테스트 설계와 데이터, 격리, Vitest, Playwright, 네트워크, 기준값과 실행 결과를 다룹니다.
+React 렌더와 실제 스타일 변경만 해당 companion을 활성화하며 locator나 CSS 단언만으로는 활성화하지 않습니다.
+테스트 추가 정책, IA 번호, 케이스 ID, 결과서 형식은 소비 프로젝트에 남깁니다.
+
+Vitest, Playwright, MSW는 테스트 예제의 실제 API 타입 검사를 위한 개발 의존성입니다.
+이 저장소 도구의 회귀 테스트는 기존 `node:test`와 `tsx` 명령으로 실행합니다.
 
 `routing-evals.json`과 회귀 테스트는 예상 선택 목록, 필수 규칙 관계, 전체 규칙의 적용 사례 유무를 검사합니다.
 이 검사를 통과해도 실제 에이전트의 선택 정확도가 인증되는 것은 아닙니다.

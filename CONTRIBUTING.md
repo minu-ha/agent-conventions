@@ -44,7 +44,7 @@ skill/react/
 생성물은 `RULES_INDEX.md`, `contracts/*.md` 둘. 사람이 읽는 전체 보기는 `content/` 사이트다.
 직접 고치면 다음 build에서 사라지고 `check:generated`가 실패한다.
 
-`react`, `typescript`, `css`, `figma` 넷이 전부다.
+`react`, `typescript`, `css`, `testing`, `figma` 다섯 가지를 지원한다.
 
 ---
 
@@ -264,8 +264,10 @@ appliesWhen: TSX event prop의 인라인 callback에 분기, 비동기 호출 �
 
 ## 4. 배치 기준
 
-여러 프레임워크 공통이면 `typescript` 또는 `css`에 둔다.
-generic TypeScript 규칙은 `skill/typescript`가 정본이다.
+언어, 타입, 모듈 공통 규칙은 `typescript`, 스타일 공통 규칙은 `css`에 둔다.
+테스트 범위, 기대값, 격리, mock, 기준값과 실행 결과 규칙은 `testing`에 둔다.
+`testing`은 사이트의 Coding에 속하며 Vitest와 Playwright 전용 규칙도 해당 섹션에서 좁혀 읽는다.
+generic TypeScript 규칙은 `skill/typescript`가 정본이며 테스트 전용 예외도 그 규칙에서 정한다.
 
 특정 프레임워크 전용이면 그 skill의 local rule로 둔다.
 

@@ -1,0 +1,35 @@
+{
+	"title": "Testing 컨벤션",
+	"version": "1.0.0",
+	"organization": "Agent Conventions",
+	"date": "2026년 10월",
+	"abstract": "테스트를 설계하고 작성, 검토하는 팀을 위한 컨벤션입니다. 단위, 화면 통합, 앱 여정의 검증 책임과 독립된 기대값, 타입 기반 입력, 시간과 상태의 격리를 다룹니다. Vitest의 단언과 mock, Playwright의 locator와 대기, 네트워크 경계, 골든과 시각 비교, 실패와 실행 범위의 보고를 정합니다. 폴더 번호와 케이스 ID, 결과서 형식은 프로젝트에 남깁니다. 규칙 본문의 정본은 `rules/*.md`입니다.",
+	"companions": [
+		{
+			"skill": "typescript",
+			"mode": "required"
+		},
+		{
+			"skill": "react",
+			"mode": "conditional",
+			"appliesWhen": "story, 테스트 harness의 React 렌더, 상태, provider 구성을 실제로 변경한다."
+		},
+		{
+			"skill": "css",
+			"mode": "conditional",
+			"appliesWhen": "테스트 대상이나 harness의 스타일시트, 클래스 계약, 토큰을 실제로 변경한다."
+		}
+	],
+	"references": [
+		"https://vitest.dev/guide/learn/testing-in-practice",
+		"https://vitest.dev/guide/learn/writing-tests-with-ai",
+		"https://vitest.dev/guide/mocking",
+		"https://vitest.dev/guide/snapshot",
+		"https://playwright.dev/docs/best-practices",
+		"https://playwright.dev/docs/test-fixtures",
+		"https://playwright.dev/docs/clock",
+		"https://playwright.dev/docs/api/class-testconfig#test-config-expect",
+		"https://mswjs.io/guides/best-practices/avoid-request-assertions",
+		"https://testing-library.com/docs/guiding-principles/"
+	]
+}
