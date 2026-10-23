@@ -11,6 +11,7 @@ export default {
 	description:
 		"Personal coding conventions for AI-assisted development, with structured skills, examples and research for React, TypeScript, CSS, Testing and Figma.",
 	lang: "ko",
+	statusImage: "asset/status.svg",
 	cursorFace: true,
 	navigation: ["Coding", "Tool", "Research", "Development"],
 

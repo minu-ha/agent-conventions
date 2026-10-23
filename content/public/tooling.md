@@ -30,7 +30,7 @@ rule frontmatter의 `reviewWith`는 조건부 재평가, `requiresSelected`는 s
 
 스킬 연결과 프로젝트 적용 방법은 [Usage](usage.md)에서 확인합니다.
 
-Node.js 22.12.0 이상에서 for-humanity `0.18.0`을 사용합니다. 버전은 `package.json`과 `package-lock.json`에 고정합니다. `for-humanity.config.ts`는 패키지의 `SiteConfig` 타입을 사용하며 저장소의 타입 검사·린트에 포함합니다.
+Node.js 22.12.0 이상에서 for-humanity `0.20.0`을 사용합니다. 버전은 `package.json`과 `package-lock.json`에 고정합니다. `for-humanity.config.ts`는 패키지의 `SiteConfig` 타입을 사용하며 저장소의 타입 검사·린트에 포함합니다.
 
 `npm run dev`는 Vite 개발 서버와 Hono 문서 앱을 포트 4322에서 실행합니다. `npm run content:build`는 정적 결과를 `content/dist`에 생성하고, `npm run content:preview`는 그 결과를 확인하는 로컬 미리보기입니다. 설정 변경은 개발 서버 재시작이 필요합니다.
 
@@ -124,6 +124,9 @@ Vitest, Playwright, MSW는 테스트 예제의 실제 API 타입 검사를 위�
 사이트 로고와 탭 아이콘은 `content/asset/favicon.svg`를 함께 사용합니다. 회색 픽셀 얼굴에 검은 눈과 웃는 입만 남겼습니다.
 `for-humanity.config.ts`의 `cursorFace: true`로 데스크톱 커서 얼굴도 같은 아이콘을 사용합니다.
 파비콘 준비는 설치 패키지의 자원 파일만 교체합니다. `npm ci`로 초기화되면 다음 `dev`나 `content:build`에서 다시 적용합니다.
+
+404 화면은 `content/asset/status.svg`의 회색 픽셀 얼굴과 슬픈 입을 사용합니다. `for-humanity.config.ts`의 `statusImage: "asset/status.svg"`로 지정하며 `content:build`가 GitHub Pages용 `content/dist/404.html`을 생성합니다.
+없는 문서에서도 `/agent-conventions/` 기준으로 그림과 스타일을 불러오고 홈 복귀 링크를 제공합니다. 오류 화면은 검색 색인에서 제외합니다.
 
 공개 주소는 [minu-ha.github.io/agent-conventions](https://minu-ha.github.io/agent-conventions/).
 `for-humanity.config.ts`의 `url`은 도메인, `basePath`는 `/agent-conventions/`으로 지정합니다.
