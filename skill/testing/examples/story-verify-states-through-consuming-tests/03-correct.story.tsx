@@ -11,11 +11,11 @@ export const SaveResult = () => {
 
 	return (
 		<Fragment>
-			{/*
+			{/**
 			 * 브라우저 안에서 생성한 callback
 			 */}
 			<WgOrderDialog orderId="order-1" onSave={setSavedOrderId} />
-			{/*
+			{/**
 			 * 테스트에서 읽을 저장 결과
 			 */}
 			{/* [!code ++] */}

@@ -1,5 +1,5 @@
 // test/orders/order-dialog.integration.spec.ts
-import { expect, test } from "@playwright/test";
+import { expect, test } from "@test/_fixture/test";
 
 test("주문을 저장하면 callback에 선택한 ID를 전달한다", async ({ mount }) => {
 	/**

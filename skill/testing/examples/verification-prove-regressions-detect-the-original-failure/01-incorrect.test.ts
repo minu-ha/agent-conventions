@@ -12,14 +12,14 @@ test("0도 수량으로 처리한다", () => {
 
 	/**
 	 * WHEN
-	 * 수량의 표시 문자열 계산
+	 * 수량 표시 문자열을 계산하는 호출
 	 */
-	const label = formatQuantity(value);
+	const format = () => formatQuantity(value);
 
 	/**
 	 * THEN
 	 * 오류 발생 여부만 검사
 	 */
 	// [!code error]
-	expect(() => label).not.toThrow();
+	expect(format).not.toThrow();
 });

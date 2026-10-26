@@ -22,7 +22,7 @@ story는 화면, 위젯의 특정 상태를 만드는 브라우저 지원 코드
 | props | 같은 상태의 값 차이. Node에서 넘길 때 직렬화 가능해야 합니다 |
 | router | 실제로 읽는 경로, params, search와 이동에 필요한 경계 |
 | provider | 앱과 같은 query, theme, modal 등 실제 문맥 |
-| gallery | story 발견, mount, update, unmount와 렌더 실패의 전파 |
+| gallery | window.mount, window.unmount 구현으로 story 발견, 렌더, 갱신과 렌더 실패의 전파 |
 
 상태를 가진 page 소유자와 우리 동작이 있는 위젯부터 story를 만듭니다.
 서드파티 자체의 속성이나 단순 래퍼를 모두 별도 story로 만들지 않습니다.
@@ -31,7 +31,7 @@ Node spy나 함수를 props로 넘겨 브라우저에서 실행될 것으로 가
 
 story 파일은 앱의 production 진입 경로로 가져오지 않고 테스트 gallery에서만 발견합니다.
 하나의 story에 모든 앱 여정을 붙이지 않고 세션과 라우트 트리 자체가 대상일 때만 범위를 넓힙니다.
-storybook은 선택 사항이며 현재 프로젝트의 gallery와 story ID 계약을 유지합니다.
+Storybook은 선택 사항이며 현재 프로젝트의 gallery와 story ID 계약을 유지합니다.
 
 참고: [Playwright의 story와 gallery](https://playwright.dev/docs/test-components).
 

@@ -22,6 +22,8 @@ story 파일이 있다는 이유로 자동화 integration 테스트가 있다고
 1. 구역의 정상, 빈 값, 로딩, 실패 중 변경 계약에 필요한 상태를 고릅니다.
 2. 공유 registry를 fixture에 연결하고 사례의 API 차이를 요청 시작 전에 등록합니다.
 3. 초기 props와 라우트가 있는 story를 mount하고 반환된 locator로 범위를 좁힙니다.
+   Playwright의 내장 mount는 baseURL의 gallery를 열고 window.mount에 story id와 props를 넘깁니다.
+   gallery가 window.mount와 window.unmount를 구현하고 mount는 #root locator를 돌려줍니다.
 4. GIVEN, WHEN, THEN으로 준비, 행동, 결과를 설명하고 DOM, URL, 파일 결과를 단언합니다.
 5. gallery를 포함한 테스트 빌드, 수집 목록과 해당 spec의 실제 실행을 확인합니다.
 

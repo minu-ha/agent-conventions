@@ -1,7 +1,7 @@
 // test/orders/orders.e2e.spec.ts
 import { expect, test } from "@playwright/test";
 
-// baseURL: 검증할 배포 산출물. fixture에서 세션과 읽기 전용 order-1 데이터를 준비
+// baseURL: 검증할 배포 산출물. 세션과 읽기 전용 order-1 데이터는 그 환경에 준비돼 있음
 // [!code ++]
 test("주문 화면에 진입하면 대표 목록을 조회한다", { tag: "@smoke" }, async ({ page }) => {
 	/**
