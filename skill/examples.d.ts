@@ -988,7 +988,7 @@ declare module "@/service/msw/handlers" {
 	export const mock_handlers: typeof import("./testing/examples/network-compose-generated-contracts-through-owned-builders/04-correct").mock_handlers;
 }
 declare module "@/service/msw/_constant/mock" {
-	export const mock_unhandled_api_prefix: typeof import("./testing/examples/network-share-handlers-across-browser-and-node/05-correct").mock_unhandled_api_prefix;
+	export const mock_unhandled_api_prefix: typeof import("./testing/examples/network-detect-unhandled-api-requests/03-correct").mock_unhandled_api_prefix;
 }
 declare module "@test/_fixture/to-mock-route" {
 	export const toMockRoute: typeof import("./testing/examples/network-share-handlers-across-browser-and-node/03-correct").toMockRoute;

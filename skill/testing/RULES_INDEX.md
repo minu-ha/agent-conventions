@@ -1,7 +1,7 @@
 # Testing 컨벤션 Rule Index
 
 - Skill: `testing`
-- Routing digest: `sha256:ef6a840802c3b30ab89fe93bc7d75f9ea20af47f43bf82e77d5ff1176c28e5ba`
+- Routing digest: `sha256:6f89490e98471263232b8adb7bfb4aaaac5de4e00550ca2b7b244aa0af137704`
 
 ## Direct Companions
 
@@ -31,7 +31,7 @@
 - T06-02 | network-detect-unhandled-api-requests | mock 서버의 미처리 요청 정책, route fallback, handler 우선순위를 추가하거나 바꿀 때.
 - T06-03 | network-state-real-and-mocked-system-boundaries | 테스트의 실제 서버와 mock 경계를 정하거나 E2E, 인증, 저장 검증 범위를 설명할 때.
 - T06-04 | network-compose-generated-contracts-through-owned-builders | API 생성기의 DTO, faker, MSW 산출물을 연결하거나 그 위의 소유 mock을 조립할 때.
-- T06-05 | network-share-handlers-across-browser-and-node | MSW worker, Node bridge, mockApi fixture의 handler 공유와 우선순위를 만들거나 바꿀 때.
+- T06-05 | network-share-handlers-across-browser-and-node | MSW worker, Node bridge, 응답 덮어쓰기 fixture의 handler 공유와 우선순위를 만들거나 바꿀 때.
 - T07-01 | baseline-keep-snapshots-stable-small-and-reviewed | JSON 골든, snapshot, serializer, 기준값 갱신을 추가하거나 바꿀 때.
 - T07-02 | baseline-align-visual-environment-and-matcher-options | 이미지 기준값, 캡처 대상, 렌더 안정화, 비교 허용치나 matcher 설정을 바꿀 때.
 - T08-01 | verification-prove-regressions-detect-the-original-failure | 버그 재현 테스트를 추가하거나 기존 실패 테스트와 기준값을 수정할 때.
