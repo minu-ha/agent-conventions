@@ -13,7 +13,7 @@ order: 5
 저장소를 받은 뒤 스킬 폴더를 연결한다.
 
 ```sh
-git clone https://github.com/minu-ha/agent-conventions.git
+git clone https://github.com/nomeehej/agent-conventions.git
 cd agent-conventions
 
 mkdir -p ~/.agents/skills
@@ -26,7 +26,7 @@ ln -s "$PWD/skill" ~/.agents/skills/conventions
 ## 프로젝트에 적용
 
 프로젝트의 `AGENTS.md`에 작업별 스킬을 적는다.
-새 프로젝트는 [시작 템플릿](https://github.com/minu-ha/agent-conventions/blob/main/AGENTS.template.md)을 사용해도 된다.
+새 프로젝트는 [시작 템플릿](https://github.com/nomeehej/agent-conventions/blob/main/AGENTS.template.md)을 사용해도 된다.
 
 ```markdown
 ## 코딩 컨벤션
@@ -43,7 +43,7 @@ ln -s "$PWD/skill" ~/.agents/skills/conventions
 
 ## 규칙 읽기
 
-[문서 사이트](https://minu-ha.github.io/agent-conventions/)에서 스킬을 고르면 개요와 전체 규칙 표가 나온다.
+[문서 사이트](https://nomeehej.github.io/agent-conventions/)에서 스킬을 고르면 개요와 전체 규칙 표가 나온다.
 섹션 페이지에서는 한 줄 요지, 판정 기준, 잘못된 예와 올바른 예, 관련 규칙을 함께 볼 수 있다.
 규칙 번호는 원문 파일 번호와 같아 사이트와 소스를 맞춰 찾을 수 있다.
 
@@ -55,7 +55,7 @@ npm run dev
 ```
 
 [localhost:4322/agent-conventions](http://localhost:4322/agent-conventions/)에서 확인한다.
-사이트는 [for-humanity](https://github.com/minu-ha/for-humanity)로 만든다.
+사이트는 [for-humanity](https://github.com/nomeehej/for-humanity)로 만든다.
 
 ## 함께 읽는 스킬
 

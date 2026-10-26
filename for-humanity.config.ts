@@ -4,7 +4,7 @@ import type {SiteConfig} from "for-humanity";
  * 문서 사이트 이름과 탐색 순서
  */
 export default {
-	url: "https://minu-ha.github.io",
+	url: "https://nomeehej.github.io",
 	basePath: "/agent-conventions/",
 	content: {root: "content", public: "public", private: "private"},
 	title: "agent conventions",

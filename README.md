@@ -11,10 +11,10 @@
 Rules, examples and the reasoning behind everyday decisions in React, TypeScript, CSS and Figma.
 
 [![MIT](https://img.shields.io/badge/license-MIT-1111aa?style=flat-square)](LICENSE)
-[![Documentation](https://img.shields.io/github/actions/workflow/status/minu-ha/agent-conventions/docs.yml?branch=main&label=docs&style=flat-square)](https://github.com/minu-ha/agent-conventions/actions/workflows/docs.yml)
+[![Documentation](https://img.shields.io/github/actions/workflow/status/nomeehej/agent-conventions/docs.yml?branch=main&label=docs&style=flat-square)](https://github.com/nomeehej/agent-conventions/actions/workflows/docs.yml)
 ![Node.js 22.12.0+](https://img.shields.io/badge/node-22.12.0%2B-444444?style=flat-square)
 
-[Documentation](https://minu-ha.github.io/agent-conventions/) | [Usage](content/public/usage.md) | [Rule authoring](CONTRIBUTING.md) | [Research](content/public/research/progressive-loading.md)
+[Documentation](https://nomeehej.github.io/agent-conventions/) | [Usage](content/public/usage.md) | [Rule authoring](CONTRIBUTING.md) | [Research](content/public/research/progressive-loading.md)
 
 </div>
 
@@ -28,11 +28,11 @@ The conventions grow from actual project work, with changes to the rules and the
 
 | Skill | What it covers |
 | --- | --- |
-| [React](https://minu-ha.github.io/agent-conventions/convention/react/) | Component ownership, server data, state, composition, events, runtime boundaries and accessibility |
-| [TypeScript](https://minu-ha.github.io/agent-conventions/convention/typescript/) | Types and contracts, imports, naming, function boundaries, values, fallbacks and comments |
-| [CSS](https://minu-ha.github.io/agent-conventions/convention/css/) | Class names, ownership, selectors, design tokens, layout, responsive behavior and motion |
-| [Testing](https://minu-ha.github.io/agent-conventions/convention/testing/) | Test levels and suite selection, Given/When/Then, generated API mocks, stories, Vitest, Playwright, baselines, and verification |
-| [Figma](https://minu-ha.github.io/agent-conventions/convention/figma/) | Reading designs, identifying intent, tracing values and copy, implementing and comparing the result |
+| [React](https://nomeehej.github.io/agent-conventions/convention/react/) | Component ownership, server data, state, composition, events, runtime boundaries and accessibility |
+| [TypeScript](https://nomeehej.github.io/agent-conventions/convention/typescript/) | Types and contracts, imports, naming, function boundaries, values, fallbacks and comments |
+| [CSS](https://nomeehej.github.io/agent-conventions/convention/css/) | Class names, ownership, selectors, design tokens, layout, responsive behavior and motion |
+| [Testing](https://nomeehej.github.io/agent-conventions/convention/testing/) | Test levels and suite selection, Given/When/Then, generated API mocks, stories, Vitest, Playwright, baselines, and verification |
+| [Figma](https://nomeehej.github.io/agent-conventions/convention/figma/) | Reading designs, identifying intent, tracing values and copy, implementing and comparing the result |
 
 The skills declare their dependencies explicitly.
 React always activates the shared TypeScript conventions and adds CSS when styling changes.
@@ -75,7 +75,7 @@ A revised rule or example carries through to both views when they are rebuilt.
 
 On the site, each skill has an overview and a page for each section.
 Rule numbers follow the source file numbers, making it possible to move between a rule in the browser and its original file.
-The site is built with [for-humanity](https://github.com/minu-ha/for-humanity).
+The site is built with [for-humanity](https://github.com/nomeehej/for-humanity).
 
 ## Keep the reasoning with the rules
 
@@ -99,6 +99,6 @@ The detailed guides and rule explanations are currently written in Korean.
 
 ## License
 
-[MIT](LICENSE) © 2026 [Minu Ha](https://github.com/minu-ha)
+[MIT](LICENSE) © 2026 [Minu Ha](https://github.com/nomeehej)
 
 </div>

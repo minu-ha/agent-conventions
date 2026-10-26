@@ -52,7 +52,7 @@ CLI 사용법은 `npx for-humanity --help`, 설치 버전은 `npx for-humanity -
 | Script | Does |
 | --- | --- |
 | `npm run validate` | source, metadata, companion closure, index 입력, routing eval manifest, 규칙 문체를 검사합니다. `-- --skill=<name>`으로 하나만 봅니다. |
-| `npm run build` | 모든 buildable skill의 `RULES_INDEX.md`, `contracts/*.md`를 다시 쓰고 `content/public/convention/`에 [for-humanity](https://github.com/minu-ha/for-humanity) Markdown을 생성합니다. 이 폴더는 커밋하지 않습니다. |
+| `npm run build` | 모든 buildable skill의 `RULES_INDEX.md`, `contracts/*.md`를 다시 쓰고 `content/public/convention/`에 [for-humanity](https://github.com/nomeehej/for-humanity) Markdown을 생성합니다. 이 폴더는 커밋하지 않습니다. |
 | `npm run sync:readme` | 루트 `README.md`에서 사이트 홈 `content/README.md`를 생성합니다. 문서 링크와 이미지 경로만 사이트 기준으로 변환합니다. |
 | `npm run sync:favicon` | `content/asset/favicon.svg`를 설치된 for-humanity의 내장 파비콘에 복사합니다. 0.17.0의 설정 항목 미지원을 보완하며 `dev`와 `content:build`에서 자동 실행합니다. |
 | `npm run check` | `validate`, `check:generated`, `check:diagrams`, `typecheck`, `lint`, `lint:examples`, `typecheck:examples`, `test`를 차례로 실행합니다. 커밋 전 한 번에 돌리는 명령입니다. |
@@ -128,7 +128,7 @@ Vitest, Playwright, MSW는 테스트 예제의 실제 API 타입 검사를 위�
 404 화면은 `content/asset/status.svg`의 회색 픽셀 얼굴과 슬픈 입을 사용합니다. `for-humanity.config.ts`의 `statusImage: "asset/status.svg"`로 지정하며 `content:build`가 GitHub Pages용 `content/dist/404.html`을 생성합니다.
 없는 문서에서도 `/agent-conventions/` 기준으로 그림과 스타일을 불러오고 홈 복귀 링크를 제공합니다. 오류 화면은 검색 색인에서 제외합니다.
 
-공개 주소는 [minu-ha.github.io/agent-conventions](https://minu-ha.github.io/agent-conventions/).
+공개 주소는 [nomeehej.github.io/agent-conventions](https://nomeehej.github.io/agent-conventions/).
 `for-humanity.config.ts`의 `url`은 도메인, `basePath`는 `/agent-conventions/`으로 지정합니다.
 개발과 미리보기 주소는 `http://localhost:4322/agent-conventions/`입니다.
 

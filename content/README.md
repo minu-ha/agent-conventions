@@ -12,11 +12,11 @@
 
 Rules, examples and the reasoning behind everyday decisions in React, TypeScript, CSS and Figma.
 
-[![MIT](https://img.shields.io/badge/license-MIT-1111aa?style=flat-square)](https://github.com/minu-ha/agent-conventions/blob/main/LICENSE)
-[![Documentation](https://img.shields.io/github/actions/workflow/status/minu-ha/agent-conventions/docs.yml?branch=main&label=docs&style=flat-square)](https://github.com/minu-ha/agent-conventions/actions/workflows/docs.yml)
+[![MIT](https://img.shields.io/badge/license-MIT-1111aa?style=flat-square)](https://github.com/nomeehej/agent-conventions/blob/main/LICENSE)
+[![Documentation](https://img.shields.io/github/actions/workflow/status/nomeehej/agent-conventions/docs.yml?branch=main&label=docs&style=flat-square)](https://github.com/nomeehej/agent-conventions/actions/workflows/docs.yml)
 ![Node.js 22.12.0+](https://img.shields.io/badge/node-22.12.0%2B-444444?style=flat-square)
 
-[Documentation](https://minu-ha.github.io/agent-conventions/) | [Usage](public/usage.md) | [Rule authoring](https://github.com/minu-ha/agent-conventions/blob/main/CONTRIBUTING.md) | [Research](public/research/progressive-loading.md)
+[Documentation](https://nomeehej.github.io/agent-conventions/) | [Usage](public/usage.md) | [Rule authoring](https://github.com/nomeehej/agent-conventions/blob/main/CONTRIBUTING.md) | [Research](public/research/progressive-loading.md)
 
 </div>
 
@@ -77,7 +77,7 @@ A revised rule or example carries through to both views when they are rebuilt.
 
 On the site, each skill has an overview and a page for each section.
 Rule numbers follow the source file numbers, making it possible to move between a rule in the browser and its original file.
-The site is built with [for-humanity](https://github.com/minu-ha/for-humanity).
+The site is built with [for-humanity](https://github.com/nomeehej/for-humanity).
 
 ## Keep the reasoning with the rules
 
@@ -91,16 +91,16 @@ Keeping these records alongside the conventions makes later changes easier to as
 | Topic | Reference |
 | --- | --- |
 | Connect the skills and apply them to a project | [Usage](public/usage.md) |
-| Write or revise a convention | [Rule authoring](https://github.com/minu-ha/agent-conventions/blob/main/CONTRIBUTING.md) |
+| Write or revise a convention | [Rule authoring](https://github.com/nomeehej/agent-conventions/blob/main/CONTRIBUTING.md) |
 | Build, validate and deploy the documentation | [Tooling](public/tooling.md) |
 | Understand the loading design and evaluations | [Progressive loading](public/research/progressive-loading.md), [Design notes](public/research/progressive-loading-design.md) |
 | Review the recorded rule audit | [Rule audit](public/research/rule-audit-2026-10-14.md) |
-| Start a project's agent instructions | [AGENTS template](https://github.com/minu-ha/agent-conventions/blob/main/AGENTS.template.md) |
+| Start a project's agent instructions | [AGENTS template](https://github.com/nomeehej/agent-conventions/blob/main/AGENTS.template.md) |
 
 The detailed guides and rule explanations are currently written in Korean.
 
 ## License
 
-[MIT](https://github.com/minu-ha/agent-conventions/blob/main/LICENSE) © 2026 [Minu Ha](https://github.com/minu-ha)
+[MIT](https://github.com/nomeehej/agent-conventions/blob/main/LICENSE) © 2026 [Minu Ha](https://github.com/nomeehej)
 
 </div>
