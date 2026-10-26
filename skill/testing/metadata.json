@@ -36,6 +36,12 @@
 		"https://playwright.dev/docs/test-annotations",
 		"https://docs.kubb.dev/extensions/kubb-labs/plugin-msw/options",
 		"https://docs.kubb.dev/extensions/kubb-labs/plugin-faker/options",
-		"https://mswjs.io/api/get-response"
+		"https://mswjs.io/api/get-response",
+		"https://vitest.dev/guide/learn/async",
+		"https://playwright.dev/docs/browser-contexts",
+		"https://playwright.dev/docs/locators",
+		"https://playwright.dev/docs/network",
+		"https://playwright.dev/docs/mock",
+		"https://playwright.dev/docs/test-retries"
 	]
 }
