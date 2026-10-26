@@ -1,7 +1,9 @@
 src/util/number/format-quantity.test.ts
+src/service/msw/handlers.test.ts
+test/_golden/order-rows.test.ts
 test/reports/reports.integration.spec.ts
 test/reports/reports.e2e.spec.ts
 test/_fixture/reports-page.ts
 
-Vitest include: src/**/*.test.ts
+Vitest projects: unit src/**/*.test.ts, golden test/_golden/**/*.test.ts
 Playwright testMatch: test/**/*.integration.spec.ts, test/**/*.e2e.spec.ts

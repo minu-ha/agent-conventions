@@ -298,7 +298,7 @@
 			"id": "unhandled-api-policy-only",
 			"prompt": "이미 있는 MSW server와 afterEach resetHandlers, afterAll close는 유지하고 server.listen의 onUnhandledRequest만 bypass에서 error로 바꾼다. 새 handler, 입력, 이름, 타입, 가져오기는 없다.",
 			"files": [
-				"test/_fixture/server.ts"
+				"src/service/msw/handlers.test.ts"
 			],
 			"expectedSkills": [
 				"testing",

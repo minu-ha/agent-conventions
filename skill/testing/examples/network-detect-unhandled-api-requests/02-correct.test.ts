@@ -1,13 +1,10 @@
-// test/_fixture/server.test.ts
+// src/service/msw/handlers.test.ts
 import { afterAll, afterEach, beforeAll, expect, test } from "vitest";
-import { HttpResponse, http } from "msw";
 import { setupServer } from "msw/node";
 
-const server = setupServer(
-	http.get("https://app.example.test/api/orders", () => {
-		return HttpResponse.json({ items: [], total: 0 });
-	}),
-);
+import { mock_handlers } from "@/service/msw/handlers";
+
+const server = setupServer(...mock_handlers);
 
 beforeAll(() => {
 	// [!code ++]
@@ -20,10 +17,10 @@ afterAll(() => {
 	server.close();
 });
 
-test("주문 목록 응답을 받는다", async () => {
+test("공유 registry가 주문 목록 응답을 돌려준다", async () => {
 	/**
 	 * GIVEN
-	 * 모듈 fixture의 주문 목록 handler
+	 * Node에 연결한 공유 registry
 	 */
 	const url = "https://app.example.test/api/orders";
 
@@ -35,7 +32,7 @@ test("주문 목록 응답을 받는다", async () => {
 
 	/**
 	 * THEN
-	 * fixture에서 정한 빈 목록과 건수
+	 * builder가 고정한 대표 주문과 건수
 	 */
-	expect(await response.json()).toStrictEqual({ items: [], total: 0 });
+	expect(await response.json()).toMatchObject({ total: 1, items: [{ id: "order-1" }] });
 });

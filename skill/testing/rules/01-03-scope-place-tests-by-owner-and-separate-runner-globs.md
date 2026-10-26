@@ -21,7 +21,7 @@ tags: testing, scope
 | 화면, 앱 여정 | 프로젝트의 화면별 테스트 구조를 따릅니다 |
 | fixture, story, page object, 기준값 | 사용하는 테스트의 지원 코드로 구분합니다 |
 
-IA 번호, 케이스 ID, 별칭, 실제 폴더 이름은 프로젝트 문서가 정합니다.
+폴더 번호, 케이스 ID, 별칭, 실제 폴더 이름은 프로젝트 문서가 정합니다.
 단순 이동을 이유로 무관한 테스트와 프로덕션 파일을 재배치하지 않습니다.
 
 참고: [공식 문서](https://vitest.dev/guide/learn/testing-in-practice).
