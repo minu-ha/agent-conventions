@@ -18,7 +18,7 @@ tags: testing, vitest
 동기 예외는 함수를 넘겨 toThrow로 검사하고 Promise의 성공과 거부는 resolves와 rejects를 await합니다.
 오류가 없으면 단언도 실행되지 않는 catch 블록으로 예외 검사를 대신하지 않습니다.
 테스트 종료 후에도 남는 Promise나 처리되지 않은 rejection이 없도록 비동기 작업을 기다립니다.
-러너가 Vitest이면 실제 Vitest API와 프로젝트 설정을 사용합니다.
+Jest 전역이나 다른 러너의 API를 섞지 않고 vitest에서 가져온 API와 프로젝트 설정을 사용합니다.
 
 참고: [공식 문서](https://vitest.dev/guide/learn/async).
 

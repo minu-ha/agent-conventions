@@ -4,7 +4,7 @@ titleKo: 시간과 환경을 명시적인 테스트 입력으로 통제합니다
 impact: HIGH
 impactDescription: 실행 날짜와 실행 위치가 바뀌어도 같은 입력이 같은 결과를 냅니다
 appliesWhen:
-  - 테스트 결과가 현재 시각, 난수, 타임존, 로케일, viewport에 의존하도록 추가하거나 바꿀 때
+  - 테스트가 현재 시각, 난수, 타임존, 로케일, viewport를 읽는 코드나 설정을 추가하거나 바꿀 때
 requiresSelected: data-isolate-and-restore-test-state
 tags: testing, data
 ---

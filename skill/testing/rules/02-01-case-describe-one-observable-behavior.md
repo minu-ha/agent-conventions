@@ -1,10 +1,11 @@
 ---
 title: Describe One Observable Behavior
-titleKo: 조건과 관찰 가능한 결과로 테스트 하나를 설명합니다
+titleKo: 조건과 결과로 테스트 하나를 설명하고 GIVEN, WHEN, THEN으로 구간을 나눕니다
 impact: HIGH
 impactDescription: 실패한 제목만으로 깨진 동작과 필요한 사전조건을 찾을 수 있습니다
 appliesWhen:
   - 테스트 제목, 본문 구간, describe, step을 추가하거나 시나리오를 나눌 때
+  - GIVEN, WHEN, THEN 블록 주석을 새로 쓰거나 그 형식을 바꿀 때
 tags: testing, case
 ---
 
