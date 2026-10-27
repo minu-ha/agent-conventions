@@ -50,6 +50,7 @@ build tooling은 [content/public/tooling.md](./content/public/tooling.md).
 - [skill/css](./skill/css/SKILL.md)
 - [skill/testing](./skill/testing/SKILL.md)
 - [skill/figma](./skill/figma/SKILL.md)
+- [skill/blueprint](./skill/blueprint/SKILL.md)
 
 모든 skill은 `SKILL.md` → `RULES_INDEX.md` → 걸린 `contracts/*.md`로 좁힌다.
 
@@ -57,6 +58,7 @@ build tooling은 [content/public/tooling.md](./content/public/tooling.md).
 계층은 이 선언이 정한다. 나를 companion으로 켜는 skill이 위 계층이고,
 `typescript`는 아무 skill도 켜지 않으므로 가장 아래다.
 `figma`, `testing`은 변경 범위에 따라 `react`, `css`를 켜는 위 계층이다.
+`blueprint`는 Figma를 재료로 읽을 때 `figma`를 켜는 가장 위 계층이다.
 아래에서 위를 가리키지 않는다.
 
 ---
@@ -93,7 +95,7 @@ build tooling은 [content/public/tooling.md](./content/public/tooling.md).
 7. skill 인벤토리나 artifact 역할이 바뀌면 [README.md](./README.md),
    [CONTRIBUTING.md](./CONTRIBUTING.md), [content/public/tooling.md](./content/public/tooling.md) 도 갱신.
 
-새 skill은 이미 정리된 `react`, `typescript`, `css`, `testing`, `figma`를 템플릿으로 삼는다.
+새 skill은 이미 정리된 `react`, `typescript`, `css`, `testing`, `figma`, `blueprint`를 템플릿으로 삼는다.
 
 ### 4.1 routing 키
 
@@ -102,7 +104,7 @@ build tooling은 [content/public/tooling.md](./content/public/tooling.md).
 | `appliesWhen` | 이 규칙이 걸리는 조건. 불릿 목록 또는 한 줄로 작성하며, 합쳐진 라우팅 문장은 160자 이내 |
 | `requiresSelected` | 함께 적용하는 필수 관계. cross-skill 이면 companion도 활성화 |
 | `reviewWith` | 재평가 힌트. 자동 적용 아님. 방향 있음 — 역방향 추론 금지 |
-| `requiredOnCompletion` | 마무리 시 항상 적용. 인덱스에는 `completionGate`로 찍히고 `SKILL.md` 3절이 그 이름으로 안내한다. 지금은 `figma`의 `verify` 규칙 둘만 쓴다 |
+| `requiredOnCompletion` | 마무리 시 항상 적용. 인덱스에는 `completionGate`로 찍히고 `SKILL.md` 3절이 그 이름으로 안내한다. 지금은 `figma`의 `verify` 규칙 둘과 `blueprint`의 `stage`, `verify` 규칙 하나씩 쓴다 |
 
 ---
 
@@ -123,7 +125,7 @@ npm run content:preview  # content/dist 의 공개 사이트 미리보기
 `dev`와 `content:build`에서도 자동 실행하므로 홈은 직접 편집하지 않는다.
 `content/public/convention/`과 정적 출력 `content/dist/`는 생성 폴더라 커밋하지 않는다.
 
-buildable skill: `css` `figma` `react` `testing` `typescript`
+buildable skill: `blueprint` `css` `figma` `react` `testing` `typescript`
 
 ---
 

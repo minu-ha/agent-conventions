@@ -24,8 +24,8 @@ const commandEnv = {...process.env, PATH: [packageBinDir, nodeBinDir, process.en
 const tsxCliPath = path.join(packageDir, "node_modules", "tsx", "dist", "cli.mjs");
 const buildModulePath = path.join(packageDir, "script", "build.ts");
 const checkGeneratedModulePath = path.join(packageDir, "script", "check-generated.ts");
-const _expectedSkillScriptNames = ["react", "css", "typescript", "testing", "figma"] as const;
-const _expectedProgressiveSkillNames = ["css", "figma", "react", "testing", "typescript"] as const;
+const _expectedSkillScriptNames = ["react", "css", "typescript", "testing", "figma", "blueprint"] as const;
+const _expectedProgressiveSkillNames = ["blueprint", "css", "figma", "react", "testing", "typescript"] as const;
 
 /**
  * @summary exact Markdown section 조회 조건

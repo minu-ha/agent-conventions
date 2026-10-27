@@ -78,14 +78,18 @@ CLI 사용법은 `npx for-humanity --help`, 설치 버전은 `npx for-humanity -
 | `typescript` | none |
 | `figma` | conditional `react`, `css` |
 | `testing` | required `typescript`; conditional `react`, `css` |
+| `blueprint` | conditional `figma` |
 
-skill은 `SKILL.md` → activated `RULES_INDEX.md` 전체 scan과 completion gate → Selected/Unknown `contracts/*.md` → CRITICAL 또는 판정 근거가 필요한 `rules/*.md` full expansion → Unknown 해소 → final Selected의 `requiresSelected` closure 순서로 소비합니다. 형태를 정하는 규칙은 원문의 `Correct` 예제도 읽습니다. 새 selection이나 companion이 생기면 고정점까지 반복합니다. 현재 제공하는 skill은 위 표의 다섯 가지입니다.
+skill은 `SKILL.md` → activated `RULES_INDEX.md` 전체 scan과 completion gate → Selected/Unknown `contracts/*.md` → CRITICAL 또는 판정 근거가 필요한 `rules/*.md` full expansion → Unknown 해소 → final Selected의 `requiresSelected` closure 순서로 소비합니다. 형태를 정하는 규칙은 원문의 `Correct` 예제도 읽습니다. 새 selection이나 companion이 생기면 고정점까지 반복합니다. 현재 제공하는 skill은 위 표의 여섯 가지입니다.
 
 Testing은 Coding에 배치합니다. 테스트 층과 선별 목적, GWT, 데이터와 격리, story의 자동 검증을 다룹니다.
 Kubb 등의 생성 계약에서 소유 mock과 handler를 조립하고 브라우저와 Node가 공유하는 작성 흐름을 포함합니다.
 Vitest, Playwright, 기준값과 실행 결과도 같은 규칙 체계로 읽습니다.
 React 렌더와 실제 스타일 변경만 해당 companion을 활성화하며 locator나 CSS 단언만으로는 활성화하지 않습니다.
 테스트 추가 정책, IA 번호, 케이스 ID, 결과서 형식은 소비 프로젝트에 남깁니다.
+
+Blueprint는 Tool에 배치합니다. 화면을 구현하기 전에 쓰는 설계 문서의 재료, 질문, 짜임, 글, 단계, 확인을 다룹니다.
+문서는 for-humanity Markdown으로 쓰고 템플릿은 `.md` 예제로 싣습니다. Figma를 재료로 읽을 때만 `figma`를 활성화합니다.
 
 Vitest, Playwright, MSW는 테스트 예제의 실제 API 타입 검사를 위한 개발 의존성입니다.
 이 저장소 도구의 회귀 테스트는 기존 `node:test`와 `tsx` 명령으로 실행합니다.

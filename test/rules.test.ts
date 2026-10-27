@@ -13,7 +13,7 @@ import {generateSiteFiles} from "../src/site.js";
 import {inlineSnippets} from "../src/snippets.js";
 import type {LoadedSkillDocument} from "../src/types.js";
 
-const expectedRuleCount = 173;
+const expectedRuleCount = 196;
 
 /**
  * @helper 사이트가 노출하는 skill 문서 전부
@@ -252,7 +252,9 @@ test("inlineSnippets widens the fence around a Markdown example that holds its o
 		const parsed = parseRuleBody(result.body);
 
 		assert.equal(parsed.examples.length, 1);
-		assert.deepEqual(parsed.examples[0]?.blocks, [{lang: "md", code: ["## Flow", "", "```mermaid", "flowchart LR", "\ta --> b", "```"].join("\n")}]);
+		assert.deepEqual(parsed.examples[0]?.blocks, [
+			{lang: "md", code: ["## Flow", "", "```mermaid", "flowchart LR", "\ta --> b", "```"].join("\n")},
+		]);
 	} finally {
 		await rm(temporaryDir, {recursive: true, force: true});
 	}
