@@ -36,7 +36,7 @@
 		"clsx": "^2.1.1",
 		"dayjs": "^1.11.23",
 		"es-toolkit": "^1.52.0",
-		"for-humanity": "0.24.0",
+		"for-humanity": "0.25.0",
 		"github-slugger": "2.0.0",
 		"msw": "2.14.6",
 		"nuqs": "^2.10.2",
