@@ -251,6 +251,7 @@ BE 가 아직 안 준 것은 지금 spec 위 mock 으로 먼저 가고, 들어�
 | 막지 않는 BE 질문을 Blocked 로 센 단계 표 | `.md` | P02-03 Incorrect |
 
 예제 세계관은 다른 skill 과 같은 관리자 콘솔이다. 에이전트는 계약의 Correct 템플릿을 복사해 문서를 시작한다.
+Markdown 예제의 확장자는 `.markdown` 이다. `.md` 면 for-humanity 가 사이트 문서로 읽고 사이트 검사가 절 페이지로 센다.
 
 ## 라우터
 
@@ -291,8 +292,8 @@ Figma 파일을 재료로 읽을 때만 `convention-figma` 를 켠다. 나머지
 | 파츠 | 설정 | 구현 자리 | 왜 |
 | --- | --- | --- | --- |
 | 배지 종류 | `status[].kind` 에 `blocked` (빨강), `neutral` (회색) | `src/constant/status.ts`, `remark-status.ts`, `token.css`, `wg-article.css` | 두 색으로는 Blocked 와 Per Figma 를 못 가른다 |
-| 참조 칩 | `refs: [{prefix: "Q", kind: "plan"}, {prefix: "B", kind: "be"}, {prefix: "D", kind: "dev"}, {prefix: "R", kind: "plan"}]` | `remark-links.ts` 옆의 새 플러그인. 글자가 `<prefix><숫자>` 인 링크에 칩 class | 본문 어디서든 질문 자리가 보이고 눌러 간다 |
-| 앵커 검증 | 없음 | `rehype-heading-ids.ts` 가 모은 id 로 같은 문서와 다른 문서의 `#id` 링크를 build 때 대조. 없으면 파일과 줄 경고 | `questions.md` 로 가는 링크가 전부 hash 다 |
+| 참조 칩 | `refs: [{prefix: "Q", color: "violet"}, {prefix: "B", color: "amber"}, {prefix: "D"}, {prefix: "R", color: "violet"}]`. 색은 gray, blue, violet, amber | `remark-refs.ts`. 글자가 `<prefix><숫자>` 인 링크에 칩 class | 본문 어디서든 질문 자리가 보이고 눌러 간다 |
+| 앵커 검증 | 없음 | `_rehype-anchors.ts` 가 같은 문서는 바로, 다른 문서는 `read-docs.ts` 가 전체 수집 뒤 대조. 없으면 파일과 줄 경고. 홈 제목은 제외 | `questions.md` 로 가는 링크가 전부 hash 다 |
 
 문서는 `settings.md` 의 Status badges 절, `writing.md` 의 Links 절, `CHANGELOG.md` 의 Unreleased 에 적는다.
 
