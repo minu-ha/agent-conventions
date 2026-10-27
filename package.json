@@ -5,9 +5,7 @@
 	"license": "MIT",
 	"description": "Personal coding conventions, agent skills and documentation for React, TypeScript, CSS, Testing, Figma and Blueprint",
 	"type": "module",
-	"engines": {
-		"node": ">=22.12.0"
-	},
+	"engines": {"node": ">=22.12.0"},
 	"scripts": {
 		"dev": "npm run build && npm run sync:readme && npm run sync:favicon && for-humanity dev",
 		"build": "tsx script/build.ts",
