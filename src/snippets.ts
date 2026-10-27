@@ -71,6 +71,15 @@ export const toFenceBody = (source: string): string => {
 };
 
 /**
+ * @helper 펜스 본문이 품은 가장 긴 백틱 묶음보다 한 칸 긴 펜스. Mermaid 펜스가 든 Markdown 예제도 한 블록으로 묶임
+ */
+export const toFenceMarker = (code: string): string => {
+	const longest = Math.max(2, ...[...code.matchAll(/`{3,}/g)].map((match) => match[0].length));
+
+	return "`".repeat(longest + 1);
+};
+
+/**
  * @api 본문의 `<<<` 줄을 코드 펜스로 바꿈. 없는 파일은 오류. 코드 펜스 안은 건드리지 않음
  * @description 규칙 산출물(계약, 인덱스, 검사)은 전부 이 결과를 보므로 예제가 파일로 가도 아무것도 달라지지 않음
  */
@@ -104,7 +113,11 @@ export const inlineSnippets = (body: string, baseDir: string): {body: string; sn
 		}
 
 		snippets.push({reference, filePath, meta});
-		out.push(`\`\`\`${fenceLanguageOf(filePath)}`, toFenceBody(source), "```");
+
+		const code = toFenceBody(source);
+		const fence = toFenceMarker(code);
+
+		out.push(`${fence}${fenceLanguageOf(filePath)}`, code, fence);
 	}
 
 	return {body: out.join("\n"), snippets};

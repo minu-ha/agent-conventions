@@ -133,11 +133,13 @@ export const parseRuleBody = (body: string): ParsedRuleBody => {
 		}
 
 		if (line.startsWith(fenceMarker)) {
-			const lang = line.slice(fenceMarker.length).trim() || "text";
+			// 여는 펜스 길이 이상의 백틱만 닫는 펜스. 안쪽의 더 짧은 펜스는 코드
+			const opener = /^`+/.exec(line)?.[0] ?? fenceMarker;
+			const lang = line.slice(opener.length).trim() || "text";
 			const buffer: string[] = [];
 			index += 1;
 
-			while (index < lines.length && !(lines[index] ?? "").startsWith("```")) {
+			while (index < lines.length && !new RegExp(`^\`{${opener.length},}\\s*$`).test(lines[index] ?? "")) {
 				buffer.push(lines[index] ?? "");
 				index += 1;
 			}

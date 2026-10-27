@@ -232,6 +232,32 @@ test("inlineSnippets turns a snippet line into a fence and strips regions and li
 	}
 });
 
+test("inlineSnippets widens the fence around a Markdown example that holds its own fences", async () => {
+	const temporaryDir = await mkdtemp(path.join(tmpdir(), "agent-conventions-snippets-"));
+
+	try {
+		await mkdir(path.join(temporaryDir, "examples"));
+		await writeFile(
+			path.join(temporaryDir, "examples", "02-correct.md"),
+			["## Flow", "", "```mermaid", "flowchart LR", "\ta --> b", "```", ""].join("\n"),
+		);
+
+		const result = inlineSnippets(["**Correct 1 (c):**", "", "<<< ./examples/02-correct.md"].join("\n"), temporaryDir);
+
+		assert.equal(
+			result.body,
+			["**Correct 1 (c):**", "", "````md", "## Flow", "", "```mermaid", "flowchart LR", "\ta --> b", "```", "````"].join("\n"),
+		);
+
+		const parsed = parseRuleBody(result.body);
+
+		assert.equal(parsed.examples.length, 1);
+		assert.deepEqual(parsed.examples[0]?.blocks, [{lang: "md", code: ["## Flow", "", "```mermaid", "flowchart LR", "\ta --> b", "```"].join("\n")}]);
+	} finally {
+		await rm(temporaryDir, {recursive: true, force: true});
+	}
+});
+
 test("every rule loads its examples from files and no rule keeps an example fence inline", async () => {
 	for (const document of await readProgressiveDocuments()) {
 		for (const rule of document.rules) {
