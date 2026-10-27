@@ -1,0 +1,20 @@
+{
+	"title": "Blueprint 설계 문서 컨벤션",
+	"version": "1.0.0",
+	"organization": "Agent Conventions",
+	"date": "2026년 10월",
+	"abstract": "화면을 구현하기 전에 설계 문서를 쓰고, 구현하는 동안 그 문서를 지금의 정답으로 유지하는 팀을 위한 컨벤션입니다. Figma, 기획 데모, API spec, 코드, 캡처 가운데 무엇이 무엇의 정답인지 먼저 정하고, 남의 답이 필요한 것만 번호를 붙여 한 곳에 모읍니다. 문서는 for-humanity Markdown으로 쓰며 한눈에, 화면, 구조 순서로 사람과 에이전트가 각자 필요한 깊이까지 읽게 합니다. 변경은 변경 문서로 받고 반영 뒤 본문을 고쳐 써서 문서가 이력이 되지 않게 합니다. 단계와 확인 명령으로 구현을 나누고, 넘기기 전에 사이트 빌드와 링크, 번호, 문체를 검사합니다. Figma를 재료로 읽을 때는 Figma 규칙을 함께 봅니다. 규칙 본문의 정본은 `rules/*.md`입니다.",
+	"companions": [
+		{
+			"skill": "figma",
+			"mode": "conditional",
+			"appliesWhen": "Figma 파일이나 노드를 설계 문서의 재료로 읽는다."
+		}
+	],
+	"references": [
+		"https://for-humanity.fyi",
+		"https://github.com/nomeehej/for-humanity/blob/main/content/public/writing.md",
+		"https://github.com/nomeehej/for-humanity/blob/main/content/public/parts.md",
+		"https://mermaid.js.org/syntax/flowchart.html"
+	]
+}

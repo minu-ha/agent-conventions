@@ -1,0 +1,2 @@
+- 조건 패널 폭 300 급 `_pg-condition-panel.tsx:46`, [Figma](https://www.figma.com/design/Ab12Cd34Ef56Gh78Ij90Kl/admin?node-id=8949-46508)
+- 툴팁 문구 셋 = [툴팁 프레임](https://www.figma.com/design/Ab12Cd34Ef56Gh78Ij90Kl/admin?node-id=8949-46511)

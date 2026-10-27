@@ -1,0 +1,121 @@
+{
+	"version": 1,
+	"skill": "blueprint",
+	"scenarios": [
+		{
+			"id": "BPE01-new-project-screen-doc",
+			"prompt": "start the admin console design docs in for-humanity: write content/public/overview.md, content/public/questions.md and the orders list screen document content/public/screen/orders.md from this Figma wrapper URL (figma.com/design/Ab12Cd34Ef56Gh78Ij90Kl/admin?node-id=12-340), the planning demo orders-demo (3).html and openapi.json; the demo sorts by order date while the Figma table shows order number order, the demo includes refunded orders and the Figma sample does not, and the response captures in src/service/capture are from 10-02.",
+			"files": [
+				"content/public/overview.md",
+				"content/public/questions.md",
+				"content/public/screen/orders.md"
+			],
+			"expectedSkills": [
+				"blueprint",
+				"figma"
+			],
+			"expectedSelected": {
+				"blueprint": [
+					"material-build-the-truth-table-first",
+					"material-compare-sources-item-by-item",
+					"material-read-figma-as-ux-not-pixels",
+					"material-confirm-response-shapes-with-captures",
+					"question-keep-every-number-in-one-page",
+					"question-write-cards-with-options-and-one-pick",
+					"question-filter-what-needs-another-person",
+					"structure-keep-four-document-kinds",
+					"structure-order-screen-docs-for-two-readers",
+					"structure-fold-only-sizes-and-contracts",
+					"structure-write-overview-as-the-project-map",
+					"writing-use-noun-phrases-one-fact-per-line",
+					"writing-label-in-english-and-explain-in-korean",
+					"writing-cite-at-the-end-and-link-figma-nodes",
+					"writing-draw-flows-with-mermaid-and-trees-with-treeview",
+					"writing-show-screens-as-numbered-captures",
+					"stage-split-work-into-gated-stages",
+					"stage-report-done-with-the-check-command",
+					"verify-build-the-site-before-handing-over"
+				],
+				"figma": [
+					"read-start-with-screenshot-and-metadata",
+					"read-choose-the-node-each-tool-reads",
+					"read-collect-hidden-layers-and-annotations",
+					"verify-measure-rendered-values-before-claiming-parity",
+					"verify-report-reads-decisions-and-gaps"
+				]
+			}
+		},
+		{
+			"id": "BPE02-figma-fix-roundup",
+			"prompt": "a 10-15 Figma revision batch arrived for the orders list (figma.com/design/Ab12Cd34Ef56Gh78Ij90Kl/admin?node-id=18-120, 14 annotated cards plus comments): write content/public/change/1015-figma.md with the items and captures, update the affected sections of content/public/screen/orders.md to the new truth, and add any new planner or BE questions to content/public/questions.md; the batch changes the refund column color that the user already decided on 10-07.",
+			"files": [
+				"content/public/change/1015-figma.md",
+				"content/public/screen/orders.md",
+				"content/public/questions.md"
+			],
+			"expectedSkills": [
+				"blueprint",
+				"figma"
+			],
+			"expectedSelected": {
+				"blueprint": [
+					"material-compare-sources-item-by-item",
+					"material-read-figma-as-ux-not-pixels",
+					"question-keep-every-number-in-one-page",
+					"question-write-cards-with-options-and-one-pick",
+					"question-filter-what-needs-another-person",
+					"question-close-with-a-result-and-keep-one-line",
+					"structure-keep-the-body-current-and-log-changes-apart",
+					"writing-use-noun-phrases-one-fact-per-line",
+					"writing-cite-at-the-end-and-link-figma-nodes",
+					"writing-show-screens-as-numbered-captures",
+					"stage-report-done-with-the-check-command",
+					"verify-build-the-site-before-handing-over"
+				],
+				"figma": [
+					"read-start-with-screenshot-and-metadata",
+					"read-choose-the-node-each-tool-reads",
+					"read-collect-hidden-layers-and-annotations",
+					"verify-measure-rendered-values-before-claiming-parity",
+					"verify-report-reads-decisions-and-gaps"
+				]
+			}
+		},
+		{
+			"id": "BPE03-close-question-with-answer",
+			"prompt": "the planner answered Q1 of the admin console: refunded orders stay in the orders list with a status chip; close Q1 in content/public/questions.md and unblock stage 2 in the Remaining table of content/public/screen/orders.md.",
+			"files": [
+				"content/public/questions.md",
+				"content/public/screen/orders.md"
+			],
+			"expectedSkills": [
+				"blueprint"
+			],
+			"expectedSelected": {
+				"blueprint": [
+					"question-close-with-a-result-and-keep-one-line",
+					"stage-split-work-into-gated-stages",
+					"stage-report-done-with-the-check-command",
+					"verify-build-the-site-before-handing-over"
+				]
+			}
+		},
+		{
+			"id": "BPE04-report-stage-done",
+			"prompt": "stage 2 of the orders list blueprint (the orders table) is implemented in src/page/orders; run the stage check and report it done in content/public/screen/orders.md.",
+			"files": [
+				"content/public/screen/orders.md"
+			],
+			"expectedSkills": [
+				"blueprint"
+			],
+			"expectedSelected": {
+				"blueprint": [
+					"stage-split-work-into-gated-stages",
+					"stage-report-done-with-the-check-command",
+					"verify-build-the-site-before-handing-over"
+				]
+			}
+		}
+	]
+}
