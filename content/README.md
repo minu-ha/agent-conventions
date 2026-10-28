@@ -103,6 +103,6 @@ The detailed guides and rule explanations are currently written in Korean.
 
 ## License
 
-[MIT](https://github.com/nomeehej/agent-conventions/blob/main/LICENSE) © 2026 [Minu Ha](https://github.com/nomeehej)
+[MIT](https://github.com/nomeehej/agent-conventions/blob/main/LICENSE) © 2026 [nomeehej](https://github.com/nomeehej)
 
 </div>

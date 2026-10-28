@@ -101,6 +101,6 @@ The detailed guides and rule explanations are currently written in Korean.
 
 ## License
 
-[MIT](LICENSE) © 2026 [Minu Ha](https://github.com/nomeehej)
+[MIT](LICENSE) © 2026 [nomeehej](https://github.com/nomeehej)
 
 </div>
